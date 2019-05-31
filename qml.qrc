@@ -1,2 +1,10 @@
-<!DOCTYPE RCC>
-<RCC version="1.0"/>
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>SceneRoot.qml</file>
+        <file>../../../../../home/nova/Qt/Tools/Qt3DStudio/examples/studio3d/SampleProject/maps/road.png</file>
+        <file>normal_map_flat.png</file>
+        <file>Panel.qml</file>
+        <file>Plane.ply</file>
+    </qresource>
+</RCC>

@@ -17,6 +17,7 @@ Entity {
     property real rotZ: 0
 
     property ShellSurface shellSurf
+    property real listIndex
 
     id:panel
 
@@ -86,22 +87,14 @@ Entity {
 
         mouseEnabled: true
 
-        Rectangle {
+        ShellSurfaceItem {
+            id:waylandQuickItem
             height: shellSurf != null ? shellSurf.surface.size.height : 128
             width: shellSurf != null ? shellSurf.surface.size.width : 128
-            color: "white"
-
-            WaylandQuickItem {
-                id:waylandQuickItem
-                anchors.fill: parent
-                surface: shellSurf.surface
-                onSurfaceDestroyed: function() {
-                    console.log("Destroying panel...");
-                    waylandScene.destroy();
-                    panel.destroy();
-                    waylandQuickItem.destroy();
-                    console.log("Panel destroyed");
-                }
+            shellSurface: shellSurf
+            onSurfaceDestroyed: function() {
+                panel.destroy();
+                shellSurfaces.remove(listIndex);
             }
         }
     }
@@ -110,7 +103,7 @@ Entity {
     Timer {
         onTriggered: function() {
             console.log("shellSurf:");
-            console.log(shellSurf.surface);
+            console.log(shellSurf);
         }
         running: true
         interval: 1000
