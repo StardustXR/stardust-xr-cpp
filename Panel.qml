@@ -18,6 +18,8 @@ Entity {
     property ShellSurface shellSurf
     property real listIndex
 
+    property real margin: 0
+
     id:panel
 
     components: [panelTransform, planeMesh, material, panelPicker]
@@ -31,7 +33,7 @@ Entity {
     Transform {
         id: panelTransform
         translation: position
-        scale3D: shellSurf != null ? Qt.vector3d(shellSurf.surface.size.width/ppm, shellSurf.surface.size.height/ppm, 1) : Qt.vector3d(0,0,0)
+        scale3D: shellSurf != null ? Qt.vector3d(waylandSurfaceTexture.width/ppm, waylandSurfaceTexture.height/ppm, 1) : Qt.vector3d(0,0,0)
         rotationX: rotX
         rotationY: rotY
         rotationZ: rotZ
@@ -79,8 +81,8 @@ Entity {
             attachmentPoint: RenderTargetOutput.Color0
             texture: Texture2D {
                 id: waylandSurfaceTexture
-                height: shellSurf != null ? shellSurf.surface.size.height : 128
-                width: shellSurf != null ? shellSurf.surface.size.width : 128
+                height: shellSurf.surface.size.height - (margin*2)
+                width: shellSurf.surface.size.width - (margin*2)
                 format: Texture.RGBA8_UNorm
                 generateMipMaps: true
                 magnificationFilter: Texture.Linear
@@ -94,19 +96,27 @@ Entity {
         mouseEnabled: true
         entities: []
 
-        ShellSurfaceItem {
-            id:waylandQuickItem
+        Item {
             height: waylandSurfaceTexture.height
             width: waylandSurfaceTexture.width
-            shellSurface: shellSurf
 
-            moveItem: Item {
-                visible: false
-            }
 
-            onSurfaceDestroyed: function() {
-                panel.destroy();
-                shellSurfaces.remove(index);
+            ShellSurfaceItem {
+                id:waylandQuickItem
+                x:-margin
+                y:-margin
+                height: shellSurf.surface.size.height
+                width: shellSurf.surface.size.width
+                shellSurface: shellSurf
+
+                moveItem: Item {
+                    visible: false
+                }
+
+                onSurfaceDestroyed: function() {
+                    panel.destroy();
+                    shellSurfaces.remove(index);
+                }
             }
         }
     }
