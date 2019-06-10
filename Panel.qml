@@ -100,18 +100,13 @@ Entity {
             width: waylandSurfaceTexture.width
             shellSurface: shellSurf
 
-            moveItem: moveTarget
+            moveItem: Item {
+                visible: false
+            }
 
             onSurfaceDestroyed: function() {
                 panel.destroy();
                 shellSurfaces.remove(index);
-            }
-
-            Item {
-                id:moveTarget
-                height:0
-                width:0
-                visible: false
             }
         }
     }
