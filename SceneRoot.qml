@@ -3,6 +3,8 @@ import Qt3D.Core 2.12
 import Qt3D.Render 2.12
 import Qt3D.Input 2.12
 import Qt3D.Extras 2.12
+import QtQuick.Scene2D 2.12
+import QtWayland.Compositor 1.3
 
 Entity {
     id:sceneRoot
@@ -13,7 +15,7 @@ Entity {
         fieldOfView: 45
         aspectRatio: 16/9
         nearPlane : 0.1
-        farPlane : 1000.0
+        farPlane : 100.0
         position: Qt.vector3d(0,0,5)
         upVector: Qt.vector3d(0,0,1)
         viewCenter: Qt.vector3d(0,0,0)
@@ -26,8 +28,15 @@ Entity {
                 clearColor: Qt.rgba(0, 0.5, 1, 1)
                 camera: camera
             }
-        }
+            pickingSettings.pickMethod: PickingSettings.TrianglePicking
+            pickingSettings.faceOrientationPickingMode: PickingSettings.FrontAndBackFace
+        },
+        InputSettings {}
     ]
+
+    FirstPersonCameraController {
+        camera: camera
+    }
 
     NodeInstantiator {
         model: shellSurfaces

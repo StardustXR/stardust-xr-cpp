@@ -5,12 +5,11 @@ import Qt3D.Input 2.12
 import Qt3D.Extras 2.12
 import QtQuick.Scene2D 2.12
 import QtWayland.Compositor 1.3
+import QtQuick.Controls 2.5
 
 Entity {
     property real ppm: 250
     property size dimensions: Qt.size(1000, 1000)
-    property real resolution: 2
-    property bool flipped: false
     property variant position: Qt.vector3d(0,0,0)
     property real rotX: 0
     property real rotY: 0
@@ -41,7 +40,7 @@ Entity {
     NormalDiffuseMapAlphaMaterial {
         id:material
         ambient: "white"
-        diffuse: texture
+        diffuse: waylandSurfaceTexture
         normal: Texture2D {
             TextureImage {
                 source: "qrc:/normal_map_flat.png"
@@ -59,54 +58,61 @@ Entity {
         id: panelPicker
         hoverEnabled: true
         dragEnabled: true
+        onPressed: {
+            console.log("ObjectPicker Picked!");
+        }
     }
 
     NumberAnimation on rotY {
-        from:0; to:360
-        duration: 10000
-        easing.type: Easing.Linear
+        from:-30; to:30
+        duration: 5000
+        easing.type: Easing.SineCurve
         loops: Animation.Infinite
         running: true
     }
 
+
     Scene2D {
         id: waylandScene
         output: RenderTargetOutput {
+            id: waylandSceneRenderTargetOutput
             attachmentPoint: RenderTargetOutput.Color0
             texture: Texture2D {
-                id: texture
+                id: waylandSurfaceTexture
                 height: shellSurf != null ? shellSurf.surface.size.height : 128
                 width: shellSurf != null ? shellSurf.surface.size.width : 128
                 format: Texture.RGBA8_UNorm
-                minificationFilter: Texture.Linear
-                magnificationFilter: Texture.Nearest
+                generateMipMaps: true
+                magnificationFilter: Texture.Linear
+                minificationFilter: Texture.LinearMipMapLinear
+                wrapMode {
+                    x: WrapMode.ClampToEdge
+                    y: WrapMode.ClampToEdge
+                }
             }
         }
-
-        entities: [panel]
-
         mouseEnabled: true
+        entities: []
 
         ShellSurfaceItem {
             id:waylandQuickItem
-            height: shellSurf != null ? shellSurf.surface.size.height : 128
-            width: shellSurf != null ? shellSurf.surface.size.width : 128
+            height: waylandSurfaceTexture.height
+            width: waylandSurfaceTexture.width
             shellSurface: shellSurf
+
             onSurfaceDestroyed: function() {
                 panel.destroy();
-                shellSurfaces.remove(listIndex);
+                shellSurfaces.remove(index);
             }
         }
     }
 
-
     Timer {
         onTriggered: function() {
-            console.log("shellSurf:");
-            console.log(shellSurf);
+            waylandScene.entities = [parent];
         }
         running: true
-        interval: 1000
-        repeat: true
+        interval: 250
+        repeat: false
     }
 }

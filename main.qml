@@ -17,10 +17,12 @@ WaylandCompositor {
             visible: true
 
             Scene3D {
+                aspects: [ "input", "render" ]
                 anchors.fill: parent
                 anchors.margins: 0
                 focus: true
                 cameraAspectRatioMode: Scene3D.AutomaticAspectRatio
+                hoverEnabled: true
 
                 SceneRoot {
                     id:sceneRoot
