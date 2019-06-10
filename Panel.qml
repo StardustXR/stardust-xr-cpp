@@ -19,6 +19,10 @@ Entity {
     property real listIndex
 
     property real margin: 0
+    property real marginTop: margin
+    property real marginBottom: margin
+    property real marginLeft: margin
+    property real marginRight: margin
 
     id:panel
 
@@ -81,8 +85,8 @@ Entity {
             attachmentPoint: RenderTargetOutput.Color0
             texture: Texture2D {
                 id: waylandSurfaceTexture
-                height: shellSurf.surface.size.height - (margin*2)
-                width: shellSurf.surface.size.width - (margin*2)
+                height: shellSurf.surface.size.height - marginTop - marginBottom
+                width: shellSurf.surface.size.width - marginLeft - marginRight
                 format: Texture.RGBA8_UNorm
                 generateMipMaps: true
                 magnificationFilter: Texture.Linear
@@ -103,8 +107,8 @@ Entity {
 
             ShellSurfaceItem {
                 id:waylandQuickItem
-                x:-margin
-                y:-margin
+                x:-marginLeft
+                y:-marginTop
                 height: shellSurf.surface.size.height
                 width: shellSurf.surface.size.width
                 shellSurface: shellSurf
