@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>app_prefs.json</file>
+    </qresource>
+</RCC>

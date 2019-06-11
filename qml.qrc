@@ -6,5 +6,6 @@
         <file>normal_map_flat.png</file>
         <file>Panel.qml</file>
         <file>Plane.ply</file>
+        <file>AppPrefs.qml</file>
     </qresource>
 </RCC>

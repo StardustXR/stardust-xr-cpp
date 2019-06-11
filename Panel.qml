@@ -7,8 +7,10 @@ import QtQuick.Scene2D 2.12
 import QtWayland.Compositor 1.3
 import QtQuick.Controls 2.5
 
+import Launcher 1.0
+
 Entity {
-    property real ppm: 250
+    property real ppm: loadAppPref("ppm", 250)
     property size dimensions: Qt.size(1000, 1000)
     property variant position: Qt.vector3d(0,0,0)
     property real rotX: 0
@@ -17,12 +19,13 @@ Entity {
 
     property ShellSurface shellSurf
     property real listIndex
+    property string processName
 
-    property real margin: 0
-    property real marginTop: margin
-    property real marginBottom: margin
-    property real marginLeft: margin
-    property real marginRight: margin
+    property real margin: loadAppPref("margin", 0)
+    property real marginTop: loadAppPref("marginTop", margin)
+    property real marginBottom: loadAppPref("marginBottom", margin)
+    property real marginLeft: loadAppPref("marginLeft", margin)
+    property real marginRight: loadAppPref("marginRight", margin)
 
     id:panel
 
@@ -118,6 +121,7 @@ Entity {
                 }
 
                 onSurfaceDestroyed: function() {
+                    saveAppPrefs();
                     panel.destroy();
                     shellSurfaces.remove(index);
                 }
@@ -132,5 +136,36 @@ Entity {
         running: true
         interval: 250
         repeat: false
+    }
+
+    Launcher {
+        id: processFinder
+
+        Component.onCompleted: {
+            processName = launch("ps -p "+shellSurf.surface.client.processId+" -o comm=");
+            console.log(processName)
+        }
+    }
+
+    function loadAppPref(name, fallback) {
+        if(appPrefs.jsonAppPrefs[processName] && appPrefs.jsonAppPrefs[processName][name]) {
+            return appPrefs.jsonAppPrefs[processName][name];
+        } else if(appPrefs.jsonAppPrefs.global && appPrefs.jsonAppPrefs.global[name]) {
+            return appPrefs.jsonAppPrefs.global[name];
+        } else {
+            return fallback;
+        }
+    }
+
+    function saveAppPrefs() {
+        appPrefs.jsonAppPrefs[processName] = {
+            "ppm":ppm,
+            "margin":margin,
+            "marginTop":marginTop,
+            "marginBottom":marginBottom,
+            "marginLeft":marginLeft,
+            "marginRight":marginRight
+        }
+        appPrefs.savePrefs();
     }
 }

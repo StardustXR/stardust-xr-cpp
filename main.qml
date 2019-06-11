@@ -53,4 +53,8 @@ WaylandCompositor {
     }
 
     ListModel { id: shellSurfaces }
+
+    AppPrefs {
+        id:appPrefs
+    }
 }

@@ -13,9 +13,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    fileio.cpp \
+    launcher.cpp \
     main.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    defaults.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -31,5 +34,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 HEADERS += \
+    fileio.h \
+    launcher.h \
     qwaylandtexture.h \
     qwaylandtextureimage.h
