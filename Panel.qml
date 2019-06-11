@@ -72,8 +72,8 @@ Entity {
         }
     }
 
-    NumberAnimation on rotY {
-        from:-30; to:30
+    Vector3dAnimation on position {
+        from:Qt.vector3d(0,0,0); to:Qt.vector3d(0,0,-0.5)
         duration: 5000
         easing.type: Easing.SineCurve
         loops: Animation.Infinite
