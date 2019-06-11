@@ -8,8 +8,10 @@ Launcher {
 
     property variant jsonAppPrefs
 
+    property string homePath: exec("echo ~")
+
     property FileIO fileWriter: FileIO {
-        source: exec("echo ~")+"/.config/stardust/app_prefs.json"
+        source: homePath+"/.config/stardust/app_prefs.json"
 
         Component.onCompleted: {
             if(!read()) {

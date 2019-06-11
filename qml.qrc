@@ -7,5 +7,6 @@
         <file>Panel.qml</file>
         <file>Plane.ply</file>
         <file>AppPrefs.qml</file>
+        <file>ExtensionLoader.qml</file>
     </qresource>
 </RCC>

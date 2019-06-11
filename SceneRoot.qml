@@ -47,4 +47,8 @@ Entity {
             listIndex: index
         }
     }
+
+    ExtensionLoader {
+        extensionType: "keyboard"
+    }
 }
