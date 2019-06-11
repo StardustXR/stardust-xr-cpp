@@ -36,6 +36,10 @@ WaylandCompositor {
         onWlShellSurfaceCreated:
             shellSurfaces.append({shellSurface: shellSurface});
     }
+    IviApplication {
+        onIviSurfaceCreated:
+            shellSurfaces.append({shellSurface: iviSurface});
+    }
     XdgShellV6 {
         onToplevelCreated:
             shellSurfaces.append({shellSurface: xdgSurface});
@@ -44,9 +48,9 @@ WaylandCompositor {
         onToplevelCreated:
             shellSurfaces.append({shellSurface: xdgSurface});
     }
-    IviApplication {
-        onIviSurfaceCreated:
-            shellSurfaces.append({shellSurface: iviSurface});
+    XdgDecorationManagerV1 {
+        preferredMode: XdgToplevel.ServerSideDecoration
     }
+
     ListModel { id: shellSurfaces }
 }
