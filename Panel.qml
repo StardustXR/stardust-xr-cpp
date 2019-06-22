@@ -148,17 +148,17 @@ Entity {
     }
 
     function loadAppPref(name, fallback) {
-        if(appPrefs.jsonAppPrefs[processName] && appPrefs.jsonAppPrefs[processName][name]) {
-            return appPrefs.jsonAppPrefs[processName][name];
-        } else if(appPrefs.jsonAppPrefs.global && appPrefs.jsonAppPrefs.global[name]) {
-            return appPrefs.jsonAppPrefs.global[name];
+        if(appPrefs.jsonPrefs[processName] && appPrefs.jsonPrefs[processName][name]) {
+            return appPrefs.jsonPrefs[processName][name];
+        } else if(appPrefs.jsonPrefs.global && appPrefs.jsonPrefs.global[name]) {
+            return appPrefs.jsonPrefs.global[name];
         } else {
             return fallback;
         }
     }
 
     function saveAppPrefs() {
-        appPrefs.jsonAppPrefs[processName] = {
+        appPrefs.jsonPrefs[processName] = {
             "ppm":ppm,
             "margin":margin,
             "marginTop":marginTop,
