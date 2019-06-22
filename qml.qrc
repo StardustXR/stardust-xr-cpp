@@ -6,9 +6,6 @@
         <file>normal_map_flat.png</file>
         <file>Panel.qml</file>
         <file>Plane.ply</file>
-        <file>AppPrefs.qml</file>
         <file>ExtensionLoader.qml</file>
-        <file>CompositorPrefs.qml</file>
-        <file>Prefs.qml</file>
     </qresource>
 </RCC>

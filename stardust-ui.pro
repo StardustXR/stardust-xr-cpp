@@ -15,7 +15,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     fileio.cpp \
     launcher.cpp \
-    main.cpp
+    main.cpp \
+    prefs.cpp
 
 RESOURCES += qml.qrc \
     defaults.qrc
@@ -36,5 +37,6 @@ DISTFILES +=
 HEADERS += \
     fileio.h \
     launcher.h \
+    prefs.h \
     qwaylandtexture.h \
     qwaylandtextureimage.h

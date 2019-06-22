@@ -6,6 +6,7 @@ import Qt3D.Extras 2.12
 import QtQuick.Window 2.12
 import QtWayland.Compositor 1.3
 import QtQuick.Scene3D 2.12
+import Preferences 1.0
 
 WaylandCompositor {
     // The output defines the screen.
@@ -54,11 +55,13 @@ WaylandCompositor {
 
     ListModel { id: shellSurfaces }
 
-    AppPrefs {
+    Preferences {
         id:appPrefs
+        fileName: "app_prefs.json"
     }
 
-    CompositorPrefs {
+    Preferences {
         id:compositorPrefs
+        fileName: "compositor_prefs.json"
     }
 }

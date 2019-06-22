@@ -7,6 +7,7 @@
 
 #include "launcher.h"
 #include "fileio.h"
+#include "prefs.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +18,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<Launcher>("Launcher", 1, 0, "Launcher");
     qmlRegisterType<FileIO>("FileIO", 1, 0, "FileIO");
+    qmlRegisterType<Prefs>("Preferences", 1, 0, "Preferences");
 
     QQmlApplicationEngine appEngine(QUrl("qrc:///main.qml"));
 

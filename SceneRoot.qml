@@ -11,7 +11,7 @@ Entity {
     id:sceneRoot
 
     Component.onCompleted: {
-        autoLauncher.launchDetached("sh -c \""+compositorPrefs.jsonPrefs.autostart.join(";")+"\"");
+        autoLauncher.launchDetached("sh -c \""+compositorPrefs.json.autostart.join(";")+"\"");
     }
 
     Launcher {
