@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>app_prefs.json</file>
+        <file>compositor_prefs.json</file>
     </qresource>
 </RCC>

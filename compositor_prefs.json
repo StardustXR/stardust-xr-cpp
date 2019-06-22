@@ -1,0 +1,11 @@
+{
+    "autostart": [
+        "wiggly -platform wayland"
+    ],
+    "renderSettings": {
+        "extension": "NorthStarRenderSettings"
+    },
+    "panel": {
+        "thickness": 0.01
+    }
+}
