@@ -1,6 +1,5 @@
 {
     "autostart": [
-        "wiggly -platform wayland"
     ],
     "renderSettings": {
         "extension": "NorthStarRenderSettings"

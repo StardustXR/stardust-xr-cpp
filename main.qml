@@ -57,4 +57,8 @@ WaylandCompositor {
     AppPrefs {
         id:appPrefs
     }
+
+    CompositorPrefs {
+        id:compositorPrefs
+    }
 }

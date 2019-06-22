@@ -5,9 +5,18 @@ import Qt3D.Input 2.12
 import Qt3D.Extras 2.12
 import QtQuick.Scene2D 2.12
 import QtWayland.Compositor 1.3
+import Launcher 1.0
 
 Entity {
     id:sceneRoot
+
+    Component.onCompleted: {
+        autoLauncher.launchDetached("sh -c \""+compositorPrefs.jsonPrefs.autostart.join(";")+"\"");
+    }
+
+    Launcher {
+        id:autoLauncher
+    }
 
     Camera {
         id: camera

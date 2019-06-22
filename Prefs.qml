@@ -8,27 +8,31 @@ Launcher {
 
     property variant jsonPrefs
 
-    property string prefsFile
-    property string defaultPrefsFile
-    property string homePath: exec("echo ~")
+    property string prefsFilePath
+    property string defaultPrefsFilePath
+    property string configFolderPath: exec("echo $STARDUST_CONFIG_DIR")+"/"
 
     property FileIO fileWriter: FileIO {
-        source: homePath+prefsFile
+        source: configFolderPath+prefsFilePath
+    }
 
-        Component.onCompleted: {
-            if(!read()) {
-                exec("mkdir -p ~/.config/stardust & touch "+source);
-                console.log(source);
+    Component.onCompleted: {
+        if(configFolderPath == "/") {
+            configFolderPath = exec("echo \"$HOME/.config/stardust\"")+"/";
+            console.log("$STARDUST_CONFIG_DIR environment variable not set... defaulting to "+configFolderPath);
+        }
 
-                var oldSource = source;
-                source = defaultPrefsFile;
+        console.log("Attempting to read "+fileWriter.source);
 
-                jsonPrefs = JSON.parse(read());
+        if(!fileWriter.read()) {
+            exec("mkdir -p "+configFolderPath+" & touch "+configFolderPath+prefsFilePath);
 
-                source = oldSource;
 
-                savePrefs();
-            }
+            loadPrefs(defaultPrefsFilePath);
+
+            savePrefs();
+        } else {
+            reloadPrefs();
         }
     }
 
@@ -38,13 +42,17 @@ Launcher {
         //return launch(command);
     }
 
-    Component.onCompleted: loadPrefs();
+    function reloadPrefs() {
+        loadPrefs(configFolderPath+prefsFilePath);
+    }
 
-    function loadPrefs() {
+    function loadPrefs(path) {
+        fileWriter.source = path;
         var appPrefsText = fileWriter.read() || "{}";
 
-        console.log(appPrefsText);
         jsonPrefs = JSON.parse(appPrefsText);
+        console.log(fileWriter.source);
+        console.log(appPrefsText);
     }
 
     function savePrefs() {
