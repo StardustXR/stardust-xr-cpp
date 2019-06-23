@@ -6,6 +6,7 @@ import Qt3D.Extras 2.12
 import QtQuick.Scene2D 2.12
 import QtWayland.Compositor 1.3
 import Launcher 1.0
+import ExtensionLoader 1.0
 
 Entity {
     id:sceneRoot
@@ -57,7 +58,7 @@ Entity {
         }
     }
 
-    ExtensionLoader {
+    QMLExtensionLoader {
         extensionType: "keyboard"
     }
 }

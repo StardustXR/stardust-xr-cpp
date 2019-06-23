@@ -8,6 +8,7 @@
 #include "launcher.h"
 #include "fileio.h"
 #include "prefs.h"
+#include "extensionloader.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Launcher>("Launcher", 1, 0, "Launcher");
     qmlRegisterType<FileIO>("FileIO", 1, 0, "FileIO");
     qmlRegisterType<Prefs>("Preferences", 1, 0, "Preferences");
+    qmlRegisterType<ExtensionLoader>("ExtensionLoader", 1, 0, "ExtensionLoader");
 
     QQmlApplicationEngine appEngine(QUrl("qrc:///main.qml"));
 
