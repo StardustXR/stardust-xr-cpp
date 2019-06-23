@@ -3,10 +3,8 @@
 Prefs::Prefs(QObject *parent) : QObject(parent)
 {
     Q_INIT_RESOURCE(defaults);
-    QString configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-    m_prefsDir = QDir(configPath);
-    m_prefsDir.mkdir(m_configDirName);
-    m_prefsDir.cd(m_configDirName);
+    ConfigPathGetter getter;
+    m_prefsDir.setPath(getter.loadConfigDir("stardust"));
 }
 
 void Prefs::classBegin() {}

@@ -57,8 +57,4 @@ Entity {
             listIndex: index
         }
     }
-
-    QMLExtensionLoader {
-        extensionType: "keyboard"
-    }
 }

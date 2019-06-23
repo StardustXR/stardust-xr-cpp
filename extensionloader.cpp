@@ -10,10 +10,8 @@ void ExtensionLoader::componentComplete() {
 }
 
 void ExtensionLoader::setup() {
-    QString configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-    m_extensionsDir = QDir(configPath);
-    m_extensionsDir.mkpath(configPath+"/"+m_configDirName);
-    m_extensionsDir.cd(configPath+"/"+m_configDirName);
+    ConfigPathGetter getter;
+    m_extensionsDir.setPath(getter.loadConfigDir("stardust/extensions"));
 }
 
 void ExtensionLoader::reload() {
