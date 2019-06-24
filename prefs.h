@@ -31,7 +31,7 @@ public:
     QJsonObject jsonPrefs();
     void setJsonPrefs(QJsonObject &object);
 
-    void classBegin() override;
+    void classBegin() override {}
     void componentComplete() override;
 private:
     QString m_prefsFileName;

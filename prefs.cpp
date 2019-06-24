@@ -7,8 +7,6 @@ Prefs::Prefs(QObject *parent) : QObject(parent)
     m_prefsDir.setPath(getter.loadConfigDir("stardust"));
 }
 
-void Prefs::classBegin() {}
-
 void Prefs::componentComplete() {
     load();
 }

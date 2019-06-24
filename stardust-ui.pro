@@ -16,9 +16,12 @@ SOURCES += \
     configpathgetter.cpp \
     extensionloader.cpp \
     fileio.cpp \
+    keyboard/keyboardhandler.cpp \
     launcher.cpp \
     main.cpp \
-    prefs.cpp
+    keyboard/physicalkeyboardadapter.cpp \
+    prefs.cpp \
+    keyboard/waylandkeyboardhandler.cpp
 
 RESOURCES += qml.qrc \
     defaults.qrc
@@ -40,5 +43,9 @@ HEADERS += \
     configpathgetter.h \
     extensionloader.h \
     fileio.h \
+    keyboard/keyboard.h \
+    keyboard/keyboardhandler.h \
     launcher.h \
-    prefs.h
+    keyboard/physicalkeyboardadapter.h \
+    prefs.h \
+    keyboard/waylandkeyboardhandler.h

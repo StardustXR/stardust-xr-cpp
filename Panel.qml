@@ -8,6 +8,7 @@ import QtWayland.Compositor 1.3
 import QtQuick.Controls 2.5
 
 import Launcher 1.0
+import WaylandKeyboardHandler 1.0
 
 Entity {
     property real ppm: loadAppPref("ppm", 250)
@@ -124,6 +125,14 @@ Entity {
                     saveAppPrefs();
                     panel.destroy();
                     shellSurfaces.remove(index);
+                }
+
+                WaylandKeyboardHandler {
+                    surf: shellSurf.surface
+
+                    Component.onCompleted: {
+                        physicalKeyboardAdapter.fullKeyEvent.connect(this.fullKeyEvent);
+                    }
                 }
             }
         }
