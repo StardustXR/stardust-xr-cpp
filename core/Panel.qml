@@ -35,7 +35,7 @@ Entity {
 
     Mesh {
         id:planeMesh
-        source: "qrc:/Plane.ply"
+        source: "qrc:/res/Plane.ply"
     }
 
     Transform {
@@ -53,7 +53,7 @@ Entity {
         diffuse: waylandSurfaceTexture
         normal: Texture2D {
             TextureImage {
-                source: "qrc:/normal_map_flat.png"
+                source: "qrc:/res/normal_map_flat.png"
             }
         }
         shininess: 0
@@ -175,6 +175,6 @@ Entity {
             "marginLeft":marginLeft,
             "marginRight":marginRight
         }
-        appPrefs.savePrefs();
+        appPrefs.save();
     }
 }

@@ -5,11 +5,11 @@
 
 #include <QtQml/QQmlApplicationEngine>
 
-#include "launcher.h"
-#include "fileio.h"
+#include "core/launcher.h"
+#include "core/fileio.h"
 
-#include "prefs.h"
-#include "extensionloader.h"
+#include "core/prefs.h"
+#include "core/extensionloader.h"
 
 #include "keyboard/physicalkeyboardadapter.h"
 #include "keyboard/waylandkeyboardhandler.h"
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<WaylandKeyboardHandler>("WaylandKeyboardHandler", 1, 0, "WaylandKeyboardHandler");
 
 
-    QQmlApplicationEngine appEngine(QUrl("qrc:///main.qml"));
+    QQmlApplicationEngine appEngine(QUrl("qrc:/core/main.qml"));
 
     return app.exec();
 }

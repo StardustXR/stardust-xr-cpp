@@ -14,7 +14,7 @@ void Prefs::componentComplete() {
 void Prefs::load() {
     m_prefsFile.setFileName(m_prefsDir.absoluteFilePath(m_prefsFileName));
     if(!m_prefsFile.exists()) {
-        QFile::copy(":/"+m_prefsFileName, m_prefsFile.fileName());
+        QFile::copy(":/defaults/"+m_prefsFileName, m_prefsFile.fileName());
     }
     if(m_prefsFile.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream in(&m_prefsFile);

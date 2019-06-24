@@ -13,18 +13,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    configpathgetter.cpp \
-    extensionloader.cpp \
-    fileio.cpp \
+    core/configpathgetter.cpp \
+    core/fileio.cpp \
+    core/launcher.cpp \
+    core/prefs.cpp \
+    core/extensionloader.cpp \
     keyboard/keyboardhandler.cpp \
-    launcher.cpp \
     main.cpp \
     keyboard/physicalkeyboardadapter.cpp \
-    prefs.cpp \
     keyboard/waylandkeyboardhandler.cpp
 
 RESOURCES += qml.qrc \
-    defaults.qrc
+    defaults.qrc \
+    res.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -40,12 +41,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 HEADERS += \
-    configpathgetter.h \
-    extensionloader.h \
-    fileio.h \
+    core/configpathgetter.h \
+    core/fileio.h \
+    core/launcher.h \
+    core/prefs.h \
+    core/extensionloader.h \
     keyboard/keyboard.h \
     keyboard/keyboardhandler.h \
-    launcher.h \
     keyboard/physicalkeyboardadapter.h \
-    prefs.h \
     keyboard/waylandkeyboardhandler.h
