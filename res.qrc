@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>res/normal_map_flat.png</file>
         <file>res/Plane.ply</file>
+        <file>res/test_grid.png</file>
     </qresource>
 </RCC>
