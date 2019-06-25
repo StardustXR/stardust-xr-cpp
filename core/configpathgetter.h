@@ -11,7 +11,7 @@ class ConfigPathGetter : public QObject
 public:
     explicit ConfigPathGetter(QObject *parent = nullptr);
     QDir loadConfigDir(QString name);
-    QString loadConfigDirPath(QString name);
+    Q_INVOKABLE QString loadConfigDirPath(QString name);
 
 private:
     QString m_configPath;

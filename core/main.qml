@@ -15,8 +15,9 @@ WaylandCompositor {
     WaylandOutput {
         sizeFollowsWindow: true
         window: Window {
-            width: 1024
-            height: 768
+            id: displaySurface
+            width: 1600
+            height: 900
             visible: true
 
             Scene3D {
