@@ -11,7 +11,7 @@ void ExtensionLoader::componentComplete() {
 
 void ExtensionLoader::setup() {
     ConfigPathGetter getter;
-    m_extensionsDir.setPath(getter.loadConfigDir("stardust/extensions"));
+    m_extensionsDir = getter.loadConfigDir("stardust/extensions");
 }
 
 void ExtensionLoader::reload() {

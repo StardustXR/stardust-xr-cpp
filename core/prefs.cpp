@@ -4,7 +4,7 @@ Prefs::Prefs(QObject *parent) : QObject(parent)
 {
     Q_INIT_RESOURCE(defaults);
     ConfigPathGetter getter;
-    m_prefsDir.setPath(getter.loadConfigDir("stardust"));
+    m_prefsDir = getter.loadConfigDir("stardust");
 }
 
 void Prefs::componentComplete() {
