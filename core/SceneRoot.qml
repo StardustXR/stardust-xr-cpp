@@ -8,6 +8,7 @@ import QtWayland.Compositor 1.3
 import Launcher 1.0
 import ConfigPathGetter 1.0
 import ExtensionLoader 1.0
+import "../render"
 
 Entity {
     id:sceneRoot
@@ -24,30 +25,35 @@ Entity {
         id: configPathGetter
     }
 
+    MonoCamera {
+        id: monoCamera
+        lens: CameraLens {
+            fieldOfView: 60
+            projectionType: CameraLens.PerspectiveProjection
+            aspectRatio: displaySurface.width/displaySurface.height
+            nearPlane: 0.01
+            farPlane: 1000
+        }
+        position: Qt.vector3d(0,-2,0)
+        viewVector: Qt.vector3d(0,1,0)
+
+    }
+
     components: [
         RenderSettings {
             id:renderSettings
 
-            property alias window: activeFrameGraph.surface
             activeFrameGraph: ForwardRenderer {
                 id:startupFrameGraph
                 clearColor: Qt.rgba(0, 0.5, 1, 1)
-                camera: Camera {
-                    fieldOfView: 45
-                    projectionType: CameraLens.PerspectiveProjection
-                    aspectRatio: 16/9
-                    nearPlane: 0.01
-                    farPlane: 1000
-                    upVector: Qt.vector3d(0,1,0)
-                    position: Qt.vector3d(0,0,5)
-                }
+                camera: monoCamera
             }
             pickingSettings.pickMethod: PickingSettings.TrianglePicking
             pickingSettings.faceOrientationPickingMode: PickingSettings.FrontAndBackFace
 
             Component.onCompleted: {
                 var frameGraphComponent = Qt.createComponent("file://"+configPathGetter.loadConfigDirPath("stardust")+"/StardustRenderSettings.qml");
-                var newFrameGraph = frameGraphComponent.createObject(this, {});
+                var newFrameGraph = frameGraphComponent.createObject(this, {"monoCam": monoCamera});
                 activeFrameGraph = newFrameGraph;
                 startupFrameGraph.destroy();
             }
@@ -55,9 +61,7 @@ Entity {
         InputSettings {}
     ]
 
-    FirstPersonCameraController {
-        camera: camera
-    }
+
 
     NodeInstantiator {
         model: shellSurfaces

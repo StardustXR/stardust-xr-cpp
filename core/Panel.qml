@@ -41,7 +41,7 @@ Entity {
     Transform {
         id: panelTransform
         translation: position
-        scale3D: shellSurf != null ? Qt.vector3d(waylandSurfaceTexture.width/ppm, waylandSurfaceTexture.height/ppm, 1) : Qt.vector3d(0,0,0)
+        scale3D: shellSurf != null ? Qt.vector3d(waylandSurfaceTexture.width/ppm, 1, waylandSurfaceTexture.height/ppm) : Qt.vector3d(0,0,0)
         rotationX: rotX
         rotationY: rotY
         rotationZ: rotZ
@@ -74,7 +74,7 @@ Entity {
     }
 
     Vector3dAnimation on position {
-        from:Qt.vector3d(0,0,0); to:Qt.vector3d(0,0,-0.5)
+        from:Qt.vector3d(0,0,0); to:Qt.vector3d(0,0.5,0)
         duration: 5000
         easing.type: Easing.SineCurve
         loops: Animation.Infinite
