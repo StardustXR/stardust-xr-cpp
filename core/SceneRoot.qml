@@ -61,7 +61,9 @@ Entity {
         InputSettings {}
     ]
 
-
+    TestSphere {
+        position: monoCamera.position
+    }
 
     NodeInstantiator {
         model: shellSurfaces
