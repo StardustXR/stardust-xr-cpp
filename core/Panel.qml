@@ -4,11 +4,6 @@ import Qt3D.Render 2.12
 import Qt3D.Input 2.12
 import Qt3D.Extras 2.12
 import QtQuick.Scene2D 2.12
-import QtWayland.Compositor 1.3
-import QtQuick.Controls 2.5
-
-import Launcher 1.0
-import WaylandKeyboardHandler 1.0
 
 Entity {
     property real ppm: loadAppPref("ppm", 250)
@@ -18,15 +13,13 @@ Entity {
     property real rotY: 0
     property real rotZ: 0
 
-    property ShellSurface shellSurf
-    property real listIndex
-    property string processName
+    property Item panelContents
 
-    property real margin: loadAppPref("margin", 0)
-    property real marginTop: loadAppPref("marginTop", margin)
-    property real marginBottom: loadAppPref("marginBottom", margin)
-    property real marginLeft: loadAppPref("marginLeft", margin)
-    property real marginRight: loadAppPref("marginRight", margin)
+    property real margin: 0
+    property real marginTop: 0
+    property real marginBottom: 0
+    property real marginLeft: 0
+    property real marginRight: 0
 
     id:panel
 
@@ -41,7 +34,7 @@ Entity {
     Transform {
         id: panelTransform
         translation: position
-        scale3D: shellSurf != null ? Qt.vector3d(waylandSurfaceTexture.width/ppm, 1, waylandSurfaceTexture.height/ppm) : Qt.vector3d(0,0,0)
+        scale3D: shellSurf != null ? Qt.vector3d(surfaceTexture.width/ppm, 1, surfaceTexture.height/ppm) : Qt.vector3d(0,0,0)
         rotationX: rotX
         rotationY: rotY
         rotationZ: rotZ
@@ -50,7 +43,7 @@ Entity {
     NormalDiffuseMapAlphaMaterial {
         id:material
         ambient: "white"
-        diffuse: waylandSurfaceTexture
+        diffuse: surfaceTexture
         normal: Texture2D {
             TextureImage {
                 source: "qrc:/res/normal_map_flat.png"
@@ -83,14 +76,14 @@ Entity {
 
 
     Scene2D {
-        id: waylandScene
+        id: panelScene
         output: RenderTargetOutput {
-            id: waylandSceneRenderTargetOutput
+            id: sceneRenderTargetOutput
             attachmentPoint: RenderTargetOutput.Color0
             texture: Texture2D {
-                id: waylandSurfaceTexture
-                height: shellSurf.surface.size.height - marginTop - marginBottom
-                width: shellSurf.surface.size.width - marginLeft - marginRight
+                id: surfaceTexture
+                height: dimensions.height - marginTop - marginBottom
+                width: dimensions.width - marginLeft - marginRight
                 format: Texture.RGBA8_UNorm
                 generateMipMaps: true
                 magnificationFilter: Texture.Linear
@@ -105,76 +98,20 @@ Entity {
         entities: []
 
         Item {
-            height: waylandSurfaceTexture.height
-            width: waylandSurfaceTexture.width
+            height: surfaceTexture.height
+            width: surfaceTexture.width
 
-
-            ShellSurfaceItem {
-                id:waylandQuickItem
-                x:-marginLeft
-                y:-marginTop
-                height: shellSurf.surface.size.height
-                width: shellSurf.surface.size.width
-                shellSurface: shellSurf
-
-                moveItem: Item {
-                    visible: false
-                }
-
-                onSurfaceDestroyed: function() {
-                    saveAppPrefs();
-                    panel.destroy();
-                    shellSurfaces.remove(index);
-                }
-
-                WaylandKeyboardHandler {
-                    surf: shellSurf.surface
-
-                    Component.onCompleted: {
-                        physicalKeyboardAdapter.fullKeyEvent.connect(this.fullKeyEvent);
-                    }
-                }
-            }
+            children: [panelContents]
         }
     }
 
+
     Timer {
         onTriggered: function() {
-            waylandScene.entities = [parent];
+            panelScene.entities = [parent];
         }
         running: true
         interval: 250
         repeat: false
-    }
-
-    Launcher {
-        id: processFinder
-
-        Component.onCompleted: {
-            processName = launch("ps -p "+shellSurf.surface.client.processId+" -o comm=");
-            console.log(processName)
-        }
-    }
-
-    function loadAppPref(name, fallback) {
-        if(appPrefs.json[processName] && appPrefs.json[processName][name]) {
-            return appPrefs.json[processName][name];
-        } else if(appPrefs.json.global && appPrefs.json.global[name]) {
-            return appPrefs.json.global[name];
-        } else {
-            return fallback;
-        }
-    }
-
-    function saveAppPrefs() {
-        appPrefs.json[processName] = {
-            "ppm":ppm,
-            "margin":margin,
-            "marginTop":marginTop,
-            "marginBottom":marginBottom,
-            "marginLeft":marginLeft,
-            "marginRight":marginRight
-        }
-        appPrefs.save();
     }
 }

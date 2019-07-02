@@ -7,5 +7,6 @@
         <file>render/MonoCamera.qml</file>
         <file>render/TestGrid.qml</file>
         <file>render/TestSphere.qml</file>
+        <file>core/WaylandPanel.qml</file>
     </qresource>
 </RCC>

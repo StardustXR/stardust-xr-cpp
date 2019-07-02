@@ -68,7 +68,7 @@ Entity {
     NodeInstantiator {
         model: shellSurfaces
 
-        Panel {
+        WaylandPanel {
             id:panel
             shellSurf: modelData
             listIndex: index
