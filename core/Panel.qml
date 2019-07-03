@@ -6,7 +6,7 @@ import Qt3D.Extras 2.12
 import QtQuick.Scene2D 2.12
 
 Entity {
-    property real ppm: loadAppPref("ppm", 250)
+    property real ppm: 250
     property size dimensions: Qt.size(1000, 1000)
     property variant position: Qt.vector3d(0,0,0)
     property real rotX: 0
@@ -66,14 +66,6 @@ Entity {
         }
     }
 
-    Vector3dAnimation on position {
-        from:Qt.vector3d(0,0,0); to:Qt.vector3d(0,0.5,0)
-        duration: 5000
-        easing.type: Easing.SineCurve
-        loops: Animation.Infinite
-        running: true
-    }
-
 
     Scene2D {
         id: panelScene
@@ -109,6 +101,7 @@ Entity {
     Timer {
         onTriggered: function() {
             panelScene.entities = [parent];
+            console.log(dimensions);
         }
         running: true
         interval: 250
