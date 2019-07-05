@@ -8,5 +8,6 @@
         <file>render/TestGrid.qml</file>
         <file>render/TestSphere.qml</file>
         <file>core/WaylandPanel.qml</file>
+        <file>core/EntityGroup.qml</file>
     </qresource>
 </RCC>

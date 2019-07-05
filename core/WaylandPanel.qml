@@ -8,7 +8,7 @@ import Qt3D.Extras 2.12
 import Launcher 1.0
 import WaylandKeyboardHandler 1.0
 
-Entity {
+EntityGroup {
 
     id:panel
     property alias shellSurf: waylandPanel.shellSurf
@@ -18,8 +18,6 @@ Entity {
     property alias dimensions: waylandPanel.dimensions
 
     property real headerHeight: 0.02
-
-    property vector3d position: Qt.vector3d(0,0,0)
 
     Panel {
         id:waylandPanel
@@ -110,7 +108,6 @@ Entity {
 
         dimensions: Qt.size(waylandPanel.dimensions.width, unitHeight*ppm)
         position: Qt.vector3d(0,0,panel.dimensions.height/2/ppm+unitHeight/2)
-//        position: Qt.vector3d(0,0,0.1)
         panelContents: Rectangle {
             color: "transparent"
             width: defaultPanelHeader.dimensions.width
@@ -134,16 +131,6 @@ Entity {
             }
         }
     }
-
-    components: [transform]
-
-    Transform {
-        id:transform
-
-        translation: panel.position
-    }
-
-
 
     Vector3dAnimation on position {
         from:Qt.vector3d(0,0,0); to:Qt.vector3d(0,0.1,0)
