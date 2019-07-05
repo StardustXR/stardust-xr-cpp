@@ -50,3 +50,6 @@ HEADERS += \
     keyboard/keyboardhandler.h \
     keyboard/physicalkeyboardadapter.h \
     keyboard/waylandkeyboardhandler.h
+
+SUBDIRS += \
+    qmlhmddevice/qml-hmddevice.pro

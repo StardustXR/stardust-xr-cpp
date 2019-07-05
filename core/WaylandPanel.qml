@@ -8,47 +8,142 @@ import Qt3D.Extras 2.12
 import Launcher 1.0
 import WaylandKeyboardHandler 1.0
 
-Panel {
-    property ShellSurface shellSurf
-    property real listIndex
-    property string processName
+Entity {
 
-    ppm: loadAppPref("ppm", 1000)
+    id:panel
+    property alias shellSurf: waylandPanel.shellSurf
+    property alias listIndex: waylandPanel.listIndex
+    property alias processName: waylandPanel.processName
+    property alias ppm: waylandPanel.ppm
+    property alias dimensions: waylandPanel.dimensions
 
-    margin: loadAppPref("margin", 0)
-    marginTop: loadAppPref("marginTop", margin)
-    marginBottom: loadAppPref("marginBottom", margin)
-    marginLeft: loadAppPref("marginLeft", margin)
-    marginRight: loadAppPref("marginRight", margin)
+    property real headerHeight: 0.02
 
-    dimensions: shellSurf.surface.size
+    property vector3d position: Qt.vector3d(0,0,0)
 
-    panelContents: ShellSurfaceItem {
-        id:waylandQuickItem
-        x:-marginLeft
-        y:-marginTop
-        height: shellSurf.surface.size.height
-        width: shellSurf.surface.size.width
-        shellSurface: shellSurf
+    Panel {
+        id:waylandPanel
 
-        moveItem: Item {
-            visible: false
+        property ShellSurface shellSurf
+        property real listIndex
+        property string processName
+
+        ppm: loadAppPref("ppm", 1000)
+
+        margin: loadAppPref("margin", 0)
+        marginTop: loadAppPref("marginTop", margin)
+        marginBottom: loadAppPref("marginBottom", margin)
+        marginLeft: loadAppPref("marginLeft", margin)
+        marginRight: loadAppPref("marginRight", margin)
+
+        dimensions: shellSurf.surface.size
+
+        panelContents: waylandQuickItem
+
+        ShellSurfaceItem {
+            id:waylandQuickItem
+            x:-parent.marginLeft
+            y:-parent.marginTop
+            height: shellSurf.surface.size.height
+            width: shellSurf.surface.size.width
+                            shellSurface: shellSurf
+
+                            moveItem: Item {
+                                visible: false
+                            }
+
+                            onSurfaceDestroyed: function() {
+                                saveAppPrefs();
+                panel.destroy();
+                shellSurfaces.remove(index);
+            }
+
+            WaylandKeyboardHandler {
+                surf: shellSurf.surface
+
+                Component.onCompleted: {
+                    physicalKeyboardAdapter.fullKeyEvent.connect(this.fullKeyEvent);
+                }
+            }
         }
 
-        onSurfaceDestroyed: function() {
-            saveAppPrefs();
-            panel.destroy();
-            shellSurfaces.remove(index);
-        }
-
-        WaylandKeyboardHandler {
-            surf: shellSurf.surface
+        Launcher {
+            id: processFinder
 
             Component.onCompleted: {
-                physicalKeyboardAdapter.fullKeyEvent.connect(this.fullKeyEvent);
+                processName = launch("ps -p "+shellSurf.surface.client.processId+" -o comm=");
+                console.log(processName);
+            }
+        }
+
+        function loadAppPref(name, fallback) {
+            if(appPrefs.json[processName] && appPrefs.json[processName][name]) {
+                return appPrefs.json[processName][name];
+            } else if(appPrefs.json.global && appPrefs.json.global[name]) {
+                return appPrefs.json.global[name];
+            } else {
+                return fallback;
+            }
+        }
+
+        function saveAppPrefs() {
+            appPrefs.json[processName] = {
+                "ppm":ppm,
+                "margin":margin,
+                "marginTop":marginTop,
+                "marginBottom":marginBottom,
+                "marginLeft":marginLeft,
+                "marginRight":marginRight
+            }
+            appPrefs.save();
+        }
+    }
+
+    Panel {
+        id:defaultPanelHeader
+
+        property real unitHeight: panel.headerHeight
+
+        ppm:waylandPanel.ppm
+
+        mouseEnabled: false
+
+        dimensions: Qt.size(waylandPanel.dimensions.width, unitHeight*ppm)
+        position: Qt.vector3d(0,0,panel.dimensions.height/2/ppm+unitHeight/2)
+//        position: Qt.vector3d(0,0,0.1)
+        panelContents: Rectangle {
+            color: "transparent"
+            width: defaultPanelHeader.dimensions.width
+            height: defaultPanelHeader.dimensions.height
+
+            Label {
+                anchors.fill:parent
+
+                antialiasing: true
+
+                padding: 0.001*ppm
+
+                font.family: "Inter"
+                font.bold: true
+                font.pixelSize: height-(0.004*ppm)
+
+                color: "white"
+
+                text: shellSurf.title || processName
+
             }
         }
     }
+
+    components: [transform]
+
+    Transform {
+        id:transform
+
+        translation: panel.position
+    }
+
+
 
     Vector3dAnimation on position {
         from:Qt.vector3d(0,0,0); to:Qt.vector3d(0,0.1,0)
@@ -56,47 +151,5 @@ Panel {
         easing.type: Easing.SineCurve
         loops: Animation.Infinite
         running: true
-    }
-
-    Launcher {
-        id: processFinder
-
-        Component.onCompleted: {
-            processName = launch("ps -p "+shellSurf.surface.client.processId+" -o comm=");
-            console.log(processName);
-        }
-    }
-
-    function loadAppPref(name, fallback) {
-        if(appPrefs.json[processName] && appPrefs.json[processName][name]) {
-            return appPrefs.json[processName][name];
-        } else if(appPrefs.json.global && appPrefs.json.global[name]) {
-            return appPrefs.json.global[name];
-        } else {
-            return fallback;
-        }
-    }
-
-    function saveAppPrefs() {
-        appPrefs.json[processName] = {
-            "ppm":ppm,
-            "margin":margin,
-            "marginTop":marginTop,
-            "marginBottom":marginBottom,
-            "marginLeft":marginLeft,
-            "marginRight":marginRight
-        }
-        appPrefs.save();
-    }
-
-    Panel {
-        id:defaultPanelHeader
-        ppm:parent.ppm
-
-        dimensions: Qt.size(parent.dimensions.width, 0.02*ppm)
-        panelContents: Rectangle {
-            color: "white"
-            anchors.fill: parent
-        }
     }
 }

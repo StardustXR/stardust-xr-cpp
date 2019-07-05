@@ -21,6 +21,12 @@ Entity {
     property real marginLeft: 0
     property real marginRight: 0
 
+    property alias mouseEnabled: panelScene.mouseEnabled
+
+    function onClicked() {}
+    function onPressed() {}
+    function onReleased() {}
+
     id:panel
 
     components: [panelTransform, planeMesh, material, panelPicker]
@@ -34,7 +40,7 @@ Entity {
     Transform {
         id: panelTransform
         translation: position
-        scale3D: shellSurf != null ? Qt.vector3d(surfaceTexture.width/ppm, 1, surfaceTexture.height/ppm) : Qt.vector3d(0,0,0)
+        scale3D: Qt.vector3d(surfaceTexture.width/ppm, 1, surfaceTexture.height/ppm)
         rotationX: rotX
         rotationY: rotY
         rotationZ: rotZ
@@ -61,9 +67,9 @@ Entity {
         id: panelPicker
         hoverEnabled: true
         dragEnabled: true
-        onPressed: {
-            console.log("ObjectPicker Picked!");
-        }
+        onClicked: parent.onClicked()
+        onPressed: parent.onPressed()
+        onReleased: parent.onReleased()
     }
 
 
@@ -101,7 +107,8 @@ Entity {
     Timer {
         onTriggered: function() {
             panelScene.entities = [parent];
-            console.log(dimensions);
+            console.log(panelContents.height);
+            console.log(panelContents.width);
         }
         running: true
         interval: 250
