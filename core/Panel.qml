@@ -16,10 +16,12 @@ Entity {
     property Item panelContents
 
     property real margin: 0
-    property real marginTop: 0
-    property real marginBottom: 0
-    property real marginLeft: 0
-    property real marginRight: 0
+    property real marginTop: margin
+    property real marginBottom: margin
+    property real marginLeft: margin
+    property real marginRight: margin
+
+    property size croppedDimensions: Qt.size(dimensions.width-marginLeft-marginRight, dimensions.height-marginTop-marginBottom)
 
     property alias mouseEnabled: panelScene.mouseEnabled
 
@@ -40,7 +42,7 @@ Entity {
     Transform {
         id: panelTransform
         translation: position
-        scale3D: Qt.vector3d(surfaceTexture.width/ppm, 1, surfaceTexture.height/ppm)
+        scale3D: Qt.vector3d(croppedDimensions.width/ppm, 1, croppedDimensions.height/ppm)
         rotationX: rotX
         rotationY: rotY
         rotationZ: rotZ
@@ -80,8 +82,8 @@ Entity {
             attachmentPoint: RenderTargetOutput.Color0
             texture: Texture2D {
                 id: surfaceTexture
-                height: dimensions.height - marginTop - marginBottom
-                width: dimensions.width - marginLeft - marginRight
+                height: croppedDimensions.height
+                width: croppedDimensions.width
                 format: Texture.RGBA8_UNorm
                 generateMipMaps: true
                 magnificationFilter: Texture.Linear
@@ -96,10 +98,15 @@ Entity {
         entities: []
 
         Item {
-            height: surfaceTexture.height
-            width: surfaceTexture.width
+            height: dimensions.height
+            width: dimensions.width
+
+            x: -marginLeft
+            y: -marginTop
 
             children: [panelContents]
+
+
         }
     }
 

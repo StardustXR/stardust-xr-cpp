@@ -44,14 +44,14 @@ EntityGroup {
             y:-parent.marginTop
             height: shellSurf.surface.size.height
             width: shellSurf.surface.size.width
-                            shellSurface: shellSurf
+            shellSurface: shellSurf
 
-                            moveItem: Item {
-                                visible: false
-                            }
+            moveItem: Item {
+                visible: false
+            }
 
-                            onSurfaceDestroyed: function() {
-                                saveAppPrefs();
+            onSurfaceDestroyed: function() {
+                saveAppPrefs();
                 panel.destroy();
                 shellSurfaces.remove(index);
             }
@@ -106,8 +106,8 @@ EntityGroup {
 
         mouseEnabled: false
 
-        dimensions: Qt.size(waylandPanel.dimensions.width, unitHeight*ppm)
-        position: Qt.vector3d(0,0,panel.dimensions.height/2/ppm+unitHeight/2)
+        dimensions: Qt.size(waylandPanel.croppedDimensions.width, unitHeight*ppm)
+        position: Qt.vector3d(0,0,waylandPanel.croppedDimensions.height/2/ppm+unitHeight/2)
         panelContents: Rectangle {
             color: "transparent"
             width: defaultPanelHeader.dimensions.width
