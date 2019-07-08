@@ -71,6 +71,8 @@ EntityGroup {
             Component.onCompleted: {
                 processName = launch("ps -p "+shellSurf.surface.client.processId+" -o comm=");
                 console.log(processName);
+
+                saveAppPrefs();
             }
         }
 
