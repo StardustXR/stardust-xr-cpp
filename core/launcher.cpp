@@ -17,6 +17,11 @@ QString Launcher::launch(const QString &program)
     return output;
 }
 
+void Launcher::launchDetached(const QString &program)
+{
+    m_process->startDetached(program);
+}
+
 Launcher::~Launcher() {
 
 }

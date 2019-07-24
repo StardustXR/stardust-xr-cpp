@@ -7,16 +7,21 @@ import QtQuick.Window 2.12
 import QtWayland.Compositor 1.3
 import QtQuick.Scene3D 2.12
 
+import Preferences 1.0
+import PhysicalKeyboardAdapter 1.0
+
 WaylandCompositor {
     // The output defines the screen.
     WaylandOutput {
         sizeFollowsWindow: true
         window: Window {
-            width: 1024
-            height: 768
+            id: displaySurface
+            width: 1600
+            height: 900
             visible: true
 
             Scene3D {
+                id:scene3D
                 aspects: [ "input", "render" ]
                 anchors.fill: parent
                 anchors.margins: 0
@@ -27,6 +32,13 @@ WaylandCompositor {
                 SceneRoot {
                     id:sceneRoot
                 }
+
+                Keys.onPressed: physicalKeyboardAdapter.sendKey(event, true)
+                Keys.onReleased: physicalKeyboardAdapter.sendKey(event, false)
+            }
+
+            PhysicalKeyboardAdapter {
+                id:physicalKeyboardAdapter
             }
         }
     }
@@ -54,7 +66,13 @@ WaylandCompositor {
 
     ListModel { id: shellSurfaces }
 
-    AppPrefs {
+    Preferences {
         id:appPrefs
+        fileName: "app_prefs.json"
+    }
+
+    Preferences {
+        id:compositorPrefs
+        fileName: "compositor_prefs.json"
     }
 }

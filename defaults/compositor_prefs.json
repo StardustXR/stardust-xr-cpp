@@ -1,0 +1,10 @@
+{
+    "autostart": [
+    ],
+    "renderSettings": {
+        "extension": "NorthStarRenderSettings"
+    },
+    "panel": {
+        "thickness": 0.01
+    }
+}
