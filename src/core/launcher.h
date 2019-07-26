@@ -9,7 +9,7 @@ class Launcher : public QObject
     Q_OBJECT
 
 public:
-    explicit Launcher(QObject *parent = 0);
+    explicit Launcher(QObject *parent = nullptr);
     ~Launcher();
     Q_INVOKABLE QString launch(const QString &program);
     Q_INVOKABLE void launchDetached(const QString &program);

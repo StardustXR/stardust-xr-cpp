@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     ConfigPathGetter getter;
     QDir renderSettingsDir = getter.loadConfigDir("stardust");
     if(!QFile::exists(renderSettingsDir.absoluteFilePath("StardustRenderSettings.qml"))) {
-        QFile::copy(":/defaults/StardustRenderSettings.qml", renderSettingsDir.absoluteFilePath("StardustRenderSettings.qml"));
+        QFile::copy(":/StardustRenderSettings.qml", renderSettingsDir.absoluteFilePath("StardustRenderSettings.qml"));
     }
 
     QQmlApplicationEngine appEngine(QUrl("qrc:/core/main.qml"));

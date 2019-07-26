@@ -9,7 +9,7 @@
 #include <QQmlContext>
 #include <QQmlParserStatus>
 #include <QQmlComponent>
-#include "core/configpathgetter.h"
+#include "configpathgetter.h"
 
 class ExtensionLoader : public QObject, public QQmlParserStatus
 {

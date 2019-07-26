@@ -23,7 +23,7 @@ Entity {
                     y: WrapMode.Repeat
                 }
                 TextureImage {
-                    source: "qrc:/res/test_grid.png"
+                    source: "qrc:/test_grid.png"
                 }
             }
         },

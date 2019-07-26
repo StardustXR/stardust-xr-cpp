@@ -9,7 +9,7 @@
 #include <QJsonObject>
 #include <QTextStream>
 #include <QQmlParserStatus>
-#include "core/configpathgetter.h"
+#include "configpathgetter.h"
 
 class Prefs : public QObject, public QQmlParserStatus
 {

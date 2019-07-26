@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>compositor_prefs.json</file>
+        <file>app_prefs.json</file>
+        <file>StardustRenderSettings.qml</file>
+    </qresource>
+</RCC>
