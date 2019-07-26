@@ -9,7 +9,6 @@ import Launcher 1.0
 import ConfigPathGetter 1.0
 import ExtensionLoader 1.0
 import "../render"
-//import openhmd 1.0
 
 Entity {
     id:sceneRoot
@@ -39,27 +38,6 @@ Entity {
         viewVector: Qt.vector3d(0,1,0)
 
     }
-
-
-//    Item {
-//        HmdDevice {
-//            id: headset
-//            updateRate: 60
-//        }
-
-//        HmdEye {
-//            hmdDevice: headset
-//            eye: HmdEye.Left
-//            camera: cameraLeft
-//        }
-
-//        HmdEye {
-//            hmdDevice: headset
-//            eye: HmdEye.Right
-//            camera: cameraRight
-//        }
-//    }
-
 
     components: [
         RenderSettings {

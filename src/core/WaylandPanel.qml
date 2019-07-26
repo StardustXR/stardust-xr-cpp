@@ -40,10 +40,12 @@ EntityGroup {
 
         ShellSurfaceItem {
             id:waylandQuickItem
+
             x:-parent.marginLeft
             y:-parent.marginTop
             height: shellSurf.surface.size.height
             width: shellSurf.surface.size.width
+
             shellSurface: shellSurf
 
             moveItem: Item {
@@ -72,18 +74,21 @@ EntityGroup {
                 processName = launch("ps -p "+shellSurf.surface.client.processId+" -o comm=");
                 console.log(processName);
 
-                saveAppPrefs();
+                waylandPanel.saveAppPrefs();
             }
         }
 
         function loadAppPref(name, fallback) {
+            var value;
             if(appPrefs.json[processName] && appPrefs.json[processName][name]) {
-                return appPrefs.json[processName][name];
+                value =  appPrefs.json[processName][name];
             } else if(appPrefs.json.global && appPrefs.json.global[name]) {
-                return appPrefs.json.global[name];
+                value = appPrefs.json.global[name];
             } else {
-                return fallback;
+                value = fallback;
             }
+            console.log(name+": "+value);
+            return value;
         }
 
         function saveAppPrefs() {

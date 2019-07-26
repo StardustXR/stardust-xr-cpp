@@ -36,7 +36,7 @@ Entity {
 
     Mesh {
         id:planeMesh
-        source: "qrc:/res/Plane.ply"
+        source: "qrc:/Plane.ply"
     }
 
     Transform {
@@ -54,7 +54,7 @@ Entity {
         diffuse: surfaceTexture
         normal: Texture2D {
             TextureImage {
-                source: "qrc:/res/normal_map_flat.png"
+                source: "qrc:/normal_map_flat.png"
             }
         }
         shininess: 0

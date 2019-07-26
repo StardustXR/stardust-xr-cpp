@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>test_grid.png</file>
+        <file>normal_map_flat.png</file>
+        <file>Plane.ply</file>
+    </qresource>
+</RCC>

@@ -2,12 +2,12 @@
     <qresource prefix="/">
         <file>core/QMLExtensionLoader.qml</file>
         <file>core/main.qml</file>
+		<file>core/EntityGroup.qml</file>
         <file>core/Panel.qml</file>
         <file>core/SceneRoot.qml</file>
+		<file>core/WaylandPanel.qml</file>
         <file>render/MonoCamera.qml</file>
         <file>render/TestGrid.qml</file>
-        <file>render/TestSphere.qml</file>
-        <file>core/WaylandPanel.qml</file>
-        <file>core/EntityGroup.qml</file>
+		<file>render/TestSphere.qml</file>
     </qresource>
 </RCC>

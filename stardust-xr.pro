@@ -13,19 +13,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    core/configpathgetter.cpp \
-    core/fileio.cpp \
-    core/launcher.cpp \
-    core/prefs.cpp \
-    core/extensionloader.cpp \
-    keyboard/keyboardhandler.cpp \
-    main.cpp \
-    keyboard/physicalkeyboardadapter.cpp \
-    keyboard/waylandkeyboardhandler.cpp
+    src/core/configpathgetter.cpp \
+    src/core/fileio.cpp \
+    src/core/launcher.cpp \
+    src/core/prefs.cpp \
+    src/core/extensionloader.cpp \
+    src/keyboard/keyboardhandler.cpp \
+    src/main.cpp \
+    src/keyboard/physicalkeyboardadapter.cpp \
+    src/keyboard/waylandkeyboardhandler.cpp
 
-RESOURCES += qml.qrc \
-    defaults.qrc \
-    res.qrc
+RESOURCES += src/qml.qrc \
+    defaults/defaults.qrc \
+    resources/resources.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -41,15 +41,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 HEADERS += \
-    core/configpathgetter.h \
-    core/fileio.h \
-    core/launcher.h \
-    core/prefs.h \
-    core/extensionloader.h \
-    keyboard/keyboard.h \
-    keyboard/keyboardhandler.h \
-    keyboard/physicalkeyboardadapter.h \
-    keyboard/waylandkeyboardhandler.h
-
-SUBDIRS += \
-    qmlhmddevice/qml-hmddevice.pro
+    src/core/configpathgetter.h \
+    src/core/fileio.h \
+    src/core/launcher.h \
+    src/core/prefs.h \
+    src/core/extensionloader.h \
+    src/keyboard/keyboard.h \
+    src/keyboard/keyboardhandler.h \
+    src/keyboard/physicalkeyboardadapter.h \
+    src/keyboard/waylandkeyboardhandler.h
