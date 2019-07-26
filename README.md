@@ -6,5 +6,5 @@ Building instructions:
 
 ```
 $ mkdir build && cd build
-$ sh ../build.sh ..
+$ sh ../scripts/build.sh ..
 ```
