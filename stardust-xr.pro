@@ -19,6 +19,7 @@ SOURCES += \
     src/core/prefs.cpp \
     src/core/extensionloader.cpp \
     src/keyboard/keyboardhandler.cpp \
+    src/keyboard/passthroughkeyboardhandler.cpp \
     src/main.cpp \
     src/keyboard/physicalkeyboardadapter.cpp \
     src/keyboard/waylandkeyboardhandler.cpp
@@ -48,5 +49,6 @@ HEADERS += \
     src/core/extensionloader.h \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \
+    src/keyboard/passthroughkeyboardhandler.h \
     src/keyboard/physicalkeyboardadapter.h \
     src/keyboard/waylandkeyboardhandler.h

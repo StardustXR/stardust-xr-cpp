@@ -4,7 +4,7 @@ import Qt3D.Render 2.12
 import Qt3D.Input 2.12
 import Qt3D.Extras 2.12
 import QtQuick.Window 2.12
-import QtWayland.Compositor 1.3
+import QtWayland.Compositor 1.13
 import QtQuick.Scene3D 2.12
 
 import Preferences 1.0

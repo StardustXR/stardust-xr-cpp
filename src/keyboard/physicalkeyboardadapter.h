@@ -10,12 +10,11 @@ class PhysicalKeyboardAdapter : public Keyboard
 public:
     explicit PhysicalKeyboardAdapter(QObject *parent = nullptr);
 
+    Q_INVOKABLE void sendKey(QObject *keyEvent, bool pressed);
+
 signals:
     void fullKeyEvent(QObject *keyEvent);
     void keyEvent(int key, bool pressed);
-
-public slots:
-    void sendKey(QObject *keyEvent, bool pressed);
 };
 
 #endif // PHYSICALKEYBOARDADAPTER_H

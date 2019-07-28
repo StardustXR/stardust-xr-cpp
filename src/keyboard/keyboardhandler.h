@@ -11,7 +11,7 @@ class KeyboardHandler : public QObject
     Q_OBJECT
 public:
     explicit KeyboardHandler(QObject *parent = nullptr);
-    QKeyEvent qmlKeyEventToQKeyEvent(QObject *keyEvent);
+    QKeyEvent *qmlKeyEventToQKeyEvent(QObject *keyEvent);
 
 public slots:
     virtual void fullKeyEvent(QObject *keyEvent) = 0;
