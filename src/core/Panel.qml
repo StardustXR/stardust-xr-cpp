@@ -5,6 +5,8 @@ import Qt3D.Input 2.12
 import Qt3D.Extras 2.12
 import QtQuick.Scene2D 2.12
 
+import PassthroughKeyboardHandler 1.0
+
 Entity {
     property real ppm: 250
     property size dimensions: Qt.size(1000, 1000)
@@ -98,6 +100,7 @@ Entity {
         entities: []
 
         Item {
+            id:panelContentsContainer
             height: dimensions.height
             width: dimensions.width
 
@@ -105,8 +108,13 @@ Entity {
             y: -marginTop
 
             children: [panelContents]
+        }
+    }
+    PassthroughKeyboardHandler {
+        target: panelContents
 
-
+        Component.onCompleted: {
+            physicalKeyboardAdapter.fullKeyEvent.connect(this.fullKeyEvent);
         }
     }
 

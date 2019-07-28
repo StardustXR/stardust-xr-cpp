@@ -17,6 +17,7 @@
 #include "core/extensionloader.h"
 
 #include "keyboard/physicalkeyboardadapter.h"
+#include "keyboard/passthroughkeyboardhandler.h"
 #include "keyboard/waylandkeyboardhandler.h"
 
 int main(int argc, char *argv[])
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<ExtensionLoader>("ExtensionLoader", 1, 0, "ExtensionLoader");
 
     qmlRegisterType<PhysicalKeyboardAdapter>("PhysicalKeyboardAdapter", 1, 0, "PhysicalKeyboardAdapter");
+    qmlRegisterType<PassthroughKeyboardHandler>("PassthroughKeyboardHandler", 1, 0, "PassthroughKeyboardHandler");
     qmlRegisterType<WaylandKeyboardHandler>("WaylandKeyboardHandler", 1, 0, "WaylandKeyboardHandler");
 
     ConfigPathGetter getter;

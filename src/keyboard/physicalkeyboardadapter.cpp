@@ -4,5 +4,5 @@ PhysicalKeyboardAdapter::PhysicalKeyboardAdapter(QObject *parent) : Keyboard(par
 
 void PhysicalKeyboardAdapter::sendKey(QObject *keyEvent, bool pressed) {
     keyEvent->setProperty("pressed", pressed);
-  fullKeyEvent(keyEvent);
+    emit fullKeyEvent(keyEvent);
 }

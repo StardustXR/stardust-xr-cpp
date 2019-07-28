@@ -58,13 +58,17 @@ EntityGroup {
                 shellSurfaces.remove(index);
             }
 
-            WaylandKeyboardHandler {
-                surf: shellSurf.surface
-
-                Component.onCompleted: {
-                    physicalKeyboardAdapter.fullKeyEvent.connect(this.fullKeyEvent);
-                }
+            Keys.onPressed: {
+                console.log(event);
             }
+
+//            WaylandKeyboardHandler {
+//                surf: shellSurf.surface
+
+//                Component.onCompleted: {
+//                    physicalKeyboardAdapter.fullKeyEvent.connect(this.fullKeyEvent);
+//                }
+//            }
         }
 
         Launcher {
