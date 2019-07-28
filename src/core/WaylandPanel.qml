@@ -101,7 +101,7 @@ EntityGroup {
                 value = fallback;
             }
 
-            if(value.height && value.width) {
+            if(value && value.height && value.width) {
                 value = Qt.size(value.width, value.height);
             }
 
