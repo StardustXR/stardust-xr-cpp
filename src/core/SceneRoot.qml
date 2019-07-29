@@ -8,6 +8,7 @@ import QtWayland.Compositor 1.3
 import Launcher 1.0
 import ConfigPathGetter 1.0
 import ExtensionLoader 1.0
+import PluginLoader 1.0
 import "../render"
 
 Entity {

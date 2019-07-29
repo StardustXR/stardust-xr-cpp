@@ -105,7 +105,7 @@ EntityGroup {
                 value = Qt.size(value.width, value.height);
             }
 
-            console.log(name+": "+value);
+//            console.log(name+": "+value);
             return value;
         }
 

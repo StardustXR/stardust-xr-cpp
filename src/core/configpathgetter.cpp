@@ -8,7 +8,7 @@ ConfigPathGetter::ConfigPathGetter(QObject *parent) : QObject(parent) {
 QDir ConfigPathGetter::loadConfigDir(QString name) {
     m_configDir.mkpath(m_configPath);
     m_configDir.setPath(m_configPath);
-    m_configDir.mkdir(name);
+    m_configDir.mkpath(name);
     m_configDir.cd(name);
     return m_configDir;
 }
@@ -16,7 +16,7 @@ QDir ConfigPathGetter::loadConfigDir(QString name) {
 QString ConfigPathGetter::loadConfigDirPath(QString name) {
     m_configDir.mkpath(m_configPath);
     m_configDir.setPath(m_configPath);
-    m_configDir.mkdir(name);
+    m_configDir.mkpath(name);
     m_configDir.cd(name);
     return m_configDir.path();
 }

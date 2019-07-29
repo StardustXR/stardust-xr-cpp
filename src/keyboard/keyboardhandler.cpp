@@ -20,3 +20,12 @@ QKeyEvent *KeyboardHandler::qmlKeyEventToQKeyEvent(QObject *keyEvent) {
 
     return event;
 }
+
+void KeyboardHandler::fullKeyEvent(QObject *keyEvent) {
+    emit qKeyEvent(qmlKeyEventToQKeyEvent(keyEvent));
+}
+
+void KeyboardHandler::keyEvent(int key, bool pressed) {
+    QKeyEvent *keyEvent = new QKeyEvent(pressed ? QEvent::KeyPress : QEvent::KeyRelease, key, Qt::KeyboardModifier::NoModifier);
+    emit qKeyEvent(keyEvent);
+}

@@ -9,13 +9,11 @@ class Keyboard : public QObject
     Q_OBJECT
 public:
     explicit Keyboard(QObject *parent = nullptr) : QObject(parent) {}
-
+    QObject *qKeyEventToQmlEvent(QKeyEvent *keyEvent);
 
 signals:
     void fullKeyEvent(QObject *keyEvent);
     void keyEvent(int key, bool pressed);
-
-public slots:
 };
 
 #endif // KEYBOARD_H

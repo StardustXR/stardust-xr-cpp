@@ -13,9 +13,12 @@ public:
 
     QObject *target;
 
-public slots:
-    void fullKeyEvent(QObject *event) override;
-    void keyEvent(int key, bool pressed) override;
+    void qKeyEvent(QKeyEvent *event) override;
+
+//    // KeyboardHandler interface
+//public slots:
+//    void fullKeyEvent(QObject *keyEvent) override;
+//    void keyEvent(int key, bool pressed);
 };
 
 #endif // PASSTHROUGHKEYBOARDHANDLER_H
