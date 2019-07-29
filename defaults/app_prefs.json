@@ -1,6 +1,6 @@
 {
     "global": {
-        "ppm": 250,
+        "ppm": 1000,
 		"margin": 0,
 		"marginTop": 0,
 		"marginBottom": 0,
@@ -8,15 +8,16 @@
 		"marginRight": 0
     },
 	"wiggly": {
-		"ppm": 250,
+        "ppm": 1000,
 		"margin": 0,
 		"marginTop": 0,
 		"marginBottom": 0,
 		"marginLeft": 0,
-		"marginRight": 0
-	},
+        "marginRight": 0,
+        "defaultSize": {"height":400, "width": 800}
+    },
 	"weston-terminal": {
-		"ppm": 250,
+        "ppm": 1000,
 		"margin": 38,
 		"marginTop": 59,
 		"marginBottom": 38,

@@ -19,10 +19,10 @@ void WaylandKeyboardHandler::componentComplete() {
 }
 
 
-void WaylandKeyboardHandler::fullKeyEvent(QObject *keyEvent) {
-    QKeyEvent *event = qmlKeyEventToQKeyEvent(keyEvent);
-    m_waylandSeat->sendFullKeyEvent(event);
-}
 void WaylandKeyboardHandler::keyEvent(int key, bool pressed) {
     m_waylandSeat->sendKeyEvent(key, pressed);
+}
+
+void WaylandKeyboardHandler::qKeyEvent(QKeyEvent *keyEvent) {
+    m_waylandSeat->sendFullKeyEvent(keyEvent);
 }

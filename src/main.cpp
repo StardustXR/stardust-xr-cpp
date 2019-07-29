@@ -15,6 +15,7 @@
 
 #include "core/prefs.h"
 #include "core/extensionloader.h"
+#include "core/pluginloader.h"
 
 #include "keyboard/physicalkeyboardadapter.h"
 #include "keyboard/passthroughkeyboardhandler.h"
@@ -35,6 +36,13 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<Prefs>("Preferences", 1, 0, "Preferences");
     qmlRegisterType<ExtensionLoader>("ExtensionLoader", 1, 0, "ExtensionLoader");
+
+    qmlRegisterSingletonType<PluginLoader>("PluginLoader", 1, 0, "PluginLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine);
+        Q_UNUSED(scriptEngine);
+
+        return new PluginLoader;
+    });
 
     qmlRegisterType<PhysicalKeyboardAdapter>("PhysicalKeyboardAdapter", 1, 0, "PhysicalKeyboardAdapter");
     qmlRegisterType<PassthroughKeyboardHandler>("PassthroughKeyboardHandler", 1, 0, "PassthroughKeyboardHandler");

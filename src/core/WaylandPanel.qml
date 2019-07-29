@@ -52,14 +52,23 @@ EntityGroup {
                 visible: false
             }
 
+            Component.onCompleted: {
+                var panelSize = waylandPanel.loadAppPref("defaultSize", undefined);
+                if(panelSize !== undefined) {
+                    if(shellSurface instanceof WlShellSurface) {
+                        shellSurface.sendConfigure(panelSize, 0);
+                    } else if (shellSurface instanceof XdgSurface) {
+                        shellSurface.toplevel.sendUnmaximized(panelSize);
+                    } else if (shellSurface instanceof IviSurface) {
+                        shellSurface.sendConfigure(panelSize);
+                    }
+                }
+            }
+
             onSurfaceDestroyed: function() {
                 saveAppPrefs();
                 panel.destroy();
                 shellSurfaces.remove(index);
-            }
-
-            Keys.onPressed: {
-                console.log(event);
             }
 
 //            WaylandKeyboardHandler {
@@ -85,13 +94,18 @@ EntityGroup {
         function loadAppPref(name, fallback) {
             var value;
             if(appPrefs.json[processName] && appPrefs.json[processName][name]) {
-                value =  appPrefs.json[processName][name];
+                value = appPrefs.json[processName][name];
             } else if(appPrefs.json.global && appPrefs.json.global[name]) {
                 value = appPrefs.json.global[name];
             } else {
                 value = fallback;
             }
-            console.log(name+": "+value);
+
+            if(value && value.height && value.width) {
+                value = Qt.size(value.width, value.height);
+            }
+
+//            console.log(name+": "+value);
             return value;
         }
 

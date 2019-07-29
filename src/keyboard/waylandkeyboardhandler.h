@@ -21,8 +21,9 @@ public:
     void classBegin() override {}
     void componentComplete() override;
 
+    void qKeyEvent(QKeyEvent *keyEvent) override;
+
 public slots:
-    void fullKeyEvent(QObject *keyEvent) override;
     void keyEvent(int key, bool pressed) override;
 private:
     QWaylandSurface *m_waylandSurface = nullptr;

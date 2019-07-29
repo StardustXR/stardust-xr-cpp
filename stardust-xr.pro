@@ -18,8 +18,10 @@ SOURCES += \
     src/core/launcher.cpp \
     src/core/prefs.cpp \
     src/core/extensionloader.cpp \
+    src/keyboard/keyboard.cpp \
     src/keyboard/keyboardhandler.cpp \
     src/keyboard/passthroughkeyboardhandler.cpp \
+    src/core/pluginloader.cpp \
     src/main.cpp \
     src/keyboard/physicalkeyboardadapter.cpp \
     src/keyboard/waylandkeyboardhandler.cpp
@@ -45,10 +47,12 @@ HEADERS += \
     src/core/configpathgetter.h \
     src/core/fileio.h \
     src/core/launcher.h \
+    src/core/plugininterfaces.h \
     src/core/prefs.h \
     src/core/extensionloader.h \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \
     src/keyboard/passthroughkeyboardhandler.h \
     src/keyboard/physicalkeyboardadapter.h \
+    src/core/pluginloader.h \
     src/keyboard/waylandkeyboardhandler.h
