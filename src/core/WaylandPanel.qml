@@ -9,15 +9,16 @@ import Launcher 1.0
 import WaylandKeyboardHandler 1.0
 
 EntityGroup {
-
     id:panel
+
     property alias shellSurf: waylandPanel.shellSurf
     property alias listIndex: waylandPanel.listIndex
     property alias processName: waylandPanel.processName
     property alias ppm: waylandPanel.ppm
     property alias dimensions: waylandPanel.dimensions
 
-    property real headerHeight: 0.02
+    property real headerHeight: 0.03
+    property string titleText: "Title"
 
     Panel {
         id:waylandPanel
@@ -65,10 +66,7 @@ EntityGroup {
                 }
             }
 
-            onSurfaceDestroyed: function() {
-                bufferLocked = true;
-                shellSurfaces.remove(index);
-            }
+            onSurfaceDestroyed: panel.close()
 
 //            WaylandKeyboardHandler {
 //                surf: shellSurf.surface
@@ -84,9 +82,11 @@ EntityGroup {
 
             Component.onCompleted: {
                 processName = launch("ps -p "+shellSurf.surface.client.processId+" -o comm=");
-                console.log(processName);
 
                 waylandPanel.saveAppPrefs();
+
+                titleText = shellSurf.title || processName;
+                console.log(titleText);
             }
         }
 
@@ -128,31 +128,22 @@ EntityGroup {
 
         ppm:waylandPanel.ppm
 
-        mouseEnabled: false
-
         dimensions: Qt.size(waylandPanel.croppedDimensions.width, unitHeight*ppm)
         position: Qt.vector3d(0,0,waylandPanel.croppedDimensions.height/2/ppm+unitHeight/2)
-        panelContents: Rectangle {
-            color: "transparent"
+        panelContents:titleContent
+
+        DesktopPanelTitleContent {
+            id:titleContent
             width: defaultPanelHeader.dimensions.width
             height: defaultPanelHeader.dimensions.height
+            ppm:panel.ppm
 
-            Label {
-                anchors.fill:parent
-
-                antialiasing: true
-
-                padding: 0.001*ppm
-
-                font.family: "Inter"
-                font.bold: true
-                font.pixelSize: height-(0.004*ppm)
-
-                color: "white"
-
-                text: shellSurf.title || processName
-
-            }
+            titleText: panel.titleText
         }
+    }
+
+    function close() {
+        waylandQuickItem.bufferLocked = true;
+        shellSurfaces.remove(index);
     }
 }
