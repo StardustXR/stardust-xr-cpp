@@ -66,8 +66,7 @@ EntityGroup {
             }
 
             onSurfaceDestroyed: function() {
-                saveAppPrefs();
-                panel.destroy();
+                bufferLocked = true;
                 shellSurfaces.remove(index);
             }
 
@@ -155,13 +154,5 @@ EntityGroup {
 
             }
         }
-    }
-
-    Vector3dAnimation on position {
-        from:Qt.vector3d(0,0,0); to:Qt.vector3d(0,0.1,0)
-        duration: 5000
-        easing.type: Easing.SineCurve
-        loops: Animation.Infinite
-        running: true
     }
 }
