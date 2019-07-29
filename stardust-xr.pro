@@ -18,6 +18,7 @@ SOURCES += \
     src/core/launcher.cpp \
     src/core/prefs.cpp \
     src/core/extensionloader.cpp \
+    src/pointer/inputpointer.cpp \
     src/keyboard/keyboard.cpp \
     src/keyboard/keyboardhandler.cpp \
     src/keyboard/passthroughkeyboardhandler.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     src/core/plugininterfaces.h \
     src/core/prefs.h \
     src/core/extensionloader.h \
+    src/pointer/inputpointer.h \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \
     src/keyboard/passthroughkeyboardhandler.h \
