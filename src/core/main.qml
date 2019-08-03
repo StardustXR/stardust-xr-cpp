@@ -20,26 +20,34 @@ WaylandCompositor {
             height: 900
             visible: true
 
-            Scene3D {
-                id:scene3D
-                aspects: [ "input", "render" ]
-                anchors.fill: parent
-                anchors.margins: 0
-                focus: true
-                cameraAspectRatioMode: Scene3D.AutomaticAspectRatio
-                hoverEnabled: true
+            data: [waylandContent]
+        }
+    }
 
-                SceneRoot {
-                    id:sceneRoot
-                }
+    Item {
+        id:waylandContent
 
-                Keys.onPressed: physicalKeyboardAdapter.sendKey(event, true)
-                Keys.onReleased: physicalKeyboardAdapter.sendKey(event, false)
+        anchors.fill: parent
+
+        Scene3D {
+            id:scene3D
+            aspects: [ "input", "render" ]
+            anchors.fill: parent
+            anchors.margins: 0
+            focus: true
+            cameraAspectRatioMode: Scene3D.AutomaticAspectRatio
+            hoverEnabled: true
+
+            SceneRoot {
+                id:sceneRoot
             }
 
-            PhysicalKeyboardAdapter {
-                id:physicalKeyboardAdapter
-            }
+            Keys.onPressed: physicalKeyboardAdapter.sendKey(event, true)
+            Keys.onReleased: physicalKeyboardAdapter.sendKey(event, false)
+        }
+
+        PhysicalKeyboardAdapter {
+            id:physicalKeyboardAdapter
         }
     }
 

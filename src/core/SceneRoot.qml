@@ -31,7 +31,7 @@ Entity {
         lens: CameraLens {
             fieldOfView: 60
             projectionType: CameraLens.PerspectiveProjection
-            aspectRatio: displaySurface.width/displaySurface.height
+            aspectRatio: waylandContent.width/waylandContent.height
             nearPlane: 0.01
             farPlane: 1000
         }
