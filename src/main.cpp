@@ -61,6 +61,7 @@ void setupOpenXR() {
     XrInstanceCreateInfo *xrInfo = new XrInstanceCreateInfo;
     xrInfo->type = XR_TYPE_INSTANCE_CREATE_INFO;
     xrInfo->next = nullptr;
+    xrInfo->createFlags = 0;
     xrInfo->applicationInfo = xrAppInfo;
     xrInfo->enabledApiLayerCount = 0;
     xrInfo->enabledExtensionCount = 0;
