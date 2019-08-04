@@ -23,6 +23,8 @@
 #include "keyboard/passthroughkeyboardhandler.h"
 #include "keyboard/waylandkeyboardhandler.h"
 
+#include "openxr/stardustopenxr.h"
+
 
 void registerQMLTypes() {
     qmlRegisterType<Launcher>("Launcher", 1, 0, "Launcher");
@@ -43,61 +45,20 @@ void registerQMLTypes() {
     qmlRegisterType<PhysicalKeyboardAdapter>("PhysicalKeyboardAdapter", 1, 0, "PhysicalKeyboardAdapter");
     qmlRegisterType<PassthroughKeyboardHandler>("PassthroughKeyboardHandler", 1, 0, "PassthroughKeyboardHandler");
     qmlRegisterType<WaylandKeyboardHandler>("WaylandKeyboardHandler", 1, 0, "WaylandKeyboardHandler");
+
+    qmlRegisterSingletonType<StardustOpenXR>("OpenXR", 1, 0, "OpenXR", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine);
+        Q_UNUSED(scriptEngine);
+
+        return new StardustOpenXR();
+    });
 }
 
-
-void setupOpenXR() {
-
-    XrApplicationInfo xrAppInfo;
-    strcpy(xrAppInfo.applicationName, QString("Stardust XR").toUtf8());
-    xrAppInfo.applicationVersion = 1;
-
-    strcpy(xrAppInfo.engineName, QString("Qt").toUtf8());
-    xrAppInfo.engineVersion = 5;
-
-    xrAppInfo.apiVersion = XR_CURRENT_API_VERSION;
-
-
-    XrInstanceCreateInfo *xrInfo = new XrInstanceCreateInfo;
-    xrInfo->type = XR_TYPE_INSTANCE_CREATE_INFO;
-    xrInfo->next = nullptr;
-    xrInfo->createFlags = 0;
-    xrInfo->applicationInfo = xrAppInfo;
-    xrInfo->enabledApiLayerCount = 0;
-    xrInfo->enabledExtensionCount = 0;
-
-    XrInstance *stardustInstance = new XrInstance;
-    xrCreateInstance(xrInfo, stardustInstance);
-
-    XrSystemGetInfo *hmdInfo = new XrSystemGetInfo;
-    hmdInfo->type = XR_TYPE_SYSTEM_GET_INFO;
-    hmdInfo->next = nullptr;
-    hmdInfo->formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
-
-    XrSystemId *hmdID = new XrSystemId;
-    xrGetSystem(*stardustInstance, hmdInfo, hmdID);
-
-
-
-    XrSessionCreateInfo *sessionInfo = new XrSessionCreateInfo;
-    sessionInfo->type = XR_TYPE_SESSION_CREATE_INFO;
-    sessionInfo->next = nullptr;
-    sessionInfo->systemId = *hmdID;
-    sessionInfo->createFlags = 0;
-
-    XrSession *stardustSession = new XrSession;
-    xrCreateSession(*stardustInstance, sessionInfo, stardustSession);
-}
-
-
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     // ShareOpenGLContexts is needed for using the threaded renderer
     // on Nvidia EGLStreams
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
     QGuiApplication app(argc, argv);
-
-    setupOpenXR();
 
     registerQMLTypes();
 

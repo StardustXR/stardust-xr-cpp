@@ -10,18 +10,26 @@ import QtQuick.Scene3D 2.12
 import Preferences 1.0
 import PhysicalKeyboardAdapter 1.0
 
-WaylandCompositor {
-    // The output defines the screen.
-    WaylandOutput {
-        sizeFollowsWindow: true
-        window: Window {
-            id: displaySurface
-            width: 1600
-            height: 900
-            visible: true
+import OpenXR 1.0
 
-            data: [waylandContent]
-        }
+WaylandCompositor {
+    useHardwareIntegrationExtension: false
+
+    // The output defines the screen.
+//    WaylandOutput {
+//        sizeFollowsWindow: true
+//        window: Window {
+//            id: displaySurface
+//            width: 1600
+//            height: 900
+//            visible: true
+
+//            data: [waylandContent]
+//        }
+//    }
+
+    Component.onCompleted: {
+        OpenXR.initialize();
     }
 
     Item {
