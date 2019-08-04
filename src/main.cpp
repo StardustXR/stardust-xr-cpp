@@ -5,6 +5,8 @@
 
 #include <QtQml/QQmlApplicationEngine>
 
+#include <openxr/openxr.h>
+
 #include <QFile>
 #include <QDir>
 
@@ -21,14 +23,8 @@
 #include "keyboard/passthroughkeyboardhandler.h"
 #include "keyboard/waylandkeyboardhandler.h"
 
-int main(int argc, char *argv[])
-{
-    // ShareOpenGLContexts is needed for using the threaded renderer
-    // on Nvidia EGLStreams
-    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
-    QGuiApplication app(argc, argv);
 
-
+void registerQMLTypes() {
     qmlRegisterType<Launcher>("Launcher", 1, 0, "Launcher");
     qmlRegisterType<FileIO>("FileIO", 1, 0, "FileIO");
 
@@ -47,6 +43,45 @@ int main(int argc, char *argv[])
     qmlRegisterType<PhysicalKeyboardAdapter>("PhysicalKeyboardAdapter", 1, 0, "PhysicalKeyboardAdapter");
     qmlRegisterType<PassthroughKeyboardHandler>("PassthroughKeyboardHandler", 1, 0, "PassthroughKeyboardHandler");
     qmlRegisterType<WaylandKeyboardHandler>("WaylandKeyboardHandler", 1, 0, "WaylandKeyboardHandler");
+}
+
+
+void setupOpenXR() {
+
+    XrApplicationInfo xrAppInfo;
+    strcpy(xrAppInfo.applicationName, QString("Stardust XR").toUtf8());
+    xrAppInfo.applicationVersion = 1;
+
+    strcpy(xrAppInfo.engineName, QString("Qt").toUtf8());
+    xrAppInfo.engineVersion = 5;
+
+    xrAppInfo.apiVersion = XR_CURRENT_API_VERSION;
+
+
+    XrInstanceCreateInfo *xrInfo = new XrInstanceCreateInfo;
+    xrInfo->type = XR_TYPE_INSTANCE_CREATE_INFO;
+    xrInfo->next = nullptr;
+    xrInfo->applicationInfo = xrAppInfo;
+    xrInfo->enabledApiLayerCount = 0;
+    xrInfo->enabledExtensionCount = 0;
+
+    XrInstance *stardustInstance = new XrInstance;
+    XrResult openXRInstance = xrCreateInstance(xrInfo, stardustInstance);
+
+    qDebug() << openXRInstance << endl;
+}
+
+
+int main(int argc, char *argv[])
+{
+    // ShareOpenGLContexts is needed for using the threaded renderer
+    // on Nvidia EGLStreams
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+    QGuiApplication app(argc, argv);
+
+    setupOpenXR();
+
+    registerQMLTypes();
 
     ConfigPathGetter getter;
     QDir renderSettingsDir = getter.loadConfigDir("stardust");
