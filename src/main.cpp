@@ -67,9 +67,26 @@ void setupOpenXR() {
     xrInfo->enabledExtensionCount = 0;
 
     XrInstance *stardustInstance = new XrInstance;
-    XrResult openXRInstance = xrCreateInstance(xrInfo, stardustInstance);
+    xrCreateInstance(xrInfo, stardustInstance);
 
-    qDebug() << openXRInstance << endl;
+    XrSystemGetInfo *hmdInfo = new XrSystemGetInfo;
+    hmdInfo->type = XR_TYPE_SYSTEM_GET_INFO;
+    hmdInfo->next = nullptr;
+    hmdInfo->formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
+
+    XrSystemId *hmdID = new XrSystemId;
+    xrGetSystem(*stardustInstance, hmdInfo, hmdID);
+
+
+
+    XrSessionCreateInfo *sessionInfo = new XrSessionCreateInfo;
+    sessionInfo->type = XR_TYPE_SESSION_CREATE_INFO;
+    sessionInfo->next = nullptr;
+    sessionInfo->systemId = *hmdID;
+    sessionInfo->createFlags = 0;
+
+    XrSession *stardustSession = new XrSession;
+    xrCreateSession(*stardustInstance, sessionInfo, stardustSession);
 }
 
 
