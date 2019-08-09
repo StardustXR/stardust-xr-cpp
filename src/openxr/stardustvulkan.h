@@ -13,6 +13,7 @@ class StardustVulkan : public QObject {
 public:
     explicit StardustVulkan(QObject *parent = nullptr);
 
+    StardustOpenXR *openxr = nullptr;
     Q_INVOKABLE void initialize();
 
     uint32_t instanceExtensionCount = 0;
@@ -32,8 +33,6 @@ public:
 
     VkDeviceCreateInfo deviceCreateInfo{VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO};
     VkDevice device = VK_NULL_HANDLE;
-
-    StardustOpenXR *openxr = nullptr;
 
 private:
     bool isDeviceSuitable(VkPhysicalDevice device);

@@ -25,6 +25,7 @@
 
 #include "openxr/stardustvulkan.h"
 #include "openxr/stardustopenxr.h"
+#include "openxr/stardustopenxrgraphics.h"
 
 
 void registerQMLTypes() {
@@ -58,6 +59,12 @@ void registerQMLTypes() {
         Q_UNUSED(scriptEngine);
 
         return new StardustOpenXR();
+    });
+    qmlRegisterSingletonType<StardustOpenXRGraphics>("OpenXRGraphics", 1, 0, "OpenXRGraphics", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine);
+        Q_UNUSED(scriptEngine);
+
+        return new StardustOpenXRGraphics();
     });
 }
 

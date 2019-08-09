@@ -19,6 +19,7 @@ SOURCES += \
     src/core/prefs.cpp \
     src/core/extensionloader.cpp \
     src/openxr/stardustopenxr.cpp \
+    src/openxr/stardustopenxrgraphics.cpp \
     src/openxr/stardustvulkan.cpp \
     src/pointer/inputpointer.cpp \
     src/keyboard/keyboard.cpp \
@@ -56,6 +57,7 @@ HEADERS += \
     src/core/extensionloader.h \
     src/openxr/openxr_meta.h \
     src/openxr/stardustopenxr.h \
+    src/openxr/stardustopenxrgraphics.h \
     src/openxr/stardustvulkan.h \
     src/pointer/inputpointer.h \
     src/keyboard/keyboard.h \

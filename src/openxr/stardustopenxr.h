@@ -13,7 +13,9 @@ class StardustOpenXR : public QObject
     Q_PROPERTY(StardustVulkan *vulkan MEMBER vulkan)
 public:
     explicit StardustOpenXR(QObject *parent = nullptr);
+    ~StardustOpenXR();
 
+    StardustVulkan *vulkan = nullptr;
     Q_INVOKABLE void initialize();
 
     XrApplicationInfo *xrAppInfo = new XrApplicationInfo;
@@ -26,8 +28,15 @@ public:
 
     std::vector<char> *vulkanExtensionBuffer = new std::vector<char>;
 
-    StardustVulkan *vulkan = nullptr;
     XrGraphicsBindingVulkanKHR vulkanBinding{XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR};
+
+    XrViewConfigurationType viewConfig{XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO};
+
+    XrSessionBeginInfo beginInfo{
+        XR_TYPE_SESSION_BEGIN_INFO,
+                nullptr,
+                viewConfig
+    };
 
 private:
     bool isExtensionSupported(char* extensionName, XrExtensionProperties* instanceExtensionProperties, uint32_t instanceExtensionCount);

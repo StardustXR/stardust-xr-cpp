@@ -7,6 +7,12 @@
 StardustOpenXR::StardustOpenXR(QObject *parent) : QObject(parent) {
 }
 
+StardustOpenXR::~StardustOpenXR() {
+    xrEndSession(*stardustSession);
+    xrDestroySession(*stardustSession);
+    xrDestroyInstance(*xrInstance);
+}
+
 void StardustOpenXR::initialize() {
     //XrApplicationInfo *xrAppInfo
     strcpy(xrAppInfo->applicationName, QString("Stardust XR").toUtf8());
@@ -77,6 +83,9 @@ void StardustOpenXR::initialize() {
 
     //XrSession *stardustSession;
     xrCreateSession(*xrInstance, xrSessionInfo, stardustSession);
+
+    //Start the XrSession
+    xrBeginSession(*stardustSession, &beginInfo);
 }
 
 bool StardustOpenXR::isExtensionSupported(char *extensionName, XrExtensionProperties *instanceExtensionProperties, uint32_t instanceExtensionCount) {
