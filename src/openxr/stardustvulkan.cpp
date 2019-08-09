@@ -26,18 +26,17 @@ void StardustVulkan::initialize() {
     std::vector<const char*> extensions = ParseExtensionString(&extensionNames[0]);
 
     //VkInstanceCreateInfo *instanceInfo
-    instanceInfo->sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    instanceInfo->pNext = nullptr;
-    instanceInfo->flags = 0;
-    instanceInfo->pApplicationInfo = nullptr;
-    instanceInfo->enabledLayerCount = 0;
-//    instanceInfo->enabledExtensionCount = 0;
-    instanceInfo->enabledExtensionCount = static_cast<uint32_t>(extensions.size());
-    instanceInfo->ppEnabledExtensionNames = extensions.size() ? &extensions[0] : nullptr;
+    instanceInfo.pNext = nullptr;
+    instanceInfo.flags = 0;
+    instanceInfo.pApplicationInfo = nullptr;
+    instanceInfo.enabledLayerCount = 0;
+//    instanceInfo.enabledExtensionCount = 0;
+    instanceInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+    instanceInfo.ppEnabledExtensionNames = extensions.size() ? &extensions[0] : nullptr;
 
-    vkCreateInstance(instanceInfo, nullptr, instance);
+    vkCreateInstance(&instanceInfo, nullptr, &instance);
 
-    xrGetVulkanGraphicsDeviceKHR(*openxr->xrInstance, *openxr->hmdID, *instance, &physicalDevice);
+    xrGetVulkanGraphicsDeviceKHR(*openxr->xrInstance, *openxr->hmdID, instance, &physicalDevice);
 
     if (physicalDevice == VK_NULL_HANDLE) {
         throw std::runtime_error("failed to find a suitable GPU!");
@@ -45,11 +44,10 @@ void StardustVulkan::initialize() {
     queueFamilyIndex = findQueueFamily(physicalDevice);
     queueIndex = 0;
 
-    queueInfo->sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    queueInfo->queueFamilyIndex = queueFamilyIndex;
-    queueInfo->queueCount = 1;
+    queueInfo.queueFamilyIndex = queueFamilyIndex;
+    queueInfo.queueCount = 1;
     float queuePriority = 1.0f;
-    queueInfo->pQueuePriorities = &queuePriority;
+    queueInfo.pQueuePriorities = &queuePriority;
 
     //Get vulkan device extensions
     uint32_t deviceExtensionNamesSize = 0;
@@ -59,16 +57,14 @@ void StardustVulkan::initialize() {
     deviceExtensions = ParseExtensionString(&deviceExtensionNames[0]);
 
     //Create vulkan graphics device
-    deviceCreateInfo->sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    deviceCreateInfo->pNext = nullptr;
-    deviceCreateInfo->flags = 0;
-    deviceCreateInfo->pQueueCreateInfos = queueInfo;
-    deviceCreateInfo->queueCreateInfoCount = 1;
-    deviceCreateInfo->pEnabledFeatures = physicalDeviceFeatures;
-    deviceCreateInfo->enabledExtensionCount = 0;
-    deviceCreateInfo->enabledLayerCount = 0;
+    deviceCreateInfo.pNext = nullptr;
+    deviceCreateInfo.flags = 0;
+    deviceCreateInfo.pQueueCreateInfos = &queueInfo;
+    deviceCreateInfo.queueCreateInfoCount = 1;
+    deviceCreateInfo.enabledExtensionCount = 0;
+    deviceCreateInfo.enabledLayerCount = 0;
 
-    vkCreateDevice(physicalDevice, deviceCreateInfo, nullptr, device);
+    vkCreateDevice(physicalDevice, &deviceCreateInfo, VK_NULL_HANDLE, &device);
 
     qDebug() << "finished vulkan initialization" << endl;
 }

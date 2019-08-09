@@ -34,7 +34,7 @@ public:
     std::vector<char> *vulkanExtensionBuffer = new std::vector<char>;
 
     StardustVulkan *vulkan = nullptr;
-    XrGraphicsBindingVulkanKHR *vulkanBinding = new XrGraphicsBindingVulkanKHR;
+    XrGraphicsBindingVulkanKHR vulkanBinding{XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR};
 
 private:
     bool isExtensionSupported(char* extensionName, XrExtensionProperties* instanceExtensionProperties, uint32_t instanceExtensionCount);

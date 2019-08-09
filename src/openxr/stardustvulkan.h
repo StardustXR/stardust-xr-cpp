@@ -21,24 +21,23 @@ public:
 
     Q_INVOKABLE void initialize();
 
-    uint32_t *instanceExtensionCount = nullptr;
+    uint32_t instanceExtensionCount = 0;
     const char* const* instanceExtensions = nullptr;
-    VkInstanceCreateInfo *instanceInfo = new VkInstanceCreateInfo;
-    VkInstance *instance = new VkInstance;
+    VkInstanceCreateInfo instanceInfo{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
+    VkInstance instance = VK_NULL_HANDLE;
 
-    uint32_t *physicalDeviceCount = new uint32_t;
+    uint32_t physicalDeviceCount = 0;
     std::vector<VkPhysicalDevice> *physicalDevices;
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-    VkPhysicalDeviceFeatures *physicalDeviceFeatures = new VkPhysicalDeviceFeatures;
 
-    VkDeviceQueueCreateInfo *queueInfo = new VkDeviceQueueCreateInfo;
-    uint32_t queueFamilyIndex;
-    uint32_t queueIndex;
+    VkDeviceQueueCreateInfo queueInfo{VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO};
+    uint32_t queueFamilyIndex = 0;
+    uint32_t queueIndex = 0;
 
     std::vector<const char*> deviceExtensions;
 
-    VkDeviceCreateInfo *deviceCreateInfo = new VkDeviceCreateInfo;
-    VkDevice *device = new VkDevice;
+    VkDeviceCreateInfo deviceCreateInfo{VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO};
+    VkDevice device = VK_NULL_HANDLE;
 
     StardustOpenXR *openxr = nullptr;
 

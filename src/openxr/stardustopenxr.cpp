@@ -61,17 +61,17 @@ void StardustOpenXR::initialize() {
 
     //Bind vulkan to this OpenXR session
     //XrGraphicsBindingVulkanKHR *vulkanBinding
-    vulkanBinding->type = XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR;
-    vulkanBinding->next = nullptr;
-    vulkanBinding->instance = *vulkan->instance;
-    vulkanBinding->physicalDevice = vulkan->physicalDevice;
-    vulkanBinding->device = *vulkan->device;
-    vulkanBinding->queueFamilyIndex = vulkan->queueFamilyIndex;
-    vulkanBinding->queueIndex = vulkan->queueIndex;
+    vulkanBinding.type = XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR;
+    vulkanBinding.next = nullptr;
+    vulkanBinding.instance = vulkan->instance;
+    vulkanBinding.physicalDevice = vulkan->physicalDevice;
+    vulkanBinding.device = vulkan->device;
+    vulkanBinding.queueFamilyIndex = vulkan->queueFamilyIndex;
+    vulkanBinding.queueIndex = vulkan->queueIndex;
 
     //XrSessionCreateInfo *xrSessionInfo
     xrSessionInfo->type = XR_TYPE_SESSION_CREATE_INFO;
-    xrSessionInfo->next = vulkanBinding;
+    xrSessionInfo->next = const_cast<const XrGraphicsBindingVulkanKHR*>(&vulkanBinding);
     xrSessionInfo->systemId = *hmdID;
     xrSessionInfo->createFlags = 0;
 
