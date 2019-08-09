@@ -23,6 +23,7 @@
 #include "keyboard/passthroughkeyboardhandler.h"
 #include "keyboard/waylandkeyboardhandler.h"
 
+#include "openxr/stardustvulkan.h"
 #include "openxr/stardustopenxr.h"
 
 
@@ -46,6 +47,12 @@ void registerQMLTypes() {
     qmlRegisterType<PassthroughKeyboardHandler>("PassthroughKeyboardHandler", 1, 0, "PassthroughKeyboardHandler");
     qmlRegisterType<WaylandKeyboardHandler>("WaylandKeyboardHandler", 1, 0, "WaylandKeyboardHandler");
 
+    qmlRegisterSingletonType<StardustVulkan>("Vulkan", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine);
+        Q_UNUSED(scriptEngine);
+
+        return new StardustVulkan();
+    });
     qmlRegisterSingletonType<StardustOpenXR>("OpenXR", 1, 0, "OpenXR", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine);
         Q_UNUSED(scriptEngine);

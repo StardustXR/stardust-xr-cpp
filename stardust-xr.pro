@@ -19,6 +19,7 @@ SOURCES += \
     src/core/prefs.cpp \
     src/core/extensionloader.cpp \
     src/openxr/stardustopenxr.cpp \
+    src/openxr/stardustvulkan.cpp \
     src/pointer/inputpointer.cpp \
     src/keyboard/keyboard.cpp \
     src/keyboard/keyboardhandler.cpp \
@@ -44,7 +45,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 
 INCLUDEPATH += -i/usr/local/include
 
-LIBS += -lopenxr_loader
+LIBS += -lopenxr_loader -lvulkan
 
 HEADERS += \
     src/core/configpathgetter.h \
@@ -54,6 +55,7 @@ HEADERS += \
     src/core/prefs.h \
     src/core/extensionloader.h \
     src/openxr/stardustopenxr.h \
+    src/openxr/stardustvulkan.h \
     src/pointer/inputpointer.h \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \

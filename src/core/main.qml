@@ -10,9 +10,11 @@ import QtQuick.Scene3D 2.12
 import Preferences 1.0
 import PhysicalKeyboardAdapter 1.0
 
+import Vulkan 1.0
 import OpenXR 1.0
 
 WaylandCompositor {
+    id:waylandCompositor
     useHardwareIntegrationExtension: false
 
     // The output defines the screen.
@@ -29,6 +31,8 @@ WaylandCompositor {
 //    }
 
     Component.onCompleted: {
+        OpenXR.vulkan = Vulkan;
+        Vulkan.openxr = OpenXR;
         OpenXR.initialize();
     }
 
