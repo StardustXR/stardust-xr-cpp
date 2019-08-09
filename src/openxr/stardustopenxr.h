@@ -3,14 +3,7 @@
 
 #include <QObject>
 
-#include <vulkan/vulkan.h>
-
-#define XR_USE_GRAPHICS_API_VULKAN
-#define XR_KHR_vulkan_enable
-#include <openxr/openxr.h>
-#include <openxr/openxr_platform.h>
-#include <openxr/openxr_platform_defines.h>
-#include <openxr/openxr_reflection.h>
+#include "openxr_meta.h"
 
 #include "stardustvulkan.h"
 

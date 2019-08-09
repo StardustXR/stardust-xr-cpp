@@ -54,6 +54,7 @@ HEADERS += \
     src/core/plugininterfaces.h \
     src/core/prefs.h \
     src/core/extensionloader.h \
+    src/openxr/openxr_meta.h \
     src/openxr/stardustopenxr.h \
     src/openxr/stardustvulkan.h \
     src/pointer/inputpointer.h \
