@@ -1,7 +1,7 @@
 #ifndef OPENXR_META_H
 #define OPENXR_META_H
 
-#include <vulkan/vulkan.h>
+#include "vulkan_meta.h"
 
 #define XR_USE_GRAPHICS_API_VULKAN
 #define XR_KHR_vulkan_enable
