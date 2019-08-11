@@ -1,8 +1,12 @@
 #ifndef STARDUSTOPENXRGRAPHICS_H
 #define STARDUSTOPENXRGRAPHICS_H
 
-#include <QObject>
+#include <QSize>
 #include <QThread>
+
+#include <Qt3DRender>
+#include <QScreen>
+#include <QOffscreenSurface>
 
 #include "openxr_meta.h"
 #include "stardustopenxr.h"
@@ -11,17 +15,26 @@ class StardustOpenXRFrameWorker : public QThread {
     Q_OBJECT
 public:
     StardustOpenXRFrameWorker(QObject *parent = nullptr) : QThread(parent) {}
-private:
-    void run() override;
+
     XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
     XrFrameState frameState{XR_TYPE_FRAME_STATE};
     long swapImageWaitTime = 0;
+private:
+    void run() override;
 };
 
 class StardustOpenXRGraphics : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(StardustOpenXR *openxr MEMBER openxr)
+
+    Q_PROPERTY(QSize eyeDimensions MEMBER eyeDimensions NOTIFY eyeDimensionsChanged)
+
+    Q_PROPERTY(Qt3DRender::QCamera *leftEye MEMBER leftEye)
+    Q_PROPERTY(Qt3DRender::QCamera *rightEye MEMBER rightEye)
+
+    Q_PROPERTY(Qt3DRender::QAbstractTexture *leftEyeTexture MEMBER leftEyeTexture)
+    Q_PROPERTY(Qt3DRender::QAbstractTexture *rightEyeTexture MEMBER rightEyeTexture)
 public:
     explicit StardustOpenXRGraphics(QObject *parent = nullptr);
     ~StardustOpenXRGraphics();
@@ -48,7 +61,10 @@ public:
         1,                                              //uint32_t                  arraySize;
         1                                               //uint32_t                  mipCount;
     };
-    XrSwapchain swapchain = XR_NULL_HANDLE;
+    XrSwapchain swapchains[2] = {
+        XrSwapchain {},
+        XrSwapchain {}
+    };
 
     VkImageCreateInfo vulkanImageTemplateInfo = {
         VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,            //VkStructureType          sType;
@@ -74,7 +90,57 @@ public:
         nullptr,
         VkImage()
     };
-    std::vector<XrSwapchainImageVulkanKHR> swapchainImages;
+    std::vector<XrSwapchainImageVulkanKHR> leftSwapchainImages;
+    std::vector<XrSwapchainImageVulkanKHR> rightSwapchainImages;
+
+    std::vector<uint32_t> swapchainImageIndices = std::vector<uint32_t>(2);
+
+    XrReferenceSpaceCreateInfo refSpaceInfo = {
+        XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
+        nullptr,
+        XR_REFERENCE_SPACE_TYPE_STAGE,
+        XrPosef {
+            XrQuaternionf {0.0f,0.0f,1.0f,0.0f},
+            XrVector3f {0.0f,0.0f,0.0f}
+        }
+    };
+    XrSpace refSpace = XR_NULL_HANDLE;
+
+    XrViewLocateInfo viewLocateInfo = {
+        XR_TYPE_VIEW_LOCATE_INFO,
+        nullptr
+    };
+    XrViewState viewState = {
+        XR_TYPE_VIEW_STATE,
+        nullptr
+    };
+
+    XrRect2Di eyeRect = {
+        XrOffset2Di {0,0},
+        XrExtent2Di {1,1}
+    };
+
+    XrCompositionLayerProjectionView stardustLayerViews[2] = {
+        XrCompositionLayerProjectionView {
+            XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW,
+            nullptr
+        },
+        XrCompositionLayerProjectionView {
+            XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW,
+            nullptr
+        }
+    };
+
+    QSize eyeDimensions;
+    std::vector<XrView> views;
+    Qt3DRender::QCamera *leftEye = nullptr;
+    Qt3DRender::QCamera *rightEye = nullptr;
+
+    Qt3DRender::QAbstractTexture *leftEyeTexture = nullptr;
+    Qt3DRender::QAbstractTexture *rightEyeTexture = nullptr;
+
+signals:
+    void eyeDimensionsChanged();
 };
 
 #endif // STARDUSTOPENXRGRAPHICS_H

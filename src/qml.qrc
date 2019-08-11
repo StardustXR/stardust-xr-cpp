@@ -10,5 +10,6 @@
         <file>render/TestGrid.qml</file>
         <file>render/TestSphere.qml</file>
         <file>core/DesktopPanelTitleContent.qml</file>
+        <file>render/StereoRenderSettings.qml</file>
     </qresource>
 </RCC>

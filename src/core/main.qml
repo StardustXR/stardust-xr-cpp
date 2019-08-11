@@ -21,20 +21,21 @@ WaylandCompositor {
     // The output defines the screen.
     WaylandOutput {
         sizeFollowsWindow: true
-        window: Window {
-            id: displaySurface
-            width: 1600
-            height: 900
-            visible: true
+//        window: Window {
+//            id: displaySurface
+//            width: 1600
+//            height: 900
+//            visible: true
 
-            data: [waylandContent]
-        }
+//            data: [waylandContent]
+//        }
     }
 
     Component.onCompleted: {
         OpenXR.vulkan = Vulkan;
         Vulkan.openxr = OpenXR;
         OpenXR.initialize();
+
         OpenXRGraphics.openxr = OpenXR;
         OpenXRGraphics.initialize();
     }

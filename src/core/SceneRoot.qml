@@ -28,44 +28,33 @@ Entity {
         id: configPathGetter
     }
 
-    MonoCamera {
-        id: monoCamera
-        lens: CameraLens {
-            fieldOfView: 60
-            projectionType: CameraLens.PerspectiveProjection
-            aspectRatio: waylandContent.width/waylandContent.height
-            nearPlane: 0.01
-            farPlane: 1000
+    Camera {
+        id:leftEye
+        Component.onCompleted: {
+            OpenXRGraphics.leftEye = this;
         }
-        position: Qt.vector3d(0,-0.5,0)
-        viewVector: Qt.vector3d(0,1,0)
 
+        onViewCenterChanged: console.log(viewCenter.minus(position));
+    }
+
+    Camera {
+        id:rightEye
+        Component.onCompleted: {
+            OpenXRGraphics.rightEye = this;
+        }
+
+        onViewCenterChanged: console.log(viewCenter.minus(position));
     }
 
     components: [
-        RenderSettings {
+        StereoRenderSettings {
             id:renderSettings
-
-            activeFrameGraph: ForwardRenderer {
-                id:startupFrameGraph
-                clearColor: Qt.rgba(0, 0.5, 1, 1)
-                camera: monoCamera
-            }
-            pickingSettings.pickMethod: PickingSettings.TrianglePicking
-            pickingSettings.faceOrientationPickingMode: PickingSettings.FrontAndBackFace
-
-            Component.onCompleted: {
-                var frameGraphComponent = Qt.createComponent("file://"+configPathGetter.loadConfigDirPath("stardust")+"/StardustRenderSettings.qml");
-                var newFrameGraph = frameGraphComponent.createObject(this, {"monoCam": monoCamera});
-                activeFrameGraph = newFrameGraph;
-                startupFrameGraph.destroy();
-            }
         },
         InputSettings {}
     ]
 
     TestSphere {
-        position: monoCamera.position
+        position: leftEye.position
     }
 
     NodeInstantiator {
