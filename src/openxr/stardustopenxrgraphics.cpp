@@ -40,6 +40,9 @@ void StardustOpenXRGraphics::initialize() {
     eyeDimensions = QSize(eyeData[0].recommendedImageRectWidth, eyeData[0].recommendedImageRectHeight);
     emit eyeDimensionsChanged();
 
+    //Get the amount of swapchain images
+    xrEnumerateSwapchainImages(swapchains[0], 0, &swapchainImageCount, nullptr);
+
     //Add references to all swapchain images to swapchainImages
     leftSwapchainImages = std::vector<XrSwapchainImageVulkanKHR>(swapchainImageCount, swapchainImageTemplate);
     rightSwapchainImages = std::vector<XrSwapchainImageVulkanKHR>(swapchainImageCount, swapchainImageTemplate);
@@ -103,6 +106,10 @@ void StardustOpenXRFrameWorker::run() {
         if(swapImageWaitTime > 0)
             QThread::currentThread()->msleep(static_cast<unsigned long>(swapImageWaitTime*0.000001));
 
+        //Update VkImage pointers
+        graphics->leftEyeImage = &graphics->leftSwapchainImages.at(graphics->swapchainImageIndices.at(0)).image;
+        graphics->rightEyeImage = &graphics->rightSwapchainImages.at(graphics->swapchainImageIndices.at(1)).image;
+
         //Update view information
         graphics->viewLocateInfo.viewConfigurationType = graphics->openxr->viewConfig;
         graphics->viewLocateInfo.displayTime = frameState.predictedDisplayTime;
@@ -127,7 +134,9 @@ void StardustOpenXRFrameWorker::run() {
             QVector3D defaultCameraOrientation = QVector3D(0,-1,0);
             eye->setViewCenter(eye->position()+(rotation*defaultCameraOrientation));
 
-            //Update properties on the XrFrameEndInfo and its dependencies
+
+
+            //Update properties on the Xr`rameEndInfo and its dependencies
             graphics->stardustLayerViews[i].fov = view.fov;
             graphics->stardustLayerViews[i].pose = view.pose;
             graphics->stardustLayerViews[i].subImage = XrSwapchainSubImage {

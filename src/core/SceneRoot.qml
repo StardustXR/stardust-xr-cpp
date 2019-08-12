@@ -12,9 +12,13 @@ import ExtensionLoader 1.0
 import PluginLoader 1.0
 import "../render"
 import OpenXRGraphics 1.0
+import Qt3D.Offscreen 1.0
 
 Entity {
     id:sceneRoot
+
+    property alias leftEye: leftEye
+    property alias rightEye: rightEye
 
     Component.onCompleted: {
         autoLauncher.launchDetached("sh -c \""+compositorPrefs.json.autostart.join(";")+"\"");
@@ -30,18 +34,12 @@ Entity {
 
     Camera {
         id:leftEye
-        Component.onCompleted: {
-            OpenXRGraphics.leftEye = this;
-        }
 
         onViewCenterChanged: console.log(viewCenter.minus(position));
     }
 
     Camera {
         id:rightEye
-        Component.onCompleted: {
-            OpenXRGraphics.rightEye = this;
-        }
 
         onViewCenterChanged: console.log(viewCenter.minus(position));
     }

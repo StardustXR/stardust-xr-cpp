@@ -13,6 +13,7 @@ import PhysicalKeyboardAdapter 1.0
 import Vulkan 1.0
 import OpenXR 1.0
 import OpenXRGraphics 1.0
+import Qt3D.Offscreen 1.0
 
 WaylandCompositor {
     id:waylandCompositor
@@ -36,37 +37,22 @@ WaylandCompositor {
         Vulkan.openxr = OpenXR;
         OpenXR.initialize();
 
+        OpenXRGraphics.leftEye = sceneRoot.leftEye;
+        OpenXRGraphics.rightEye = sceneRoot.rightEye;
         OpenXRGraphics.openxr = OpenXR;
         OpenXRGraphics.initialize();
+
+        Offscreen.sceneRoot = sceneRoot;
+        Offscreen.leftEye = sceneRoot.leftEye;
+        Offscreen.rightEye = sceneRoot.rightEye;
+
+        Offscreen.graphics = OpenXRGraphics;
+        Offscreen.initialize();
     }
 
-    Item {
-        id:waylandContent
-
-        anchors.fill: parent
-
-        Scene3D {
-            id:scene3D
-            aspects: [ "input", "render" ]
-            anchors.fill: parent
-            anchors.margins: 0
-            focus: true
-            cameraAspectRatioMode: Scene3D.AutomaticAspectRatio
-            hoverEnabled: true
-
-            SceneRoot {
-                id:sceneRoot
-            }
-
-            Keys.onPressed: physicalKeyboardAdapter.sendKey(event, true)
-            Keys.onReleased: physicalKeyboardAdapter.sendKey(event, false)
-        }
-
-        PhysicalKeyboardAdapter {
-            id:physicalKeyboardAdapter
-        }
+    SceneRoot {
+        id:sceneRoot
     }
-
 
     WlShell {
         onWlShellSurfaceCreated:

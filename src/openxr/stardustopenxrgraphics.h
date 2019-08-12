@@ -32,9 +32,6 @@ class StardustOpenXRGraphics : public QObject {
 
     Q_PROPERTY(Qt3DRender::QCamera *leftEye MEMBER leftEye)
     Q_PROPERTY(Qt3DRender::QCamera *rightEye MEMBER rightEye)
-
-    Q_PROPERTY(Qt3DRender::QAbstractTexture *leftEyeTexture MEMBER leftEyeTexture)
-    Q_PROPERTY(Qt3DRender::QAbstractTexture *rightEyeTexture MEMBER rightEyeTexture)
 public:
     explicit StardustOpenXRGraphics(QObject *parent = nullptr);
     ~StardustOpenXRGraphics();
@@ -136,8 +133,8 @@ public:
     Qt3DRender::QCamera *leftEye = nullptr;
     Qt3DRender::QCamera *rightEye = nullptr;
 
-    Qt3DRender::QAbstractTexture *leftEyeTexture = nullptr;
-    Qt3DRender::QAbstractTexture *rightEyeTexture = nullptr;
+    VkImage *leftEyeImage;
+    VkImage *rightEyeImage;
 
 signals:
     void eyeDimensionsChanged();

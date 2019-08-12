@@ -26,6 +26,7 @@
 #include "openxr/stardustvulkan.h"
 #include "openxr/stardustopenxr.h"
 #include "openxr/stardustopenxrgraphics.h"
+#include "openxr/stardustqt3doffscreen.h"
 
 
 void registerQMLTypes() {
@@ -65,6 +66,12 @@ void registerQMLTypes() {
         Q_UNUSED(scriptEngine);
 
         return new StardustOpenXRGraphics();
+    });
+    qmlRegisterSingletonType<StardustQt3DOffscreen>("Qt3D.Offscreen", 1, 0, "Offscreen", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine);
+        Q_UNUSED(scriptEngine);
+
+        return new StardustQt3DOffscreen();
     });
 }
 
