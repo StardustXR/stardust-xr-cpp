@@ -29,8 +29,8 @@ void StardustOpenXRGraphics::initialize() {
     xrCreateSwapchain(*openxr->stardustSession, &swapInfo, &swapchains[1]);
 
     //Set vulkan image's size
-    vulkanImageTemplateInfo.extent.height = eyeData[0].recommendedImageRectHeight;
-    vulkanImageTemplateInfo.extent.width = eyeData[0].recommendedImageRectWidth;
+    imageExtent.height = eyeData[0].recommendedImageRectHeight;
+    imageExtent.width = eyeData[0].recommendedImageRectWidth;
 
     //Update the eyeRect's extents
     eyeRect.extent.height = eyeData[0].recommendedImageRectHeight;
@@ -49,7 +49,7 @@ void StardustOpenXRGraphics::initialize() {
 
     //Add swapchain images to the array
     xrEnumerateSwapchainImages(swapchains[0], swapchainImageCount, nullptr, reinterpret_cast<XrSwapchainImageBaseHeader *>(leftSwapchainImages.data()));
-    xrEnumerateSwapchainImages(swapchains[0], swapchainImageCount, nullptr, reinterpret_cast<XrSwapchainImageBaseHeader *>(rightSwapchainImages.data()));
+    xrEnumerateSwapchainImages(swapchains[1], swapchainImageCount, nullptr, reinterpret_cast<XrSwapchainImageBaseHeader *>(rightSwapchainImages.data()));
 
     //Create a reference space relative to the STAGE (floor)
     xrCreateReferenceSpace(*openxr->stardustSession, &refSpaceInfo, &refSpace);
@@ -102,13 +102,15 @@ void StardustOpenXRFrameWorker::run() {
             }
         }
 
+        emit renderFrame(frameState.predictedDisplayTime*0.0000005);
+
         //Wait for when the swapchain images are ready to be written
         if(swapImageWaitTime > 0)
             QThread::currentThread()->msleep(static_cast<unsigned long>(swapImageWaitTime*0.000001));
 
         //Update VkImage pointers
-        graphics->leftEyeImage = &graphics->leftSwapchainImages.at(graphics->swapchainImageIndices.at(0)).image;
-        graphics->rightEyeImage = &graphics->rightSwapchainImages.at(graphics->swapchainImageIndices.at(1)).image;
+        graphics->leftEyeImage = &graphics->leftSwapchainImages[graphics->swapchainImageIndices[0]].image;
+        graphics->rightEyeImage = &graphics->rightSwapchainImages[graphics->swapchainImageIndices[1]].image;
 
         //Update view information
         graphics->viewLocateInfo.viewConfigurationType = graphics->openxr->viewConfig;
@@ -124,7 +126,7 @@ void StardustOpenXRFrameWorker::run() {
             if(i==1)
                 eye = graphics->rightEye;
 
-            XrView &view = graphics->views.at(i);
+            XrView &view = graphics->views[i];
             //Set the cameras' positon to the pose position
             QVector3D position(view.pose.position.x, view.pose.position.z, view.pose.position.y);
             eye->setPosition(position);
@@ -133,8 +135,6 @@ void StardustOpenXRFrameWorker::run() {
             QQuaternion rotation = QQuaternion(view.pose.orientation.w, view.pose.orientation.x, view.pose.orientation.y, view.pose.orientation.z);
             QVector3D defaultCameraOrientation = QVector3D(0,-1,0);
             eye->setViewCenter(eye->position()+(rotation*defaultCameraOrientation));
-
-
 
             //Update properties on the Xr`rameEndInfo and its dependencies
             graphics->stardustLayerViews[i].fov = view.fov;

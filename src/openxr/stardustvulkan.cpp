@@ -62,21 +62,21 @@ void StardustVulkan::initialize() {
     std::vector<char> extensionNames(extensionNamesSize);
     xrGetVulkanInstanceExtensionsKHR(*openxr->xrInstance, *openxr->hmdID, extensionNamesSize, &extensionNamesSize, extensionNames.data());
 
+    //Covert all extensions into the correct format
+    std::vector<const char*> extensions = ParseExtensionString(extensionNames.data());
+
     //Get GLFW extensions
     uint32_t glfwExtensionCount = 0;
     const char** glfwExtensions;
     glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
     for(uint i=0; i<glfwExtensionCount; i++) {
-        strcat(extensionNames.data(), " ");
-        strcat(extensionNames.data(), glfwExtensions[i]);
-    }
-    if (enableValidationLayers) {
-        strcat(extensionNames.data(), " ");
-        strcat(extensionNames.data(), VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+        extensions.push_back(glfwExtensions[i]);
     }
 
-    //Covert all extensions into the correct format
-    std::vector<const char*> extensions = ParseExtensionString(extensionNames.data());
+    //Add Vulkan debug extension
+    if (enableValidationLayers) {
+        extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    }
 
     //Get vulkan instance layers
     if (enableValidationLayers && !checkValidationLayerSupport()) {

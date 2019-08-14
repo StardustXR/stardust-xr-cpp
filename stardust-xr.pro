@@ -53,7 +53,6 @@ qnx: target.path = /tmp/$${TARGET}/bin
 INCLUDEPATH += -i/usr/local/include
 
 LIBS += -lopenxr_loader \
-        -L/home/nova/Documents/vulkan-sdk/x86_64/lib \
         -lvulkan \
         -lglfw
 

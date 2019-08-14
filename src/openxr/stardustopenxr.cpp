@@ -14,7 +14,6 @@ StardustOpenXR::~StardustOpenXR() {
 }
 
 void StardustOpenXR::initialize() {
-    //XrApplicationInfo *xrAppInfo
     strcpy(xrAppInfo->applicationName, QString("Stardust XR").toUtf8());
     xrAppInfo->applicationVersion = 1;
     strcpy(xrAppInfo->engineName, QString("Qt").toUtf8());
@@ -52,7 +51,7 @@ void StardustOpenXR::initialize() {
     xrInstanceInfo->enabledExtensionNames = enabledExtensions;
 
     //Create the OpenXR Instance
-    xrCreateInstance(xrInstanceInfo, xrInstance);
+    XrResult xrResult = xrCreateInstance(xrInstanceInfo, xrInstance);
 
     //XrSystemGetInfo
     hmdInfo->type = XR_TYPE_SYSTEM_GET_INFO;

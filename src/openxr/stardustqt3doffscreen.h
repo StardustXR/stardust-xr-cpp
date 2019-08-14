@@ -52,9 +52,8 @@ private:
 
     void onFrameRendered(Qt3DRender::QRenderCaptureReply *capture, VkImage *image);
 
-    VkCommandBuffer beginSingleTimeCommands();
+    VkCommandBuffer beginSingleTimeCommands(uint32_t count);
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-    void endSingleTimeCommands(VkCommandBuffer commandBuffer);
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory, VkMemoryRequirements& memRequirements);
 private slots:
     void onLeftEyeFrameRendered();

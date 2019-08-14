@@ -17,8 +17,9 @@ void StardustQt3DOffscreen::initialize() {
     rightEyeEngine->setSceneRoot(sceneRoot);
 
     //Create the frameAction and connect it to capturing the frames
-    frameAction = new Qt3DLogic::QFrameAction(sceneRoot);
-    connect(frameAction, &Qt3DLogic::QFrameAction::triggered, this, &StardustQt3DOffscreen::captureFrames);
+//    frameAction = new Qt3DLogic::QFrameAction(sceneRoot);
+//    connect(frameAction, &Qt3DLogic::QFrameAction::triggered, this, &StardustQt3DOffscreen::captureFrames);
+    connect(graphics->frameWorker, &StardustOpenXRFrameWorker::renderFrame, this, &StardustQt3DOffscreen::captureFrames);
 }
 
 void StardustQt3DOffscreen::captureFrames(float dt) {
@@ -35,7 +36,7 @@ void StardustQt3DOffscreen::captureFrames(float dt) {
 }
 
 void StardustQt3DOffscreen::onFrameRendered(Qt3DRender::QRenderCaptureReply *capture, VkImage *image) {
-    VkCommandBuffer commandBuffer = beginSingleTimeCommands();
+    VkCommandBuffer commandBuffer = beginSingleTimeCommands(3);
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
     VkDeviceSize imageSize = eyeDimensions.width()*eyeDimensions.height()*4;
@@ -43,29 +44,55 @@ void StardustQt3DOffscreen::onFrameRendered(Qt3DRender::QRenderCaptureReply *cap
 
     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT, stagingBuffer, stagingBufferMemory, memRequirements);
 
-    capture->image().convertTo(QImage::Format_RGB888);
+    VkImageSubresourceRange range;
+    range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    range.baseArrayLayer = 0;
+    range.layerCount = 1;
+    range.baseMipLevel = 0;
+    range.levelCount = 1;
+
+    VkImageMemoryBarrier layoutTransition = {
+        VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+        nullptr,
+        VK_ACCESS_COLOR_ATTACHMENT_READ_BIT,
+        VK_ACCESS_TRANSFER_WRITE_BIT,
+        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        graphics->openxr->vulkan->queueFamilyIndex,
+        graphics->openxr->vulkan->queueFamilyIndex,
+        *image,
+        range
+    };
+
+    vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, &layoutTransition);
+
+//    capture->image().convertTo(QImage::Format_RGB888);
 
     const int align_mod = memRequirements.size % memRequirements.alignment;
     const int aligned_size = ((memRequirements.size % memRequirements.alignment) == 0)
                              ? memRequirements.size
                              : (memRequirements.size + memRequirements.alignment - align_mod);
 
-    uint imgData[imageSize];
+    uint *imgData = (uint*) malloc(sizeof (uint) * imageSize); // TODO: free somewhere
+
+    memset(imgData, 255, sizeof(uint) * imageSize);
+
+//    QByteArray arr;
+//    QBuffer buffer(&arr);
+//    buffer.open(QIODevice::WriteOnly);
+//    capture->image().save(&buffer);
 
     void* data = nullptr;
     vkMapMemory(graphics->openxr->vulkan->device, stagingBufferMemory, 0, imageSize, 0, &data);
-        memcpy(data, &imgData, imageSize);
+        memcpy(data, imgData, imageSize);
     vkUnmapMemory(graphics->openxr->vulkan->device, stagingBufferMemory);
 
-    void* outData;
-    vkMapMemory(graphics->openxr->vulkan->device, stagingBufferMemory, 0, imageSize, 0, &outData);
-
-    vkUnmapMemory(graphics->openxr->vulkan->device, stagingBufferMemory);
+    free(imgData);
 
     VkBufferImageCopy region = {};
     region.bufferOffset = 0;
-    region.bufferRowLength = 0;
-    region.bufferImageHeight = 0;
+    region.bufferRowLength = graphics->imageExtent.width;
+    region.bufferImageHeight = graphics->imageExtent.height;
 
     region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     region.imageSubresource.mipLevel = 0;
@@ -73,7 +100,7 @@ void StardustQt3DOffscreen::onFrameRendered(Qt3DRender::QRenderCaptureReply *cap
     region.imageSubresource.layerCount = 1;
 
     region.imageOffset = {0, 0, 0};
-    region.imageExtent = graphics->vulkanImageTemplateInfo.extent;
+    region.imageExtent = graphics->imageExtent;
 
     vkCmdCopyBufferToImage(
         commandBuffer,
@@ -84,14 +111,21 @@ void StardustQt3DOffscreen::onFrameRendered(Qt3DRender::QRenderCaptureReply *cap
         &region
     );
 
-    endSingleTimeCommands(commandBuffer);
+    layoutTransition.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    layoutTransition.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+    layoutTransition.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    layoutTransition.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, &layoutTransition);
+
+    vkEndCommandBuffer(commandBuffer);
 
     VkSubmitInfo submitInfo = {
         VK_STRUCTURE_TYPE_SUBMIT_INFO,
         nullptr
     };
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
+    VkCommandBuffer cmdBuffers[1] = {commandBuffer};
+    submitInfo.pCommandBuffers = cmdBuffers;
 
     vkQueueSubmit(*graphics->openxr->vulkan->queue, 1, &submitInfo, VK_NULL_HANDLE);
     vkQueueWaitIdle(*graphics->openxr->vulkan->queue);
@@ -102,15 +136,15 @@ void StardustQt3DOffscreen::onLeftEyeFrameRendered() {
 }
 
 void StardustQt3DOffscreen::onRightEyeFrameRendered() {
-    onFrameRendered(rightEyeCapture, graphics->leftEyeImage);
+    onFrameRendered(rightEyeCapture, graphics->rightEyeImage);
 }
 
-VkCommandBuffer StardustQt3DOffscreen::beginSingleTimeCommands() {
+VkCommandBuffer StardustQt3DOffscreen::beginSingleTimeCommands(uint32_t count) {
     VkCommandBufferAllocateInfo allocInfo = {};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     allocInfo.commandPool = graphics->openxr->vulkan->pool;
-    allocInfo.commandBufferCount = 1;
+    allocInfo.commandBufferCount = count;
 
     VkCommandBuffer commandBuffer;
     vkAllocateCommandBuffers(graphics->openxr->vulkan->device, &allocInfo, &commandBuffer);
@@ -165,18 +199,4 @@ uint32_t StardustQt3DOffscreen::findMemoryType(uint32_t typeFilter, VkMemoryProp
             return i;
         }
     }
-}
-
-void StardustQt3DOffscreen::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
-    vkEndCommandBuffer(commandBuffer);
-
-    VkSubmitInfo submitInfo = {};
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandBuffer;
-
-    vkQueueSubmit(*graphics->openxr->vulkan->queue, 1, &submitInfo, VK_NULL_HANDLE);
-    vkQueueWaitIdle(*graphics->openxr->vulkan->queue);
-
-    vkFreeCommandBuffers(graphics->openxr->vulkan->device, graphics->openxr->vulkan->pool, 1, &commandBuffer);
 }
