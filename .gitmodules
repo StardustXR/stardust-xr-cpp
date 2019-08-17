@@ -1,2 +1,3 @@
-[submodule "external/Qt3D-OffscreenRenderer"]
-	url = https://github.com/florianblume/Qt3D-OffscreenRenderer.git
+[submodule "external/qtquick3d"]
+	path = external/qtquick3d
+	url = https://github.com/chromenova/qtquick3d.git
