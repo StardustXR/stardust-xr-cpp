@@ -1,19 +1,11 @@
 import QtQuick 2.12
-import Qt3D.Core 2.12
-import Qt3D.Render 2.12
-import Qt3D.Input 2.12
-import Qt3D.Extras 2.12
-import QtQuick.Window 2.12
 import QtWayland.Compositor 1.13
-import QtQuick.Scene3D 2.12
 
 import Preferences 1.0
-import PhysicalKeyboardAdapter 1.0
 
 import Vulkan 1.0
 import OpenXR 1.0
 import OpenXRGraphics 1.0
-import Qt3D.Offscreen 1.0
 
 WaylandCompositor {
     id:waylandCompositor
@@ -41,13 +33,6 @@ WaylandCompositor {
         OpenXRGraphics.rightEye = sceneRoot.rightEye;
         OpenXRGraphics.openxr = OpenXR;
         OpenXRGraphics.initialize();
-
-        Offscreen.sceneRoot = sceneRoot;
-        Offscreen.leftEye = sceneRoot.leftEye;
-        Offscreen.rightEye = sceneRoot.rightEye;
-
-        Offscreen.graphics = OpenXRGraphics;
-        Offscreen.initialize();
     }
 
     SceneRoot {

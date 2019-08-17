@@ -1,4 +1,4 @@
-QT += 3dcore 3drender 3dinput 3dquick 3dlogic qml quick 3dquickextras waylandcompositor widgets
+QT += qml quick quick3d-private 3dquickextras waylandcompositor widgets
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -13,11 +13,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    external/Qt3D-OffscreenRenderer/offscreenengine.cpp \
-    external/Qt3D-OffscreenRenderer/offscreenenginedelegate.cpp \
-    external/Qt3D-OffscreenRenderer/offscreensurfaceframegraph.cpp \
-    external/Qt3D-OffscreenRenderer/scenemodifier.cpp \
-    external/Qt3D-OffscreenRenderer/texturerendertarget.cpp \
     src/core/configpathgetter.cpp \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
@@ -25,7 +20,7 @@ SOURCES += \
     src/core/extensionloader.cpp \
     src/openxr/stardustopenxr.cpp \
     src/openxr/stardustopenxrgraphics.cpp \
-    src/openxr/stardustqt3doffscreen.cpp \
+#    src/openxr/stardustqt3doffscreen.cpp \
     src/openxr/stardustvulkan.cpp \
     src/pointer/inputpointer.cpp \
     src/keyboard/keyboard.cpp \
@@ -58,11 +53,6 @@ LIBS += -lopenxr_loader \
 
 
 HEADERS += \
-    external/Qt3D-OffscreenRenderer/offscreenengine.h \
-    external/Qt3D-OffscreenRenderer/offscreenenginedelegate.h \
-    external/Qt3D-OffscreenRenderer/offscreensurfaceframegraph.h \
-    external/Qt3D-OffscreenRenderer/scenemodifier.h \
-    external/Qt3D-OffscreenRenderer/texturerendertarget.h \
     src/core/configpathgetter.h \
     src/core/fileio.h \
     src/core/launcher.h \
@@ -72,7 +62,6 @@ HEADERS += \
     src/openxr/openxr_meta.h \
     src/openxr/stardustopenxr.h \
     src/openxr/stardustopenxrgraphics.h \
-    src/openxr/stardustqt3doffscreen.h \
     src/openxr/stardustvulkan.h \
     src/openxr/vulkan_meta.h \
     src/pointer/inputpointer.h \
