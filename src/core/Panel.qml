@@ -110,14 +110,6 @@ Entity {
             children: [panelContents]
         }
     }
-    PassthroughKeyboardHandler {
-        target: panelContents
-
-        Component.onCompleted: {
-            physicalKeyboardAdapter.fullKeyEvent.connect(this.fullKeyEvent);
-        }
-    }
-
 
     Timer {
         onTriggered: function() {

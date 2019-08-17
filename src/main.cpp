@@ -5,6 +5,8 @@
 
 #include <QtQml/QQmlApplicationEngine>
 
+#include <openxr/openxr.h>
+
 #include <QFile>
 #include <QDir>
 
@@ -21,14 +23,13 @@
 #include "keyboard/passthroughkeyboardhandler.h"
 #include "keyboard/waylandkeyboardhandler.h"
 
-int main(int argc, char *argv[])
-{
-    // ShareOpenGLContexts is needed for using the threaded renderer
-    // on Nvidia EGLStreams
-    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
-    QGuiApplication app(argc, argv);
+#include "openxr/stardustvulkan.h"
+#include "openxr/stardustopenxr.h"
+#include "openxr/stardustopenxrgraphics.h"
+#include "openxr/stardustqt3doffscreen.h"
 
 
+void registerQMLTypes() {
     qmlRegisterType<Launcher>("Launcher", 1, 0, "Launcher");
     qmlRegisterType<FileIO>("FileIO", 1, 0, "FileIO");
 
@@ -47,6 +48,40 @@ int main(int argc, char *argv[])
     qmlRegisterType<PhysicalKeyboardAdapter>("PhysicalKeyboardAdapter", 1, 0, "PhysicalKeyboardAdapter");
     qmlRegisterType<PassthroughKeyboardHandler>("PassthroughKeyboardHandler", 1, 0, "PassthroughKeyboardHandler");
     qmlRegisterType<WaylandKeyboardHandler>("WaylandKeyboardHandler", 1, 0, "WaylandKeyboardHandler");
+
+    qmlRegisterSingletonType<StardustVulkan>("Vulkan", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine);
+        Q_UNUSED(scriptEngine);
+
+        return new StardustVulkan();
+    });
+    qmlRegisterSingletonType<StardustOpenXR>("OpenXR", 1, 0, "OpenXR", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine);
+        Q_UNUSED(scriptEngine);
+
+        return new StardustOpenXR();
+    });
+    qmlRegisterSingletonType<StardustOpenXRGraphics>("OpenXRGraphics", 1, 0, "OpenXRGraphics", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine);
+        Q_UNUSED(scriptEngine);
+
+        return new StardustOpenXRGraphics();
+    });
+    qmlRegisterSingletonType<StardustQt3DOffscreen>("Qt3D.Offscreen", 1, 0, "Offscreen", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine);
+        Q_UNUSED(scriptEngine);
+
+        return new StardustQt3DOffscreen();
+    });
+}
+
+int main(int argc, char *argv[]) {
+    // ShareOpenGLContexts is needed for using the threaded renderer
+    // on Nvidia EGLStreams
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+    QGuiApplication app(argc, argv);
+
+    registerQMLTypes();
 
     ConfigPathGetter getter;
     QDir renderSettingsDir = getter.loadConfigDir("stardust");

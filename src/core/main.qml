@@ -10,39 +10,49 @@ import QtQuick.Scene3D 2.12
 import Preferences 1.0
 import PhysicalKeyboardAdapter 1.0
 
+import Vulkan 1.0
+import OpenXR 1.0
+import OpenXRGraphics 1.0
+import Qt3D.Offscreen 1.0
+
 WaylandCompositor {
+    id:waylandCompositor
+    useHardwareIntegrationExtension: false
+
     // The output defines the screen.
     WaylandOutput {
         sizeFollowsWindow: true
-        window: Window {
-            id: displaySurface
-            width: 1600
-            height: 900
-            visible: true
+//        window: Window {
+//            id: displaySurface
+//            width: 1600
+//            height: 900
+//            visible: true
 
-            Scene3D {
-                id:scene3D
-                aspects: [ "input", "render" ]
-                anchors.fill: parent
-                anchors.margins: 0
-                focus: true
-                cameraAspectRatioMode: Scene3D.AutomaticAspectRatio
-                hoverEnabled: true
-
-                SceneRoot {
-                    id:sceneRoot
-                }
-
-                Keys.onPressed: physicalKeyboardAdapter.sendKey(event, true)
-                Keys.onReleased: physicalKeyboardAdapter.sendKey(event, false)
-            }
-
-            PhysicalKeyboardAdapter {
-                id:physicalKeyboardAdapter
-            }
-        }
+//            data: [waylandContent]
+//        }
     }
 
+    Component.onCompleted: {
+        OpenXR.vulkan = Vulkan;
+        Vulkan.openxr = OpenXR;
+        OpenXR.initialize();
+
+        OpenXRGraphics.leftEye = sceneRoot.leftEye;
+        OpenXRGraphics.rightEye = sceneRoot.rightEye;
+        OpenXRGraphics.openxr = OpenXR;
+        OpenXRGraphics.initialize();
+
+        Offscreen.sceneRoot = sceneRoot;
+        Offscreen.leftEye = sceneRoot.leftEye;
+        Offscreen.rightEye = sceneRoot.rightEye;
+
+        Offscreen.graphics = OpenXRGraphics;
+        Offscreen.initialize();
+    }
+
+    SceneRoot {
+        id:sceneRoot
+    }
 
     WlShell {
         onWlShellSurfaceCreated:
