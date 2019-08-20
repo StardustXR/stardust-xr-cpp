@@ -10,6 +10,8 @@
 #include <QFile>
 #include <QDir>
 
+#include <QtQuick3D/private/qquick3dviewport_p.h>
+
 #include "core/launcher.h"
 #include "core/fileio.h"
 
@@ -81,6 +83,8 @@ int main(int argc, char *argv[]) {
     if(!QFile::exists(renderSettingsDir.absoluteFilePath("StardustRenderSettings.qml"))) {
         QFile::copy(":/StardustRenderSettings.qml", renderSettingsDir.absoluteFilePath("StardustRenderSettings.qml"));
     }
+
+    QSurfaceFormat::setDefaultFormat(QQuick3DViewport::idealSurfaceFormat());
 
     QQmlApplicationEngine appEngine(QUrl("qrc:/core/main.qml"));
 

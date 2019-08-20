@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include "stardustopenxr.h"
+#include <GLFW/glfw3.h>
 #include <iostream>
 
 static VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {

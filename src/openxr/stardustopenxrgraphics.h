@@ -1,29 +1,16 @@
 #ifndef STARDUSTOPENXRGRAPHICS_H
 #define STARDUSTOPENXRGRAPHICS_H
 
+#include <QVector3D>
+#include <QQuaternion>
 #include <QSize>
 #include <QThread>
 
-#include <Qt3DRender>
-#include <QScreen>
-#include <QOffscreenSurface>
-
 #include "openxr_meta.h"
 #include "stardustopenxr.h"
+#include <QtQuick3D/private/qquick3dviewport_p.h>
 
-class StardustOpenXRFrameWorker : public QThread {
-    Q_OBJECT
-public:
-    StardustOpenXRFrameWorker(QObject *parent = nullptr) : QThread(parent) {}
-
-    XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
-    XrFrameState frameState{XR_TYPE_FRAME_STATE};
-    long swapImageWaitTime = 0;
-signals:
-    void renderFrame(float dt);
-private:
-    void run() override;
-};
+class StardustOpenXRFrame;
 
 class StardustOpenXRGraphics : public QObject {
     Q_OBJECT
@@ -32,8 +19,10 @@ class StardustOpenXRGraphics : public QObject {
 
     Q_PROPERTY(QSize eyeDimensions MEMBER eyeDimensions NOTIFY eyeDimensionsChanged)
 
-    Q_PROPERTY(Qt3DRender::QCamera *leftEye MEMBER leftEye)
-    Q_PROPERTY(Qt3DRender::QCamera *rightEye MEMBER rightEye)
+    Q_PROPERTY(QQuick3DViewport *leftView MEMBER leftView)
+    Q_PROPERTY(QQuick3DViewport *rightView MEMBER rightView)
+    Q_PROPERTY(QQuick3DCamera *leftEye MEMBER leftEye)
+    Q_PROPERTY(QQuick3DCamera *rightEye MEMBER rightEye)
 public:
     explicit StardustOpenXRGraphics(QObject *parent = nullptr);
     ~StardustOpenXRGraphics();
@@ -41,7 +30,6 @@ public:
     StardustOpenXR *openxr = nullptr;
     Q_INVOKABLE void initialize();
 
-    StardustOpenXRFrameWorker *frameWorker;
     uint displayFPS = 0;
 
     XrViewConfigurationProperties viewProperties{XR_TYPE_VIEW_CONFIGURATION_PROPERTIES};
@@ -114,16 +102,27 @@ public:
         }
     };
 
-    QSize eyeDimensions;
-    std::vector<XrView> views;
-    Qt3DRender::QCamera *leftEye = nullptr;
-    Qt3DRender::QCamera *rightEye = nullptr;
+    QThread *frameThread = nullptr;
+    StardustOpenXRFrame *frame = nullptr;
 
-    VkImage *leftEyeImage;
-    VkImage *rightEyeImage;
+    QSize eyeDimensions = QSize(900, 900);
+    std::vector<XrView> views;
+
+    QQuick3DCamera *leftEye = nullptr;
+    QQuick3DCamera *rightEye = nullptr;
+
+    QQuick3DViewport *leftView = nullptr;
+    QQuick3DViewport *rightView = nullptr;
+
+    VkImage *leftEyeImage = VK_NULL_HANDLE;
+    VkImage *rightEyeImage = VK_NULL_HANDLE;
+
+    XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
+    XrFrameState frameState{XR_TYPE_FRAME_STATE};
 
 signals:
     void eyeDimensionsChanged();
+    void startFrameLoop();
 };
 
 #endif // STARDUSTOPENXRGRAPHICS_H

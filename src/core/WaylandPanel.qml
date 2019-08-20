@@ -1,14 +1,13 @@
 import QtQuick 2.0
-import QtWayland.Compositor 1.3
 import QtQuick.Controls 2.5
+import QtQuick3D 1.0
 
-import Qt3D.Core 2.12
-import Qt3D.Extras 2.12
+import QtWayland.Compositor 1.3
 
 import Launcher 1.0
 import WaylandKeyboardHandler 1.0
 
-EntityGroup {
+Node {
     id:panel
 
     property alias shellSurf: waylandPanel.shellSurf

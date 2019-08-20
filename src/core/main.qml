@@ -1,4 +1,7 @@
 import QtQuick 2.12
+import QtQuick.Window 2.12
+import QtQuick3D 1.0
+import QtQuick3D.MaterialLibrary 1.0
 import QtWayland.Compositor 1.13
 
 import Preferences 1.0
@@ -14,14 +17,42 @@ WaylandCompositor {
     // The output defines the screen.
     WaylandOutput {
         sizeFollowsWindow: true
-//        window: Window {
-//            id: displaySurface
-//            width: 1600
-//            height: 900
-//            visible: true
+        window: Window {
+            id: displaySurface
+            width: 1600
+            height: 900
+            visible: true
 
-//            data: [waylandContent]
-//        }
+            View3D {
+                id: leftView
+
+                renderMode: View3D.RenderNode
+
+                x:0
+                y:0
+                height: displaySurface.height
+                width: displaySurface.width/2
+
+                camera: sceneRoot.leftEye
+                scene: sceneRoot
+                environment: sceneRoot.skybox
+            }
+
+            View3D {
+                id: rightView
+
+                renderMode: View3D.RenderNode
+
+                x:displaySurface.width/2
+                y:0
+                height: displaySurface.height
+                width: displaySurface.width/2
+
+                camera: sceneRoot.rightEye
+                scene: sceneRoot
+                environment: sceneRoot.skybox
+            }
+        }
     }
 
     Component.onCompleted: {
@@ -31,6 +62,10 @@ WaylandCompositor {
 
         OpenXRGraphics.leftEye = sceneRoot.leftEye;
         OpenXRGraphics.rightEye = sceneRoot.rightEye;
+
+        OpenXRGraphics.leftView = leftView;
+        OpenXRGraphics.rightView = rightView;
+
         OpenXRGraphics.openxr = OpenXR;
         OpenXRGraphics.initialize();
     }
@@ -71,3 +106,46 @@ WaylandCompositor {
         fileName: "compositor_prefs.json"
     }
 }
+
+//Window {
+//    id: window
+//    width: 640
+//    height: 640
+//    visible: true
+//    color: "black"
+
+//    View3D {
+//        id: layer1
+//        anchors.fill: parent
+//        anchors.margins: 50
+//        camera: scene.camera
+//        renderMode: View3D.Overlay
+
+//        environment: scene.skybox
+//        scene: scene
+
+//    }
+
+//    Node {
+//        id:scene
+//        property alias skybox: skybox
+//        property alias camera: camera
+
+//        SceneEnvironment {
+//            id:skybox
+//            probeBrightness: 1000
+//            backgroundMode: SceneEnvironment.Color
+//            clearColor: "skyblue"
+////            lightProbe: Texture {
+////                source: "qrc:/test_grid.png"
+////            }
+//        }
+//        Camera {
+//            id: camera
+//            position: Qt.vector3d(0, 200, -300)
+//            rotation: Qt.vector3d(30, 0, 0)
+//        }
+//    }
+
+
+//}

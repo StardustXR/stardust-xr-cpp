@@ -1,4 +1,4 @@
-QT += qml quick quick3d-private 3dquickextras waylandcompositor widgets
+QT += qml quick quick3d-private waylandcompositor widgets
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -19,10 +19,11 @@ SOURCES += \
     src/core/prefs.cpp \
     src/core/extensionloader.cpp \
     src/openxr/stardustopenxr.cpp \
+    src/openxr/stardustopenxrframe.cpp \
     src/openxr/stardustopenxrgraphics.cpp \
 #    src/openxr/stardustqt3doffscreen.cpp \
     src/openxr/stardustvulkan.cpp \
-    src/pointer/inputpointer.cpp \
+#    src/pointer/inputpointer.cpp \
     src/keyboard/keyboard.cpp \
     src/keyboard/keyboardhandler.cpp \
     src/keyboard/passthroughkeyboardhandler.cpp \
@@ -45,12 +46,11 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-INCLUDEPATH += -i/usr/local/include
+INCLUDEPATH +=	-i/usr/local/include
 
-LIBS += -lopenxr_loader \
-        -lvulkan \
-        -lglfw
-
+LIBS += -lglfw \
+        -lopenxr_loader \
+        -lvulkan
 
 HEADERS += \
     src/core/configpathgetter.h \
@@ -61,14 +61,14 @@ HEADERS += \
     src/core/extensionloader.h \
     src/openxr/openxr_meta.h \
     src/openxr/stardustopenxr.h \
+    src/openxr/stardustopenxrframe.h \
     src/openxr/stardustopenxrgraphics.h \
     src/openxr/stardustvulkan.h \
     src/openxr/vulkan_meta.h \
-    src/pointer/inputpointer.h \
+#    src/pointer/inputpointer.h \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \
     src/keyboard/passthroughkeyboardhandler.h \
     src/keyboard/physicalkeyboardadapter.h \
     src/core/pluginloader.h \
     src/keyboard/waylandkeyboardhandler.h
-
