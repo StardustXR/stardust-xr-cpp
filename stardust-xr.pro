@@ -18,6 +18,7 @@ SOURCES += \
     src/core/launcher.cpp \
     src/core/prefs.cpp \
     src/core/extensionloader.cpp \
+    src/openxr/stardustopengl.cpp \
     src/openxr/stardustopenxr.cpp \
     src/openxr/stardustopenxrframe.cpp \
     src/openxr/stardustopenxrgraphics.cpp \
@@ -59,7 +60,9 @@ HEADERS += \
     src/core/plugininterfaces.h \
     src/core/prefs.h \
     src/core/extensionloader.h \
+    src/openxr/opengl_meta.h \
     src/openxr/openxr_meta.h \
+    src/openxr/stardustopengl.h \
     src/openxr/stardustopenxr.h \
     src/openxr/stardustopenxrframe.h \
     src/openxr/stardustopenxrgraphics.h \

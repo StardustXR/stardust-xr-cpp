@@ -1,14 +1,15 @@
 #ifndef STARDUSTOPENXRGRAPHICS_H
 #define STARDUSTOPENXRGRAPHICS_H
 
-#include <QVector3D>
-#include <QQuaternion>
 #include <QSize>
 #include <QThread>
+#include <QVector3D>
+#include <QQuaternion>
+#include <QOpenGLFramebufferObject>
+#include <QMetaObject>
+#include <QQuickItem>
 
-#include "openxr_meta.h"
 #include "stardustopenxr.h"
-#include <QtQuick3D/private/qquick3dviewport_p.h>
 
 class StardustOpenXRFrame;
 
@@ -19,10 +20,10 @@ class StardustOpenXRGraphics : public QObject {
 
     Q_PROPERTY(QSize eyeDimensions MEMBER eyeDimensions NOTIFY eyeDimensionsChanged)
 
-    Q_PROPERTY(QQuick3DViewport *leftView MEMBER leftView)
-    Q_PROPERTY(QQuick3DViewport *rightView MEMBER rightView)
-    Q_PROPERTY(QQuick3DCamera *leftEye MEMBER leftEye)
-    Q_PROPERTY(QQuick3DCamera *rightEye MEMBER rightEye)
+    Q_PROPERTY(QQuickItem *leftView MEMBER leftView)
+    Q_PROPERTY(QQuickItem *rightView MEMBER rightView)
+    Q_PROPERTY(QObject *leftEye MEMBER leftEye)
+    Q_PROPERTY(QObject *rightEye MEMBER rightEye)
 public:
     explicit StardustOpenXRGraphics(QObject *parent = nullptr);
     ~StardustOpenXRGraphics();
@@ -40,7 +41,7 @@ public:
         nullptr,                                                                            //const void*               next;
         0,                                                                                  //XrSwapchainCreateFlags    createFlags;
         XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT | XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT,      //XrSwapchainUsageFlags     usageFlags;
-        VK_FORMAT_R8G8B8A8_SRGB,                                                            //int64_t                   format;
+        VK_FORMAT_R8G8B8A8_UNORM,                                                           //int64_t                   format;
         1,                                                                                  //uint32_t                  sampleCount;
         1,                                                                                  //uint32_t                  width;
         1,                                                                                  //uint32_t                  height;
@@ -53,7 +54,10 @@ public:
         XrSwapchain {}
     };
 
-    VkExtent3D imageExtent = {0, 0, 1};
+    VkExtent3D imageExtents[2] = {
+        VkExtent3D{0, 0, 1},
+        VkExtent3D{0, 0, 1}
+    };
 
     uint32_t swapchainImageCount = 0;
     XrSwapchainImageVulkanKHR swapchainImageTemplate = {
@@ -61,8 +65,8 @@ public:
         nullptr,
         VkImage()
     };
-    std::vector<XrSwapchainImageVulkanKHR> leftSwapchainImages;
-    std::vector<XrSwapchainImageVulkanKHR> rightSwapchainImages;
+    std::vector<XrSwapchainImageVulkanKHR> swapchainImages[2];
+    uint32_t swapchainImageIndex;
 
     std::vector<uint32_t> swapchainImageIndices = std::vector<uint32_t>(2);
 
@@ -86,9 +90,15 @@ public:
         nullptr
     };
 
-    XrRect2Di eyeRect = {
-        XrOffset2Di {0,0},
-        XrExtent2Di {1,1}
+    XrRect2Di eyeRects[2] = {
+        XrRect2Di {
+            XrOffset2Di {0,0},
+            XrExtent2Di {1,1}
+        },
+        XrRect2Di {
+            XrOffset2Di {0,0},
+            XrExtent2Di {1,1}
+        }
     };
 
     XrCompositionLayerProjectionView stardustLayerViews[2] = {
@@ -102,20 +112,26 @@ public:
         }
     };
 
+    QOpenGLFramebufferObject *fbo;
+
     QThread *frameThread = nullptr;
     StardustOpenXRFrame *frame = nullptr;
 
     QSize eyeDimensions = QSize(900, 900);
     std::vector<XrView> views;
 
-    QQuick3DCamera *leftEye = nullptr;
-    QQuick3DCamera *rightEye = nullptr;
+    QObject *leftEye = nullptr;
+    QObject *rightEye = nullptr;
 
-    QQuick3DViewport *leftView = nullptr;
-    QQuick3DViewport *rightView = nullptr;
+    QQuickItem *leftView = nullptr;
+    QQuickItem *rightView = nullptr;
 
-    VkImage *leftEyeImage = VK_NULL_HANDLE;
-    VkImage *rightEyeImage = VK_NULL_HANDLE;
+    QQuickItem *surfaces[2];
+
+    VkImage *vulkanImages[2] = {
+        VK_NULL_HANDLE,
+        VK_NULL_HANDLE
+    };
 
     XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
     XrFrameState frameState{XR_TYPE_FRAME_STATE};

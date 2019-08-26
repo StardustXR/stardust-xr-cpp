@@ -1,7 +1,6 @@
 #ifndef STARDUSTOPENXRFRAME_H
 #define STARDUSTOPENXRFRAME_H
 
-#include <QObject>
 
 #include "openxr_meta.h"
 #include "stardustopenxrgraphics.h"
@@ -17,10 +16,9 @@ public:
     QThread *thread = nullptr;
 
 signals:
-    void renderFrame();
+    void startedFrame();
 
-    void copiedLeftView();
-    void copiedRightView();
+    void renderedFrame();
 
     void frameEnded();
 
@@ -28,18 +26,17 @@ public slots:
     void startFrame();
 
 private slots:
-    void copyLeftView();
-    void copyRightView();
+    void renderFrame();
 
     void endFrame();
 
 private:
-    void copyFrame(QQuick3DViewport *view, VkImage *image);
+    void copyFrame(int i, GLuint glTexID, VkImage *image);
 
     //Vulkan helper functions
     VkCommandBuffer beginSingleTimeCommands(uint32_t count);
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory, VkMemoryRequirements &memRequirements);
+    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory, int &fd, VkMemoryRequirements &memRequirements);
 };
 
 #endif // STARDUSTOPENXRFRAME_H

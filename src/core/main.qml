@@ -26,12 +26,12 @@ WaylandCompositor {
             View3D {
                 id: leftView
 
-                renderMode: View3D.RenderNode
+                renderMode: View3D.Texture
 
                 x:0
                 y:0
-                height: displaySurface.height
-                width: displaySurface.width/2
+                height: OpenXRGraphics.eyeDimensions.height
+                width: OpenXRGraphics.eyeDimensions.width
 
                 camera: sceneRoot.leftEye
                 scene: sceneRoot
@@ -41,33 +41,37 @@ WaylandCompositor {
             View3D {
                 id: rightView
 
-                renderMode: View3D.RenderNode
+                renderMode: View3D.Texture
 
-                x:displaySurface.width/2
+                x:OpenXRGraphics.eyeDimensions.width
                 y:0
-                height: displaySurface.height
-                width: displaySurface.width/2
+                height: OpenXRGraphics.eyeDimensions.height
+                width: OpenXRGraphics.eyeDimensions.width
 
                 camera: sceneRoot.rightEye
                 scene: sceneRoot
                 environment: sceneRoot.skybox
             }
-        }
-    }
 
-    Component.onCompleted: {
+            onSceneGraphInitialized: {
         OpenXR.vulkan = Vulkan;
         Vulkan.openxr = OpenXR;
         OpenXR.initialize();
 
-        OpenXRGraphics.leftEye = sceneRoot.leftEye;
-        OpenXRGraphics.rightEye = sceneRoot.rightEye;
+                OpenXRGraphics.leftEye = sceneRoot.leftEye;
+                OpenXRGraphics.rightEye = sceneRoot.rightEye;
 
-        OpenXRGraphics.leftView = leftView;
-        OpenXRGraphics.rightView = rightView;
+                OpenXRGraphics.leftView = leftView;
+                OpenXRGraphics.rightView = rightView;
 
-        OpenXRGraphics.openxr = OpenXR;
-        OpenXRGraphics.initialize();
+                OpenXRGraphics.openxr = OpenXR;
+
+                OpenXRGraphics.initialize();
+
+                displaySurface.width = OpenXRGraphics.eyeDimensions.width;
+                displaySurface.height = OpenXRGraphics.eyeDimensions.height;
+            }
+        }
     }
 
     SceneRoot {

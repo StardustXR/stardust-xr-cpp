@@ -1,6 +1,5 @@
 #include "stardustopenxrgraphics.h"
 
-#include <QDebug>
 #include "stardustopenxrframe.h"
 
 StardustOpenXRGraphics::StardustOpenXRGraphics(QObject *parent) : QObject(parent) {
@@ -19,6 +18,10 @@ void StardustOpenXRGraphics::initialize() {
     uint32_t viewCount = 2;
     xrEnumerateViewConfigurationViews(*openxr->xrInstance, *openxr->hmdID, openxr->viewConfig, viewCount, &viewCount, eyeData);
 
+    //Add views to the surfaces array
+    surfaces[0] = leftView;
+    surfaces[1] = rightView;
+
     //Update the swapchain info's values
     swapInfo.height = eyeData[0].recommendedImageRectHeight;
     swapInfo.width = eyeData[0].recommendedImageRectWidth;
@@ -28,45 +31,54 @@ void StardustOpenXRGraphics::initialize() {
     xrCreateSwapchain(*openxr->stardustSession, &swapInfo, &swapchains[0]);
     xrCreateSwapchain(*openxr->stardustSession, &swapInfo, &swapchains[1]);
 
-    //Set vulkan image's size
-    imageExtent.height = eyeData[0].recommendedImageRectHeight;
-    imageExtent.width = eyeData[0].recommendedImageRectWidth;
 
-    //Update the eyeRect's extents
-    eyeRect.extent.height = eyeData[0].recommendedImageRectHeight;
-    eyeRect.extent.width = eyeData[0].recommendedImageRectWidth;
+    //Do all this for both eyes
+    for(int i=0; i<2; i++) {
+        //Update the OpenXR extents
+        imageExtents[i].width = eyeData[i].recommendedImageRectWidth;
+        imageExtents[i].height = eyeData[i].recommendedImageRectHeight;
 
-    //Update the QSize so the QML textures can be set
-    eyeDimensions = QSize(eyeData[0].recommendedImageRectWidth, eyeData[0].recommendedImageRectHeight);
-    emit eyeDimensionsChanged();
+        //Update the eyeRects' extents
+        eyeRects[i].extent.height = eyeData[i].recommendedImageRectHeight;
+        eyeRects[i].extent.width = eyeData[i].recommendedImageRectWidth;
 
-    //Get the amount of swapchain images
-    xrEnumerateSwapchainImages(swapchains[0], 0, &swapchainImageCount, nullptr);
+        //Update the QSize so the QML textures can be set
+        eyeDimensions = QSize(eyeData[i].recommendedImageRectWidth, eyeData[i].recommendedImageRectHeight);
+        surfaces[i]->setWidth(eyeRects[0].extent.width);
+        surfaces[i]->setHeight(eyeRects[0].extent.height);
+        surfaces[i]->update();
+        emit eyeDimensionsChanged();
 
-    //Add references to all swapchain images to swapchainImages
-    leftSwapchainImages = std::vector<XrSwapchainImageVulkanKHR>(swapchainImageCount, swapchainImageTemplate);
-    rightSwapchainImages = std::vector<XrSwapchainImageVulkanKHR>(swapchainImageCount, swapchainImageTemplate);
+        //Get the amount of swapchain images
+        xrEnumerateSwapchainImages(swapchains[i], 0, &swapchainImageCount, nullptr);
 
-    //Add swapchain images to the array
-    xrEnumerateSwapchainImages(swapchains[0], swapchainImageCount, nullptr, reinterpret_cast<XrSwapchainImageBaseHeader *>(leftSwapchainImages.data()));
-    xrEnumerateSwapchainImages(swapchains[1], swapchainImageCount, nullptr, reinterpret_cast<XrSwapchainImageBaseHeader *>(rightSwapchainImages.data()));
+        //Add references to all swapchain images to swapchainImages
+        swapchainImages[i] = std::vector<XrSwapchainImageVulkanKHR>(swapchainImageCount, swapchainImageTemplate);
 
-    //Create a reference space relative to the STAGE (floor)
+        //Add swapchain images to the array
+        xrEnumerateSwapchainImages(swapchains[i], swapchainImageCount, nullptr, reinterpret_cast<XrSwapchainImageBaseHeader *>(swapchainImages[i].data()));
+
+        //Add pointers to the swapchain images
+        vulkanImages[i] = &swapchainImages[i][swapchainImageIndices[i]].image;
+    }
+
+    //Create a reference space relative to the iz (floor)
     xrCreateReferenceSpace(*openxr->stardustSession, &refSpaceInfo, &refSpace);
 
     //Initialize views vector
     views = std::vector<XrView>(2, XrView {XR_TYPE_VIEW, nullptr});
 
     //Create StardustOpenXRFrame object and add it to the thread
-    frame = new StardustOpenXRFrame(this);
+    frame = new StardustOpenXRFrame(nullptr);
     frame->graphics = this;
 
     frameThread = new QThread(this);
     frame->moveToThread(frameThread);
     frame->thread = frameThread;
 
+    //Start up the frame loop
     connect(this, &StardustOpenXRGraphics::startFrameLoop, frame, &StardustOpenXRFrame::startFrame);
     frameThread->start();
 
-//    emit startFrameLoop();
+    emit startFrameLoop();
 }

@@ -1,19 +1,19 @@
 #include "stardustopenxrframe.h"
 #include <QtQuick3D/private/qquick3dcamera_p.h>
+#include <QDebug>
 
 #define RAD2DEG 180/3.14159
 
 StardustOpenXRFrame::StardustOpenXRFrame(QObject *parent) : QObject(parent) {
     connect(this, &StardustOpenXRFrame::frameEnded, this, &StardustOpenXRFrame::startFrame);
 
-    connect(this, &StardustOpenXRFrame::renderFrame, this, &StardustOpenXRFrame::copyLeftView);
-    connect(this, &StardustOpenXRFrame::copiedLeftView, this, &StardustOpenXRFrame::copyRightView);
-    connect(this, &StardustOpenXRFrame::copiedRightView, this, &StardustOpenXRFrame::endFrame);
+    connect(this, &StardustOpenXRFrame::startedFrame, this, &StardustOpenXRFrame::renderFrame);
+
+    connect(this, &StardustOpenXRFrame::renderedFrame, this, &StardustOpenXRFrame::endFrame);
 }
 
 void StardustOpenXRFrame::startFrame() {
-    StardustOpenXRGraphics *graphics = qobject_cast<StardustOpenXRGraphics *>(parent());
-
+    qDebug() << "Starting frame";
     //Wait for next frame
     xrWaitFrame(*graphics->openxr->stardustSession, &graphics->frameWaitInfo, &graphics->frameState);
 
@@ -31,18 +31,13 @@ void StardustOpenXRFrame::startFrame() {
 
         //Grab the swapchain image
         xrAcquireSwapchainImage(graphics->swapchains[i], &acquireInfo, &graphics->swapchainImageIndices.at(i));
+
+        //Create empty swapchain wait info
+        XrSwapchainImageWaitInfo waitInfo{XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO, nullptr};
+
+        //Wait for when the swapchain images are ready to be written
+        xrWaitSwapchainImage(graphics->swapchains[i], &waitInfo);
     }
-
-    //Create empty swapchain wait info
-    XrSwapchainImageWaitInfo waitInfo{XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO, nullptr};
-
-    //Wait for when the swapchain images are ready to be written
-    xrWaitSwapchainImage(graphics->swapchains[0], &waitInfo);
-    xrWaitSwapchainImage(graphics->swapchains[1], &waitInfo);
-
-    //Update VkImage pointers
-    graphics->leftEyeImage = &graphics->leftSwapchainImages[graphics->swapchainImageIndices[0]].image;
-    graphics->rightEyeImage = &graphics->rightSwapchainImages[graphics->swapchainImageIndices[1]].image;
 
     //Update view information
     graphics->viewLocateInfo.viewConfigurationType = graphics->openxr->viewConfig;
@@ -54,9 +49,9 @@ void StardustOpenXRFrame::startFrame() {
 
     //Do for each eye
     for(int i=0; i<2; i++) {
-        QQuick3DCamera *eye = graphics->leftEye;
+        QQuick3DCamera *eye = qobject_cast<QQuick3DCamera *>(graphics->leftEye);
         if(i==1)
-            eye = graphics->rightEye;
+            eye = qobject_cast<QQuick3DCamera *>(graphics->rightEye);
 
         XrView &view = graphics->views[i];
         //Set the cameras' positon to the pose position
@@ -80,124 +75,33 @@ void StardustOpenXRFrame::startFrame() {
         graphics->stardustLayerViews[i].pose = view.pose;
         graphics->stardustLayerViews[i].subImage = XrSwapchainSubImage {
             graphics->swapchains[i],
-            graphics->eyeRect,
+            graphics->eyeRects[i],
             graphics->swapchainImageIndices[i]
         };
     }
 
-    emit copyLeftView();
+    emit startedFrame();
 }
 
-void StardustOpenXRFrame::copyLeftView() {
-    copyFrame(graphics->leftView, graphics->leftEyeImage);
+void StardustOpenXRFrame::renderFrame() {
+    qDebug() << "Rendering frame";
 
-    emit copiedLeftView();
+    graphics->surfaces[0]->setProperty("disableAutomaticRender", true);
+    GLuint leftTex;
+    QMetaObject::invokeMethod(graphics->surfaces[0],
+                              "render",
+                              Qt::DirectConnection,
+                              Q_RETURN_ARG(GLuint, leftTex)
+            );
+
+    copyFrame(0, leftTex, graphics->vulkanImages[0]);
+
+    emit renderedFrame();
 }
 
-void StardustOpenXRFrame::copyRightView() {
-    copyFrame(graphics->rightView, graphics->rightEyeImage);
-
-    emit copiedRightView();
-}
-
-
-void StardustOpenXRFrame::copyFrame(QQuick3DViewport *view, VkImage *image) {
-    VkCommandBuffer commandBuffer = beginSingleTimeCommands(3);
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    VkDeviceSize imageSize = graphics->eyeDimensions.width()*graphics->eyeDimensions.height()*4;
-    VkMemoryRequirements memRequirements;
-
-    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT, stagingBuffer, stagingBufferMemory, memRequirements);
-
-    VkImageSubresourceRange range;
-    range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    range.baseArrayLayer = 0;
-    range.layerCount = 1;
-    range.baseMipLevel = 0;
-    range.levelCount = 1;
-
-    VkImageMemoryBarrier layoutTransition = {
-        VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
-        nullptr,
-        VK_ACCESS_COLOR_ATTACHMENT_READ_BIT,
-        VK_ACCESS_TRANSFER_WRITE_BIT,
-        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-        graphics->openxr->vulkan->queueFamilyIndex,
-        graphics->openxr->vulkan->queueFamilyIndex,
-        *image,
-        range
-    };
-
-    vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, &layoutTransition);
-
-//    capture->image().convertTo(QImage::Format_RGB888);
-
-    const int align_mod = memRequirements.size % memRequirements.alignment;
-    const int aligned_size = ((memRequirements.size % memRequirements.alignment) == 0)
-                             ? memRequirements.size
-                             : (memRequirements.size + memRequirements.alignment - align_mod);
-
-    uint *imgData = (uint*) malloc(sizeof (uint) * imageSize); // TODO: free somewhere
-
-    memset(imgData, 255, sizeof(uint) * imageSize);
-
-//    QByteArray arr;
-//    QBuffer buffer(&arr);
-//    buffer.open(QIODevice::WriteOnly);
-//    capture->image().save(&buffer);
-
-    void* data = nullptr;
-    vkMapMemory(graphics->openxr->vulkan->device, stagingBufferMemory, 0, imageSize, 0, &data);
-        memcpy(data, imgData, imageSize);
-    vkUnmapMemory(graphics->openxr->vulkan->device, stagingBufferMemory);
-
-    free(imgData);
-
-    VkBufferImageCopy region = {};
-    region.bufferOffset = 0;
-    region.bufferRowLength = graphics->imageExtent.width;
-    region.bufferImageHeight = graphics->imageExtent.height;
-
-    region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    region.imageSubresource.mipLevel = 0;
-    region.imageSubresource.baseArrayLayer = 0;
-    region.imageSubresource.layerCount = 1;
-
-    region.imageOffset = {0, 0, 0};
-    region.imageExtent = graphics->imageExtent;
-
-    vkCmdCopyBufferToImage(
-        commandBuffer,
-        stagingBuffer,
-        *image,
-        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-        1,
-        &region
-    );
-
-    layoutTransition.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-    layoutTransition.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
-    layoutTransition.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    layoutTransition.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-    vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, &layoutTransition);
-
-    vkEndCommandBuffer(commandBuffer);
-
-    VkSubmitInfo submitInfo = {
-        VK_STRUCTURE_TYPE_SUBMIT_INFO,
-        nullptr
-    };
-    submitInfo.commandBufferCount = 1;
-    VkCommandBuffer cmdBuffers[1] = {commandBuffer};
-    submitInfo.pCommandBuffers = cmdBuffers;
-
-    vkQueueSubmit(*graphics->openxr->vulkan->queue, 1, &submitInfo, VK_NULL_HANDLE);
-    vkQueueWaitIdle(*graphics->openxr->vulkan->queue);
-}
 
 void StardustOpenXRFrame::endFrame() {
+    qDebug() << "Ending frame";
     //Update properties on the XrFrameEndInfo and its dependencies
     XrCompositionLayerProjection stardustLayer = {
         XR_TYPE_COMPOSITION_LAYER_PROJECTION,
@@ -235,7 +139,100 @@ void StardustOpenXRFrame::endFrame() {
 
 
 
+
+
+
 //Vulkan shortcuts
+
+void StardustOpenXRFrame::copyFrame(int i, GLuint glTexID, VkImage *image) {
+    VkCommandBuffer commandBuffer = beginSingleTimeCommands(3);
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    VkDeviceSize imageSize = graphics->eyeDimensions.width()*graphics->eyeDimensions.height()*4;
+    VkMemoryRequirements memRequirements;
+    int fd = 0;
+
+    createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT, stagingBuffer, stagingBufferMemory, fd, memRequirements);
+
+    VkImageSubresourceRange range;
+    range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    range.baseArrayLayer = 0;
+    range.layerCount = 1;
+    range.baseMipLevel = 0;
+    range.levelCount = 1;
+
+    VkImageMemoryBarrier layoutTransition = {
+        VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+        nullptr,
+        VK_ACCESS_COLOR_ATTACHMENT_READ_BIT,
+        VK_ACCESS_TRANSFER_WRITE_BIT,
+        VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        graphics->openxr->vulkan->queueFamilyIndex,
+        graphics->openxr->vulkan->queueFamilyIndex,
+        *image,
+        range
+    };
+
+    vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, &layoutTransition);
+
+    const int align_mod = memRequirements.size % memRequirements.alignment;
+    const int aligned_size = ((memRequirements.size % memRequirements.alignment) == 0)
+                             ? memRequirements.size
+                             : (memRequirements.size + memRequirements.alignment - align_mod);
+
+    uint *imgData = (uint*) malloc(sizeof (uint) * imageSize); // TODO: free somewhere
+
+    memset(imgData, 255, sizeof(uint) * imageSize);
+
+    void* data = nullptr;
+    vkMapMemory(graphics->openxr->vulkan->device, stagingBufferMemory, 0, imageSize, 0, &data);
+        memcpy(data, imgData, imageSize);
+    vkUnmapMemory(graphics->openxr->vulkan->device, stagingBufferMemory);
+
+    free(imgData);
+
+    VkBufferImageCopy region = {};
+    region.bufferOffset = align_mod;
+    region.bufferRowLength = graphics->eyeDimensions.width();
+    region.bufferImageHeight = graphics->eyeDimensions.height();
+
+    region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    region.imageSubresource.mipLevel = 0;
+    region.imageSubresource.baseArrayLayer = 0;
+    region.imageSubresource.layerCount = 1;
+
+    region.imageOffset = {0, 0, 0};
+    region.imageExtent = graphics->imageExtents[i];
+
+    vkCmdCopyBufferToImage(
+        commandBuffer,
+        stagingBuffer,
+        *image,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        1,
+        &region
+    );
+
+    layoutTransition.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    layoutTransition.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+    layoutTransition.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    layoutTransition.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_DEPENDENCY_BY_REGION_BIT, 0, nullptr, 0, nullptr, 1, &layoutTransition);
+
+    vkEndCommandBuffer(commandBuffer);
+
+    VkSubmitInfo submitInfo = {
+        VK_STRUCTURE_TYPE_SUBMIT_INFO,
+        nullptr
+    };
+    submitInfo.commandBufferCount = 1;
+    VkCommandBuffer cmdBuffers[1] = {commandBuffer};
+    submitInfo.pCommandBuffers = cmdBuffers;
+
+    vkQueueSubmit(*graphics->openxr->vulkan->queue, 1, &submitInfo, VK_NULL_HANDLE);
+    vkQueueWaitIdle(*graphics->openxr->vulkan->queue);
+}
 
 VkCommandBuffer StardustOpenXRFrame::beginSingleTimeCommands(uint32_t count) {
     VkCommandBufferAllocateInfo allocInfo = {};
@@ -264,7 +261,8 @@ void StardustOpenXRFrame::createBuffer(VkDeviceSize size, VkBufferUsageFlags usa
 
     VkBufferCreateInfo bufferInfo = {};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.pNext = &externalBufferInfo;
+//    bufferInfo.pNext = &externalBufferInfo;
+    bufferInfo.pNext = nullptr;
     bufferInfo.size = size;
     bufferInfo.usage = usage;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
@@ -292,7 +290,8 @@ void StardustOpenXRFrame::createBuffer(VkDeviceSize size, VkBufferUsageFlags usa
 
     VkMemoryAllocateInfo allocInfo = {};
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    allocInfo.pNext = &import_memory_info;
+//    allocInfo.pNext = &import_memory_info;
+    allocInfo.pNext = nullptr;
     allocInfo.allocationSize = aligned_size;
     allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 

@@ -1,8 +1,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
 
-#include <QtGui/QGuiApplication>
-
+#include <QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 
 #include <openxr/openxr.h>
@@ -77,12 +76,6 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
     registerQMLTypes();
-
-    ConfigPathGetter getter;
-    QDir renderSettingsDir = getter.loadConfigDir("stardust");
-    if(!QFile::exists(renderSettingsDir.absoluteFilePath("StardustRenderSettings.qml"))) {
-        QFile::copy(":/StardustRenderSettings.qml", renderSettingsDir.absoluteFilePath("StardustRenderSettings.qml"));
-    }
 
     QSurfaceFormat::setDefaultFormat(QQuick3DViewport::idealSurfaceFormat());
 
