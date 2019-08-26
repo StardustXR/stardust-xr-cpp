@@ -262,8 +262,7 @@ void StardustOpenXRFrame::createBuffer(VkDeviceSize size, VkBufferUsageFlags usa
 
     VkBufferCreateInfo bufferInfo = {};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-//    bufferInfo.pNext = &externalBufferInfo;
-    bufferInfo.pNext = nullptr;
+    bufferInfo.pNext = &externalBufferInfo;
     bufferInfo.size = size;
     bufferInfo.usage = usage;
     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
@@ -282,25 +281,37 @@ void StardustOpenXRFrame::createBuffer(VkDeviceSize size, VkBufferUsageFlags usa
                              : (memRequirements.size + memRequirements.alignment - align_mod);
 
 
-    VkImportMemoryFdInfoKHR import_memory_info = {
-        VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR,
+    VkMemoryDedicatedAllocateInfoKHR dedicated_memory_info = {
+        VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR,
         nullptr,
-        VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT,
-        fd
+        VK_NULL_HANDLE,
+        buffer
     };
 
-    VkMemoryAllocateInfo allocInfo = {};
-    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-//    allocInfo.pNext = &import_memory_info;
-    allocInfo.pNext = nullptr;
-    allocInfo.allocationSize = aligned_size;
-    allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+    VkMemoryAllocateInfo allocInfo = {
+        VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+        &dedicated_memory_info,
+        memRequirements.size,
+        findMemoryType(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, properties)
+    };
+    allocInfo.allocationSize = memRequirements.size;
 
-    if (vkAllocateMemory(graphics->openxr->vulkan->device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
+    VkResult result = vkAllocateMemory(graphics->openxr->vulkan->device, &allocInfo, nullptr, &bufferMemory);
+    if (result != VK_SUCCESS) {
         throw std::runtime_error("failed to allocate buffer memory!");
     }
 
-    VkResult result = vkBindBufferMemory(graphics->openxr->vulkan->device, buffer, bufferMemory, 0);
+    result = vkBindBufferMemory(graphics->openxr->vulkan->device, buffer, bufferMemory, 0);
+
+    PFN_vkGetMemoryFdKHR extVkGetMemoryFdKHR = (PFN_vkGetMemoryFdKHR) vkGetDeviceProcAddr (graphics->openxr->vulkan->device, "vkGetMemoryFdKHR");
+    VkMemoryGetFdInfoKHR vulkanFdInfo = {
+        VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR,
+        nullptr,
+        bufferMemory,
+        VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR
+    };
+
+    extVkGetMemoryFdKHR(graphics->openxr->vulkan->device, &vulkanFdInfo, &fd);
 }
 
 uint32_t StardustOpenXRFrame::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
