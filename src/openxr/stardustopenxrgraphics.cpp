@@ -50,16 +50,18 @@ void StardustOpenXRGraphics::initialize() {
         emit eyeDimensionsChanged();
 
         //Get the amount of swapchain images
-        xrEnumerateSwapchainImages(swapchains[i], 0, &swapchainImageCount, nullptr);
+        uint32_t swapchainLength = 0;
+        xrEnumerateSwapchainImages(swapchains[i], 0, &swapchainLength, nullptr);
 
-        //Add references to all swapchain images to swapchainImages
-        swapchainImages[i] = std::vector<XrSwapchainImageVulkanKHR>(swapchainImageCount, swapchainImageTemplate);
+        assert(swapchainLength > 0);
 
-        //Add swapchain images to the array
-        xrEnumerateSwapchainImages(swapchains[i], swapchainImageCount, nullptr, reinterpret_cast<XrSwapchainImageBaseHeader *>(swapchainImages[i].data()));
+        // Resize the swapchain-length for current eye i
+        swapchainImages[i].resize(swapchainLength);
+        xrEnumerateSwapchainImages(swapchains[i], swapchainLength, &swapchainLength, reinterpret_cast<XrSwapchainImageBaseHeader*>(swapchainImages[i].data()));
 
-        //Add pointers to the swapchain images
-        vulkanImages[i] = &swapchainImages[i][swapchainImageIndices[i]].image;
+        vulkanImages[i].resize(swapchainImages[i].size());
+        for (size_t j = 0; j < swapchainImages[i].size(); j++)
+            vulkanImages[i][j] = swapchainImages[i][j].image;
     }
 
     //Create a reference space relative to the iz (floor)

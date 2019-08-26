@@ -128,10 +128,7 @@ public:
 
     QQuickItem *surfaces[2];
 
-    VkImage *vulkanImages[2] = {
-        VK_NULL_HANDLE,
-        VK_NULL_HANDLE
-    };
+    std::vector<VkImage> vulkanImages[2];
 
     XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
     XrFrameState frameState{XR_TYPE_FRAME_STATE};

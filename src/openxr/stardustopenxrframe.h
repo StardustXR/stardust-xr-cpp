@@ -31,7 +31,7 @@ private slots:
     void endFrame();
 
 private:
-    void copyFrame(int i, GLuint glTexID, VkImage *image);
+    void copyFrame(int i, GLuint glTexID, VkImage image);
 
     //Vulkan helper functions
     VkCommandBuffer beginSingleTimeCommands(uint32_t count);

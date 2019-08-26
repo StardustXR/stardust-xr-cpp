@@ -94,7 +94,8 @@ void StardustOpenXRFrame::renderFrame() {
                               Q_RETURN_ARG(GLuint, leftTex)
             );
 
-    copyFrame(0, leftTex, graphics->vulkanImages[0]);
+    copyFrame(0, leftTex, graphics->vulkanImages[0][0]);
+    copyFrame(1, 0, graphics->vulkanImages[1][0]);
 
     emit renderedFrame();
 }
@@ -144,7 +145,7 @@ void StardustOpenXRFrame::endFrame() {
 
 //Vulkan shortcuts
 
-void StardustOpenXRFrame::copyFrame(int i, GLuint glTexID, VkImage *image) {
+void StardustOpenXRFrame::copyFrame(int i, GLuint glTexID, VkImage image) {
     VkCommandBuffer commandBuffer = beginSingleTimeCommands(3);
     VkBuffer stagingBuffer;
     VkDeviceMemory stagingBufferMemory;
@@ -170,7 +171,7 @@ void StardustOpenXRFrame::copyFrame(int i, GLuint glTexID, VkImage *image) {
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         graphics->openxr->vulkan->queueFamilyIndex,
         graphics->openxr->vulkan->queueFamilyIndex,
-        *image,
+        image,
         range
     };
 
@@ -208,7 +209,7 @@ void StardustOpenXRFrame::copyFrame(int i, GLuint glTexID, VkImage *image) {
     vkCmdCopyBufferToImage(
         commandBuffer,
         stagingBuffer,
-        *image,
+        image,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         1,
         &region
