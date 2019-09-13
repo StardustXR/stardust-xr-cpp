@@ -10,6 +10,9 @@ StardustOpenXRGraphics::~StardustOpenXRGraphics() {
     xrDestroySwapchain(swapchains[1]);
 }
 
+void StardustOpenXRGraphics::preInitialize() {
+}
+
 void StardustOpenXRGraphics::initialize() {
     //Get the stereo views' configuration properties
     xrGetViewConfigurationProperties(*openxr->xrInstance, *openxr->hmdID, openxr->viewConfig, &viewProperties);
@@ -17,10 +20,6 @@ void StardustOpenXRGraphics::initialize() {
     //Get the stereo views' configurations
     uint32_t viewCount = 2;
     xrEnumerateViewConfigurationViews(*openxr->xrInstance, *openxr->hmdID, openxr->viewConfig, viewCount, &viewCount, eyeData);
-
-    //Add views to the surfaces array
-    surfaces[0] = leftView;
-    surfaces[1] = rightView;
 
     //Update the swapchain info's values
     swapInfo.height = eyeData[0].recommendedImageRectHeight;
@@ -31,6 +30,7 @@ void StardustOpenXRGraphics::initialize() {
     xrCreateSwapchain(*openxr->stardustSession, &swapInfo, &swapchains[0]);
     xrCreateSwapchain(*openxr->stardustSession, &swapInfo, &swapchains[1]);
 
+    imageOffsets[1].x = eyeData[0].recommendedImageRectWidth;
 
     //Do all this for both eyes
     for(int i=0; i<2; i++) {
@@ -41,13 +41,6 @@ void StardustOpenXRGraphics::initialize() {
         //Update the eyeRects' extents
         eyeRects[i].extent.height = eyeData[i].recommendedImageRectHeight;
         eyeRects[i].extent.width = eyeData[i].recommendedImageRectWidth;
-
-        //Update the QSize so the QML textures can be set
-        eyeDimensions = QSize(eyeData[i].recommendedImageRectWidth, eyeData[i].recommendedImageRectHeight);
-        surfaces[i]->setWidth(eyeRects[0].extent.width);
-        surfaces[i]->setHeight(eyeRects[0].extent.height);
-        surfaces[i]->update();
-        emit eyeDimensionsChanged();
 
         //Get the amount of swapchain images
         uint32_t swapchainLength = 0;
@@ -75,12 +68,26 @@ void StardustOpenXRGraphics::initialize() {
     frame->graphics = this;
 
     frameThread = new QThread(this);
-    frame->moveToThread(frameThread);
     frame->thread = frameThread;
 
-    //Start up the frame loop
-    connect(this, &StardustOpenXRGraphics::startFrameLoop, frame, &StardustOpenXRFrame::startFrame);
+    //Start up the frame thread
     frameThread->start();
 
+    //Start the frame loop as soon as the scene graph initializes
+    connect(this, &StardustOpenXRGraphics::startFrameLoop, frame, &StardustOpenXRFrame::initialize);
     emit startFrameLoop();
+}
+
+QSize StardustOpenXRGraphics::getRightViewSize() const
+{
+    return rightViewSize;
+}
+
+QSize StardustOpenXRGraphics::getLeftViewSize() const
+{
+    return leftViewSize;
+}
+
+QQuickWindow *StardustOpenXRGraphics::getWindow() const {
+    return window;
 }

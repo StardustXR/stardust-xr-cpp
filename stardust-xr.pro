@@ -1,4 +1,4 @@
-QT += qml quick quick3d-private waylandcompositor widgets
+QT += qml quick quick3d-private widgets
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -30,8 +30,7 @@ SOURCES += \
     src/keyboard/passthroughkeyboardhandler.cpp \
     src/core/pluginloader.cpp \
     src/main.cpp \
-    src/keyboard/physicalkeyboardadapter.cpp \
-    src/keyboard/waylandkeyboardhandler.cpp
+    src/keyboard/physicalkeyboardadapter.cpp
 
 RESOURCES += src/qml.qrc \
     defaults/defaults.qrc \
@@ -49,9 +48,10 @@ qnx: target.path = /tmp/$${TARGET}/bin
 
 INCLUDEPATH +=	-i/usr/local/include
 
-LIBS += -lglfw \
-        -lopenxr_loader \
-        -lvulkan
+LIBS += -lopenxr_loader \
+        -lvulkan \
+        -lGLEW \
+        -lglfw
 
 HEADERS += \
     src/core/configpathgetter.h \
@@ -73,5 +73,4 @@ HEADERS += \
     src/keyboard/keyboardhandler.h \
     src/keyboard/passthroughkeyboardhandler.h \
     src/keyboard/physicalkeyboardadapter.h \
-    src/core/pluginloader.h \
-    src/keyboard/waylandkeyboardhandler.h
+    src/core/pluginloader.h

@@ -16,6 +16,8 @@ public:
     QThread *thread = nullptr;
 
 signals:
+    void initialized();
+
     void startedFrame();
 
     void renderedFrame();
@@ -23,20 +25,41 @@ signals:
     void frameEnded();
 
 public slots:
-    void startFrame();
+    void initialize();
 
 private slots:
+    void startFrame();
+
     void renderFrame();
 
     void endFrame();
 
 private:
-    void copyFrame(int i, GLuint glTexID, VkImage image);
+    void copyFrame(uint i);
+    void initRenderControl();
+
+    QSize totalSize;
 
     //Vulkan helper functions
     VkCommandBuffer beginSingleTimeCommands(uint32_t count);
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
+    void createEXTBuffers();
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory, int &fd, VkMemoryRequirements &memRequirements);
+
+    //Vulkan variables
+    VkBuffer stagingBuffer;
+    VkDeviceMemory stagingBufferMemory;
+    VkDeviceSize imageSize;
+    VkMemoryRequirements memRequirements;
+    int fd = 0;
+
+    //OpenGL helper functions
+    void createTextureFromFD(int d);
+
+    //OpenGL variables
+    GLuint copyFBO;
+    GLuint colorTex;
 };
 
 #endif // STARDUSTOPENXRFRAME_H

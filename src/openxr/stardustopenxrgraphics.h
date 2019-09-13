@@ -5,9 +5,17 @@
 #include <QThread>
 #include <QVector3D>
 #include <QQuaternion>
-#include <QOpenGLFramebufferObject>
 #include <QMetaObject>
 #include <QQuickItem>
+#include <QQuickWindow>
+#include <QQuickRenderControl>
+#include <QOpenGLContext>
+#include <QOpenGLFramebufferObject>
+#include <QOffscreenSurface>
+
+#include <QQmlEngine>
+#include <QQmlComponent>
+
 
 #include "stardustopenxr.h"
 
@@ -18,17 +26,19 @@ class StardustOpenXRGraphics : public QObject {
 
     Q_PROPERTY(StardustOpenXR *openxr MEMBER openxr)
 
-    Q_PROPERTY(QSize eyeDimensions MEMBER eyeDimensions NOTIFY eyeDimensionsChanged)
-
-    Q_PROPERTY(QQuickItem *leftView MEMBER leftView)
-    Q_PROPERTY(QQuickItem *rightView MEMBER rightView)
     Q_PROPERTY(QObject *leftEye MEMBER leftEye)
     Q_PROPERTY(QObject *rightEye MEMBER rightEye)
+
+    Q_PROPERTY(QSize leftViewSize MEMBER leftViewSize NOTIFY leftEyeSizeChanged)
+    Q_PROPERTY(QSize rightViewSize MEMBER rightViewSize NOTIFY rightEyeSizeChanged)
+
+    Q_PROPERTY(QQuickWindow *window READ getWindow NOTIFY windowChanged)
 public:
     explicit StardustOpenXRGraphics(QObject *parent = nullptr);
     ~StardustOpenXRGraphics();
 
     StardustOpenXR *openxr = nullptr;
+    Q_INVOKABLE void preInitialize();
     Q_INVOKABLE void initialize();
 
     uint displayFPS = 0;
@@ -52,6 +62,12 @@ public:
     XrSwapchain swapchains[2] = {
         XrSwapchain {},
         XrSwapchain {}
+    };
+
+
+    VkOffset3D imageOffsets[2] = {
+        VkOffset3D{0, 0, 0},
+        VkOffset3D{0, 0, 0}
     };
 
     VkExtent3D imageExtents[2] = {
@@ -117,24 +133,38 @@ public:
     QThread *frameThread = nullptr;
     StardustOpenXRFrame *frame = nullptr;
 
-    QSize eyeDimensions = QSize(900, 900);
     std::vector<XrView> views;
 
-    QObject *leftEye = nullptr;
-    QObject *rightEye = nullptr;
+    QObject *leftEye;
+    QObject *rightEye;
 
-    QQuickItem *leftView = nullptr;
-    QQuickItem *rightView = nullptr;
+    QSize leftViewSize;
+    QSize rightViewSize;
 
-    QQuickItem *surfaces[2];
+    QOpenGLContext *glContext;
+    QOffscreenSurface *surface;
+    QQuickWindow *window;
+    QQuickRenderControl *quickRenderer;
+    QOpenGLFramebufferObject *glFBO;
+
+    QQmlEngine *qmlEngine;
+    QQmlComponent *qmlComponent;
 
     std::vector<VkImage> vulkanImages[2];
 
     XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
     XrFrameState frameState{XR_TYPE_FRAME_STATE};
 
+    QQuickWindow *getWindow() const;
+
+    QSize getLeftViewSize() const;
+    QSize getRightViewSize() const;
+
 signals:
-    void eyeDimensionsChanged();
+    void leftEyeSizeChanged();
+    void rightEyeSizeChanged();
+
+    void windowChanged();
     void startFrameLoop();
 };
 

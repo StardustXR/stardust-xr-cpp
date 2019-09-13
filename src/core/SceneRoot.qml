@@ -1,13 +1,14 @@
 import QtQuick 2.0
 import QtQuick3D 1.0
 import QtQuick3D.MaterialLibrary 1.0
-import QtWayland.Compositor 1.3
 
 import Launcher 1.0
 import ConfigPathGetter 1.0
 import ExtensionLoader 1.0
 import PluginLoader 1.0
 import "../render"
+
+import OpenXRGraphics 1.0
 
 Node {
     id:sceneRoot
@@ -27,23 +28,23 @@ Node {
     Camera {
         id:leftEye
 
-        position: Qt.vector3d(0,0,0)
+        clipNear: 0.001
         clipFar: 1000
-        fieldOfView: 45
+        fieldOfView: 110
         projectionMode: Camera.Perspective
-        enableFrustumCulling: true
-        rotation: Qt.vector3d(0,0,0)
+//        enableFrustumCulling: true
+
+        Component.onCompleted: OpenXRGraphics.leftEye = this
     }
 
     Camera {
         id:rightEye
 
-        position: Qt.vector3d(0,0,0)
         clipFar: 1000
-        fieldOfView: 45
-        projectionMode: Camera.Perspective
-        enableFrustumCulling: true
-        rotation: Qt.vector3d(0,0,0)
+        projectionMode: Camera.Frustum
+//        enableFrustumCulling: true
+
+        Component.onCompleted: OpenXRGraphics.rightEye = this
     }
 
     SceneEnvironment {
