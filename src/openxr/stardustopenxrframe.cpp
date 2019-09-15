@@ -160,6 +160,10 @@ void StardustOpenXRFrame::renderFrame() {
         GL_FRAMEBUFFER_EXT, graphics->glFBO->handle()
     );
 
+    (reinterpret_cast<PFNGLCLIPCONTROLPROC>(graphics->glContext->getProcAddress("glClipControl")))(
+        GL_UPPER_LEFT, GL_ZERO_TO_ONE
+    );
+
     (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
         GL_FRAMEBUFFER_EXT,
         GL_COLOR_ATTACHMENT0_EXT,
