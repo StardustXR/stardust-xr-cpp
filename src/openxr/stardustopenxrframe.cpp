@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 
 #include "stardustopenxrframe.h"
+#include "qopenglfunctions.h"
 #include <QtQuick3D/private/qquick3dcamera_p.h>
 #include <QDebug>
 
@@ -18,32 +19,21 @@ StardustOpenXRFrame::StardustOpenXRFrame(QObject *parent) : QObject(parent) {
 void StardustOpenXRFrame::initialize() {
     initRenderControl();
 
-    graphics->glContext->makeCurrent(graphics->surface);
+    bool isCurrent = graphics->glContext->makeCurrent(graphics->surface);
 
     createEXTBuffers();
-
-    //glGenFramebuffers(1, &copyFBO);
-    (reinterpret_cast<PFNGLGENFRAMEBUFFERSPROC>(graphics->glContext->getProcAddress("glGenFramebuffers")))(1, &copyFBO);
 
     emit initialized();
 }
 
 void StardustOpenXRFrame::initRenderControl() {
 
-    //Define format for all OpenGL rendering
-    QSurfaceFormat format;
-    format.setDepthBufferSize(16);
-    format.setStencilBufferSize(8);
-
     //Create the OpenGL view rendering
     graphics->glContext = new QOpenGLContext(this);
-    graphics->glContext->setFormat(format);
-    qDebug() << graphics->glContext->format();
     bool contextCreated = graphics->glContext->create();
 
     //Create the offscreen surface
     graphics->surface = new QOffscreenSurface;
-    graphics->surface->setFormat(graphics->glContext->format());
     graphics->surface->create();
 
     //Create QQuickRenderControl for both eyes
@@ -51,12 +41,8 @@ void StardustOpenXRFrame::initRenderControl() {
     graphics->window = new QQuickWindow(graphics->quickRenderer);
     graphics->window->setColor(Qt::transparent);
 
-    totalSize = QSize(
-                graphics->eyeData[0].recommendedImageRectWidth+graphics->eyeData[1].recommendedImageRectWidth,
-                std::max(graphics->eyeData[0].recommendedImageRectHeight, graphics->eyeData[1].recommendedImageRectHeight)
-            );
 
-    graphics->window->setGeometry(QRect(QPoint(0,0),totalSize)); //Set the window bounds to the minimum to fit both views in case they are asymmetrical
+    graphics->window->setGeometry(QRect(QPoint(0,0),graphics->totalSize)); //Set the window bounds to the minimum to fit both views in case they are asymmetrical
 
     //Make the QML engine and components and so on
     graphics->qmlEngine = new QQmlEngine;
@@ -67,7 +53,7 @@ void StardustOpenXRFrame::initRenderControl() {
     bool isCurrent = graphics->glContext->makeCurrent(graphics->surface);
 
     //Create and link the FBO
-    graphics->glFBO = new QOpenGLFramebufferObject(totalSize, QOpenGLFramebufferObject::NoAttachment, GL_TEXTURE_2D, GL_RGBA8);
+    graphics->glFBO = new QOpenGLFramebufferObject(graphics->totalSize, QOpenGLFramebufferObject::NoAttachment, GL_TEXTURE_2D, GL_RGBA);
     graphics->window->setRenderTarget(graphics->glFBO);
 
     graphics->leftViewSize = QSize(graphics->eyeData[0].recommendedImageRectWidth, graphics->eyeData[0].recommendedImageRectHeight);
@@ -83,7 +69,7 @@ void StardustOpenXRFrame::initRenderControl() {
     QQuickItem *root = qobject_cast<QQuickItem *>(graphics->qmlComponent->create());
     root->setParentItem(graphics->window->contentItem());
     root->setPosition(QPoint(0, 0));
-    root->setSize(QSize(graphics->window->size()));
+    root->setSize(graphics->totalSize);
 
     graphics->quickRenderer->initialize(graphics->glContext);
 }
@@ -100,20 +86,17 @@ void StardustOpenXRFrame::startFrame() {
 //        qDebug() << "FPS:" << 1000000000/frameState.predictedDisplayTime;
     graphics->displayFPS = static_cast<uint>(1000000000/graphics->frameState.predictedDisplayTime);
 
-    //Do all this for both eyes
-    for(int i=0; i<2; i++) {
-        //Create acquire information
-        XrSwapchainImageAcquireInfo acquireInfo{XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO, nullptr};
+    //Create acquire information
+    XrSwapchainImageAcquireInfo acquireInfo{XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO, nullptr};
 
-        //Grab the swapchain image
-        xrAcquireSwapchainImage(graphics->swapchains[i], &acquireInfo, &graphics->swapchainImageIndices.at(i));
+    //Grab the swapchain image
+    xrAcquireSwapchainImage(graphics->swapchain, &acquireInfo, &graphics->swapchainImageIndex);
 
-        //Create empty swapchain wait info
-        XrSwapchainImageWaitInfo waitInfo{XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO, nullptr};
+    //Create empty swapchain wait info
+    XrSwapchainImageWaitInfo waitInfo{XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO, nullptr};
 
-        //Wait for when the swapchain images are ready to be written
-        xrWaitSwapchainImage(graphics->swapchains[i], &waitInfo);
-    }
+    //Wait for when the swapchain images are ready to be written
+    xrWaitSwapchainImage(graphics->swapchain, &waitInfo);
 
     //Update view information
     graphics->viewLocateInfo.viewConfigurationType = graphics->openxr->viewConfig;
@@ -155,9 +138,9 @@ void StardustOpenXRFrame::startFrame() {
         graphics->stardustLayerViews[i].fov = view.fov;
         graphics->stardustLayerViews[i].pose = view.pose;
         graphics->stardustLayerViews[i].subImage = XrSwapchainSubImage {
-            graphics->swapchains[i],
+            graphics->swapchain,
             graphics->eyeRects[i],
-            graphics->swapchainImageIndices[i]
+            graphics->swapchainImageIndex
         };
     }
 
@@ -167,65 +150,30 @@ void StardustOpenXRFrame::startFrame() {
 void StardustOpenXRFrame::renderFrame() {
     qDebug() << "Rendering frame";
 
-    bool isCurrent = graphics->glContext->makeCurrent(graphics->surface);
-
     graphics->quickRenderer->polishItems();
     graphics->quickRenderer->sync();
     graphics->quickRenderer->render();
 
-//    //glBindFramebuffer(GL_FRAMEBUFFER, copyFBO);
-//    (reinterpret_cast<PFNGLBINDFRAMEBUFFERPROC>(graphics->glContext->getProcAddress("glBindFramebuffer")))(GL_FRAMEBUFFER, copyFBO);
-//    //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, graphics->glFBO->texture(), 0);
-//    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2D")))(
-//                GL_FRAMEBUFFER,
-//                GL_COLOR_ATTACHMENT0,
-//                GL_TEXTURE_2D,
-//                graphics->glFBO->texture(),
-//                0
-//    );
+//    graphics->glFBO->toImage().save("out.png", 0, 10);
 
-//    (reinterpret_cast<PFNGLTEXIMAGE2DMULTISAMPLEPROC>(graphics->glContext->getProcAddress("glCopyTexSubImage2D")))
+    (reinterpret_cast<PFNGLBINDFRAMEBUFFEREXTPROC>(graphics->glContext->getProcAddress("glBindFramebufferEXT")))(
+        GL_FRAMEBUFFER_EXT, graphics->glFBO->handle()
+    );
 
-//    (reinterpret_cast<PFNGLCOPYTEXTURESUBIMAGE2DPROC>(graphics->glContext->getProcAddress("glCopyTexSubImage2D")))(
-//                GL_TEXTURE_2D,
-//                0,
-//                0,0,0,0,
-//                graphics->window->width(),
-//                graphics->window->height());
-
-//    (reinterpret_cast<PFNGLCOPYIMAGESUBDATAPROC>(graphics->glContext->getProcAddress("glCopyImageSubData")))(
-//        graphics->glFBO->texture(), GL_TEXTURE_2D, 0, 0, 0, 0,
-//        colorTex, GL_TEXTURE_2D, 0, 0, 0, 0,
-//        graphics->window->width(), graphics->window->height(), 1
-//    );
-
-    char *imageData = new char[imageSize];
-
-
-    glBindTexture(GL_TEXTURE_2D, graphics->glFBO->texture());
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA8, GL_UNSIGNED_BYTE, imageData);
-    glBindTexture(GL_TEXTURE_2D, colorTex);
-
-
-    (reinterpret_cast<PFNGLTEXSUBIMAGE2DEXTPROC>(graphics->glContext->getProcAddress("glTexSubImage2D")))(
+    (reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE2DEXTPROC>(graphics->glContext->getProcAddress("glFramebufferTexture2DEXT")))(
+        GL_FRAMEBUFFER_EXT,
+        GL_COLOR_ATTACHMENT0_EXT,
         GL_TEXTURE_2D,
-        0,0,0,
-        graphics->window->width(),
-        graphics->window->height(),
-        GL_RGBA8,
-        GL_UNSIGNED_BYTE,
-        imageData
+        colorTex,
+        0
     );
 
     glFinish();
-    copyFrame(0);
-    copyFrame(1);
 
-    free(imageData);
+    copyFrame();
 
     emit renderedFrame();
 }
-
 
 void StardustOpenXRFrame::endFrame() {
     qDebug() << "Ending frame";
@@ -238,11 +186,10 @@ void StardustOpenXRFrame::endFrame() {
         2,
         graphics->stardustLayerViews
     };
-    stardustLayer.views = graphics->stardustLayerViews;
     std::vector<XrCompositionLayerBaseHeader*> layers;
-    if(graphics->frameState.shouldRender) {
-        layers.push_back(reinterpret_cast<XrCompositionLayerBaseHeader*>(&stardustLayer));
-    }
+
+    layers.push_back(reinterpret_cast<XrCompositionLayerBaseHeader*>(&stardustLayer));
+
     XrFrameEndInfo endInfo = {
         XR_TYPE_FRAME_END_INFO,
         nullptr,
@@ -255,8 +202,7 @@ void StardustOpenXRFrame::endFrame() {
     XrSwapchainImageReleaseInfo releaseInfo = {XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO, nullptr};
 
     //Release the swapchain images
-    xrReleaseSwapchainImage(graphics->swapchains[0], &releaseInfo);
-    xrReleaseSwapchainImage(graphics->swapchains[1], &releaseInfo);
+    xrReleaseSwapchainImage(graphics->swapchain, &releaseInfo);
 
     //End the drawing of the current frame
     xrEndFrame(*graphics->openxr->stardustSession, &endInfo);
@@ -267,8 +213,8 @@ void StardustOpenXRFrame::endFrame() {
 
 //Vulkan shortcuts
 
-void StardustOpenXRFrame::copyFrame(uint i) {
-    VkImage image = graphics->vulkanImages[i][0];
+void StardustOpenXRFrame::copyFrame() {
+    VkImage image = graphics->vulkanImage[0];
 
     VkCommandBuffer commandBuffer = beginSingleTimeCommands(3);
 
@@ -301,16 +247,16 @@ void StardustOpenXRFrame::copyFrame(uint i) {
 
     VkBufferImageCopy region = {};
     region.bufferOffset = align_mod;
-    region.bufferRowLength = graphics->eyeData[i].recommendedImageRectWidth;
-    region.bufferImageHeight = graphics->eyeData[i].recommendedImageRectHeight;
+    region.bufferRowLength = graphics->totalSize.width();
+    region.bufferImageHeight = graphics->totalSize.height();
 
     region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     region.imageSubresource.mipLevel = 0;
     region.imageSubresource.baseArrayLayer = 0;
     region.imageSubresource.layerCount = 1;
 
-    region.imageOffset = VkOffset3D{0, 0, 0};
-    region.imageExtent = VkExtent3D{static_cast<uint32_t>(totalSize.width()), static_cast<uint32_t>(totalSize.height()), 1};
+    region.imageOffset = VkOffset3D{0,0,0};
+    region.imageExtent = VkExtent3D{static_cast<uint32_t>(graphics->totalSize.width()), static_cast<uint32_t>(graphics->totalSize.height()), 1};
 
     vkCmdCopyBufferToImage(
         commandBuffer,
@@ -361,12 +307,13 @@ VkCommandBuffer StardustOpenXRFrame::beginSingleTimeCommands(uint32_t count) {
 }
 
 void StardustOpenXRFrame::createEXTBuffers() {
-    imageSize = graphics->window->height()*graphics->window->width()*4;
+    imageSize = graphics->totalSize.height()*graphics->totalSize.width()*4;
     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT, stagingBuffer, stagingBufferMemory, fd, memRequirements);
 
     GLint isDedicated = GL_TRUE;
 
     GLuint glMemObj = 0;
+
     //glCreateMemoryObjectsEXT(1, &glMemObj);
     (reinterpret_cast<PFNGLCREATEMEMORYOBJECTSEXTPROC>(graphics->glContext->getProcAddress("glCreateMemoryObjectsEXT")))(1, &glMemObj);
 
@@ -376,10 +323,9 @@ void StardustOpenXRFrame::createEXTBuffers() {
     glGenTextures(1, &colorTex);
 
     glBindTexture (GL_TEXTURE_2D, colorTex);
-//    glBindTexture (GL_TEXTURE_2D, graphics->glFBO->texture());
 
-//    glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, graphics->window->width(), graphics->window->height(), glMemObj, 0);
-    (reinterpret_cast<PFNGLTEXSTORAGEMEM2DEXTPROC>(graphics->glContext->getProcAddress("glTexStorageMem2DEXT")))(GL_TEXTURE_2D, 1, GL_RGBA8, graphics->window->width(), graphics->window->height(), glMemObj, 0);
+//    glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA, graphics->totalSize.width(), graphics->totalSize.height(), glMemObj, 0);
+    (reinterpret_cast<PFNGLTEXSTORAGEMEM2DEXTPROC>(graphics->glContext->getProcAddress("glTexStorageMem2DEXT")))(GL_TEXTURE_2D, 1, GL_RGBA, graphics->totalSize.width(), graphics->totalSize.height(), glMemObj, 0);
 
     glFinish();
 }

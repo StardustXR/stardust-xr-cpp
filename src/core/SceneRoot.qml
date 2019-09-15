@@ -40,8 +40,10 @@ Node {
     Camera {
         id:rightEye
 
+        clipNear: 0.001
         clipFar: 1000
-        projectionMode: Camera.Frustum
+        fieldOfView: 110
+        projectionMode: Camera.Perspective
 //        enableFrustumCulling: true
 
         Component.onCompleted: OpenXRGraphics.rightEye = this

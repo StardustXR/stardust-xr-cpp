@@ -6,7 +6,6 @@ import OpenXRGraphics 1.0
 
 Rectangle {
     anchors.fill: parent
-
     View3D {
         id: leftView
 
@@ -22,20 +21,20 @@ Rectangle {
         environment: sceneRoot.skybox
     }
 
-//    View3D {
-//        id: rightView
+    View3D {
+        id: rightView
 
-//        renderMode: View3D.Texture
+        renderMode: View3D.Texture
 
-//        x: OpenXRGraphics.leftViewSize.width
-//        y: 0
-//        width: OpenXRGraphics.rightViewSize.width
-//        height: OpenXRGraphics.rightViewSize.height
+        x: OpenXRGraphics.leftViewSize.width
+        y: 0
+        width: OpenXRGraphics.rightViewSize.width
+        height: OpenXRGraphics.rightViewSize.height
 
-//        camera: sceneRoot.rightEye
-//        scene: sceneRoot
-//        environment: sceneRoot.skybox
-//    }
+        camera: sceneRoot.rightEye
+        scene: sceneRoot
+        environment: sceneRoot.skybox
+    }
 
     SceneRoot {
         id:sceneRoot

@@ -59,21 +59,7 @@ public:
         1,                                                                                  //uint32_t                  arraySize;
         1                                                                                   //uint32_t                  mipCount;
     };
-    XrSwapchain swapchains[2] = {
-        XrSwapchain {},
-        XrSwapchain {}
-    };
-
-
-    VkOffset3D imageOffsets[2] = {
-        VkOffset3D{0, 0, 0},
-        VkOffset3D{0, 0, 0}
-    };
-
-    VkExtent3D imageExtents[2] = {
-        VkExtent3D{0, 0, 1},
-        VkExtent3D{0, 0, 1}
-    };
+    XrSwapchain swapchain;
 
     uint32_t swapchainImageCount = 0;
     XrSwapchainImageVulkanKHR swapchainImageTemplate = {
@@ -81,10 +67,8 @@ public:
         nullptr,
         VkImage()
     };
-    std::vector<XrSwapchainImageVulkanKHR> swapchainImages[2];
+    std::vector<XrSwapchainImageVulkanKHR> swapchainImages;
     uint32_t swapchainImageIndex;
-
-    std::vector<uint32_t> swapchainImageIndices = std::vector<uint32_t>(2);
 
     XrReferenceSpaceCreateInfo refSpaceInfo = {
         XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
@@ -141,6 +125,8 @@ public:
     QSize leftViewSize;
     QSize rightViewSize;
 
+    QSize totalSize;
+
     QOpenGLContext *glContext;
     QOffscreenSurface *surface;
     QQuickWindow *window;
@@ -150,7 +136,7 @@ public:
     QQmlEngine *qmlEngine;
     QQmlComponent *qmlComponent;
 
-    std::vector<VkImage> vulkanImages[2];
+    std::vector<VkImage> vulkanImage;
 
     XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
     XrFrameState frameState{XR_TYPE_FRAME_STATE};

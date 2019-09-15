@@ -35,10 +35,8 @@ private slots:
     void endFrame();
 
 private:
-    void copyFrame(uint i);
+    void copyFrame();
     void initRenderControl();
-
-    QSize totalSize;
 
     //Vulkan helper functions
     VkCommandBuffer beginSingleTimeCommands(uint32_t count);
