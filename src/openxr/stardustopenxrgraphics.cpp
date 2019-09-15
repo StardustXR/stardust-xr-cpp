@@ -6,7 +6,8 @@ StardustOpenXRGraphics::StardustOpenXRGraphics(QObject *parent) : QObject(parent
 }
 
 StardustOpenXRGraphics::~StardustOpenXRGraphics() {
-    xrDestroySwapchain(swapchain);
+    xrDestroySwapchain(swapchains[0]);
+    xrDestroySwapchain(swapchains[1]);
 }
 
 void StardustOpenXRGraphics::preInitialize() {
@@ -26,37 +27,41 @@ void StardustOpenXRGraphics::initialize() {
                 std::max(eyeData[0].recommendedImageRectHeight, eyeData[1].recommendedImageRectHeight)
             );
 
+    //Do all this for both eyes
+    for(int i=0; i<2; i++) {
+        //Create the eyeRects
+        eyeRects[i] = QRect();
+//        eyeRects[1].setX(eyeData[0].recommendedImageRectWidth);
+
+        //Update the eyeRects' extents
+        eyeRects[i].setHeight(eyeData[i].recommendedImageRectHeight);
+        eyeRects[i].setWidth(eyeData[i].recommendedImageRectWidth);
+    }
+
     //Update the swapchain info's values
-    swapInfo.height = totalSize.height();
-    swapInfo.width = totalSize.width();
+    swapInfo.width = eyeRects[0].width();
+    swapInfo.height = eyeRects[0].height();
     swapInfo.sampleCount = eyeData[0].recommendedSwapchainSampleCount;
-
-    //Create the swapchains
-    xrCreateSwapchain(*openxr->stardustSession, &swapInfo, &swapchain);
-
-    eyeRects[1].offset.x = eyeData[0].recommendedImageRectWidth;
 
     //Do all this for both eyes
     for(int i=0; i<2; i++) {
-        //Update the eyeRects' extents
-        eyeRects[i].extent.height = eyeData[i].recommendedImageRectHeight;
-        eyeRects[i].extent.width = eyeData[i].recommendedImageRectWidth;
+        //Create the swapchains
+        xrCreateSwapchain(*openxr->stardustSession, &swapInfo, &swapchains[i]);
 
         //Get the amount of swapchain images
         uint32_t swapchainLength = 0;
-        xrEnumerateSwapchainImages(swapchain, 0, &swapchainLength, nullptr);
+        xrEnumerateSwapchainImages(swapchains[i], 0, &swapchainLength, nullptr);
 
         assert(swapchainLength > 0);
 
         // Resize the swapchain-length for current eye i
-        swapchainImages.resize(swapchainLength);
-        xrEnumerateSwapchainImages(swapchain, swapchainLength, &swapchainLength, reinterpret_cast<XrSwapchainImageBaseHeader*>(swapchainImages.data()));
+        swapchainImages[i].resize(swapchainLength);
+        xrEnumerateSwapchainImages(swapchains[i], swapchainLength, &swapchainLength, reinterpret_cast<XrSwapchainImageBaseHeader*>(swapchainImages[i].data()));
+
+        vulkanImages[i].resize(swapchainImages[i].size());
+        for (size_t j = 0; j < swapchainImages[i].size(); j++)
+            vulkanImages[i][j] = swapchainImages[i][j].image;
     }
-
-
-    vulkanImage.resize(swapchainImages.size());
-    for (size_t j = 0; j < swapchainImages.size(); j++)
-        vulkanImage[j] = swapchainImages[j].image;
 
     //Create a reference space relative to the iz (floor)
     xrCreateReferenceSpace(*openxr->stardustSession, &refSpaceInfo, &refSpace);

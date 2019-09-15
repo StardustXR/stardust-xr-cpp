@@ -35,7 +35,7 @@ private slots:
     void endFrame();
 
 private:
-    void copyFrame();
+    void copyFrame(uint i);
     void initRenderControl();
 
     //Vulkan helper functions

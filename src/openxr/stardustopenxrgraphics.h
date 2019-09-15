@@ -59,7 +59,7 @@ public:
         1,                                                                                  //uint32_t                  arraySize;
         1                                                                                   //uint32_t                  mipCount;
     };
-    XrSwapchain swapchain;
+    XrSwapchain swapchains[2];
 
     uint32_t swapchainImageCount = 0;
     XrSwapchainImageVulkanKHR swapchainImageTemplate = {
@@ -67,8 +67,8 @@ public:
         nullptr,
         VkImage()
     };
-    std::vector<XrSwapchainImageVulkanKHR> swapchainImages;
-    uint32_t swapchainImageIndex;
+    std::vector<XrSwapchainImageVulkanKHR> swapchainImages[2];
+    uint32_t swapchainImageIndices[2];
 
     XrReferenceSpaceCreateInfo refSpaceInfo = {
         XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
@@ -90,16 +90,7 @@ public:
         nullptr
     };
 
-    XrRect2Di eyeRects[2] = {
-        XrRect2Di {
-            XrOffset2Di {0,0},
-            XrExtent2Di {1,1}
-        },
-        XrRect2Di {
-            XrOffset2Di {0,0},
-            XrExtent2Di {1,1}
-        }
-    };
+    QRect eyeRects[2];
 
     XrCompositionLayerProjectionView stardustLayerViews[2] = {
         XrCompositionLayerProjectionView {
@@ -136,7 +127,7 @@ public:
     QQmlEngine *qmlEngine;
     QQmlComponent *qmlComponent;
 
-    std::vector<VkImage> vulkanImage;
+    std::vector<VkImage> vulkanImages[2];
 
     XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
     XrFrameState frameState{XR_TYPE_FRAME_STATE};

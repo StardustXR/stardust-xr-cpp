@@ -86,18 +86,6 @@ void StardustOpenXRFrame::startFrame() {
 //        qDebug() << "FPS:" << 1000000000/frameState.predictedDisplayTime;
     graphics->displayFPS = static_cast<uint>(1000000000/graphics->frameState.predictedDisplayTime);
 
-    //Create acquire information
-    XrSwapchainImageAcquireInfo acquireInfo{XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO, nullptr};
-
-    //Grab the swapchain image
-    xrAcquireSwapchainImage(graphics->swapchain, &acquireInfo, &graphics->swapchainImageIndex);
-
-    //Create empty swapchain wait info
-    XrSwapchainImageWaitInfo waitInfo{XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO, nullptr};
-
-    //Wait for when the swapchain images are ready to be written
-    xrWaitSwapchainImage(graphics->swapchain, &waitInfo);
-
     //Update view information
     graphics->viewLocateInfo.viewConfigurationType = graphics->openxr->viewConfig;
     graphics->viewLocateInfo.displayTime = graphics->frameState.predictedDisplayTime;
@@ -106,10 +94,24 @@ void StardustOpenXRFrame::startFrame() {
     //Locate views
     xrLocateViews(*graphics->openxr->stardustSession, &graphics->viewLocateInfo, &graphics->viewState, 2, nullptr, graphics->views.data());
 
+    //Create acquire information
+    XrSwapchainImageAcquireInfo acquireInfo{XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO, nullptr};
+
+    //Create empty swapchain wait info
+    XrSwapchainImageWaitInfo waitInfo{XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO, nullptr};
+
     //Do for each eye
     for(int i=0; i<2; i++) {
+        //Grab the swapchain image
+        xrAcquireSwapchainImage(graphics->swapchains[i], &acquireInfo, &graphics->swapchainImageIndices[i]);
+
+        //Wait for when the swapchain images are ready to be written
+        xrWaitSwapchainImage(graphics->swapchains[i], &waitInfo);
+
+        //Get the current view (makes code neater)
         XrView &view = graphics->views[i];
 
+        //Get the current eye camera (makes code neater)
         QQuick3DCamera *eye = qobject_cast<QQuick3DCamera *>(graphics->leftEye);
         if(i==1)
             eye = qobject_cast<QQuick3DCamera *>(graphics->rightEye);
@@ -138,9 +140,18 @@ void StardustOpenXRFrame::startFrame() {
         graphics->stardustLayerViews[i].fov = view.fov;
         graphics->stardustLayerViews[i].pose = view.pose;
         graphics->stardustLayerViews[i].subImage = XrSwapchainSubImage {
-            graphics->swapchain,
-            graphics->eyeRects[i],
-            graphics->swapchainImageIndex
+            graphics->swapchains[i],
+            XrRect2Di {
+                XrOffset2Di {
+                    graphics->eyeRects[i].x(),
+                    graphics->eyeRects[i].y()
+                },
+                XrExtent2Di {
+                    graphics->eyeRects[i].width(),
+                    graphics->eyeRects[i].height()
+                }
+            },
+            graphics->swapchainImageIndices[i]
         };
     }
 
@@ -174,7 +185,8 @@ void StardustOpenXRFrame::renderFrame() {
 
     glFinish();
 
-    copyFrame();
+    copyFrame(0);
+    copyFrame(1);
 
     emit renderedFrame();
 }
@@ -206,7 +218,8 @@ void StardustOpenXRFrame::endFrame() {
     XrSwapchainImageReleaseInfo releaseInfo = {XR_TYPE_SWAPCHAIN_IMAGE_RELEASE_INFO, nullptr};
 
     //Release the swapchain images
-    xrReleaseSwapchainImage(graphics->swapchain, &releaseInfo);
+    xrReleaseSwapchainImage(graphics->swapchains[0], &releaseInfo);
+    xrReleaseSwapchainImage(graphics->swapchains[1], &releaseInfo);
 
     //End the drawing of the current frame
     xrEndFrame(*graphics->openxr->stardustSession, &endInfo);
@@ -217,8 +230,8 @@ void StardustOpenXRFrame::endFrame() {
 
 //Vulkan shortcuts
 
-void StardustOpenXRFrame::copyFrame() {
-    VkImage image = graphics->vulkanImage[0];
+void StardustOpenXRFrame::copyFrame(uint i) {
+    VkImage image = graphics->vulkanImages[i][0];
 
     VkCommandBuffer commandBuffer = beginSingleTimeCommands(3);
 
@@ -260,7 +273,7 @@ void StardustOpenXRFrame::copyFrame() {
     region.imageSubresource.layerCount = 1;
 
     region.imageOffset = VkOffset3D{0,0,0};
-    region.imageExtent = VkExtent3D{static_cast<uint32_t>(graphics->totalSize.width()), static_cast<uint32_t>(graphics->totalSize.height()), 1};
+    region.imageExtent = VkExtent3D{static_cast<uint32_t>(graphics->eyeRects[i].width()), static_cast<uint32_t>(graphics->eyeRects[i].height()), 1};
 
     vkCmdCopyBufferToImage(
         commandBuffer,
@@ -311,7 +324,7 @@ VkCommandBuffer StardustOpenXRFrame::beginSingleTimeCommands(uint32_t count) {
 }
 
 void StardustOpenXRFrame::createEXTBuffers() {
-    imageSize = graphics->totalSize.height()*graphics->totalSize.width()*4;
+    imageSize = graphics->totalSize.width()*graphics->totalSize.height()*4;
     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT, stagingBuffer, stagingBufferMemory, fd, memRequirements);
 
     GLint isDedicated = GL_TRUE;
