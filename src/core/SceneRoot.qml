@@ -57,7 +57,6 @@ Node {
         enableFrustumCulling: true
 
         Component.onCompleted: OpenXRGraphics.leftEye = this
-        onPositionChanged: console.log(position)
     }
 
     Camera {
