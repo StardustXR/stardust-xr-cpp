@@ -1,8 +1,10 @@
+import QtQuick 2.12
 import QtQuick3D 1.0
 
 Model {
     property real radius: 1
-    onRadiusChanged: scale = Qt.vector3d(radius, radius, radius)
+    scale: Qt.vector3d(0.01, 0.01, 0.01)
+    onRadiusChanged: scale = Qt.vector3d(radius*0.01, radius*0.01, radius*0.01)
 
     source: "#Sphere"
 
