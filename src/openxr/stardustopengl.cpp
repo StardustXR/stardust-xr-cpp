@@ -1,10 +1,12 @@
 #include "stardustopengl.h"
 
-StardustOpenGL::StardustOpenGL(QObject *parent) : QObject(parent) {
+namespace Stardust {
+
+OpenGL::OpenGL(QObject *parent) : QObject(parent) {
 
 }
 
-void StardustOpenGL::initialize() {
+void OpenGL::initialize() {
     //Temporarily make the context current
     QCoreApplication::setAttribute(Qt::AA_DontCheckOpenGLContextThreadAffinity, true);
     window->openglContext()->doneCurrent();
@@ -34,4 +36,6 @@ void StardustOpenGL::initialize() {
 
     //Enable same-thread context checking
     QCoreApplication::setAttribute(Qt::AA_DontCheckOpenGLContextThreadAffinity, false);
+}
+
 }

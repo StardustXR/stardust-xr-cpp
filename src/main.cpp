@@ -27,9 +27,9 @@
 #include "openxr/stardustopenxr.h"
 #include "openxr/stardustopenxrgraphics.h"
 
-StardustOpenXR *openxr;
-StardustVulkan *vulkan;
-StardustOpenXRGraphics *graphics;
+Stardust::OpenXR *openxr;
+Stardust::Vulkan *vulkan;
+Stardust::OpenXRGraphics *graphics;
 
 void registerQMLTypes() {
     qmlRegisterType<Launcher>("Stardust.Core", 1, 0, "Launcher");
@@ -50,19 +50,19 @@ void registerQMLTypes() {
     qmlRegisterType<PhysicalKeyboardAdapter>("Stardust.Core", 1, 0, "PhysicalKeyboardAdapter");
     qmlRegisterType<PassthroughKeyboardHandler>("Stardust.Core", 1, 0, "PassthroughKeyboardHandler");
 
-    qmlRegisterSingletonType<StardustVulkan>("Stardust.Core.Internal", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+    qmlRegisterSingletonType<Stardust::Vulkan>("Stardust.Core.Internal", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
         return vulkan;
     });
-    qmlRegisterSingletonType<StardustOpenXR>("Stardust.Core.Internal", 1, 0, "OpenXR", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+    qmlRegisterSingletonType<Stardust::OpenXR>("Stardust.Core.Internal", 1, 0, "OpenXR", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
         return openxr;
     });
-    qmlRegisterSingletonType<StardustOpenXRGraphics>("Stardust.Core.Internal", 1, 0, "OpenXRGraphics", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+    qmlRegisterSingletonType<Stardust::OpenXRGraphics>("Stardust.Core.Internal", 1, 0, "OpenXRGraphics", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
@@ -71,11 +71,11 @@ void registerQMLTypes() {
 }
 
 void initOpenXR() {
-    graphics = new StardustOpenXRGraphics();
+    graphics = new Stardust::OpenXRGraphics();
     graphics->preInitialize();
 
-    openxr = new StardustOpenXR();
-    vulkan = new StardustVulkan();
+    openxr = new Stardust::OpenXR();
+    vulkan = new Stardust::Vulkan();
 
     openxr->vulkan = vulkan;
     vulkan->openxr = openxr;

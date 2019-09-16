@@ -4,16 +4,18 @@
 #include <QDebug>
 #include <signal.h>
 
-StardustOpenXR::StardustOpenXR(QObject *parent) : QObject(parent) {
+namespace Stardust {
+
+OpenXR::OpenXR(QObject *parent) : QObject(parent) {
 }
 
-StardustOpenXR::~StardustOpenXR() {
+OpenXR::~OpenXR() {
     xrEndSession(*stardustSession);
     xrDestroySession(*stardustSession);
     xrDestroyInstance(*xrInstance);
 }
 
-void StardustOpenXR::initialize() {
+void OpenXR::initialize() {
     strcpy(xrAppInfo->applicationName, QString("Stardust XR").toUtf8());
     xrAppInfo->applicationVersion = 1;
     strcpy(xrAppInfo->engineName, QString("Qt").toUtf8());
@@ -87,7 +89,7 @@ void StardustOpenXR::initialize() {
     xrBeginSession(*stardustSession, &beginInfo);
 }
 
-bool StardustOpenXR::isExtensionSupported(char *extensionName, XrExtensionProperties *instanceExtensionProperties, uint32_t instanceExtensionCount) {
+bool OpenXR::isExtensionSupported(char *extensionName, XrExtensionProperties *instanceExtensionProperties, uint32_t instanceExtensionCount) {
     for (uint32_t supportedIndex = 0; supportedIndex < instanceExtensionCount; supportedIndex++) {
         if (!strcmp(extensionName,
                     instanceExtensionProperties[supportedIndex].extensionName)) {
@@ -95,4 +97,6 @@ bool StardustOpenXR::isExtensionSupported(char *extensionName, XrExtensionProper
         }
     }
     return false;
+}
+
 }

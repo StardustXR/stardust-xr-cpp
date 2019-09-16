@@ -19,12 +19,14 @@
 
 #include "stardustopenxr.h"
 
-class StardustOpenXRFrame;
+namespace Stardust {
 
-class StardustOpenXRGraphics : public QObject {
+class OpenXRFrame;
+
+class OpenXRGraphics : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(StardustOpenXR *openxr MEMBER openxr)
+    Q_PROPERTY(OpenXR *openxr MEMBER openxr)
 
     Q_PROPERTY(QObject *leftEye MEMBER leftEye)
     Q_PROPERTY(QObject *rightEye MEMBER rightEye)
@@ -34,10 +36,10 @@ class StardustOpenXRGraphics : public QObject {
 
     Q_PROPERTY(QQuickWindow *window READ getWindow NOTIFY windowChanged)
 public:
-    explicit StardustOpenXRGraphics(QObject *parent = nullptr);
-    ~StardustOpenXRGraphics();
+    explicit OpenXRGraphics(QObject *parent = nullptr);
+    ~OpenXRGraphics();
 
-    StardustOpenXR *openxr = nullptr;
+    OpenXR *openxr = nullptr;
     Q_INVOKABLE void preInitialize();
     Q_INVOKABLE void initialize();
 
@@ -106,7 +108,7 @@ public:
     QOpenGLFramebufferObject *fbo;
 
     QThread *frameThread = nullptr;
-    StardustOpenXRFrame *frame = nullptr;
+    OpenXRFrame *frame = nullptr;
 
     std::vector<XrView> views;
 
@@ -145,5 +147,7 @@ signals:
     void windowChanged();
     void startFrameLoop();
 };
+
+}
 
 #endif // STARDUSTOPENXRGRAPHICS_H

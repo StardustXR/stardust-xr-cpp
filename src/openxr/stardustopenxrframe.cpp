@@ -8,15 +8,17 @@
 
 #define RAD2DEG 180/3.14159
 
-StardustOpenXRFrame::StardustOpenXRFrame(QObject *parent) : QObject(parent) {
-    connect(this, &StardustOpenXRFrame::initialized, this, &StardustOpenXRFrame::startFrame);
+namespace Stardust {
 
-    connect(this, &StardustOpenXRFrame::startedFrame, this, &StardustOpenXRFrame::renderFrame);
-    connect(this, &StardustOpenXRFrame::renderedFrame, this, &StardustOpenXRFrame::endFrame);
-    connect(this, &StardustOpenXRFrame::frameEnded, this, &StardustOpenXRFrame::startFrame);
+OpenXRFrame::OpenXRFrame(QObject *parent) : QObject(parent) {
+    connect(this, &OpenXRFrame::initialized, this, &OpenXRFrame::startFrame);
+
+    connect(this, &OpenXRFrame::startedFrame, this, &OpenXRFrame::renderFrame);
+    connect(this, &OpenXRFrame::renderedFrame, this, &OpenXRFrame::endFrame);
+    connect(this, &OpenXRFrame::frameEnded, this, &OpenXRFrame::startFrame);
 }
 
-void StardustOpenXRFrame::initialize() {
+void OpenXRFrame::initialize() {
     initRenderControl();
 
     bool isCurrent = graphics->glContext->makeCurrent(graphics->surface);
@@ -27,7 +29,7 @@ void StardustOpenXRFrame::initialize() {
     emit graphics->openxr->ready();
 }
 
-void StardustOpenXRFrame::initRenderControl() {
+void OpenXRFrame::initRenderControl() {
 
     //Create the OpenGL view rendering
     graphics->glContext = new QOpenGLContext(this);
@@ -78,7 +80,7 @@ void StardustOpenXRFrame::initRenderControl() {
     graphics->quickRenderer->initialize(graphics->glContext);
 }
 
-void StardustOpenXRFrame::startFrame() {
+void OpenXRFrame::startFrame() {
 //    qDebug() << "Starting frame";
     //Wait for next frame
     xrWaitFrame(*graphics->openxr->stardustSession, &graphics->frameWaitInfo, &graphics->frameState);
@@ -173,7 +175,7 @@ void StardustOpenXRFrame::startFrame() {
     emit startedFrame();
 }
 
-void StardustOpenXRFrame::renderFrame() {
+void OpenXRFrame::renderFrame() {
 //    qDebug() << "Rendering frame";
 
     graphics->quickRenderer->polishItems();
@@ -206,7 +208,7 @@ void StardustOpenXRFrame::renderFrame() {
     emit renderedFrame();
 }
 
-void StardustOpenXRFrame::endFrame() {
+void OpenXRFrame::endFrame() {
 //    qDebug() << "Ending frame";
     //Update properties on the XrFrameEndInfo and its dependencies
     XrCompositionLayerProjection stardustLayer = {
@@ -245,7 +247,7 @@ void StardustOpenXRFrame::endFrame() {
 
 //Vulkan shortcuts
 
-void StardustOpenXRFrame::copyFrame(uint i) {
+void OpenXRFrame::copyFrame(uint i) {
     VkImage image = graphics->vulkanImages[i][0];
 
     VkCommandBuffer commandBuffer = beginSingleTimeCommands(3);
@@ -325,7 +327,7 @@ void StardustOpenXRFrame::copyFrame(uint i) {
     vkQueueWaitIdle(*graphics->openxr->vulkan->queue);
 }
 
-VkCommandBuffer StardustOpenXRFrame::beginSingleTimeCommands(uint32_t count) {
+VkCommandBuffer OpenXRFrame::beginSingleTimeCommands(uint32_t count) {
     VkCommandBufferAllocateInfo allocInfo = {};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -344,7 +346,7 @@ VkCommandBuffer StardustOpenXRFrame::beginSingleTimeCommands(uint32_t count) {
     return commandBuffer;
 }
 
-void StardustOpenXRFrame::createEXTBuffers() {
+void OpenXRFrame::createEXTBuffers() {
     imageSize = graphics->totalSize.width()*graphics->totalSize.height()*4;
     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT, stagingBuffer, stagingBufferMemory, fd, memRequirements);
 
@@ -368,7 +370,7 @@ void StardustOpenXRFrame::createEXTBuffers() {
     glFinish();
 }
 
-void StardustOpenXRFrame::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory, int &fd, VkMemoryRequirements& memRequirements) {
+void OpenXRFrame::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory, int &fd, VkMemoryRequirements& memRequirements) {
     VkExternalMemoryBufferCreateInfo externalBufferInfo = {
         VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO,
         nullptr,
@@ -429,7 +431,7 @@ void StardustOpenXRFrame::createBuffer(VkDeviceSize size, VkBufferUsageFlags usa
     extVkGetMemoryFdKHR(graphics->openxr->vulkan->device, &vulkanFdInfo, &fd);
 }
 
-uint32_t StardustOpenXRFrame::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+uint32_t OpenXRFrame::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
     VkPhysicalDeviceMemoryProperties memProperties;
     vkGetPhysicalDeviceMemoryProperties(graphics->openxr->vulkan->physicalDevice, &memProperties);
     for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
@@ -439,4 +441,4 @@ uint32_t StardustOpenXRFrame::findMemoryType(uint32_t typeFilter, VkMemoryProper
     }
 }
 
-
+}

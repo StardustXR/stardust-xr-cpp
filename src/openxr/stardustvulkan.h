@@ -5,16 +5,18 @@
 
 #include "openxr_meta.h"
 
-class StardustOpenXR;
+namespace Stardust {
 
-class StardustVulkan : public QObject {
+class OpenXR;
+
+class Vulkan : public QObject {
     Q_OBJECT
-    Q_PROPERTY(StardustOpenXR *openxr MEMBER openxr)
+    Q_PROPERTY(OpenXR *openxr MEMBER openxr)
 public:
-    explicit StardustVulkan(QObject *parent = nullptr);
-    ~StardustVulkan();
+    explicit Vulkan(QObject *parent = nullptr);
+    ~Vulkan();
 
-    StardustOpenXR *openxr = nullptr;
+    OpenXR *openxr = nullptr;
     Q_INVOKABLE void initialize();
 
     uint32_t instanceExtensionCount = 0;
@@ -57,5 +59,7 @@ private:
     std::vector<const char*> ParseExtensionString(char* names);
     bool checkValidationLayerSupport();
 };
+
+}
 
 #endif // STARDUSTVULKAN_H

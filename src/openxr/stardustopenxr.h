@@ -6,16 +6,17 @@
 #include "openxr_meta.h"
 
 #include "stardustvulkan.h"
+namespace Stardust {
 
-class StardustOpenXR : public QObject
+class OpenXR : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(StardustVulkan *vulkan MEMBER vulkan)
+    Q_PROPERTY(Vulkan *vulkan MEMBER vulkan)
 public:
-    explicit StardustOpenXR(QObject *parent = nullptr);
-    ~StardustOpenXR();
+    explicit OpenXR(QObject *parent = nullptr);
+    ~OpenXR();
 
-    StardustVulkan *vulkan = nullptr;
+    Vulkan *vulkan = nullptr;
     Q_INVOKABLE void initialize();
 
     XrApplicationInfo *xrAppInfo = new XrApplicationInfo;
@@ -44,5 +45,7 @@ signals:
 private:
     bool isExtensionSupported(char* extensionName, XrExtensionProperties* instanceExtensionProperties, uint32_t instanceExtensionCount);
 };
+
+}
 
 #endif // STARDUSTOPENXR_H
