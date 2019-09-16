@@ -37,14 +37,14 @@ void registerQMLTypes() {
 
     qmlRegisterType<ConfigPathGetter>("Stardust.Core", 1, 0, "ConfigPathGetter");
 
-    qmlRegisterType<Prefs>("Stardust.Core", 1, 0, "Preferences");
-    qmlRegisterType<ExtensionLoader>("Stardust.Core", 1, 0, "ExtensionLoader");
+    qmlRegisterType<Stardust::Prefs>("Stardust.Core", 1, 0, "Preferences");
+    qmlRegisterType<Stardust::ExtensionLoader>("Stardust.Core", 1, 0, "ExtensionLoader");
 
-    qmlRegisterSingletonType<PluginLoader>("Stardust.Core", 1, 0, "PluginLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+    qmlRegisterSingletonType<Stardust::PluginLoader>("Stardust.Core", 1, 0, "PluginLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
-        return new PluginLoader;
+        return new Stardust::PluginLoader;
     });
 
     qmlRegisterType<StardustAPI::PhysicalKeyboardAdapter>("Stardust.Core", 1, 0, "PhysicalKeyboardAdapter");
