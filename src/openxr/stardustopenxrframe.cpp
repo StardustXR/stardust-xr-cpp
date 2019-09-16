@@ -121,9 +121,9 @@ void StardustOpenXRFrame::startFrame() {
 
         //Set the cameras' positon to the pose position
         QVector3D position = QVector3D(
-            view.pose.position.x,
-            view.pose.position.y,
-            view.pose.position.z
+            -view.pose.position.x,
+            -view.pose.position.y,
+            -view.pose.position.z
         );
         eye->setPosition(position);
 
@@ -142,13 +142,13 @@ void StardustOpenXRFrame::startFrame() {
             -euler.z()
         ));
 
-        eye->setIsFieldOfViewHorizontal(true);
-        eye->setFieldOfView((view.fov.angleRight-view.fov.angleLeft)*RAD2DEG);
+//        eye->setIsFieldOfViewHorizontal(true);
+//        eye->setFieldOfView((view.fov.angleRight-view.fov.angleLeft)*RAD2DEG);
 
-//        eye->setFrustumTop(view.fov.angleUp*RAD2DEG);
-//        eye->setFrustumBottom(view.fov.angleDown*RAD2DEG);
-//        eye->setFrustumLeft(view.fov.angleLeft*RAD2DEG);
-//        eye->setFrustumRight(view.fov.angleRight*RAD2DEG);
+        eye->setFrustumTop      (std::sin(view.fov.angleUp)*eye->clipNear());
+        eye->setFrustumBottom   (std::sin(view.fov.angleDown)*eye->clipNear());
+        eye->setFrustumLeft     (std::sin(view.fov.angleLeft)*eye->clipNear());
+        eye->setFrustumRight    (std::sin(view.fov.angleRight)*eye->clipNear());
 
         //Update properties on the XrFrameEndInfo and its dependencies
         graphics->stardustLayerViews[i].fov = view.fov;
