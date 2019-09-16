@@ -3,5 +3,6 @@
         <file>test_grid.png</file>
         <file>normal_map_flat.png</file>
         <file>Plane.ply</file>
+        <file>pond_bridge_night.hdr</file>
     </qresource>
 </RCC>

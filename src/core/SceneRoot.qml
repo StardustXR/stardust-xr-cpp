@@ -31,10 +31,11 @@ Node {
         clipNear: 0.001
         clipFar: 1000
         fieldOfView: 110
-        projectionMode: Camera.Perspective
-//        enableFrustumCulling: true
+        projectionMode: Camera.Frustum
+        enableFrustumCulling: true
 
         Component.onCompleted: OpenXRGraphics.leftEye = this
+        onPositionChanged: console.log(position)
     }
 
     Camera {
@@ -43,8 +44,8 @@ Node {
         clipNear: 0.001
         clipFar: 1000
         fieldOfView: 110
-        projectionMode: Camera.Perspective
-//        enableFrustumCulling: true
+        projectionMode: Camera.Frustum
+        enableFrustumCulling: true
 
         Component.onCompleted: OpenXRGraphics.rightEye = this
     }
