@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+namespace Stardust {
+
 static VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
     auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
     if (func != nullptr) {
@@ -32,18 +34,18 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
     return VK_FALSE;
 }
 
-StardustVulkan::StardustVulkan(QObject *parent) : QObject(parent) {
+Vulkan::Vulkan(QObject *parent) : QObject(parent) {
 
 }
 
-StardustVulkan::~StardustVulkan() {
+Vulkan::~Vulkan() {
     if (enableValidationLayers) {
         DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
     }
     vkDestroyInstance(instance, nullptr);
 }
 
-void StardustVulkan::initialize() {
+void Vulkan::initialize() {
     //Get the vulkan instance version
     uint32_t version;
     vkEnumerateInstanceVersion(&version);
@@ -163,7 +165,7 @@ void StardustVulkan::initialize() {
     qDebug() << "finished vulkan initialization" << endl;
 }
 
-uint32_t StardustVulkan::findQueueFamily(VkPhysicalDevice device) {
+uint32_t Vulkan::findQueueFamily(VkPhysicalDevice device) {
     uint32_t i = 0;
 
     uint32_t queueFamilyCount = 0;
@@ -184,7 +186,7 @@ uint32_t StardustVulkan::findQueueFamily(VkPhysicalDevice device) {
 
 
 
-uint StardustVulkan::GetExtensionNumber(uint32_t length, char *names) {
+uint Vulkan::GetExtensionNumber(uint32_t length, char *names) {
     uint space = 0;
     for(uint i=0; i<length; i++) {
         if(names[i] == ' ') {
@@ -195,7 +197,7 @@ uint StardustVulkan::GetExtensionNumber(uint32_t length, char *names) {
     return ++space;
 }
 
-//const char* const* StardustVulkan::ParseExtensionString(uint extensionCount, uint32_t length, char* names) {
+//const char* const* Vulkan::ParseExtensionString(uint extensionCount, uint32_t length, char* names) {
 //    char** list = new char*[extensionCount];
 
 //    uint j = 0;
@@ -220,7 +222,7 @@ uint StardustVulkan::GetExtensionNumber(uint32_t length, char *names) {
 //}
 
 
-std::vector<const char*> StardustVulkan::ParseExtensionString(char* names) {
+std::vector<const char*> Vulkan::ParseExtensionString(char* names) {
     std::vector<const char*> list;
     while (*names) {
         list.push_back(names);
@@ -234,7 +236,7 @@ std::vector<const char*> StardustVulkan::ParseExtensionString(char* names) {
     return list;
 }
 
-bool StardustVulkan::checkValidationLayerSupport() {
+bool Vulkan::checkValidationLayerSupport() {
     uint32_t layerCount;
     vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -261,4 +263,6 @@ bool StardustVulkan::checkValidationLayerSupport() {
     }
 
     return true;
+}
+
 }

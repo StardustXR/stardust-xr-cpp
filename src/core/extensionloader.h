@@ -11,6 +11,8 @@
 #include <QQmlComponent>
 #include "configpathgetter.h"
 
+namespace Stardust {
+
 class ExtensionLoader : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
@@ -39,5 +41,7 @@ private:
     QList<QString> m_extensionsList;
     void setup();
 };
+
+}
 
 #endif // EXTENSIONLOADER_H

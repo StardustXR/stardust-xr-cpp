@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QKeyEvent>
 
+namespace StardustAPI {
+
 class Keyboard : public QObject
 {
     Q_OBJECT
@@ -15,5 +17,7 @@ signals:
     void fullKeyEvent(QObject *keyEvent);
     void keyEvent(int key, bool pressed);
 };
+
+}
 
 #endif // KEYBOARD_H

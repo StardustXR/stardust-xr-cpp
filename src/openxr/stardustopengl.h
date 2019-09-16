@@ -10,11 +10,13 @@
 
 #include "openxr_meta.h"
 
-class StardustOpenGL : public QObject
+namespace Stardust {
+
+class OpenGL : public QObject
 {
     Q_OBJECT
 public:
-    explicit StardustOpenGL(QObject *parent = nullptr);
+    explicit OpenGL(QObject *parent = nullptr);
 
     Q_INVOKABLE void initialize();
 
@@ -24,5 +26,8 @@ public:
 //    GLXContext context;
 //    GLXDrawable drawable;
 };
+
+}
+
 
 #endif // STARDUSTOPENGL_H

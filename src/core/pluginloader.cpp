@@ -3,6 +3,8 @@
 #include "../core/plugininterfaces.h"
 #include <QDebug>
 
+namespace Stardust {
+
 PluginLoader::PluginLoader(QObject *parent) : QObject(parent) {
     m_configPathGetter = new ConfigPathGetter(this);
     getPluginsList();
@@ -81,4 +83,6 @@ QObject *PluginLoader::loadPlugin(QString name) {
 QString PluginLoader::pluginJSON() {
     QJsonDocument doc(*m_pluginList);
     return QString::fromUtf8(doc.toJson());
+}
+
 }

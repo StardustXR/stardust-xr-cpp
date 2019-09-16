@@ -1,5 +1,7 @@
 #include "keyboardhandler.h"
 
+namespace StardustAPI {
+
 KeyboardHandler::KeyboardHandler(QObject *parent) : QObject(parent) {
 
 }
@@ -28,4 +30,6 @@ void KeyboardHandler::fullKeyEvent(QObject *keyEvent) {
 void KeyboardHandler::keyEvent(int key, bool pressed) {
     QKeyEvent *keyEvent = new QKeyEvent(pressed ? QEvent::KeyPress : QEvent::KeyRelease, key, Qt::KeyboardModifier::NoModifier);
     emit qKeyEvent(keyEvent);
+}
+
 }

@@ -5,14 +5,16 @@
 #include "openxr_meta.h"
 #include "stardustopenxrgraphics.h"
 
-class StardustOpenXRFrame : public QObject
+namespace Stardust {
+
+class OpenXRFrame : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(StardustOpenXRGraphics *graphics MEMBER graphics)
+    Q_PROPERTY(OpenXRGraphics *graphics MEMBER graphics)
 public:
-    explicit StardustOpenXRFrame(QObject *parent = nullptr);
+    explicit OpenXRFrame(QObject *parent = nullptr);
 
-    StardustOpenXRGraphics *graphics = nullptr;
+    OpenXRGraphics *graphics = nullptr;
     QThread *thread = nullptr;
 
 signals:
@@ -59,5 +61,7 @@ private:
     GLuint copyFBO;
     GLuint colorTex;
 };
+
+}
 
 #endif // STARDUSTOPENXRFRAME_H

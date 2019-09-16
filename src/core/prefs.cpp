@@ -1,8 +1,9 @@
 #include "prefs.h"
 
+namespace Stardust {
+
 Prefs::Prefs(QObject *parent) : QObject(parent)
 {
-    Q_INIT_RESOURCE(defaults);
     ConfigPathGetter getter;
     m_prefsDir = getter.loadConfigDir("stardust");
 }
@@ -54,4 +55,6 @@ QJsonObject Prefs::jsonPrefs() {
 }
 void Prefs::setJsonPrefs(QJsonObject &object) {
     m_jsonObject = object;
+}
+
 }

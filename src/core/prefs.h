@@ -11,6 +11,8 @@
 #include <QQmlParserStatus>
 #include "configpathgetter.h"
 
+namespace Stardust {
+
 class Prefs : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
@@ -44,5 +46,7 @@ signals:
     void jsonChanged(QJsonObject newJson);
 public slots:
 };
+
+}
 
 #endif // PREFS_H

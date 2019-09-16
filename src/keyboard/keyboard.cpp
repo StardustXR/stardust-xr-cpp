@@ -1,5 +1,6 @@
 #include "keyboard.h"
 
+namespace StardustAPI {
 
 QObject *Keyboard::qKeyEventToQmlEvent(QKeyEvent *keyEvent) {
     QObject *event = new QObject(this);
@@ -13,4 +14,6 @@ QObject *Keyboard::qKeyEventToQmlEvent(QKeyEvent *keyEvent) {
     event->setProperty("count", keyEvent->count());
 
     return event;
+}
+
 }

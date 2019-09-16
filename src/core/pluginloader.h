@@ -10,6 +10,8 @@
 
 #include <QQmlEngine>
 
+namespace Stardust {
+
 class PluginLoader : public QObject
 {
     Q_OBJECT
@@ -32,5 +34,7 @@ private:
     ConfigPathGetter *m_configPathGetter = nullptr;
     QJsonArray *m_pluginList = nullptr;
 };
+
+}
 
 #endif // PLUGINLOADER_H

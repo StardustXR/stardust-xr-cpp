@@ -2,18 +2,20 @@
 
 #include "stardustopenxrframe.h"
 
-StardustOpenXRGraphics::StardustOpenXRGraphics(QObject *parent) : QObject(parent) {
+namespace Stardust {
+
+OpenXRGraphics::OpenXRGraphics(QObject *parent) : QObject(parent) {
 }
 
-StardustOpenXRGraphics::~StardustOpenXRGraphics() {
+OpenXRGraphics::~OpenXRGraphics() {
     xrDestroySwapchain(swapchains[0]);
     xrDestroySwapchain(swapchains[1]);
 }
 
-void StardustOpenXRGraphics::preInitialize() {
+void OpenXRGraphics::preInitialize() {
 }
 
-void StardustOpenXRGraphics::initialize() {
+void OpenXRGraphics::initialize() {
     //Get the stereo views' configuration properties
     xrGetViewConfigurationProperties(*openxr->xrInstance, *openxr->hmdID, openxr->viewConfig, &viewProperties);
 
@@ -68,8 +70,8 @@ void StardustOpenXRGraphics::initialize() {
     //Initialize views vector
     views = std::vector<XrView>(2, XrView {XR_TYPE_VIEW, nullptr});
 
-    //Create StardustOpenXRFrame object and add it to the thread
-    frame = new StardustOpenXRFrame(nullptr);
+    //Create OpenXRFrame object and add it to the thread
+    frame = new OpenXRFrame(nullptr);
     frame->graphics = this;
 
     frameThread = new QThread(this);
@@ -79,20 +81,22 @@ void StardustOpenXRGraphics::initialize() {
     frameThread->start();
 
     //Start the frame loop as soon as the scene graph initializes
-    connect(this, &StardustOpenXRGraphics::startFrameLoop, frame, &StardustOpenXRFrame::initialize);
+    connect(this, &OpenXRGraphics::startFrameLoop, frame, &OpenXRFrame::initialize);
     emit startFrameLoop();
 }
 
-QSize StardustOpenXRGraphics::getRightViewSize() const
+QSize OpenXRGraphics::getRightViewSize() const
 {
     return rightViewSize;
 }
 
-QSize StardustOpenXRGraphics::getLeftViewSize() const
+QSize OpenXRGraphics::getLeftViewSize() const
 {
     return leftViewSize;
 }
 
-QQuickWindow *StardustOpenXRGraphics::getWindow() const {
+QQuickWindow *OpenXRGraphics::getWindow() const {
     return window;
+}
+
 }

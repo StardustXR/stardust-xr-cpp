@@ -1,5 +1,7 @@
 #include "extensionloader.h"
 
+namespace Stardust {
+
 ExtensionLoader::ExtensionLoader(QObject *parent) : QObject(parent){
     setup();
 }
@@ -47,4 +49,6 @@ void ExtensionLoader::setType(QString &type) {
 
 QList<QString> ExtensionLoader::extensionsList() {
     return m_extensionsList;
+}
+
 }

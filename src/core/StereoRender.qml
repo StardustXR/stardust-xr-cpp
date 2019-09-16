@@ -1,8 +1,8 @@
 import QtQuick 2.12
 import QtQuick3D 1.0
 
-import Preferences 1.0
-import OpenXRGraphics 1.0
+import Stardust.Core 1.0
+import Stardust.Core.Internal 1.0
 
 Rectangle {
     anchors.fill: parent
@@ -16,9 +16,9 @@ Rectangle {
         width: OpenXRGraphics.leftViewSize.width
         height: OpenXRGraphics.leftViewSize.height
 
-        camera: sceneRoot.leftEye
-        scene: sceneRoot
-        environment: sceneRoot.skybox
+//        camera: sceneRoot.leftEye
+//        scene: sceneRoot
+//        environment: sceneRoot.skybox
     }
 
     View3D {
@@ -31,13 +31,13 @@ Rectangle {
         width: OpenXRGraphics.rightViewSize.width
         height: OpenXRGraphics.rightViewSize.height
 
-        camera: sceneRoot.rightEye
-        scene: sceneRoot
-        environment: sceneRoot.skybox
+//        camera: sceneRoot.rightEye
+//        scene: sceneRoot
+//        environment: sceneRoot.skybox
     }
 
-    SceneRoot {
-        id:sceneRoot
+    Loader {
+        source: "SceneRoot.qml"
     }
 
 //    Preferences {

@@ -1,21 +1,13 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick3D 1.0
-import QtQuick3D.MaterialLibrary 1.0
 
-import Launcher 1.0
-import ConfigPathGetter 1.0
-import ExtensionLoader 1.0
-import PluginLoader 1.0
+import Stardust.Core 1.0
+import Stardust.Core.Internal 1.0
+
 import "../render"
-
-import OpenXRGraphics 1.0
 
 Node {
     id:sceneRoot
-
-    property alias leftEye: leftEye
-    property alias rightEye: rightEye
-    property alias skybox: skybox
 
 //    Component.onCompleted: {
 //        autoLauncher.launchDetached("sh -c \""+compositorPrefs.json.autostart.join(";")+"\"");
@@ -47,28 +39,8 @@ Node {
         ]
     }
 
-    Camera {
-        id:leftEye
-
-        clipNear: 0.001
-        clipFar: 1000
-        fieldOfView: 110
-        projectionMode: Camera.Frustum
-        enableFrustumCulling: true
-
-        Component.onCompleted: OpenXRGraphics.leftEye = this
-    }
-
-    Camera {
-        id:rightEye
-
-        clipNear: 0.001
-        clipFar: 1000
-        fieldOfView: 110
-        projectionMode: Camera.Frustum
-        enableFrustumCulling: true
-
-        Component.onCompleted: OpenXRGraphics.rightEye = this
+    StereoCameras {
+        id:stereoCameras
     }
 
     SceneEnvironment {
@@ -81,5 +53,15 @@ Node {
             source: "qrc:/pond_bridge_night.hdr"
             mappingMode: Texture.Environment
         }
+    }
+
+    Component.onCompleted: {
+        leftView.camera = stereoCameras.leftEye;
+        leftView.scene = this;
+        leftView.environment = skybox;
+
+        rightView.camera = stereoCameras.rightEye;
+        rightView.scene = this;
+        rightView.environment = skybox;
     }
 }
