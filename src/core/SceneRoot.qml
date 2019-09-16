@@ -1,13 +1,10 @@
 import QtQuick 2.12
 import QtQuick3D 1.0
 
-import Launcher 1.0
-import ConfigPathGetter 1.0
-import ExtensionLoader 1.0
-import PluginLoader 1.0
-import "../render"
+import Stardust.Core 1.0
+import Stardust.Core.Internal 1.0
 
-import OpenXRGraphics 1.0
+import "../render"
 
 Node {
     id:sceneRoot

@@ -1,8 +1,8 @@
 import QtQuick 2.12
 import QtQuick3D 1.0
 
-import Preferences 1.0
-import OpenXRGraphics 1.0
+import Stardust.Core 1.0
+import Stardust.Core.Internal 1.0
 
 Rectangle {
     anchors.fill: parent

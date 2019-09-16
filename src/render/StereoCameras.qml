@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick3D 1.0
 
-import OpenXRGraphics 1.0
+import Stardust.Core.Internal 1.0
 
 Node {
     property alias leftEye: leftEye

@@ -32,37 +32,37 @@ StardustVulkan *vulkan;
 StardustOpenXRGraphics *graphics;
 
 void registerQMLTypes() {
-    qmlRegisterType<Launcher>("Launcher", 1, 0, "Launcher");
-    qmlRegisterType<FileIO>("FileIO", 1, 0, "FileIO");
+    qmlRegisterType<Launcher>("Stardust.Core", 1, 0, "Launcher");
+    qmlRegisterType<FileIO>("Stardust.Core", 1, 0, "FileIO");
 
-    qmlRegisterType<ConfigPathGetter>("ConfigPathGetter", 1, 0, "ConfigPathGetter");
+    qmlRegisterType<ConfigPathGetter>("Stardust.Core", 1, 0, "ConfigPathGetter");
 
-    qmlRegisterType<Prefs>("Preferences", 1, 0, "Preferences");
-    qmlRegisterType<ExtensionLoader>("ExtensionLoader", 1, 0, "ExtensionLoader");
+    qmlRegisterType<Prefs>("Stardust.Core", 1, 0, "Preferences");
+    qmlRegisterType<ExtensionLoader>("Stardust.Core", 1, 0, "ExtensionLoader");
 
-    qmlRegisterSingletonType<PluginLoader>("PluginLoader", 1, 0, "PluginLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+    qmlRegisterSingletonType<PluginLoader>("Stardust.Core", 1, 0, "PluginLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
         return new PluginLoader;
     });
 
-    qmlRegisterType<PhysicalKeyboardAdapter>("PhysicalKeyboardAdapter", 1, 0, "PhysicalKeyboardAdapter");
-    qmlRegisterType<PassthroughKeyboardHandler>("PassthroughKeyboardHandler", 1, 0, "PassthroughKeyboardHandler");
+    qmlRegisterType<PhysicalKeyboardAdapter>("Stardust.Core", 1, 0, "PhysicalKeyboardAdapter");
+    qmlRegisterType<PassthroughKeyboardHandler>("Stardust.Core", 1, 0, "PassthroughKeyboardHandler");
 
-    qmlRegisterSingletonType<StardustVulkan>("Vulkan", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+    qmlRegisterSingletonType<StardustVulkan>("Stardust.Core.Internal", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
         return vulkan;
     });
-    qmlRegisterSingletonType<StardustOpenXR>("OpenXR", 1, 0, "OpenXR", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+    qmlRegisterSingletonType<StardustOpenXR>("Stardust.Core.Internal", 1, 0, "OpenXR", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
         return openxr;
     });
-    qmlRegisterSingletonType<StardustOpenXRGraphics>("OpenXRGraphics", 1, 0, "OpenXRGraphics", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+    qmlRegisterSingletonType<StardustOpenXRGraphics>("Stardust.Core.Internal", 1, 0, "OpenXRGraphics", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
