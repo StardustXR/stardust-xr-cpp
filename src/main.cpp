@@ -1,14 +1,15 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
 
-#include <QtGui/QGuiApplication>
-
+#include <QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 
 #include <openxr/openxr.h>
 
 #include <QFile>
 #include <QDir>
+
+#include <QtQuick3D/private/qquick3dviewport_p.h>
 
 #include "core/launcher.h"
 #include "core/fileio.h"
@@ -21,13 +22,14 @@
 
 #include "keyboard/physicalkeyboardadapter.h"
 #include "keyboard/passthroughkeyboardhandler.h"
-#include "keyboard/waylandkeyboardhandler.h"
 
 #include "openxr/stardustvulkan.h"
 #include "openxr/stardustopenxr.h"
 #include "openxr/stardustopenxrgraphics.h"
-#include "openxr/stardustqt3doffscreen.h"
 
+StardustOpenXR *openxr;
+StardustVulkan *vulkan;
+StardustOpenXRGraphics *graphics;
 
 void registerQMLTypes() {
     qmlRegisterType<Launcher>("Launcher", 1, 0, "Launcher");
@@ -39,40 +41,50 @@ void registerQMLTypes() {
     qmlRegisterType<ExtensionLoader>("ExtensionLoader", 1, 0, "ExtensionLoader");
 
     qmlRegisterSingletonType<PluginLoader>("PluginLoader", 1, 0, "PluginLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
-        Q_UNUSED(engine);
-        Q_UNUSED(scriptEngine);
+        Q_UNUSED(engine)
+        Q_UNUSED(scriptEngine)
 
         return new PluginLoader;
     });
 
     qmlRegisterType<PhysicalKeyboardAdapter>("PhysicalKeyboardAdapter", 1, 0, "PhysicalKeyboardAdapter");
     qmlRegisterType<PassthroughKeyboardHandler>("PassthroughKeyboardHandler", 1, 0, "PassthroughKeyboardHandler");
-    qmlRegisterType<WaylandKeyboardHandler>("WaylandKeyboardHandler", 1, 0, "WaylandKeyboardHandler");
 
     qmlRegisterSingletonType<StardustVulkan>("Vulkan", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
-        Q_UNUSED(engine);
-        Q_UNUSED(scriptEngine);
+        Q_UNUSED(engine)
+        Q_UNUSED(scriptEngine)
 
-        return new StardustVulkan();
+        return vulkan;
     });
     qmlRegisterSingletonType<StardustOpenXR>("OpenXR", 1, 0, "OpenXR", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
-        Q_UNUSED(engine);
-        Q_UNUSED(scriptEngine);
+        Q_UNUSED(engine)
+        Q_UNUSED(scriptEngine)
 
-        return new StardustOpenXR();
+        return openxr;
     });
     qmlRegisterSingletonType<StardustOpenXRGraphics>("OpenXRGraphics", 1, 0, "OpenXRGraphics", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
-        Q_UNUSED(engine);
-        Q_UNUSED(scriptEngine);
+        Q_UNUSED(engine)
+        Q_UNUSED(scriptEngine)
 
-        return new StardustOpenXRGraphics();
+        return graphics;
     });
-    qmlRegisterSingletonType<StardustQt3DOffscreen>("Qt3D.Offscreen", 1, 0, "Offscreen", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
-        Q_UNUSED(engine);
-        Q_UNUSED(scriptEngine);
+}
 
-        return new StardustQt3DOffscreen();
-    });
+void initOpenXR() {
+    graphics = new StardustOpenXRGraphics();
+    graphics->preInitialize();
+
+    openxr = new StardustOpenXR();
+    vulkan = new StardustVulkan();
+
+    openxr->vulkan = vulkan;
+    vulkan->openxr = openxr;
+
+    openxr->initialize();
+
+    graphics->openxr = openxr;
+
+    graphics->initialize();
 }
 
 int main(int argc, char *argv[]) {
@@ -83,13 +95,9 @@ int main(int argc, char *argv[]) {
 
     registerQMLTypes();
 
-    ConfigPathGetter getter;
-    QDir renderSettingsDir = getter.loadConfigDir("stardust");
-    if(!QFile::exists(renderSettingsDir.absoluteFilePath("StardustRenderSettings.qml"))) {
-        QFile::copy(":/StardustRenderSettings.qml", renderSettingsDir.absoluteFilePath("StardustRenderSettings.qml"));
-    }
+    initOpenXR();
 
-    QQmlApplicationEngine appEngine(QUrl("qrc:/core/main.qml"));
+    QSurfaceFormat::setDefaultFormat(QQuick3DViewport::idealSurfaceFormat());
 
     return app.exec();
 }

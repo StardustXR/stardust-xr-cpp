@@ -23,7 +23,7 @@ void StardustOpenXR::initialize() {
     uint32_t extensionCount = 0;
     xrEnumerateInstanceExtensionProperties(nullptr, 0, &extensionCount, nullptr);
 
-    printf("Runtime supports %d extensions\n", extensionCount);
+    qDebug() << "Runtime supports" << extensionCount << "extensions\n", extensionCount;
 
     XrExtensionProperties extensionProperties[extensionCount];
     for (uint16_t i = 0; i < extensionCount; i++) {

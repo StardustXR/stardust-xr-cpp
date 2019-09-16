@@ -3,45 +3,44 @@
 
 #include <QSize>
 #include <QThread>
-
-#include <Qt3DRender>
-#include <QScreen>
+#include <QVector3D>
+#include <QQuaternion>
+#include <QMetaObject>
+#include <QQuickItem>
+#include <QQuickWindow>
+#include <QQuickRenderControl>
+#include <QOpenGLContext>
+#include <QOpenGLFramebufferObject>
 #include <QOffscreenSurface>
 
-#include "openxr_meta.h"
+#include <QQmlEngine>
+#include <QQmlComponent>
+
+
 #include "stardustopenxr.h"
 
-class StardustOpenXRFrameWorker : public QThread {
-    Q_OBJECT
-public:
-    StardustOpenXRFrameWorker(QObject *parent = nullptr) : QThread(parent) {}
-
-    XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
-    XrFrameState frameState{XR_TYPE_FRAME_STATE};
-    long swapImageWaitTime = 0;
-signals:
-    void renderFrame(float dt);
-private:
-    void run() override;
-};
+class StardustOpenXRFrame;
 
 class StardustOpenXRGraphics : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(StardustOpenXR *openxr MEMBER openxr)
 
-    Q_PROPERTY(QSize eyeDimensions MEMBER eyeDimensions NOTIFY eyeDimensionsChanged)
+    Q_PROPERTY(QObject *leftEye MEMBER leftEye)
+    Q_PROPERTY(QObject *rightEye MEMBER rightEye)
 
-    Q_PROPERTY(Qt3DRender::QCamera *leftEye MEMBER leftEye)
-    Q_PROPERTY(Qt3DRender::QCamera *rightEye MEMBER rightEye)
+    Q_PROPERTY(QSize leftViewSize MEMBER leftViewSize NOTIFY leftEyeSizeChanged)
+    Q_PROPERTY(QSize rightViewSize MEMBER rightViewSize NOTIFY rightEyeSizeChanged)
+
+    Q_PROPERTY(QQuickWindow *window READ getWindow NOTIFY windowChanged)
 public:
     explicit StardustOpenXRGraphics(QObject *parent = nullptr);
     ~StardustOpenXRGraphics();
 
     StardustOpenXR *openxr = nullptr;
+    Q_INVOKABLE void preInitialize();
     Q_INVOKABLE void initialize();
 
-    StardustOpenXRFrameWorker *frameWorker;
     uint displayFPS = 0;
 
     XrViewConfigurationProperties viewProperties{XR_TYPE_VIEW_CONFIGURATION_PROPERTIES};
@@ -52,7 +51,7 @@ public:
         nullptr,                                                                            //const void*               next;
         0,                                                                                  //XrSwapchainCreateFlags    createFlags;
         XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT | XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT,      //XrSwapchainUsageFlags     usageFlags;
-        VK_FORMAT_R8G8B8A8_SRGB,                                                            //int64_t                   format;
+        VK_FORMAT_R8G8B8A8_UNORM,                                                           //int64_t                   format;
         1,                                                                                  //uint32_t                  sampleCount;
         1,                                                                                  //uint32_t                  width;
         1,                                                                                  //uint32_t                  height;
@@ -60,12 +59,7 @@ public:
         1,                                                                                  //uint32_t                  arraySize;
         1                                                                                   //uint32_t                  mipCount;
     };
-    XrSwapchain swapchains[2] = {
-        XrSwapchain {},
-        XrSwapchain {}
-    };
-
-    VkExtent3D imageExtent = {0, 0, 1};
+    XrSwapchain swapchains[2];
 
     uint32_t swapchainImageCount = 0;
     XrSwapchainImageVulkanKHR swapchainImageTemplate = {
@@ -73,10 +67,8 @@ public:
         nullptr,
         VkImage()
     };
-    std::vector<XrSwapchainImageVulkanKHR> leftSwapchainImages;
-    std::vector<XrSwapchainImageVulkanKHR> rightSwapchainImages;
-
-    std::vector<uint32_t> swapchainImageIndices = std::vector<uint32_t>(2);
+    std::vector<XrSwapchainImageVulkanKHR> swapchainImages[2];
+    uint32_t swapchainImageIndices[2];
 
     XrReferenceSpaceCreateInfo refSpaceInfo = {
         XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
@@ -98,10 +90,7 @@ public:
         nullptr
     };
 
-    XrRect2Di eyeRect = {
-        XrOffset2Di {0,0},
-        XrExtent2Di {1,1}
-    };
+    QRect eyeRects[2];
 
     XrCompositionLayerProjectionView stardustLayerViews[2] = {
         XrCompositionLayerProjectionView {
@@ -114,16 +103,46 @@ public:
         }
     };
 
-    QSize eyeDimensions;
-    std::vector<XrView> views;
-    Qt3DRender::QCamera *leftEye = nullptr;
-    Qt3DRender::QCamera *rightEye = nullptr;
+    QOpenGLFramebufferObject *fbo;
 
-    VkImage *leftEyeImage;
-    VkImage *rightEyeImage;
+    QThread *frameThread = nullptr;
+    StardustOpenXRFrame *frame = nullptr;
+
+    std::vector<XrView> views;
+
+    QObject *leftEye;
+    QObject *rightEye;
+
+    QSize leftViewSize;
+    QSize rightViewSize;
+
+    QSize totalSize;
+
+    QOpenGLContext *glContext;
+    QOffscreenSurface *surface;
+    QQuickWindow *window;
+    QQuickRenderControl *quickRenderer;
+    QOpenGLFramebufferObject *glFBO;
+
+    QQmlEngine *qmlEngine;
+    QQmlComponent *qmlComponent;
+
+    std::vector<VkImage> vulkanImages[2];
+
+    XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
+    XrFrameState frameState{XR_TYPE_FRAME_STATE};
+
+    QQuickWindow *getWindow() const;
+
+    QSize getLeftViewSize() const;
+    QSize getRightViewSize() const;
 
 signals:
-    void eyeDimensionsChanged();
+    void leftEyeSizeChanged();
+    void rightEyeSizeChanged();
+
+    void windowChanged();
+    void startFrameLoop();
 };
 
 #endif // STARDUSTOPENXRGRAPHICS_H

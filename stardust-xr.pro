@@ -1,4 +1,4 @@
-QT += 3dcore 3drender 3dinput 3dquick 3dlogic qml quick 3dquickextras waylandcompositor widgets
+QT += qml quick quick3d-private widgets
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -13,28 +13,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    external/Qt3D-OffscreenRenderer/offscreenengine.cpp \
-    external/Qt3D-OffscreenRenderer/offscreenenginedelegate.cpp \
-    external/Qt3D-OffscreenRenderer/offscreensurfaceframegraph.cpp \
-    external/Qt3D-OffscreenRenderer/scenemodifier.cpp \
-    external/Qt3D-OffscreenRenderer/texturerendertarget.cpp \
     src/core/configpathgetter.cpp \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
     src/core/prefs.cpp \
     src/core/extensionloader.cpp \
+    src/openxr/stardustopengl.cpp \
     src/openxr/stardustopenxr.cpp \
+    src/openxr/stardustopenxrframe.cpp \
     src/openxr/stardustopenxrgraphics.cpp \
-    src/openxr/stardustqt3doffscreen.cpp \
+#    src/openxr/stardustqt3doffscreen.cpp \
     src/openxr/stardustvulkan.cpp \
-    src/pointer/inputpointer.cpp \
+#    src/pointer/inputpointer.cpp \
     src/keyboard/keyboard.cpp \
     src/keyboard/keyboardhandler.cpp \
     src/keyboard/passthroughkeyboardhandler.cpp \
     src/core/pluginloader.cpp \
     src/main.cpp \
-    src/keyboard/physicalkeyboardadapter.cpp \
-    src/keyboard/waylandkeyboardhandler.cpp
+    src/keyboard/physicalkeyboardadapter.cpp
 
 RESOURCES += src/qml.qrc \
     defaults/defaults.qrc \
@@ -50,36 +46,31 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-INCLUDEPATH += -i/usr/local/include
+INCLUDEPATH +=	-i/usr/local/include
 
 LIBS += -lopenxr_loader \
         -lvulkan \
+        -lGLEW \
         -lglfw
 
-
 HEADERS += \
-    external/Qt3D-OffscreenRenderer/offscreenengine.h \
-    external/Qt3D-OffscreenRenderer/offscreenenginedelegate.h \
-    external/Qt3D-OffscreenRenderer/offscreensurfaceframegraph.h \
-    external/Qt3D-OffscreenRenderer/scenemodifier.h \
-    external/Qt3D-OffscreenRenderer/texturerendertarget.h \
     src/core/configpathgetter.h \
     src/core/fileio.h \
     src/core/launcher.h \
     src/core/plugininterfaces.h \
     src/core/prefs.h \
     src/core/extensionloader.h \
+    src/openxr/opengl_meta.h \
     src/openxr/openxr_meta.h \
+    src/openxr/stardustopengl.h \
     src/openxr/stardustopenxr.h \
+    src/openxr/stardustopenxrframe.h \
     src/openxr/stardustopenxrgraphics.h \
-    src/openxr/stardustqt3doffscreen.h \
     src/openxr/stardustvulkan.h \
     src/openxr/vulkan_meta.h \
-    src/pointer/inputpointer.h \
+#    src/pointer/inputpointer.h \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \
     src/keyboard/passthroughkeyboardhandler.h \
     src/keyboard/physicalkeyboardadapter.h \
-    src/core/pluginloader.h \
-    src/keyboard/waylandkeyboardhandler.h
-
+    src/core/pluginloader.h

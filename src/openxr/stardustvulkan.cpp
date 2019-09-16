@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include "stardustopenxr.h"
+#include <GLFW/glfw3.h>
 #include <iostream>
 
 static VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
@@ -63,20 +64,23 @@ void StardustVulkan::initialize() {
     xrGetVulkanInstanceExtensionsKHR(*openxr->xrInstance, *openxr->hmdID, extensionNamesSize, &extensionNamesSize, extensionNames.data());
 
     //Covert all extensions into the correct format
-    std::vector<const char*> extensions = ParseExtensionString(extensionNames.data());
+    std::vector<const char*> instanceExtensions = ParseExtensionString(extensionNames.data());
 
     //Get GLFW extensions
     uint32_t glfwExtensionCount = 0;
     const char** glfwExtensions;
     glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
     for(uint i=0; i<glfwExtensionCount; i++) {
-        extensions.push_back(glfwExtensions[i]);
+        instanceExtensions.push_back(glfwExtensions[i]);
     }
 
     //Add Vulkan debug extension
     if (enableValidationLayers) {
-        extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+        instanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
     }
+
+    //Add Vulkan external memory extensions
+    instanceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME);
 
     //Get vulkan instance layers
     if (enableValidationLayers && !checkValidationLayerSupport()) {
@@ -93,8 +97,8 @@ void StardustVulkan::initialize() {
     } else {
         instanceInfo.enabledLayerCount = 0;
     }
-    instanceInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
-    instanceInfo.ppEnabledExtensionNames = extensions.size() ? &extensions[0] : nullptr;
+    instanceInfo.enabledExtensionCount = static_cast<uint32_t>(instanceExtensions.size());
+    instanceInfo.ppEnabledExtensionNames = instanceExtensions.size() ? &instanceExtensions[0] : nullptr;
 
     VkResult result = vkCreateInstance(&instanceInfo, nullptr, &instance);
 
@@ -131,12 +135,16 @@ void StardustVulkan::initialize() {
     xrGetVulkanDeviceExtensionsKHR(*openxr->xrInstance, *openxr->hmdID, deviceExtensionNamesSize, &deviceExtensionNamesSize, &deviceExtensionNames[0]);
     deviceExtensions = ParseExtensionString(&deviceExtensionNames[0]);
 
+    deviceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME);
+    deviceExtensions.push_back(VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME);
+
     //Create vulkan graphics device
     deviceCreateInfo.pNext = nullptr;
     deviceCreateInfo.flags = 0;
     deviceCreateInfo.pQueueCreateInfos = &queueInfo;
     deviceCreateInfo.queueCreateInfoCount = 1;
-    deviceCreateInfo.enabledExtensionCount = 0;
+    deviceCreateInfo.enabledExtensionCount = deviceExtensions.size();
+    deviceCreateInfo.ppEnabledExtensionNames = deviceExtensions.data();
     deviceCreateInfo.enabledLayerCount = 0;
 
     result = vkCreateDevice(physicalDevice, &deviceCreateInfo, VK_NULL_HANDLE, &device);
