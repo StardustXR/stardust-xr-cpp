@@ -24,6 +24,7 @@ void StardustOpenXRFrame::initialize() {
     createEXTBuffers();
 
     emit initialized();
+    emit graphics->openxr->ready();
 }
 
 void StardustOpenXRFrame::initRenderControl() {
@@ -66,10 +67,13 @@ void StardustOpenXRFrame::initRenderControl() {
     graphics->qmlComponent = new QQmlComponent(graphics->qmlEngine, "qrc:/core/StereoRender.qml", QQmlComponent::PreferSynchronous);
 
     //Load in the QML and add it to the window
-    QQuickItem *root = qobject_cast<QQuickItem *>(graphics->qmlComponent->create());
-    root->setParentItem(graphics->window->contentItem());
-    root->setPosition(QPoint(0, 0));
-    root->setSize(graphics->totalSize);
+    QObject *rootObject = graphics->qmlComponent->create();
+    graphics->root = qobject_cast<QQuickItem *>(rootObject);
+    graphics->root->setParentItem(graphics->window->contentItem());
+    graphics->root->setPosition(QPoint(0, 0));
+    graphics->root->setSize(graphics->totalSize);
+
+    emit graphics->openxr->ready();
 
     graphics->quickRenderer->initialize(graphics->glContext);
 }
