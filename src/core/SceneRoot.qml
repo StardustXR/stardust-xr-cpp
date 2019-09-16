@@ -25,6 +25,28 @@ Node {
 //        id:autoLauncher
 //    }
 
+
+
+    Light {
+        id: directionalLight
+//        type: Light.Directional
+    }
+
+    Model {
+        source: "#Cube"
+
+        position: Qt.vector3d(0, 1.65, 5)
+        scale: Qt.vector3d(1,1,1)
+
+        materials: [
+            DefaultMaterial {
+                id: material
+                diffuseColor: "white"
+            }
+
+        ]
+    }
+
     Camera {
         id:leftEye
 
@@ -57,7 +79,7 @@ Node {
         backgroundMode: SceneEnvironment.SkyBox
 
         lightProbe: Texture {
-            source: "qrc:/test_grid.png"
+            source: "qrc:/pond_bridge_night.hdr"
             mappingMode: Texture.Environment
         }
     }
