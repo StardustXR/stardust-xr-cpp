@@ -1,3 +1,0 @@
-[submodule "external/qtquick3d"]
-	path = external/qtquick3d
-	url = https://github.com/chromenova/qtquick3d.git
