@@ -42,28 +42,8 @@ Node {
         ]
     }
 
-    Camera {
-        id:leftEye
-
-        clipNear: 0.001
-        clipFar: 1000
-        fieldOfView: 110
-        projectionMode: Camera.Frustum
-        enableFrustumCulling: true
-
-        Component.onCompleted: OpenXRGraphics.leftEye = this
-    }
-
-    Camera {
-        id:rightEye
-
-        clipNear: 0.001
-        clipFar: 1000
-        fieldOfView: 110
-        projectionMode: Camera.Frustum
-        enableFrustumCulling: true
-
-        Component.onCompleted: OpenXRGraphics.rightEye = this
+    StereoCameras {
+        id:stereoCameras
     }
 
     SceneEnvironment {
@@ -79,11 +59,11 @@ Node {
     }
 
     Component.onCompleted: {
-        leftView.camera = leftEye;
+        leftView.camera = stereoCameras.leftEye;
         leftView.scene = this;
         leftView.environment = skybox;
 
-        rightView.camera = rightEye;
+        rightView.camera = stereoCameras.rightEye;
         rightView.scene = this;
         rightView.environment = skybox;
     }
