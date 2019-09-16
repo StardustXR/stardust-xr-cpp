@@ -1,6 +1,5 @@
-import QtQuick 2.0
+import QtQuick 2.12
 import QtQuick3D 1.0
-import QtQuick3D.MaterialLibrary 1.0
 
 import Launcher 1.0
 import ConfigPathGetter 1.0
@@ -12,10 +11,6 @@ import OpenXRGraphics 1.0
 
 Node {
     id:sceneRoot
-
-    property alias leftEye: leftEye
-    property alias rightEye: rightEye
-    property alias skybox: skybox
 
 //    Component.onCompleted: {
 //        autoLauncher.launchDetached("sh -c \""+compositorPrefs.json.autostart.join(";")+"\"");
@@ -81,5 +76,15 @@ Node {
             source: "qrc:/pond_bridge_night.hdr"
             mappingMode: Texture.Environment
         }
+    }
+
+    Component.onCompleted: {
+        leftView.camera = leftEye;
+        leftView.scene = this;
+        leftView.environment = skybox;
+
+        rightView.camera = rightEye;
+        rightView.scene = this;
+        rightView.environment = skybox;
     }
 }
