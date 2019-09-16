@@ -53,11 +53,11 @@ void StardustOpenXRFrame::initRenderControl() {
     bool isCurrent = graphics->glContext->makeCurrent(graphics->surface);
 
     //Create and link the FBO
-    graphics->glFBO = new QOpenGLFramebufferObject(graphics->totalSize, QOpenGLFramebufferObject::NoAttachment, GL_TEXTURE_2D, GL_RGBA);
+    graphics->glFBO = new QOpenGLFramebufferObject(graphics->totalSize, QOpenGLFramebufferObject::NoAttachment, GL_TEXTURE_2D, GL_RGBA8);
     graphics->window->setRenderTarget(graphics->glFBO);
 
-    graphics->leftViewSize = QSize(graphics->eyeData[0].recommendedImageRectWidth, graphics->eyeData[0].recommendedImageRectHeight);
-    graphics->rightViewSize = QSize(graphics->eyeData[1].recommendedImageRectWidth, graphics->eyeData[1].recommendedImageRectHeight);
+    graphics->leftViewSize = graphics->eyeRects[0].size();
+    graphics->rightViewSize = graphics->eyeRects[0].size();
 
     emit graphics->leftEyeSizeChanged();
     emit graphics->rightEyeSizeChanged();
@@ -120,13 +120,27 @@ void StardustOpenXRFrame::startFrame() {
             break;
 
         //Set the cameras' positon to the pose position
-        QVector3D position = QVector3D(view.pose.position.x, view.pose.position.z, view.pose.position.y);
+        QVector3D position = QVector3D(
+            view.pose.position.x,
+            view.pose.position.y,
+            view.pose.position.z
+        );
         eye->setPosition(position);
 
         //Set the cameras' orientation to match the orientation
-        QQuaternion rotation = QQuaternion(view.pose.orientation.w, view.pose.orientation.x, view.pose.orientation.y, view.pose.orientation.z);
+        QQuaternion rotation = QQuaternion(
+            view.pose.orientation.w,
+            view.pose.orientation.x,
+            view.pose.orientation.y,
+            view.pose.orientation.z
+        );
         QVector3D euler = rotation.toEulerAngles();
-        eye->setRotation(-euler);
+
+        eye->setRotation(QVector3D(
+            euler.x(),
+            -euler.y(),
+            -euler.z()
+        ));
 
         eye->setIsFieldOfViewHorizontal(true);
         eye->setFieldOfView((view.fov.angleRight-view.fov.angleLeft)*RAD2DEG);
@@ -142,10 +156,7 @@ void StardustOpenXRFrame::startFrame() {
         graphics->stardustLayerViews[i].subImage = XrSwapchainSubImage {
             graphics->swapchains[i],
             XrRect2Di {
-                XrOffset2Di {
-                    graphics->eyeRects[i].x(),
-                    graphics->eyeRects[i].y()
-                },
+                XrOffset2Di {0, 0},
                 XrExtent2Di {
                     graphics->eyeRects[i].width(),
                     graphics->eyeRects[i].height()
@@ -263,7 +274,7 @@ void StardustOpenXRFrame::copyFrame(uint i) {
                              : (memRequirements.size + memRequirements.alignment - align_mod);
 
     VkBufferImageCopy region = {};
-    region.bufferOffset = align_mod;
+    region.bufferOffset = align_mod+(graphics->totalSize.width()*2*i);
     region.bufferRowLength = graphics->totalSize.width();
     region.bufferImageHeight = graphics->totalSize.height();
 
@@ -272,8 +283,14 @@ void StardustOpenXRFrame::copyFrame(uint i) {
     region.imageSubresource.baseArrayLayer = 0;
     region.imageSubresource.layerCount = 1;
 
-    region.imageOffset = VkOffset3D{0,0,0};
-    region.imageExtent = VkExtent3D{static_cast<uint32_t>(graphics->eyeRects[i].width()), static_cast<uint32_t>(graphics->eyeRects[i].height()), 1};
+    region.imageOffset = VkOffset3D{
+        0,0,0
+    };
+    region.imageExtent = VkExtent3D{
+        static_cast<uint32_t>(graphics->eyeRects[i].width()),
+        static_cast<uint32_t>(graphics->eyeRects[i].height()),
+        1
+    };
 
     vkCmdCopyBufferToImage(
         commandBuffer,
@@ -341,8 +358,8 @@ void StardustOpenXRFrame::createEXTBuffers() {
 
     glBindTexture (GL_TEXTURE_2D, colorTex);
 
-//    glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA, graphics->totalSize.width(), graphics->totalSize.height(), glMemObj, 0);
-    (reinterpret_cast<PFNGLTEXSTORAGEMEM2DEXTPROC>(graphics->glContext->getProcAddress("glTexStorageMem2DEXT")))(GL_TEXTURE_2D, 1, GL_RGBA, graphics->totalSize.width(), graphics->totalSize.height(), glMemObj, 0);
+//    glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, graphics->totalSize.width(), graphics->totalSize.height(), glMemObj, 0);
+    (reinterpret_cast<PFNGLTEXSTORAGEMEM2DEXTPROC>(graphics->glContext->getProcAddress("glTexStorageMem2DEXT")))(GL_TEXTURE_2D, 1, GL_RGBA8, graphics->totalSize.width(), graphics->totalSize.height(), glMemObj, 0);
 
     glFinish();
 }

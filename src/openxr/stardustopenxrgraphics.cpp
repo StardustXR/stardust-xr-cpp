@@ -21,22 +21,21 @@ void StardustOpenXRGraphics::initialize() {
     uint32_t viewCount = 2;
     xrEnumerateViewConfigurationViews(*openxr->xrInstance, *openxr->hmdID, openxr->viewConfig, viewCount, &viewCount, eyeData);
 
-
-    totalSize = QSize(
-                eyeData[0].recommendedImageRectWidth+eyeData[1].recommendedImageRectWidth,
-                std::max(eyeData[0].recommendedImageRectHeight, eyeData[1].recommendedImageRectHeight)
-            );
-
     //Do all this for both eyes
     for(int i=0; i<2; i++) {
         //Create the eyeRects
         eyeRects[i] = QRect();
-//        eyeRects[1].setX(eyeData[0].recommendedImageRectWidth);
+        eyeRects[1].setX(eyeData[0].recommendedImageRectHeight + (eyeData[0].recommendedImageRectHeight % 2));
 
         //Update the eyeRects' extents
-        eyeRects[i].setHeight(eyeData[i].recommendedImageRectHeight);
-        eyeRects[i].setWidth(eyeData[i].recommendedImageRectWidth);
+        eyeRects[i].setHeight(eyeData[i].recommendedImageRectHeight + (eyeData[i].recommendedImageRectHeight % 2));
+        eyeRects[i].setWidth(eyeData[i].recommendedImageRectWidth + (eyeData[i].recommendedImageRectHeight % 2));
     }
+
+    totalSize = QSize(
+                eyeRects[0].width()+eyeRects[1].width(),
+                std::max(eyeRects[0].height(), eyeRects[1].height())
+            );
 
     //Update the swapchain info's values
     swapInfo.width = eyeRects[0].width();
