@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <QQmlProperty>
 
+namespace StardustAPI {
+
 class KeyboardHandler : public QObject
 {
     Q_OBJECT
@@ -18,5 +20,7 @@ public slots:
     virtual void fullKeyEvent(QObject *keyEvent);
     virtual void keyEvent(int key, bool pressed);
 };
+
+}
 
 #endif // KEYBOARDHANDLER_H

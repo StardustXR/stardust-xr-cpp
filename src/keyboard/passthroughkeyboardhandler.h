@@ -4,6 +4,8 @@
 #include "keyboardhandler.h"
 #include <QCoreApplication>
 
+namespace StardustAPI {
+
 class PassthroughKeyboardHandler : public KeyboardHandler
 {
     Q_OBJECT
@@ -20,5 +22,7 @@ public:
 //    void fullKeyEvent(QObject *keyEvent) override;
 //    void keyEvent(int key, bool pressed);
 };
+
+}
 
 #endif // PASSTHROUGHKEYBOARDHANDLER_H

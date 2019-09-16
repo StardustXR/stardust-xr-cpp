@@ -47,8 +47,8 @@ void registerQMLTypes() {
         return new PluginLoader;
     });
 
-    qmlRegisterType<PhysicalKeyboardAdapter>("Stardust.Core", 1, 0, "PhysicalKeyboardAdapter");
-    qmlRegisterType<PassthroughKeyboardHandler>("Stardust.Core", 1, 0, "PassthroughKeyboardHandler");
+    qmlRegisterType<StardustAPI::PhysicalKeyboardAdapter>("Stardust.Core", 1, 0, "PhysicalKeyboardAdapter");
+    qmlRegisterType<StardustAPI::PassthroughKeyboardHandler>("Stardust.Core", 1, 0, "PassthroughKeyboardHandler");
 
     qmlRegisterSingletonType<Stardust::Vulkan>("Stardust.Core.Internal", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
