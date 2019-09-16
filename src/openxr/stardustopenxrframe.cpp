@@ -75,7 +75,7 @@ void StardustOpenXRFrame::initRenderControl() {
 }
 
 void StardustOpenXRFrame::startFrame() {
-    qDebug() << "Starting frame";
+//    qDebug() << "Starting frame";
     //Wait for next frame
     xrWaitFrame(*graphics->openxr->stardustSession, &graphics->frameWaitInfo, &graphics->frameState);
 
@@ -170,7 +170,7 @@ void StardustOpenXRFrame::startFrame() {
 }
 
 void StardustOpenXRFrame::renderFrame() {
-    qDebug() << "Rendering frame";
+//    qDebug() << "Rendering frame";
 
     graphics->quickRenderer->polishItems();
     graphics->quickRenderer->sync();
@@ -203,7 +203,7 @@ void StardustOpenXRFrame::renderFrame() {
 }
 
 void StardustOpenXRFrame::endFrame() {
-    qDebug() << "Ending frame";
+//    qDebug() << "Ending frame";
     //Update properties on the XrFrameEndInfo and its dependencies
     XrCompositionLayerProjection stardustLayer = {
         XR_TYPE_COMPOSITION_LAYER_PROJECTION,
