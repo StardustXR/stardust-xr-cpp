@@ -27,9 +27,9 @@
 #include "openxr/stardustopenxr.h"
 #include "openxr/stardustopenxrgraphics.h"
 
-Stardust::OpenXR *openxr;
-Stardust::Vulkan *vulkan;
-Stardust::OpenXRGraphics *graphics;
+Stardust::OpenXR *openxr = nullptr;
+Stardust::Vulkan *vulkan = nullptr;
+Stardust::OpenXRGraphics *graphics = nullptr;
 
 void registerQMLTypes() {
     qmlRegisterType<Launcher>("Stardust.Core", 1, 0, "Launcher");
