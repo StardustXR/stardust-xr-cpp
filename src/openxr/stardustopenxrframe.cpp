@@ -104,12 +104,6 @@ void OpenXRFrame::startFrame() {
     //Locate views
     xrLocateViews(*graphics->openxr->stardustSession, &graphics->viewLocateInfo, &graphics->viewState, 2, nullptr, graphics->views.data());
 
-    //Create acquire information
-    XrSwapchainImageAcquireInfo acquireInfo{XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO, nullptr};
-
-    //Create empty swapchain wait info
-    XrSwapchainImageWaitInfo waitInfo{XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO, nullptr};
-
     //Do for each eye
     for(int i=0; i<2; i++) {
         //Grab the swapchain image

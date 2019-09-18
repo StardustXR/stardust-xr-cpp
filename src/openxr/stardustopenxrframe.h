@@ -61,6 +61,9 @@ private:
     GLuint copyFBO;
     GLuint colorTex;
 
+    //OpenXR declarations
+    XrSwapchainImageAcquireInfo acquireInfo{XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO, nullptr};
+    XrSwapchainImageWaitInfo waitInfo{XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO, nullptr};
 
     //FPS Timing
     QElapsedTimer *frameTimer;
