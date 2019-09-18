@@ -16,4 +16,19 @@ Node {
 //    Launcher {
 //        id:autoLauncher
 //    }
+
+    Model {
+        source: "qrc:/Teapot.mesh"
+
+        position: Qt.vector3d(0, 0.5, -1.65)
+
+        materials: [
+            DefaultMaterial {
+                lighting: DefaultMaterial.NoLighting
+
+                emissiveColor: "#00ff7f"
+                emissivePower: 5
+            }
+        ]
+    }
 }
