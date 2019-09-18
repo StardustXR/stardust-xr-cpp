@@ -4,6 +4,7 @@
 
 #include "openxr_meta.h"
 #include "stardustopenxrgraphics.h"
+#include <QElapsedTimer>
 
 namespace Stardust {
 
