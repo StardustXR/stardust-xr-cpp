@@ -25,6 +25,8 @@ void OpenXRFrame::initialize() {
 
     createEXTBuffers();
 
+	frameTimer = new QElapsedTimer;
+
     emit initialized();
     emit graphics->openxr->ready();
 }
@@ -82,6 +84,8 @@ void OpenXRFrame::initRenderControl() {
 
 void OpenXRFrame::startFrame() {
 //    qDebug() << "Starting frame";
+	frameTimer->start();
+
     //Wait for next frame
     xrWaitFrame(*graphics->openxr->stardustSession, &graphics->frameWaitInfo, &graphics->frameState);
 
@@ -240,6 +244,9 @@ void OpenXRFrame::endFrame() {
 
     //End the drawing of the current frame
     xrEndFrame(*graphics->openxr->stardustSession, &endInfo);
+
+	fps = 1000/frameTimer->elapsed();
+	qDebug() << "FPS: " << fps << endl;
 
     emit frameEnded();
 }

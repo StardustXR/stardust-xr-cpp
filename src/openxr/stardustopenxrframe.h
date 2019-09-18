@@ -60,6 +60,11 @@ private:
     //OpenGL variables
     GLuint copyFBO;
     GLuint colorTex;
+
+
+    //FPS Timing
+    QElapsedTimer *frameTimer;
+    float fps = 0;
 };
 
 }
