@@ -356,17 +356,31 @@ void OpenXRFrame::createEXTBuffers() {
     GLuint glMemObj = 0;
 
     //glCreateMemoryObjectsEXT(1, &glMemObj);
-    (reinterpret_cast<PFNGLCREATEMEMORYOBJECTSEXTPROC>(graphics->glContext->getProcAddress("glCreateMemoryObjectsEXT")))(1, &glMemObj);
+    (reinterpret_cast<PFNGLCREATEMEMORYOBJECTSEXTPROC>(graphics->glContext->getProcAddress("glCreateMemoryObjectsEXT")))(
+        1, &glMemObj
+    );
 
     //glImportMemoryFdEXT (glMemObj, imageSize, GL_HANDLE_TYPE_OPAQUE_FD_EXT, fd);
-    (reinterpret_cast<PFNGLIMPORTMEMORYFDEXTPROC>(graphics->glContext->getProcAddress("glImportMemoryFdEXT")))(glMemObj, imageSize, GL_HANDLE_TYPE_OPAQUE_FD_EXT, fd);
+    (reinterpret_cast<PFNGLIMPORTMEMORYFDEXTPROC>(graphics->glContext->getProcAddress("glImportMemoryFdEXT")))(
+        glMemObj,
+        imageSize,
+        GL_HANDLE_TYPE_OPAQUE_FD_EXT,
+        fd
+    );
 
     glGenTextures(1, &colorTex);
+    glBindTexture(GL_TEXTURE_2D, colorTex);
 
-    glBindTexture (GL_TEXTURE_2D, colorTex);
-
-//    glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, graphics->totalSize.width(), graphics->totalSize.height(), glMemObj, 0);
-    (reinterpret_cast<PFNGLTEXSTORAGEMEM2DEXTPROC>(graphics->glContext->getProcAddress("glTexStorageMem2DEXT")))(GL_TEXTURE_2D, 1, GL_RGBA8, graphics->totalSize.width(), graphics->totalSize.height(), glMemObj, 0);
+    //glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, graphics->totalSize.width(), graphics->totalSize.height(), glMemObj, 0);
+    (reinterpret_cast<PFNGLTEXSTORAGEMEM2DEXTPROC>(graphics->glContext->getProcAddress("glTexStorageMem2DEXT")))(
+        GL_TEXTURE_2D,
+        1,
+        GL_RGBA8,
+        graphics->totalSize.width(),
+        graphics->totalSize.height(),
+        glMemObj,
+        0
+    );
 
     glFinish();
 }
