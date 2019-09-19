@@ -156,7 +156,7 @@ void Vulkan::initialize() {
     VkCommandPoolCreateInfo cmdPoolInfo = {
         VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         nullptr,
-        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT,
+        VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
         queueFamilyIndex
     };
 

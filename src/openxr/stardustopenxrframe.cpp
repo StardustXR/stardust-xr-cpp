@@ -251,7 +251,7 @@ void OpenXRFrame::endFrame() {
 void OpenXRFrame::copyFrame(uint i) {
     VkImage image = graphics->vulkanImages[i][0];
 
-    VkCommandBuffer commandBuffer = beginSingleTimeCommands(3);
+    vkBeginCommandBuffer(commandBuffer, &commandBufferBeginInfo);
 
     VkImageSubresourceRange range;
     range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -326,23 +326,18 @@ void OpenXRFrame::copyFrame(uint i) {
 
     vkQueueSubmit(*graphics->openxr->vulkan->queue, 1, &submitInfo, VK_NULL_HANDLE);
     vkQueueWaitIdle(*graphics->openxr->vulkan->queue);
+    vkResetCommandBuffer(commandBuffer, VK_NULL_HANDLE);
 }
 
-VkCommandBuffer OpenXRFrame::beginSingleTimeCommands(uint32_t count) {
+VkCommandBuffer OpenXRFrame::createCommandBuffer() {
     VkCommandBufferAllocateInfo allocInfo = {};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     allocInfo.commandPool = graphics->openxr->vulkan->pool;
-    allocInfo.commandBufferCount = count;
+    allocInfo.commandBufferCount = 1;
 
     VkCommandBuffer commandBuffer;
     vkAllocateCommandBuffers(graphics->openxr->vulkan->device, &allocInfo, &commandBuffer);
-
-    VkCommandBufferBeginInfo beginInfo = {};
-    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-    vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
     return commandBuffer;
 }
@@ -351,6 +346,9 @@ void OpenXRFrame::createEXTBuffers() {
     imageSize = graphics->totalSize.width()*graphics->totalSize.height()*4;
     //Create Vulkan side of OpenGL -> Vulkan interop
     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT, stagingBuffer, stagingBufferMemory, fd, memRequirements);
+
+    //Create Vulkan command buffer
+    commandBuffer = createCommandBuffer();
 
     //Create OpenGL side of OpenGL -> Vulkan interop
     GLuint glMemObj = 0;
