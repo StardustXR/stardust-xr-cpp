@@ -349,10 +349,10 @@ VkCommandBuffer OpenXRFrame::beginSingleTimeCommands(uint32_t count) {
 
 void OpenXRFrame::createEXTBuffers() {
     imageSize = graphics->totalSize.width()*graphics->totalSize.height()*4;
+    //Create Vulkan side of OpenGL -> Vulkan interop
     createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT, stagingBuffer, stagingBufferMemory, fd, memRequirements);
 
-    GLint isDedicated = GL_TRUE;
-
+    //Create OpenGL side of OpenGL -> Vulkan interop
     GLuint glMemObj = 0;
 
     //glCreateMemoryObjectsEXT(1, &glMemObj);
