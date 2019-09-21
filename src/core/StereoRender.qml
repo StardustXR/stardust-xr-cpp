@@ -72,13 +72,13 @@ Rectangle {
         }
     }
 
-//    Preferences {
-//        id:appPrefs
-//        fileName: "app_prefs.json"
-//    }
+    Preferences {
+        id:appPrefs
+        fileName: "app_prefs.json"
+    }
 
-//    Preferences {
-//        id:compositorPrefs
-//        fileName: "compositor_prefs.json"
-//    }
+    Preferences {
+        id:compositorPrefs
+        fileName: "compositor_prefs.json"
+    }
 }
