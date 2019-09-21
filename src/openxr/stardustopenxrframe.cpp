@@ -77,8 +77,6 @@ void OpenXRFrame::initRenderControl() {
     graphics->root->setPosition(QPoint(0, 0));
     graphics->root->setSize(graphics->totalSize);
 
-    emit graphics->openxr->ready();
-
     graphics->quickRenderer->initialize(graphics->glContext);
 }
 
