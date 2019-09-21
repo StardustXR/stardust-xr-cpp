@@ -78,7 +78,7 @@ void OpenXRGraphics::initialize() {
     frame->thread = frameThread;
 
     //Start up the frame thread
-    frameThread->start(QThread::HighestPriority);
+    frameThread->start(QThread::TimeCriticalPriority);
 
     //Start the frame loop as soon as the scene graph initializes
     connect(this, &OpenXRGraphics::startFrameLoop, frame, &OpenXRFrame::initialize);
