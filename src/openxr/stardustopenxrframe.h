@@ -18,15 +18,6 @@ public:
     OpenXRGraphics *graphics = nullptr;
     QThread *thread = nullptr;
 
-signals:
-    void initialized();
-
-    void startedFrame();
-
-    void renderedFrame();
-
-    void frameEnded();
-
 public slots:
     void initialize();
 

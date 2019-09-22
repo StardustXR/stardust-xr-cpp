@@ -11,11 +11,6 @@
 namespace Stardust {
 
 OpenXRFrame::OpenXRFrame(QObject *parent) : QObject(parent) {
-    connect(this, &OpenXRFrame::initialized, this, &OpenXRFrame::startFrame);
-
-    connect(this, &OpenXRFrame::startedFrame, this, &OpenXRFrame::renderFrame);
-    connect(this, &OpenXRFrame::renderedFrame, this, &OpenXRFrame::endFrame);
-    connect(this, &OpenXRFrame::frameEnded, this, &OpenXRFrame::startFrame);
 }
 
 void OpenXRFrame::initialize() {
@@ -27,8 +22,13 @@ void OpenXRFrame::initialize() {
 
 	frameTimer = new QElapsedTimer;
 
-    emit initialized();
     emit graphics->openxr->ready();
+
+    for(;;) {
+        startFrame();
+        renderFrame();
+        endFrame();
+    }
 }
 
 void OpenXRFrame::initRenderControl() {
@@ -167,8 +167,6 @@ void OpenXRFrame::startFrame() {
             graphics->swapchainImageIndices[i]
         };
     }
-
-    emit startedFrame();
 }
 
 void OpenXRFrame::renderFrame() {
@@ -200,8 +198,6 @@ void OpenXRFrame::renderFrame() {
 
     copyFrame(0);
     copyFrame(1);
-
-    emit renderedFrame();
 }
 
 void OpenXRFrame::endFrame() {
@@ -238,9 +234,7 @@ void OpenXRFrame::endFrame() {
     xrEndFrame(*graphics->openxr->stardustSession, &endInfo);
 
 	fps = 1000/frameTimer->elapsed();
-	qDebug() << "FPS: " << fps << endl;
-
-    emit frameEnded();
+    qDebug() << "FPS: " << fps << endl;
 }
 
 
