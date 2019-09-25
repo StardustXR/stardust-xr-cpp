@@ -1,6 +1,6 @@
 #include "passthroughkeyboardhandler.h"
 
-namespace StardustAPI {
+namespace Stardust {
 
 PassthroughKeyboardHandler::PassthroughKeyboardHandler(QObject *parent) : KeyboardHandler (parent) {}
 

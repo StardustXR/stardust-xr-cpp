@@ -1,6 +1,6 @@
 #include "physicalkeyboardadapter.h"
 
-namespace StardustAPI {
+namespace Stardust {
 
 PhysicalKeyboardAdapter::PhysicalKeyboardAdapter(QObject *parent) : Keyboard(parent) {}
 

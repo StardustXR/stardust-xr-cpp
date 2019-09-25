@@ -4,7 +4,9 @@
 #include "keyboardhandler.h"
 #include <QCoreApplication>
 
-namespace StardustAPI {
+using namespace StardustAPI;
+
+namespace Stardust {
 
 class PassthroughKeyboardHandler : public KeyboardHandler
 {

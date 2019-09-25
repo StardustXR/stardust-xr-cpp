@@ -4,7 +4,9 @@
 #include <QObject>
 #include "keyboard.h"
 
-namespace StardustAPI {
+using namespace StardustAPI;
+
+namespace Stardust {
 
 class PhysicalKeyboardAdapter : public Keyboard
 {
