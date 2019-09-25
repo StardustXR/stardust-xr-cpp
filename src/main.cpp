@@ -20,7 +20,7 @@
 #include "core/extensionloader.h"
 #include "core/pluginloader.h"
 
-#include "keyboard/physicalkeyboardadapter.h"
+#include "keyboard/recoverykeyboardadapter.h"
 #include "keyboard/passthroughkeyboardhandler.h"
 
 #include "openxr/stardustvulkan.h"
@@ -47,7 +47,13 @@ void registerQMLTypes() {
         return new Stardust::PluginLoader;
     });
 
-    qmlRegisterType<Stardust::PhysicalKeyboardAdapter>("Stardust.Core", 1, 0, "PhysicalKeyboardAdapter");
+    qmlRegisterSingletonType<Stardust::RecoveryKeyboardAdapter>("Stardust.Core.Internal", 1, 0, "RecoveryKeyboardAdapter", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine)
+        Q_UNUSED(scriptEngine)
+
+        return new Stardust::RecoveryKeyboardAdapter;
+    });
+
     qmlRegisterType<Stardust::PassthroughKeyboardHandler>("Stardust.Core", 1, 0, "PassthroughKeyboardHandler");
 
     qmlRegisterSingletonType<Stardust::Vulkan>("Stardust.Core.Internal", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {

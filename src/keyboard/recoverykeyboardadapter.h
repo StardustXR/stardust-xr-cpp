@@ -1,5 +1,5 @@
-#ifndef PHYSICALKEYBOARDADAPTER_H
-#define PHYSICALKEYBOARDADAPTER_H
+#ifndef RECOVERYKEYBOARDADAPTER_H
+#define RECOVERYKEYBOARDADAPTER_H
 
 #include <QObject>
 #include "keyboard.h"
@@ -9,11 +9,11 @@ using namespace StardustAPI;
 
 namespace Stardust {
 
-class PhysicalKeyboardAdapter : public Keyboard
+class RecoveryKeyboardAdapter : public Keyboard
 {
     Q_OBJECT
 public:
-    explicit PhysicalKeyboardAdapter(QObject *parent = nullptr);
+    explicit RecoveryKeyboardAdapter(QObject *parent = nullptr);
 
     Q_INVOKABLE void initialize();
 
@@ -24,4 +24,4 @@ signals:
 
 }
 
-#endif // PHYSICALKEYBOARDADAPTER_H
+#endif // RECOVERYKEYBOARDADAPTER_H

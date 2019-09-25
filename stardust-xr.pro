@@ -18,6 +18,7 @@ SOURCES += \
     src/core/launcher.cpp \
     src/core/prefs.cpp \
     src/core/extensionloader.cpp \
+    src/keyboard/recoverykeyboardadapter.cpp \
     src/openxr/stardustopengl.cpp \
     src/openxr/stardustopenxr.cpp \
     src/openxr/stardustopenxrframe.cpp \
@@ -28,8 +29,7 @@ SOURCES += \
     src/keyboard/keyboardhandler.cpp \
     src/keyboard/passthroughkeyboardhandler.cpp \
     src/core/pluginloader.cpp \
-    src/main.cpp \
-    src/keyboard/physicalkeyboardadapter.cpp
+    src/main.cpp
 
 RESOURCES += src/qml.qrc \
     defaults/defaults.qrc \
@@ -60,6 +60,7 @@ HEADERS += \
     src/core/plugininterfaces.h \
     src/core/prefs.h \
     src/core/extensionloader.h \
+    src/keyboard/recoverykeyboardadapter.h \
     src/openxr/opengl_meta.h \
     src/openxr/openxr_meta.h \
     src/openxr/stardustopengl.h \
@@ -72,5 +73,4 @@ HEADERS += \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \
     src/keyboard/passthroughkeyboardhandler.h \
-    src/keyboard/physicalkeyboardadapter.h \
     src/core/pluginloader.h
