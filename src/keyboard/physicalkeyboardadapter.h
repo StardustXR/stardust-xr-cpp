@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "keyboard.h"
+#include <libinput.h>
 
 using namespace StardustAPI;
 

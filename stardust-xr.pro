@@ -50,7 +50,8 @@ INCLUDEPATH +=	-i/usr/local/include
 LIBS += -lopenxr_loader \
         -lvulkan \
         -lGLEW \
-        -lglfw
+        -lglfw \
+        -linput
 
 HEADERS += \
     src/core/configpathgetter.h \
