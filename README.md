@@ -6,9 +6,8 @@ This project is made using Qt 5.13.x with and Qt 3D Quick.
 
 ## Building instructions:
 
-1. Install Qt 5.13.x base, QML, and Quick via package manager, Qt's website (https://www.qt.io/download), or compile it yourself (https://github.com/qt)
-2. Install Qt Quick 3D (https://git.qt.io/annichol/qtquick3d/)
-3. Build using the provided scripts (make sure qmake is in your PATH):
+1. Install Qt 5.14.0a base and Qt Quick 3D via Qt Maintenance Tool, Qt's website (https://www.qt.io/download), or compile it yourself (https://github.com/qt)
+2. Build using the provided scripts (make sure qmake is in your PATH):
 ```
 $ mkdir build && cd build
 $ sh ../scripts/build.sh ..
