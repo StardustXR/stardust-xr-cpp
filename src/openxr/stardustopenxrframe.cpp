@@ -234,7 +234,7 @@ void OpenXRFrame::endFrame() {
     xrEndFrame(*graphics->openxr->stardustSession, &endInfo);
 
 	fps = 1000/frameTimer->elapsed();
-    qDebug() << "FPS: " << fps << endl;
+//    qDebug() << "FPS: " << fps << endl;
 }
 
 
