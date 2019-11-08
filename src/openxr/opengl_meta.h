@@ -1,9 +1,8 @@
 #ifndef OPENGL_META_H
 #define OPENGL_META_H
 
-//#include <GL/glew.h>
-//#include <X11/Xlib.h>
-//#include <GL/glx.h>
+#include <X11/Xlib.h>
+#include <GL/glx.h>
 
 #define XR_USE_PLATFORM_XLIB
 #define XR_USE_GRAPHICS_API_OPENGL

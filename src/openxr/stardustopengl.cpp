@@ -1,5 +1,8 @@
 #include "stardustopengl.h"
 
+#include <QCoreApplication>
+#include <QOpenGLContext>
+
 namespace Stardust {
 
 OpenGL::OpenGL(QObject *parent) : QObject(parent) {
@@ -12,27 +15,16 @@ void OpenGL::initialize() {
     window->openglContext()->doneCurrent();
     window->openglContext()->makeCurrent(window);
 
-    //Get native context for window
-    nativeInterface = QGuiApplication::platformNativeInterface();
+    //Get X display
+    display = XOpenDisplay(nullptr);
 
-    //Get the ideal framebuffer
-//    std::vector<int> attrib_list = {
-////        GLX_X_RENDERABLE, false,
-////        GLX_TRANSPARENT_TYPE, GLX_TRANSPARENT_RGB,
-//        GLX_RED_SIZE, 8,
-//        GLX_GREEN_SIZE, 8,
-//        GLX_BLUE_SIZE, 8,
-//        GLX_ALPHA_SIZE, 8,
-//        None
-//    };
-//    int numElements;
-//    const GLXFBConfig *framebufferConfigs = glXChooseFBConfig(display, 0, attrib_list.data(), &numElements);
-//    framebufferConfig = framebufferConfigs[0];
+    //Get OpenGL context
+    context = glXGetCurrentContext();
 
-//    //Get OpenGL context
-//    context = glXGetCurrentContext();
+    drawable = glXGetCurrentDrawable();
 
-//    drawable = glXGetCurrentDrawable();
+    int nelements = 0;
+    framebufferConfig = glXChooseFBConfig(display, 0, framebufferOptions, &nelements);
 
     //Enable same-thread context checking
     QCoreApplication::setAttribute(Qt::AA_DontCheckOpenGLContextThreadAffinity, false);

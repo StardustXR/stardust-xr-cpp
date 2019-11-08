@@ -1,23 +1,14 @@
 #ifndef STARDUSTOPENXRGRAPHICS_H
 #define STARDUSTOPENXRGRAPHICS_H
 
-#include <QSize>
-#include <QThread>
-#include <QVector3D>
-#include <QQuaternion>
-#include <QMetaObject>
-#include <QQuickItem>
-#include <QQuickWindow>
-#include <QQuickRenderControl>
-#include <QOpenGLContext>
-#include <QOpenGLFramebufferObject>
-#include <QOffscreenSurface>
-
 #include <QQmlEngine>
 #include <QQmlComponent>
 
-
 #include "stardustopenxr.h"
+
+#include <QSize>
+#include <QOffscreenSurface>
+
 
 namespace Stardust {
 
@@ -53,7 +44,7 @@ public:
         nullptr,                                                                            //const void*               next;
         0,                                                                                  //XrSwapchainCreateFlags    createFlags;
         XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT | XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT,      //XrSwapchainUsageFlags     usageFlags;
-        VK_FORMAT_R8G8B8A8_UNORM,                                                           //int64_t                   format;
+        GL_RGBA8,                                                                           //int64_t                   format;
         1,                                                                                  //uint32_t                  sampleCount;
         1,                                                                                  //uint32_t                  width;
         1,                                                                                  //uint32_t                  height;
@@ -64,12 +55,12 @@ public:
     XrSwapchain swapchains[2];
 
     uint32_t swapchainImageCount = 0;
-    XrSwapchainImageVulkanKHR swapchainImageTemplate = {
-        XR_TYPE_SWAPCHAIN_IMAGE_VULKAN_KHR,
+    XrSwapchainImageOpenGLKHR swapchainImageTemplate = {
+        XR_TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR,
         nullptr,
-        VkImage()
+        0
     };
-    std::vector<XrSwapchainImageVulkanKHR> swapchainImages[2];
+    std::vector<XrSwapchainImageOpenGLKHR> swapchainImages[2];
     uint32_t swapchainImageIndices[2];
 
     XrReferenceSpaceCreateInfo refSpaceInfo = {
@@ -120,6 +111,7 @@ public:
 
     QSize totalSize;
 
+    QSurfaceFormat *glFormat;
     QOpenGLContext *glContext;
     QOffscreenSurface *surface;
     QQuickWindow *window;
@@ -130,7 +122,7 @@ public:
     QQmlEngine *qmlEngine;
     QQmlComponent *qmlComponent;
 
-    std::vector<VkImage> vulkanImages[2];
+    std::vector<GLuint>openglImages[2];
 
     XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
     XrFrameState frameState{XR_TYPE_FRAME_STATE};

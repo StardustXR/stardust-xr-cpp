@@ -1,7 +1,7 @@
 #ifndef OPENXR_META_H
 #define OPENXR_META_H
 
-#include "vulkan_meta.h"
+#include "opengl_meta.h"
 
 #include <openxr/openxr.h>
 #include <openxr/openxr_platform.h>

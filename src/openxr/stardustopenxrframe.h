@@ -1,8 +1,9 @@
 #ifndef STARDUSTOPENXRFRAME_H
 #define STARDUSTOPENXRFRAME_H
 
+#include <GL/glew.h>
+#include <GL/gl.h>
 
-#include "openxr_meta.h"
 #include "stardustopenxrgraphics.h"
 #include <QElapsedTimer>
 
@@ -31,29 +32,6 @@ private slots:
 private:
     void copyFrame(uint i);
     void initRenderControl();
-
-    //Vulkan helper functions
-    VkCommandBuffer createCommandBuffer();
-    uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-
-    void createEXTBuffers();
-    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory, int &fd, VkMemoryRequirements &memRequirements);
-
-    //Vulkan declarations
-    VkCommandBufferBeginInfo commandBufferBeginInfo = {
-        VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-        nullptr,
-        VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
-        nullptr
-    };
-
-    //Vulkan variables
-    VkCommandBuffer commandBuffer;
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    VkDeviceSize imageSize;
-    VkMemoryRequirements memRequirements;
-    int fd = 0;
 
     //OpenGL helper functions
     void createTextureFromFD(int d);

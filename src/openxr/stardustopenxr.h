@@ -1,22 +1,18 @@
 #ifndef STARDUSTOPENXR_H
 #define STARDUSTOPENXR_H
 
-#include <QObject>
-
-#include "openxr_meta.h"
-
-#include "stardustvulkan.h"
+#include "stardustopengl.h"
 namespace Stardust {
 
 class OpenXR : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(Vulkan *vulkan MEMBER vulkan)
+    Q_PROPERTY(OpenGL *opengl MEMBER opengl)
 public:
     explicit OpenXR(QObject *parent = nullptr);
     ~OpenXR();
 
-    Vulkan *vulkan = nullptr;
+    OpenGL *opengl = nullptr;
     Q_INVOKABLE void initialize();
 
     XrApplicationInfo *xrAppInfo = new XrApplicationInfo;
@@ -27,9 +23,12 @@ public:
     XrSessionCreateInfo *xrSessionInfo = new XrSessionCreateInfo;
     XrSession *stardustSession = new XrSession;
 
-    std::vector<char> *vulkanExtensionBuffer = new std::vector<char>;
+    XrGraphicsRequirementsOpenGLKHR graphicsRequirements{XR_TYPE_GRAPHICS_REQUIREMENTS_OPENGL_KHR};
 
-    XrGraphicsBindingVulkanKHR vulkanBinding{XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR};
+    std::vector<char> *openglExtensionBuffer = new std::vector<char>;
+
+//    Xr vulkanBinding{XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR};
+    XrGraphicsBindingOpenGLXlibKHR openglBinding{XR_TYPE_GRAPHICS_BINDING_OPENGL_XLIB_KHR};
 
     XrViewConfigurationType viewConfig{XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO};
 

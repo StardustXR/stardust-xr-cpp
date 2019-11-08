@@ -1,16 +1,13 @@
 #ifndef STARDUSTOPENGL_H
 #define STARDUSTOPENGL_H
 
-#include <QObject>
-#include <QGuiApplication>
 #include <QQuickWindow>
-#include <QOpenGLContext>
-#include <qpa/qplatformnativeinterface.h>
-#include <QScreen>
 
 #include "openxr_meta.h"
 
 namespace Stardust {
+
+class OpenXR;
 
 class OpenGL : public QObject
 {
@@ -19,12 +16,17 @@ public:
     explicit OpenGL(QObject *parent = nullptr);
 
     Q_INVOKABLE void initialize();
-
-    QPlatformNativeInterface *nativeInterface;
     QQuickWindow *window;
 
-//    GLXContext context;
-//    GLXDrawable drawable;
+    Display *display;
+
+    GLXContext context;
+    GLXDrawable drawable;
+    GLXFBConfig *framebufferConfig;
+
+    int framebufferOptions[11] = {GLX_RENDER_TYPE, GLX_RGBA_BIT, GLX_RED_SIZE, 8, GLX_GREEN_SIZE, 8, GLX_BLUE_SIZE, 8, GLX_ALPHA_SIZE, 8, None};
+
+    OpenXR *openxr;
 };
 
 }

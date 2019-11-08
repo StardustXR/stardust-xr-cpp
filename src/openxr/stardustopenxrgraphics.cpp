@@ -1,6 +1,11 @@
-#include "stardustopenxrgraphics.h"
-
 #include "stardustopenxrframe.h"
+
+#include <QThread>
+#include <QQuickItem>
+#include <QQuickRenderControl>
+#include <QOpenGLContext>
+#include <QSurfaceFormat>
+#include <QOpenGLFramebufferObject>
 
 namespace Stardust {
 
@@ -13,6 +18,71 @@ OpenXRGraphics::~OpenXRGraphics() {
 }
 
 void OpenXRGraphics::preInitialize() {
+    //Set the OpenGL version
+    glFormat = new QSurfaceFormat;
+    glFormat->setProfile(QSurfaceFormat::CoreProfile);
+    glFormat->setRenderableType(QSurfaceFormat::OpenGL);
+    glFormat->setMajorVersion(3);
+
+    QSurfaceFormat::setDefaultFormat(*glFormat);
+
+    //Create the OpenGL view rendering
+    glContext = new QOpenGLContext(this);
+    bool contextCreated = glContext->create();
+
+//    //Check if external memory object extension is supported and if so import it
+//    QByteArray ext_mem_obj_fd_name = QByteArrayLiteral("GL_EXT_memory_object_fd");
+//    if(!glContext->hasExtension(ext_mem_obj_fd_name)) {
+//        qDebug() << "Runtime does not support GL_EXT_memory_object_fd extension!" << endl;
+////        std::abort();
+
+//    } else {
+//        qDebug() << "Runtime supports GL_EXT_memory_object_fd extension!" << endl;
+//    }
+
+//    QOpenGLExtension_
+
+    //Create the offscreen surface
+    surface = new QOffscreenSurface;
+    surface->create();
+
+    //Create QQuickRenderControl for both eyes
+    quickRenderer = new QQuickRenderControl(this);
+    window = new QQuickWindow(quickRenderer);
+    window->setColor(Qt::transparent);
+
+
+    window->setGeometry(QRect(QPoint(0,0),totalSize)); //Set the window bounds to the minimum to fit both views in case they are asymmetrical
+
+    //Make the QML engine and components and so on
+    qmlEngine = new QQmlEngine;
+    if (!qmlEngine->incubationController())
+        qmlEngine->setIncubationController(window->incubationController());
+
+    //Make the context current
+    bool isCurrent = glContext->makeCurrent(surface);
+
+    //Create and link the FBO
+    glFBO = new QOpenGLFramebufferObject(totalSize, QOpenGLFramebufferObject::NoAttachment, GL_TEXTURE_2D, GL_RGBA8);
+    window->setRenderTarget(glFBO);
+
+    leftViewSize = eyeRects[0].size();
+    rightViewSize = eyeRects[0].size();
+
+    emit leftEyeSizeChanged();
+    emit rightEyeSizeChanged();
+
+    //Create QML component
+    qmlComponent = new QQmlComponent(qmlEngine, "qrc:/core/StereoRender.qml", QQmlComponent::PreferSynchronous);
+
+    //Load in the QML and add it to the window
+    QObject *rootObject = qmlComponent->create();
+    root = qobject_cast<QQuickItem *>(rootObject);
+    root->setParentItem(window->contentItem());
+    root->setPosition(QPoint(0, 0));
+    root->setSize(totalSize);
+
+    quickRenderer->initialize(glContext);
 }
 
 void OpenXRGraphics::initialize() {
@@ -59,9 +129,9 @@ void OpenXRGraphics::initialize() {
         swapchainImages[i].resize(swapchainLength);
         xrEnumerateSwapchainImages(swapchains[i], swapchainLength, &swapchainLength, reinterpret_cast<XrSwapchainImageBaseHeader*>(swapchainImages[i].data()));
 
-        vulkanImages[i].resize(swapchainImages[i].size());
+        openglImages[i].resize(swapchainImages[i].size());
         for (size_t j = 0; j < swapchainImages[i].size(); j++)
-            vulkanImages[i][j] = swapchainImages[i][j].image;
+            openglImages[i][j] = swapchainImages[i][j].image;
     }
 
     //Create a reference space relative to the iz (floor)

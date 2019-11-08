@@ -23,12 +23,12 @@
 #include "keyboard/recoverykeyboardadapter.h"
 #include "keyboard/passthroughkeyboardhandler.h"
 
-#include "openxr/stardustvulkan.h"
+#include "openxr/stardustopengl.h"
 #include "openxr/stardustopenxr.h"
 #include "openxr/stardustopenxrgraphics.h"
 
 Stardust::OpenXR *openxr = nullptr;
-Stardust::Vulkan *vulkan = nullptr;
+Stardust::OpenGL *opengl = nullptr;
 Stardust::OpenXRGraphics *graphics = nullptr;
 
 void registerQMLTypes() {
@@ -56,11 +56,11 @@ void registerQMLTypes() {
 
     qmlRegisterType<Stardust::PassthroughKeyboardHandler>("Stardust.Core", 1, 0, "PassthroughKeyboardHandler");
 
-    qmlRegisterSingletonType<Stardust::Vulkan>("Stardust.Core.Internal", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+    qmlRegisterSingletonType<Stardust::OpenGL>("Stardust.Core.Internal", 1, 0, "Vulkan", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
 
-        return vulkan;
+        return opengl;
     });
     qmlRegisterSingletonType<Stardust::OpenXR>("Stardust.Core.Internal", 1, 0, "OpenXR", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
@@ -81,16 +81,17 @@ void initOpenXR() {
     graphics->preInitialize();
 
     openxr = new Stardust::OpenXR();
-    vulkan = new Stardust::Vulkan();
+    opengl = new Stardust::OpenGL();
 
-    openxr->vulkan = vulkan;
-    vulkan->openxr = openxr;
+    openxr->opengl = opengl;
+    opengl->openxr = openxr;
+    opengl->window = graphics->window;
 
     openxr->initialize();
 
-    graphics->openxr = openxr;
+//    graphics->openxr = openxr;
 
-    graphics->initialize();
+//    graphics->initialize();
 }
 
 int main(int argc, char *argv[]) {

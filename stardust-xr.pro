@@ -1,4 +1,4 @@
-QT += qml quick quick3d-private widgets
+QT += qml quick quick3d-private widgets openglextensions
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -23,7 +23,6 @@ SOURCES += \
     src/openxr/stardustopenxr.cpp \
     src/openxr/stardustopenxrframe.cpp \
     src/openxr/stardustopenxrgraphics.cpp \
-    src/openxr/stardustvulkan.cpp \
 #    src/pointer/inputpointer.cpp \
     src/keyboard/keyboard.cpp \
     src/keyboard/keyboardhandler.cpp \
@@ -48,9 +47,9 @@ qnx: target.path = /tmp/$${TARGET}/bin
 INCLUDEPATH +=	-i/usr/local/include
 
 LIBS += -lopenxr_loader \
-        -lvulkan \
         -lGLEW \
         -lglfw \
+        -lX11 \
         -linput
 
 HEADERS += \
@@ -67,8 +66,6 @@ HEADERS += \
     src/openxr/stardustopenxr.h \
     src/openxr/stardustopenxrframe.h \
     src/openxr/stardustopenxrgraphics.h \
-    src/openxr/stardustvulkan.h \
-    src/openxr/vulkan_meta.h \
 #    src/pointer/inputpointer.h \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \

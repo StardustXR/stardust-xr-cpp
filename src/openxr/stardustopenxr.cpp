@@ -25,7 +25,7 @@ void OpenXR::initialize() {
     uint32_t extensionCount = 0;
     xrEnumerateInstanceExtensionProperties(nullptr, 0, &extensionCount, nullptr);
 
-    qDebug() << "Runtime supports" << extensionCount << "extensions\n", extensionCount;
+    qDebug() << "Runtime supports" << extensionCount << "extensions\n" << extensionCount;
 
     XrExtensionProperties extensionProperties[extensionCount];
     for (uint16_t i = 0; i < extensionCount; i++) {
@@ -37,11 +37,11 @@ void OpenXR::initialize() {
 
     xrEnumerateInstanceExtensionProperties(nullptr, extensionCount, &extensionCount, extensionProperties);
 
-    if (!isExtensionSupported(XR_KHR_VULKAN_ENABLE_EXTENSION_NAME, extensionProperties, extensionCount)) {
-        qDebug() << "Runtime does not support Vulkan extension!" << endl;
+    if (!isExtensionSupported(XR_KHR_OPENGL_ENABLE_EXTENSION_NAME, extensionProperties, extensionCount)) {
+        qDebug() << "Runtime does not support OpenGL extension!" << endl;
     }
 
-    const char* const enabledExtensions[] = {XR_KHR_VULKAN_ENABLE_EXTENSION_NAME};
+    const char* const enabledExtensions[] = {XR_KHR_OPENGL_ENABLE_EXTENSION_NAME};
 
     //XrInstanceCreateInfo *xrInstanceInfoXrInstanceCreateInfo *xrInstanceInfo
     xrInstanceInfo->type = XR_TYPE_INSTANCE_CREATE_INFO;
@@ -63,22 +63,21 @@ void OpenXR::initialize() {
     //XrSystemId *hmdID
     xrGetSystem(*xrInstance, hmdInfo, hmdID);
 
+    xrGetOpenGLGraphicsRequirementsKHR(*xrInstance, *hmdID, &graphicsRequirements);
+
     //Initialize Vulkan
-    vulkan->initialize();
+    opengl->initialize();
 
     //Bind vulkan to this OpenXR session
-    //XrGraphicsBindingVulkanKHR *vulkanBinding
-    vulkanBinding.type = XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR;
-    vulkanBinding.next = nullptr;
-    vulkanBinding.instance = vulkan->instance;
-    vulkanBinding.physicalDevice = vulkan->physicalDevice;
-    vulkanBinding.device = vulkan->device;
-    vulkanBinding.queueFamilyIndex = vulkan->queueFamilyIndex;
-    vulkanBinding.queueIndex = vulkan->queueIndex;
+    //XrGraphicsBindingOpenGLXlibKHR openglBinding
+    openglBinding.xDisplay = opengl->display;
+    openglBinding.glxContext = opengl->context;
+    openglBinding.glxDrawable = opengl->drawable;
+    openglBinding.glxFBConfig = *opengl->framebufferConfig;
 
     //XrSessionCreateInfo *xrSessionInfo
     xrSessionInfo->type = XR_TYPE_SESSION_CREATE_INFO;
-    xrSessionInfo->next = const_cast<const XrGraphicsBindingVulkanKHR*>(&vulkanBinding);
+    xrSessionInfo->next = const_cast<const XrGraphicsBindingOpenGLXlibKHR*>(&openglBinding);
     xrSessionInfo->systemId = *hmdID;
     xrSessionInfo->createFlags = 0;
 
