@@ -63,7 +63,9 @@ void OpenXR::initialize() {
     //XrSystemId *hmdID
     xrGetSystem(*xrInstance, hmdInfo, hmdID);
 
-    xrGetOpenGLGraphicsRequirementsKHR(*xrInstance, *hmdID, &graphicsRequirements);
+    PFN_xrGetOpenGLGraphicsRequirementsKHR pfnGetOpenGLGraphicsRequirementsKHR = NULL;
+    xrGetInstanceProcAddr(*xrInstance, "xrGetOpenGLGraphicsRequirementsKHR", (PFN_xrVoidFunction *)&pfnGetOpenGLGraphicsRequirementsKHR);
+    pfnGetOpenGLGraphicsRequirementsKHR(*xrInstance, *hmdID, &graphicsRequirements);
 
     //Initialize Vulkan
     opengl->initialize();
