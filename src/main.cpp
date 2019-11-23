@@ -17,8 +17,6 @@
 #include "core/configpathgetter.h"
 
 #include "core/prefs.h"
-#include "core/extensionloader.h"
-#include "core/pluginloader.h"
 
 #include "keyboard/physicalkeyboardadapter.h"
 #include "keyboard/passthroughkeyboardhandler.h"

@@ -17,7 +17,6 @@ SOURCES += \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
     src/core/moduleloader.cpp \
-    src/core/extensionloader.cpp \
     src/openxr/stardustopengl.cpp \
     src/openxr/stardustopenxr.cpp \
     src/openxr/stardustopenxrframe.cpp \
