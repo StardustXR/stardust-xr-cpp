@@ -16,7 +16,7 @@ SOURCES += \
     src/core/configpathgetter.cpp \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
-    src/core/prefs.cpp \
+    src/core/moduleloader.cpp \
     src/core/extensionloader.cpp \
     src/openxr/stardustopengl.cpp \
     src/openxr/stardustopenxr.cpp \
@@ -27,7 +27,6 @@ SOURCES += \
     src/keyboard/keyboard.cpp \
     src/keyboard/keyboardhandler.cpp \
     src/keyboard/passthroughkeyboardhandler.cpp \
-    src/core/pluginloader.cpp \
     src/main.cpp \
     src/keyboard/physicalkeyboardadapter.cpp
 
@@ -56,9 +55,8 @@ HEADERS += \
     src/core/configpathgetter.h \
     src/core/fileio.h \
     src/core/launcher.h \
+    src/core/moduleloader.h \
     src/core/plugininterfaces.h \
-    src/core/prefs.h \
-    src/core/extensionloader.h \
     src/openxr/opengl_meta.h \
     src/openxr/openxr_meta.h \
     src/openxr/stardustopengl.h \
@@ -71,5 +69,4 @@ HEADERS += \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \
     src/keyboard/passthroughkeyboardhandler.h \
-    src/keyboard/physicalkeyboardadapter.h \
-    src/core/pluginloader.h
+    src/keyboard/physicalkeyboardadapter.h
