@@ -27,7 +27,7 @@ Node {
                 lighting: DefaultMaterial.NoLighting
 
                 emissiveColor: "#00ff7f"
-                emissivePower: 5
+                emissiveFactor: 5
             }
         ]
     }
