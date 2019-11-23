@@ -3,7 +3,9 @@
 
 namespace Stardust {
 
-ModuleLoader::ModuleLoader(QObject *parent) : QObject(parent) {}
+ModuleLoader::ModuleLoader(QObject *parent, Paths *paths) : QObject(parent) {
+    this->paths = paths;
+}
 
 
 void ModuleLoader::getModuleList() {
@@ -13,16 +15,7 @@ void ModuleLoader::getModuleList() {
 
     qDebug() << "Looking for plugins..." << endl;
 
-    const QVector<QStaticPlugin> staticPlugins = QPluginLoader::staticPlugins();
-    for (int i=0; i<staticPlugins.length(); i++) {
-        QJsonObject jsonObj = staticPlugins[i].metaData();
-        jsonObj["static"] = true;
-        moduleList->append(jsonObj);
-        qDebug() << "Found static plugin " << jsonObj["MetaData"].toObject()["name"].toString() << "with metadata"  << endl << jsonObj << endl;
-        qDebug() << jsonObj << endl;
-    }
-
-    QDir pluginsDir(configPathGetter->loadConfigDir("stardust/"));
+    QDir pluginsDir(paths->getModulesPath());
 
     const auto entryList = pluginsDir.entryList(QDir::Files);
     for (const QString &fileName : entryList) {
@@ -33,7 +26,6 @@ void ModuleLoader::getModuleList() {
             jsonObj["static"] = false;
             jsonObj["filePath"] = pluginsDir.absoluteFilePath(fileName);
             moduleList->append(jsonObj);
-            qDebug() << "Found dynamic keyboard plugin" << jsonObj["MetaData"].toObject()["name"].toString() << "with metadata"  << endl << jsonObj << endl;
         } else {
             qDebug() << loader.errorString() << endl;
         }

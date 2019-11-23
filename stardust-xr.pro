@@ -16,7 +16,8 @@ SOURCES += \
     src/core/configpathgetter.cpp \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
-    src/core/moduleloader.cpp \
+    src/module/module.cpp \
+    src/module/moduleloader.cpp \
     src/core/paths.cpp \
     src/openxr/stardustopengl.cpp \
     src/openxr/stardustopenxr.cpp \
@@ -55,7 +56,8 @@ HEADERS += \
     src/core/configpathgetter.h \
     src/core/fileio.h \
     src/core/launcher.h \
-    src/core/moduleloader.h \
+    src/module/module.h \
+    src/module/moduleloader.h \
     src/core/paths.h \
     src/core/plugininterfaces.h \
     src/openxr/opengl_meta.h \

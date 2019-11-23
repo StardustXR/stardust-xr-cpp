@@ -6,7 +6,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include "configpathgetter.h"
+#include "paths.h"
 
 namespace Stardust {
 
@@ -14,7 +14,7 @@ class ModuleLoader : public QObject
 {
     Q_OBJECT
 public:
-    explicit ModuleLoader(QObject *parent = nullptr);
+    explicit ModuleLoader(QObject *parent = nullptr, Paths *paths = nullptr);
 
     Q_INVOKABLE void getModuleList();
     Q_INVOKABLE QObject *loadModule(QString name, bool isStatic);
@@ -23,7 +23,7 @@ public:
     QString modulesStringifiedJSON();
 
 private:
-    ConfigPathGetter *configPathGetter = nullptr;
+    Paths *paths = nullptr;
     QJsonArray *moduleList = nullptr;
 };
 
