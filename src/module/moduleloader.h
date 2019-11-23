@@ -11,7 +11,7 @@ class ModuleLoader : public QObject
 {
     Q_OBJECT
 public:
-    explicit ModuleLoader(QObject *parent = nullptr, Paths *paths = nullptr);
+    explicit ModuleLoader(Paths *paths = nullptr, QQmlEngine *engine = nullptr);
 
     Q_INVOKABLE void getModuleList();
     Q_INVOKABLE QObject *loadModule(QString name, bool isStatic);
@@ -19,9 +19,13 @@ public:
 
     QString modulesStringifiedJSON();
 
+    QQmlEngine *getQmlEngine() const;
+
 private:
     Paths *paths = nullptr;
     QVector<Module> *moduleList = nullptr;
+
+    QQmlEngine *qmlEngine;
 };
 
 }

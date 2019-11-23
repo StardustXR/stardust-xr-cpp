@@ -12,12 +12,15 @@
 
 #include <QPluginLoader>
 #include <QQmlComponent>
+#include <QQmlEngine>
 
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 
 namespace Stardust {
+
+class ModuleLoader;
 
 class Module : public QObject {
     Q_OBJECT
@@ -28,9 +31,9 @@ public:
         Failure
     };
 
-    explicit Module(QString path);
+    explicit Module(ModuleLoader *loader, QString path);
 
-    State reloadModule();
+    State reloadModuleInfo();
 
 protected:
     QString name = "";
@@ -42,6 +45,7 @@ protected:
     QString id = "";
     QString version = "1.0.0";
 
+    ModuleLoader *moduleLoader;
     QDir *directory = nullptr;
 
     QVector<Module> dependencies;
@@ -55,7 +59,7 @@ protected:
     QJsonDocument configJson;
 
     QByteArray loadDocument(QFile &file);
-    QString getJsonStringKeyValue(QJsonObject obj, QString key);
+    QString getJsonStringKeyValue(QJsonDocument obj, QString key);
 
 };
 

@@ -1,9 +1,11 @@
 #include "module.h"
 #include <QDebug>
+#include "moduleloader.h"
 
 namespace Stardust {
 
-Module::Module(QString path) : QObject(nullptr) {
+Module::Module(ModuleLoader *loader, QString path) : QObject(nullptr) {
+    moduleLoader = loader;
     directory = new QDir(path);
 
     moduleJsonFile = new QFile(directory->entryInfoList(QStringList("module.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
@@ -13,10 +15,10 @@ Module::Module(QString path) : QObject(nullptr) {
     binaries = QVector<QPluginLoader>();
     qmlFiles = QVector<QQmlComponent>();
 
-    reloadModule();
+    reloadModuleInfo();
 }
 
-Module::State Module::reloadModule() {
+Module::State Module::reloadModuleInfo() {
     moduleJson = QJsonDocument::fromJson(loadDocument(*moduleJsonFile));
     configJson = QJsonDocument::fromJson(loadDocument(*configJsonFile));
 
@@ -32,7 +34,29 @@ Module::State Module::reloadModule() {
     id = getJsonStringKeyValue(moduleJson, "id");
     version = getJsonStringKeyValue(moduleJson, "version");
 
-    QJsonArray dependencyPaths =
+//    if(moduleJson.object().contains("deps")) {
+//        QJsonArray dependencyPaths = moduleJson.object()["deps"].toArray();
+//    }
+
+    if(moduleJson.object().contains("binaries")) {
+        QJsonArray binaryPaths = moduleJson.object()["binaries"].toArray();
+
+        foreach(QVariant binary, binaryPaths.toVariantList()) {
+            QString binaryPath = directory->absoluteFilePath(binary.toString());
+
+            binaries.push_back(QPluginLoader());
+        }
+    }
+
+    if(moduleJson.object().contains("qml")) {
+        QJsonArray qmlFilePaths = moduleJson.object()["qml"].toArray();
+
+        foreach(QVariant qmlFile, qmlFilePaths.toVariantList()) {
+            QString qmlFilePath = directory->absoluteFilePath(qmlFile.toString());
+
+            qmlFiles.push_back(QQmlComponent(moduleLoader->getQmlEngine(), qmlFilePath, QQmlComponent::PreferSynchronous));
+        }
+    }
 }
 
 QByteArray Module::loadDocument(QFile &file) {

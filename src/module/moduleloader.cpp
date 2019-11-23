@@ -3,8 +3,9 @@
 
 namespace Stardust {
 
-ModuleLoader::ModuleLoader(QObject *parent, Paths *paths) : QObject(parent) {
+ModuleLoader::ModuleLoader(Paths *paths, QQmlEngine *engine) : QObject(nullptr) {
     this->paths = paths;
+    this->qmlEngine = engine;
 }
 
 
