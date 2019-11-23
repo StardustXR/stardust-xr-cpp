@@ -17,6 +17,7 @@ SOURCES += \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
     src/core/moduleloader.cpp \
+    src/core/paths.cpp \
     src/openxr/stardustopengl.cpp \
     src/openxr/stardustopenxr.cpp \
     src/openxr/stardustopenxrframe.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     src/core/fileio.h \
     src/core/launcher.h \
     src/core/moduleloader.h \
+    src/core/paths.h \
     src/core/plugininterfaces.h \
     src/openxr/opengl_meta.h \
     src/openxr/openxr_meta.h \
