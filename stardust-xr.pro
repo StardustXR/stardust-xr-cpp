@@ -22,7 +22,6 @@ SOURCES += \
     src/openxr/stardustopenxr.cpp \
     src/openxr/stardustopenxrframe.cpp \
     src/openxr/stardustopenxrgraphics.cpp \
-#    src/openxr/stardustqt3doffscreen.cpp \
     src/openxr/stardustvulkan.cpp \
 #    src/pointer/inputpointer.cpp \
     src/keyboard/keyboard.cpp \
