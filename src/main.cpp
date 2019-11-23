@@ -16,7 +16,7 @@
 
 #include "core/configpathgetter.h"
 
-#include "core/prefs.h"
+#include "core/moduleloader.h"
 
 #include "keyboard/physicalkeyboardadapter.h"
 #include "keyboard/passthroughkeyboardhandler.h"
@@ -29,21 +29,13 @@ Stardust::OpenXR *openxr = nullptr;
 Stardust::Vulkan *vulkan = nullptr;
 Stardust::OpenXRGraphics *graphics = nullptr;
 
+Stardust::ModuleLoader *moduleLoader = nullptr;
+
 void registerQMLTypes() {
     qmlRegisterType<Launcher>("Stardust.Core", 1, 0, "Launcher");
     qmlRegisterType<FileIO>("Stardust.Core", 1, 0, "FileIO");
 
     qmlRegisterType<ConfigPathGetter>("Stardust.Core", 1, 0, "ConfigPathGetter");
-
-    qmlRegisterType<Stardust::Prefs>("Stardust.Core", 1, 0, "Preferences");
-    qmlRegisterType<Stardust::ExtensionLoader>("Stardust.Core", 1, 0, "ExtensionLoader");
-
-    qmlRegisterSingletonType<Stardust::PluginLoader>("Stardust.Core", 1, 0, "PluginLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
-        Q_UNUSED(engine)
-        Q_UNUSED(scriptEngine)
-
-        return new Stardust::PluginLoader;
-    });
 
     qmlRegisterType<StardustAPI::PhysicalKeyboardAdapter>("Stardust.Core", 1, 0, "PhysicalKeyboardAdapter");
     qmlRegisterType<StardustAPI::PassthroughKeyboardHandler>("Stardust.Core", 1, 0, "PassthroughKeyboardHandler");
@@ -65,6 +57,12 @@ void registerQMLTypes() {
         Q_UNUSED(scriptEngine)
 
         return graphics;
+    });
+    qmlRegisterSingletonType<Stardust::ModuleLoader>("Stardust.Core", 1, 0, "ModuleLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
+        Q_UNUSED(engine)
+        Q_UNUSED(scriptEngine)
+
+        return moduleLoader;
     });
 }
 
@@ -96,6 +94,8 @@ int main(int argc, char *argv[]) {
     initOpenXR();
 
     QSurfaceFormat::setDefaultFormat(QQuick3DViewport::idealSurfaceFormat());
+
+    moduleLoader = new Stardust::ModuleLoader();
 
     return app.exec();
 }
