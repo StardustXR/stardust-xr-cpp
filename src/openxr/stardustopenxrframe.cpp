@@ -3,7 +3,7 @@
 
 #include "stardustopenxrframe.h"
 #include "qopenglfunctions.h"
-#include <QtQuick3D/private/qquick3dcamera_p.h>
+#include <QtQuick3D/private/qquick3dfrustumcamera_p.h>
 #include <QDebug>
 
 #define RAD2DEG 180/3.14159
@@ -114,9 +114,9 @@ void OpenXRFrame::startFrame() {
         XrView &view = graphics->views[i];
 
         //Get the current eye camera (makes code neater)
-        QQuick3DCamera *eye = qobject_cast<QQuick3DCamera *>(graphics->leftEye);
+        QQuick3DFrustumCamera *eye = qobject_cast<QQuick3DFrustumCamera *>(graphics->leftEye);
         if(i==1)
-            eye = qobject_cast<QQuick3DCamera *>(graphics->rightEye);
+            eye = qobject_cast<QQuick3DFrustumCamera *>(graphics->rightEye);
 
         if(!eye)
             break;
@@ -147,10 +147,10 @@ void OpenXRFrame::startFrame() {
 //        eye->setIsFieldOfViewHorizontal(true);
 //        eye->setFieldOfView((view.fov.angleRight-view.fov.angleLeft)*RAD2DEG);
 
-        eye->setFrustumTop      (std::sin(view.fov.angleUp)*eye->clipNear());
-        eye->setFrustumBottom   (std::sin(view.fov.angleDown)*eye->clipNear());
-        eye->setFrustumLeft     (std::sin(view.fov.angleLeft)*eye->clipNear());
-        eye->setFrustumRight    (std::sin(view.fov.angleRight)*eye->clipNear());
+        eye->setTop      (std::sin(view.fov.angleUp)*eye->clipNear());
+        eye->setBottom   (std::sin(view.fov.angleDown)*eye->clipNear());
+        eye->setLeft     (std::sin(view.fov.angleLeft)*eye->clipNear());
+        eye->setRight    (std::sin(view.fov.angleRight)*eye->clipNear());
 
         //Update properties on the XrFrameEndInfo and its dependencies
         graphics->stardustLayerViews[i].fov = view.fov;

@@ -7,26 +7,22 @@ Node {
     property alias leftEye: leftEye
     property alias rightEye: rightEye
 
-    Camera {
+    FrustumCamera {
         id:leftEye
 
         clipNear: 0.001
         clipFar: 1000
         fieldOfView: 110
-        projectionMode: Camera.Frustum
-        enableFrustumCulling: true
 
         Component.onCompleted: OpenXRGraphics.leftEye = this
     }
 
-    Camera {
+    FrustumCamera {
         id:rightEye
 
         clipNear: 0.001
         clipFar: 1000
         fieldOfView: 110
-        projectionMode: Camera.Frustum
-        enableFrustumCulling: true
 
         Component.onCompleted: OpenXRGraphics.rightEye = this
     }
