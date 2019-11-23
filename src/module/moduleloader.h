@@ -2,11 +2,8 @@
 #define MODULELOADER_H
 
 #include <QObject>
-#include <QPluginLoader>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QJsonDocument>
-#include "paths.h"
+#include "../core/paths.h"
+#include "module.h"
 
 namespace Stardust {
 
@@ -24,7 +21,7 @@ public:
 
 private:
     Paths *paths = nullptr;
-    QJsonArray *moduleList = nullptr;
+    QVector<Module> *moduleList = nullptr;
 };
 
 }
