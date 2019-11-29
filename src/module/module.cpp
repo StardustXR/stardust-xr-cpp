@@ -1,6 +1,8 @@
 #include "module.h"
 #include <QDebug>
 #include "moduleloader.h"
+#include <QQmlEngine>
+#include <QQmlContext>
 
 namespace Stardust {
 
@@ -11,9 +13,9 @@ Module::Module(ModuleLoader *loader, QString path) : QObject(nullptr) {
     moduleJsonFile = new QFile(directory->entryInfoList(QStringList("module.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
     configJsonFile = new QFile(directory->entryInfoList(QStringList("config.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
 
-    dependencies = QVector<Module>();
-    binaries = QVector<QPluginLoader>();
-    qmlFiles = QVector<QQmlComponent>();
+    dependencies = QVector<Module *>();
+    binaries = QVector<QPluginLoader *>();
+    qmlComponents = QVector<QQmlComponent *>();
 
     reloadModuleInfo();
 }
@@ -38,15 +40,15 @@ Module::State Module::reloadModuleInfo() {
 //        QJsonArray dependencyPaths = moduleJson.object()["deps"].toArray();
 //    }
 
-    if(moduleJson.object().contains("binaries")) {
-        QJsonArray binaryPaths = moduleJson.object()["binaries"].toArray();
+//    if(moduleJson.object().contains("binaries")) {
+//        QJsonArray binaryPaths = moduleJson.object()["binaries"].toArray();
 
-        foreach(QVariant binary, binaryPaths.toVariantList()) {
-            QString binaryPath = directory->absoluteFilePath(binary.toString());
+//        foreach(QVariant binary, binaryPaths.toVariantList()) {
+//            QString binaryPath = directory->absoluteFilePath(binary.toString());
 
-            binaries.push_back(QPluginLoader());
-        }
-    }
+//            binaries.push_back(new QPluginLoader());
+//        }
+//    }
 
     if(moduleJson.object().contains("qml")) {
         QJsonArray qmlFilePaths = moduleJson.object()["qml"].toArray();
@@ -54,9 +56,11 @@ Module::State Module::reloadModuleInfo() {
         foreach(QVariant qmlFile, qmlFilePaths.toVariantList()) {
             QString qmlFilePath = directory->absoluteFilePath(qmlFile.toString());
 
-            qmlFiles.push_back(QQmlComponent(moduleLoader->getQmlEngine(), qmlFilePath, QQmlComponent::PreferSynchronous));
+            qmlComponents.push_back(new QQmlComponent(moduleLoader->qmlEngine, qmlFilePath, QQmlComponent::PreferSynchronous));
         }
     }
+
+    return Module::State::Success;
 }
 
 QByteArray Module::loadDocument(QFile &file) {

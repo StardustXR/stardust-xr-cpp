@@ -8,6 +8,7 @@ import "../render"
 
 Rectangle {
     anchors.fill: parent
+
     View3D {
         id: leftView
 
@@ -69,16 +70,8 @@ Rectangle {
             rightView.camera = stereoCameras.rightEye;
             rightView.scene = this;
             rightView.environment = skybox;
+
+//            ModuleLoader.getModuleById(ModuleLoader.modules[0].id);
         }
-    }
-
-    Preferences {
-        id:appPrefs
-        fileName: "app_prefs.json"
-    }
-
-    Preferences {
-        id:compositorPrefs
-        fileName: "compositor_prefs.json"
     }
 }

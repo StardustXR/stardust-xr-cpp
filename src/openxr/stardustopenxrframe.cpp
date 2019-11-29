@@ -50,7 +50,6 @@ void OpenXRFrame::initRenderControl() {
     graphics->window->setGeometry(QRect(QPoint(0,0),graphics->totalSize)); //Set the window bounds to the minimum to fit both views in case they are asymmetrical
 
     //Make the QML engine and components and so on
-    graphics->qmlEngine = new QQmlEngine;
     if (!graphics->qmlEngine->incubationController())
         graphics->qmlEngine->setIncubationController(graphics->window->incubationController());
 
@@ -67,15 +66,10 @@ void OpenXRFrame::initRenderControl() {
     emit graphics->leftEyeSizeChanged();
     emit graphics->rightEyeSizeChanged();
 
-    //Create QML component
-    graphics->qmlComponent = new QQmlComponent(graphics->qmlEngine, "qrc:/core/StereoRender.qml", QQmlComponent::PreferSynchronous);
-
-    //Load in the QML and add it to the window
-    QObject *rootObject = graphics->qmlComponent->create();
-    graphics->root = qobject_cast<QQuickItem *>(rootObject);
-    graphics->root->setParentItem(graphics->window->contentItem());
-    graphics->root->setPosition(QPoint(0, 0));
-    graphics->root->setSize(graphics->totalSize);
+    //Set the sizing of the window to match the total size
+    graphics->rootObject->setParentItem(graphics->window->contentItem());
+    graphics->rootObject->setPosition(QPoint(0, 0));
+    graphics->rootObject->setSize(graphics->totalSize);
 
     graphics->quickRenderer->initialize(graphics->glContext);
 }

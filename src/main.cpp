@@ -15,7 +15,7 @@
 #include "core/fileio.h"
 
 #include "core/paths.h"
-#include "core/moduleloader.h"
+#include "module/moduleloader.h"
 
 #include "keyboard/physicalkeyboardadapter.h"
 #include "keyboard/passthroughkeyboardhandler.h"
@@ -28,8 +28,22 @@ Stardust::OpenXR *openxr;
 Stardust::Vulkan *vulkan;
 Stardust::OpenXRGraphics *graphics;
 
+QQmlEngine *mainQmlEngine;
+QQuickItem *rootObject;
+
 Stardust::Paths *paths;
 Stardust::ModuleLoader *moduleLoader;
+
+void loadQML() {
+    mainQmlEngine = new QQmlEngine();
+
+    //Create QML component
+    QQmlComponent *rootComponent = new QQmlComponent(mainQmlEngine, "qrc:/core/StereoRender.qml", QQmlComponent::PreferSynchronous);
+
+    //Load in the QML and add it to the window
+    rootObject = qobject_cast<QQuickItem *>(graphics->qmlComponent->create());
+    graphics->rootObject = rootObject;
+}
 
 void registerQMLTypes() {
     qmlRegisterType<Launcher>("Stardust.Core", 1, 0, "Launcher");
@@ -63,6 +77,9 @@ void registerQMLTypes() {
 
         return paths;
     });
+
+    //Modules
+    qmlRegisterType<Stardust::Module>("Stardust.Core", 1, 0, "Module");
     qmlRegisterSingletonType<Stardust::ModuleLoader>("Stardust.Core", 1, 0, "ModuleLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
         Q_UNUSED(engine)
         Q_UNUSED(scriptEngine)
@@ -73,6 +90,7 @@ void registerQMLTypes() {
 
 void initOpenXR() {
     graphics = new Stardust::OpenXRGraphics();
+    graphics->qmlEngine = mainQmlEngine;
     graphics->preInitialize();
 
     openxr = new Stardust::OpenXR();
@@ -94,14 +112,15 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
     QGuiApplication app(argc, argv);
 
+    loadQML();
     registerQMLTypes();
+
+    paths = new Stardust::Paths();
+    moduleLoader = new Stardust::ModuleLoader(paths, mainQmlEngine);
 
     initOpenXR();
 
     QSurfaceFormat::setDefaultFormat(QQuick3DViewport::idealSurfaceFormat());
-
-    paths = new Stardust::Paths();
-    moduleLoader = new Stardust::ModuleLoader();
 
     return app.exec();
 }

@@ -6,66 +6,61 @@ namespace Stardust {
 ModuleLoader::ModuleLoader(Paths *paths, QQmlEngine *engine) : QObject(nullptr) {
     this->paths = paths;
     this->qmlEngine = engine;
+
+    systemConfigReader.setSource("/etc/stardust.json.conf");
+
+    getModuleList();
+    loadAllModules();
 }
 
+void ModuleLoader::loadModuleList() {
+    QByteArray moduleListJsonBytes = systemConfigReader.read().toLocal8Bit();
+    QJsonDocument moduleListJsonDocument = QJsonDocument::fromJson(moduleListJsonBytes);
 
-//void ModuleLoader::getModuleList() {
-//    if(moduleList)
-//        delete moduleList;
-//    moduleList = new QJsonArray();
+    moduleJSON = QJsonObject(moduleListJsonDocument.object()["modules"].toObject());
+    modulesFolder.setPath(moduleListJsonDocument.object()["modules_path"].toString());
+}
 
-//    qDebug() << "Looking for plugins..." << endl;
+void ModuleLoader::loadAllModules() {
+    QStringList moduleIDs = moduleJSON.keys();
 
-//    QDir pluginsDir(paths->getModulesPath());
+    foreach(QString moduleID, moduleIDs) {
+        loadModule(moduleID);
+    }
+}
 
-//    const auto entryList = pluginsDir.entryList(QDir::Files);
-//    for (const QString &fileName : entryList) {
-//        QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
-//        QObject *plugin = loader.instance();
-//        if (plugin) {
-//            QJsonObject jsonObj = loader.metaData();
-//            jsonObj["static"] = false;
-//            jsonObj["filePath"] = pluginsDir.absoluteFilePath(fileName);
-//            moduleList->append(jsonObj);
-//        } else {
-//            qDebug() << loader.errorString() << endl;
-//        }
-//    }
-//}
+void ModuleLoader::loadModule(QString id) {
+    if(!moduleJSON.contains(id))
+        qErrnoWarning(("Module "+id+" does not exist.").toStdString().c_str());
 
-//QObject *ModuleLoader::loadModule(QString name, bool isStatic) {
-//    if(isStatic) {
-//        for(int i=0; i<QPluginLoader::staticPlugins().length(); i++) {
-//            QStaticPlugin *plugin = &QPluginLoader::staticPlugins()[i];
-//            if(plugin->metaData()["MetaData"].toObject()["name"].toString() == name) {
-//                qDebug() << "Loaded static keyboard plugin" << plugin->metaData()["MetaData"].toObject()["name"].toString() << endl;
+    Module *moduleToLoad = getModuleById(id);
 
-//                return plugin->instance();
-//            }
-//        }
-//    } else {
-//        for(int i=0; i<moduleList->count(); i++) {
-//            if(moduleList->at(i).toObject()["MetaData"].toObject()["name"].toString() == name) {
-//                qDebug() << "Loaded dynamic keyboard plugin" << moduleList->at(i).toObject()["MetaData"].toObject()["name"].toString() << endl;
+    if(moduleToLoad != nullptr) {
+        moduleList.removeAll(moduleToLoad);
+        delete moduleToLoad;
+    }
 
-//                QPluginLoader plugin(moduleList->at(i).toObject()["filePath"].toString());
-//                return plugin.instance();
-//            }
-//        }
-//    }
-//}
+    QString modulesFolderPath = modulesFolder.absolutePath();
 
-//QObject *ModuleLoader::loadModule(QString name) {
-//    for(int i=0; i<moduleList->count(); i++) {
-//        QJsonObject metadataObject = moduleList->at(i).toObject()["MetaData"].toObject();
-//        if(metadataObject["name"].toString() == name) {
-//            return loadModule(name, metadataObject["static"].toBool());
-//        }
-//    }
-//}
+    modulesFolder.cd(moduleJSON[id].toObject()["path"].toString());
+    moduleToLoad = new Module(this, modulesFolder.absolutePath());
 
-//QString ModuleLoader::modulesStringifiedJSON() {
-//    QJsonDocument doc(*moduleList);
-//    return QString::fromUtf8(doc.toJson());
-//}
+    modulesFolder.setPath(modulesFolderPath);
+
+    moduleToLoad->reloadModuleInfo();
+    moduleList.push_back(moduleToLoad);
+}
+
+Module *ModuleLoader::getModuleById(QString id) {
+    foreach(Module *module, moduleList)
+        if(module->property("id").toString() == id)
+            return module;
+
+    return nullptr;
+}
+
+QVariantMap ModuleLoader::getModuleList() {
+    return moduleJSON.toVariantMap();
+}
+
 }

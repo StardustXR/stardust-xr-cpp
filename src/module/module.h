@@ -24,14 +24,21 @@ class ModuleLoader;
 
 class Module : public QObject {
     Q_OBJECT
+
+    Q_PROPERTY(QString name MEMBER name)
+    Q_PROPERTY(QString description MEMBER description)
+    Q_PROPERTY(QString author MEMBER author)
+    Q_PROPERTY(QString sourceURL MEMBER sourceURL)
+    Q_PROPERTY(QString websiteURL MEMBER websiteURL)
+    Q_PROPERTY(QString id MEMBER id)
+    Q_PROPERTY(QString version MEMBER version)
 public:
     enum State {
         None,
         Success,
         Failure
     };
-
-    explicit Module(ModuleLoader *loader, QString path);
+    explicit Module(ModuleLoader *loader = nullptr, QString path = "");
 
     State reloadModuleInfo();
 
@@ -48,9 +55,9 @@ protected:
     ModuleLoader *moduleLoader;
     QDir *directory = nullptr;
 
-    QVector<Module> dependencies;
-    QVector<QPluginLoader> binaries;
-    QVector<QQmlComponent> qmlFiles;
+    QVector<Module *> dependencies;
+    QVector<QPluginLoader *> binaries;
+    QVector<QQmlComponent *> qmlComponents;
 
     QFile *moduleJsonFile;
     QFile *configJsonFile;

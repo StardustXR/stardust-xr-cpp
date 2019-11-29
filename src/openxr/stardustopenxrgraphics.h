@@ -123,7 +123,7 @@ public:
     QOpenGLContext *glContext;
     QOffscreenSurface *surface;
     QQuickWindow *window;
-    QQuickItem *root;
+    QQuickItem *rootObject;
     QQuickRenderControl *quickRenderer;
     QOpenGLFramebufferObject *glFBO;
 
