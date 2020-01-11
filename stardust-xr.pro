@@ -10,7 +10,6 @@ INCLUDEPATH +=	-i/usr/local/include
 LIBS += -lopenxr_loader
 
 RESOURCES += src/qml.qrc \
-    defaults/defaults.qrc \
     resources/resources.qrc
 
 HEADERS += \
