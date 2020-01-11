@@ -24,17 +24,6 @@ void registerQMLTypes() {
 //    qmlRegisterType<Launcher>("Stardust.Core", 1, 0, "Launcher");
 //    qmlRegisterType<FileIO>("Stardust.Core", 1, 0, "FileIO");
 
-//    qmlRegisterType<Stardust::Prefs>("Stardust.Core", 1, 0, "Preferences");
-//    qmlRegisterType<Stardust::ExtensionLoader>("Stardust.Core", 1, 0, "ExtensionLoader");
-
-//    qmlRegisterSingletonType<Stardust::PluginLoader>("Stardust.Core", 1, 0, "PluginLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
-//        Q_UNUSED(engine)
-//        Q_UNUSED(scriptEngine)
-    //Load in the QML and add it to the window
-
-//        return new Stardust::PluginLoader;
-//    });
-
 //    qmlRegisterType<StardustAPI::PhysicalKeyboardAdapter>("Stardust.Core", 1, 0, "PhysicalKeyboardAdapter");
 //    qmlRegisterType<StardustAPI::PassthroughKeyboardHandler>("Stardust.Core", 1, 0, "PassthroughKeyboardHandler");
 
