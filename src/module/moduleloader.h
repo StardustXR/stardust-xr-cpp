@@ -16,7 +16,7 @@ class ModuleLoader : public QObject
 public:
     explicit ModuleLoader(Paths *paths = nullptr, QQmlEngine *engine = nullptr);
 
-    Q_INVOKABLE void loadModuleList();
+    Q_INVOKABLE void reloadModuleList();
     Q_INVOKABLE void loadAllModules();
     Q_INVOKABLE void loadModule(QString id);
     Q_INVOKABLE Module *getModuleById(QString id);

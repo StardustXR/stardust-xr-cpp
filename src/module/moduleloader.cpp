@@ -9,11 +9,11 @@ ModuleLoader::ModuleLoader(Paths *paths, QQmlEngine *engine) : QObject(nullptr) 
 
     systemConfigReader.setSource("/etc/stardust.json.conf");
 
-    getModuleList();
+    reloadModuleList();
     loadAllModules();
 }
 
-void ModuleLoader::loadModuleList() {
+void ModuleLoader::reloadModuleList() {
     QByteArray moduleListJsonBytes = systemConfigReader.read().toLocal8Bit();
     QJsonDocument moduleListJsonDocument = QJsonDocument::fromJson(moduleListJsonBytes);
 
