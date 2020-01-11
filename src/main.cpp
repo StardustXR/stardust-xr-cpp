@@ -17,7 +17,6 @@
 using namespace Stardust;
 
 QOpenXRApplication *xrApp;
-Paths *paths;
 
 void registerQMLTypes() {
     qmlRegisterSingletonInstance<QOpenXRApplication>("QtQuick3D.OpenXR", 1, 0, "OpenXR", xrApp);
@@ -40,8 +39,8 @@ void registerQMLTypes() {
 //    qmlRegisterType<StardustAPI::PassthroughKeyboardHandler>("Stardust.Core", 1, 0, "PassthroughKeyboardHandler");
 
     qmlRegisterSingletonInstance("StardustAPI.Core", 1, 0, "Paths", Stardust::PathsSingleton());
-
-//    qmlRegisterType<Stardust::Module>("Stardust.Core", 1, 0, "Module");
+    qmlRegisterType<Stardust::Module>("Stardust.Core", 1, 0, "Module");
+    qmlRegisterSingletonInstance("Stardust.Core", 1, 0, "ModuleLoader", Stardust::ModuleLoaderSingleton());
 }
 
 int main(int argc, char *argv[]) {
