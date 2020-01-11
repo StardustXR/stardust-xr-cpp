@@ -1,4 +1,4 @@
-QT += qml quick quick3d-private widgets
+QT += qml quick quick3d-private quick3d-openxr widgets
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -16,14 +16,11 @@ SOURCES += \
     src/core/configpathgetter.cpp \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
-    src/module/module.cpp \
-    src/module/moduleloader.cpp \
+    src/core/prefs.cpp \
+    src/core/extensionloader.cpp \
     src/core/paths.cpp \
-    src/openxr/stardustopengl.cpp \
-    src/openxr/stardustopenxr.cpp \
-    src/openxr/stardustopenxrframe.cpp \
-    src/openxr/stardustopenxrgraphics.cpp \
-    src/openxr/stardustvulkan.cpp \
+    src/module/moduleloader.cpp \
+    src/module/module.cpp \
 #    src/pointer/inputpointer.cpp \
     src/keyboard/keyboard.cpp \
     src/keyboard/keyboardhandler.cpp \
@@ -47,10 +44,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 
 INCLUDEPATH +=	-i/usr/local/include
 
-LIBS += -lopenxr_loader \
-        -lvulkan \
-        -lGLEW \
-        -lglfw
+LIBS += -lopenxr_loader
 
 HEADERS += \
     src/core/configpathgetter.h \
@@ -60,14 +54,8 @@ HEADERS += \
     src/module/moduleloader.h \
     src/core/paths.h \
     src/core/plugininterfaces.h \
-    src/openxr/opengl_meta.h \
-    src/openxr/openxr_meta.h \
-    src/openxr/stardustopengl.h \
-    src/openxr/stardustopenxr.h \
-    src/openxr/stardustopenxrframe.h \
-    src/openxr/stardustopenxrgraphics.h \
-    src/openxr/stardustvulkan.h \
-    src/openxr/vulkan_meta.h \
+    src/core/prefs.h \
+    src/core/extensionloader.h \
 #    src/pointer/inputpointer.h \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \
