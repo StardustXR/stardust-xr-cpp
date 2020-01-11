@@ -14,7 +14,6 @@ class Paths : public QObject {
     Q_OBJECT
 public:
     explicit Paths(QObject *parent = nullptr);
-
     Q_INVOKABLE QString getSystemConfigPath();
     Q_INVOKABLE QString getModulesPath();
 
