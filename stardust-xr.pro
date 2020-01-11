@@ -13,11 +13,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/core/configpathgetter.cpp \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
-    src/core/prefs.cpp \
-    src/core/extensionloader.cpp \
     src/core/paths.cpp \
     src/module/moduleloader.cpp \
     src/module/module.cpp \
@@ -47,15 +44,13 @@ INCLUDEPATH +=	-i/usr/local/include
 LIBS += -lopenxr_loader
 
 HEADERS += \
-    src/core/configpathgetter.h \
+    src/singletons.h \
     src/core/fileio.h \
     src/core/launcher.h \
     src/module/module.h \
     src/module/moduleloader.h \
     src/core/paths.h \
     src/core/plugininterfaces.h \
-    src/core/prefs.h \
-    src/core/extensionloader.h \
 #    src/pointer/inputpointer.h \
     src/keyboard/keyboard.h \
     src/keyboard/keyboardhandler.h \
