@@ -5,7 +5,6 @@
         <file>core/SceneRoot.qml</file>
         <file>render/TestGrid.qml</file>
         <file>render/TestSphere.qml</file>
-        <file>core/StereoRender.qml</file>
         <file>render/StereoCameras.qml</file>
     </qresource>
 </RCC>
