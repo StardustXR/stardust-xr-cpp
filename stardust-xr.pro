@@ -9,12 +9,12 @@ SOURCES += \
     src/core/paths.cpp \
     src/module/moduleloader.cpp \
     src/module/module.cpp \
-#    src/pointer/inputpointer.cpp \
-    src/keyboard/keyboard.cpp \
-    src/keyboard/keyboardhandler.cpp \
-    src/keyboard/passthroughkeyboardhandler.cpp \
-    src/main.cpp \
-    src/keyboard/physicalkeyboardadapter.cpp
+    src/api/input/pointer/inputpointer.cpp \
+    src/api/input/keyboard/keyboard.cpp \
+    src/api/input/keyboard/keyboardhandler.cpp \
+    src/api/input/keyboard/passthroughkeyboardhandler.cpp \
+    src/api/input/keyboard/physicalkeyboardadapter.cpp \
+    src/main.cpp
 
 RESOURCES += src/qml.qrc \
     defaults/defaults.qrc \
@@ -32,12 +32,12 @@ HEADERS += \
     src/singletons.h \
     src/core/fileio.h \
     src/core/launcher.h \
-    src/module/module.h \
-    src/module/moduleloader.h \
     src/core/paths.h \
     src/core/plugininterfaces.h \
-#    src/pointer/inputpointer.h \
-    src/keyboard/keyboard.h \
-    src/keyboard/keyboardhandler.h \
-    src/keyboard/passthroughkeyboardhandler.h \
-    src/keyboard/physicalkeyboardadapter.h
+    src/module/module.h \
+    src/module/moduleloader.h \
+    src/api/input/pointer/inputpointer.h \
+    src/api/input/keyboard/keyboard.h \
+    src/api/input/keyboard/keyboardhandler.h \
+    src/api/input/keyboard/passthroughkeyboardhandler.h \
+    src/api/input/keyboard/physicalkeyboardadapter.h
