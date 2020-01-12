@@ -12,18 +12,21 @@ namespace Stardust {
 class ModuleLoader : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QVariantMap modules READ getModuleList)
+    Q_PROPERTY(QVariantMap moduleInfo READ getModuleInfo)
+    Q_PROPERTY(QVector<Module *> modules READ getModuleList)
+
 public:
     explicit ModuleLoader(Paths *paths = nullptr, QQmlEngine *engine = nullptr);
 
     Q_INVOKABLE void reloadModuleList();
     Q_INVOKABLE void loadAllModules();
-    Q_INVOKABLE void loadModule(QString id);
+    Q_INVOKABLE Module *loadModule(QString id);
     Q_INVOKABLE Module *getModuleById(QString id);
 
     QQmlEngine *qmlEngine;
 
-    QVariantMap getModuleList();
+    QVariantMap getModuleInfo();
+    QVector<Module *> getModuleList();
 
 private:
     Paths *paths = nullptr;

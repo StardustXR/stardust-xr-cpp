@@ -1,5 +1,6 @@
 #include "moduleloader.h"
 #include <QDebug>
+#include <QQmlComponent>
 
 namespace Stardust {
 
@@ -29,7 +30,7 @@ void ModuleLoader::loadAllModules() {
     }
 }
 
-void ModuleLoader::loadModule(QString id) {
+Module *ModuleLoader::loadModule(QString id) {
     if(!moduleJSON.contains(id))
         qErrnoWarning(("Module "+id+" does not exist.").toStdString().c_str());
 
@@ -47,8 +48,8 @@ void ModuleLoader::loadModule(QString id) {
 
     modulesFolder.setPath(modulesFolderPath);
 
-    moduleToLoad->reloadModuleInfo();
     moduleList.push_back(moduleToLoad);
+    return moduleToLoad;
 }
 
 Module *ModuleLoader::getModuleById(QString id) {
@@ -59,7 +60,11 @@ Module *ModuleLoader::getModuleById(QString id) {
     return nullptr;
 }
 
-QVariantMap ModuleLoader::getModuleList() {
+QVector<Module *> ModuleLoader::getModuleList() {
+    return moduleList;
+}
+
+QVariantMap ModuleLoader::getModuleInfo() {
     return moduleJSON.toVariantMap();
 }
 

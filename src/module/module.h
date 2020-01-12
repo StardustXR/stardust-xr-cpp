@@ -32,6 +32,8 @@ class Module : public QObject {
     Q_PROPERTY(QString websiteURL MEMBER websiteURL)
     Q_PROPERTY(QString id MEMBER id)
     Q_PROPERTY(QString version MEMBER version)
+
+    Q_PROPERTY(QVector<QQmlComponent *> components MEMBER qmlComponents)
 public:
     enum State {
         None,
