@@ -8,7 +8,7 @@ ModuleLoader::ModuleLoader(Paths *paths, QQmlEngine *engine) : QObject(nullptr) 
     this->paths = paths;
     this->qmlEngine = engine;
 
-    systemConfigReader.setSource("/etc/stardust.json.conf");
+    systemConfigReader.setSource(paths->getSystemConfigPath());
 
     reloadModuleList();
     loadAllModules();
