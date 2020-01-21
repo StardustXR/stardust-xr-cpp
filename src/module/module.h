@@ -18,11 +18,13 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include <QtQuick3D/private/qquick3dnode_p.h>
+
 namespace Stardust {
 
 class ModuleLoader;
 
-class Module : public QObject {
+class Module : public QQuick3DNode {
     Q_OBJECT
 
     Q_PROPERTY(QString name MEMBER name)
@@ -41,7 +43,7 @@ public:
     explicit Module(ModuleLoader *loader = nullptr, QString path = "");
 
     State reloadModuleInfo();
-    Q_INVOKABLE void load(QObject *autostartParent);
+    Q_INVOKABLE void load();
 
 protected:
     QString name = "";
@@ -61,7 +63,6 @@ protected:
     QList<QQmlComponent *> qmlComponents;
 
     QList<QQmlComponent *> loadingQmlComponents;
-    QList<QObject *> loadingQmlComponentParents;
 
     QFile *moduleJsonFile;
     QFile *configJsonFile;

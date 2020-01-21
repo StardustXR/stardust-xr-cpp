@@ -6,8 +6,9 @@
 
 namespace Stardust {
 
-Module::Module(ModuleLoader *loader, QString path) : QObject(nullptr) {
+Module::Module(ModuleLoader *loader, QString path) : QQuick3DNode(nullptr) {
     moduleLoader = loader;
+    setParentItem(moduleLoader);
     directory = new QDir(path);
 
     moduleJsonFile = new QFile(directory->entryInfoList(QStringList("module.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
@@ -18,7 +19,6 @@ Module::Module(ModuleLoader *loader, QString path) : QObject(nullptr) {
     qmlComponents = QList<QQmlComponent *>();
 
     loadingQmlComponents = QList<QQmlComponent *>();
-    loadingQmlComponentParents = QList<QObject *>();
 
     reloadModuleInfo();
 }
@@ -45,7 +45,7 @@ Module::State Module::reloadModuleInfo() {
     return Module::State::Success;
 }
 
-void Module::load(QObject *autostartParent) {
+void Module::load() {
 //    if(moduleJson.object().contains("deps")) {
 //        QJsonArray dependencyPaths = moduleJson.object()["deps"].toArray();
 //    }
@@ -78,7 +78,6 @@ void Module::load(QObject *autostartParent) {
 
                     connect(qmlComponent, &QQmlComponent::statusChanged, this, &Stardust::Module::qmlComponentStatusChanged);
                     loadingQmlComponents.append(qmlComponent);
-                    loadingQmlComponentParents.append(autostartParent);
                     qmlComponentStatusChanged();
                 }
             }
@@ -89,18 +88,16 @@ void Module::load(QObject *autostartParent) {
 void Module::qmlComponentStatusChanged() {
     for(int i=0; i<loadingQmlComponents.length(); ++i) {
         QQmlComponent *component = loadingQmlComponents[i];
-        QObject *parent = loadingQmlComponentParents[i];
         switch (component->status()) {
             case QQmlComponent::Error:
                 qDebug() << "QML file \"" + component->url().toString() + "\" from module \"" + id + "\" failed to parse because:";
                 qDebug() << component->errorString();
                 loadingQmlComponents.removeAt(i);
-                loadingQmlComponentParents.removeAt(i);
                 continue;
             case QQmlComponent::Ready:
                 qDebug() << "QML file \"" + component->url().toString() + "\" from module \"" + id + "\" has been successfully autoloaded and instantiated";
-                QObject *instance = component->create(moduleLoader->qmlEngine->rootContext());
-                instance->setParent(parent);
+                QQuick3DNode *instance = static_cast<QQuick3DNode *>(component->create(moduleLoader->qmlEngine->rootContext()));
+                instance->setParentItem(this);
         }
     }
 }

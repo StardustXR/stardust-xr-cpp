@@ -9,11 +9,11 @@
 
 namespace Stardust {
 
-class ModuleLoader : public QObject
+class ModuleLoader : public QQuick3DNode
 {
     Q_OBJECT
     Q_PROPERTY(QVariantMap moduleInfo READ getModuleInfo)
-    Q_PROPERTY(QVector<Module *> modules READ getModuleList)
+    Q_PROPERTY(QList<Module *> modules READ getModuleList)
 
 public:
     explicit ModuleLoader(Paths *paths = nullptr, QQmlEngine *engine = nullptr);
@@ -26,12 +26,12 @@ public:
     QQmlEngine *qmlEngine;
 
     QVariantMap getModuleInfo();
-    QVector<Module *> getModuleList();
+    QList<Module *> getModuleList();
 
 private:
     Paths *paths = nullptr;
 
-    QVector<Module *> moduleList;
+    QList<Module *> moduleList;
     QDir modulesFolder;
 
     QJsonObject moduleJSON;

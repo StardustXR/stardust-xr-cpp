@@ -4,7 +4,7 @@
 
 namespace Stardust {
 
-ModuleLoader::ModuleLoader(Paths *paths, QQmlEngine *engine) : QObject(nullptr) {
+ModuleLoader::ModuleLoader(Paths *paths, QQmlEngine *engine) : QQuick3DNode(nullptr) {
     this->paths = paths;
     this->qmlEngine = engine;
 
@@ -45,6 +45,7 @@ Module *ModuleLoader::loadModule(QString id) {
 
     modulesFolder.cd(moduleJSON[id].toObject()["path"].toString());
     moduleToLoad = new Module(this, modulesFolder.absolutePath());
+    moduleToLoad->load();
 
     modulesFolder.setPath(modulesFolderPath);
 
@@ -60,7 +61,7 @@ Module *ModuleLoader::getModuleById(QString id) {
     return nullptr;
 }
 
-QVector<Module *> ModuleLoader::getModuleList() {
+QList<Module *> ModuleLoader::getModuleList() {
     return moduleList;
 }
 

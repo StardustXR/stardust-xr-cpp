@@ -25,14 +25,7 @@ Node {
     }
 
     Component.onCompleted: {
-        ModuleLoader.reloadModuleList();
-        ModuleLoader.loadAllModules();
-
-        ModuleLoader.modules[0].load(modules);
-    }
-
-    Node {
-        id:modules
+        ModuleLoader.setParentItem(this);
     }
 
     Model {
