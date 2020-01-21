@@ -28,20 +28,7 @@ Node {
         ModuleLoader.reloadModuleList();
         ModuleLoader.loadAllModules();
 
-        var component = ModuleLoader.modules[0].components[0];
-        if(component.status === Component.Error) {
-            console.log(component.errorString());
-        }
-
-        if(!instantiateComponent(component, modules))
-            component.onCompleted = instantiateComponent(component, modules);
-    }
-
-    function instantiateComponent(component, parent) {
-        var componentReady = component.status === Component.Ready;
-        if(componentReady)
-            component.createObject(parent);
-        return componentReady;
+        ModuleLoader.modules[0].load(modules);
     }
 
     Node {

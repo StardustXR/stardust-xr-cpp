@@ -18,6 +18,7 @@ Module::Module(ModuleLoader *loader, QString path) : QObject(nullptr) {
     qmlComponents = QList<QQmlComponent *>();
 
     loadingQmlComponents = QList<QQmlComponent *>();
+    loadingQmlComponentParents = QList<QObject *>();
 
     reloadModuleInfo();
 }
@@ -44,7 +45,7 @@ Module::State Module::reloadModuleInfo() {
     return Module::State::Success;
 }
 
-void Module::loadModule(QObject autostartParent) {
+void Module::load(QObject *autostartParent) {
 //    if(moduleJson.object().contains("deps")) {
 //        QJsonArray dependencyPaths = moduleJson.object()["deps"].toArray();
 //    }
@@ -77,6 +78,8 @@ void Module::loadModule(QObject autostartParent) {
 
                     connect(qmlComponent, &QQmlComponent::statusChanged, this, &Stardust::Module::qmlComponentStatusChanged);
                     loadingQmlComponents.append(qmlComponent);
+                    loadingQmlComponentParents.append(autostartParent);
+                    qmlComponentStatusChanged();
                 }
             }
         }
@@ -84,15 +87,20 @@ void Module::loadModule(QObject autostartParent) {
 }
 
 void Module::qmlComponentStatusChanged() {
-    foreach(QQmlComponent *component, loadingQmlComponents) {
+    for(int i=0; i<loadingQmlComponents.length(); ++i) {
+        QQmlComponent *component = loadingQmlComponents[i];
+        QObject *parent = loadingQmlComponentParents[i];
         switch (component->status()) {
             case QQmlComponent::Error:
                 qDebug() << "QML file \"" + component->url().toString() + "\" from module \"" + id + "\" failed to parse because:";
                 qDebug() << component->errorString();
-                loadingQmlComponents.removeAll(component);
+                loadingQmlComponents.removeAt(i);
+                loadingQmlComponentParents.removeAt(i);
                 continue;
             case QQmlComponent::Ready:
-                qDebug() << "QML file \"" + component->url().toString() + "\" from module \"" + id + "\" failed to parse because:";
+                qDebug() << "QML file \"" + component->url().toString() + "\" from module \"" + id + "\" has been successfully autoloaded and instantiated";
+                QObject *instance = component->create(moduleLoader->qmlEngine->rootContext());
+                instance->setParent(parent);
         }
     }
 }

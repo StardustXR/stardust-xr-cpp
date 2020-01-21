@@ -41,7 +41,7 @@ public:
     explicit Module(ModuleLoader *loader = nullptr, QString path = "");
 
     State reloadModuleInfo();
-    void loadModule(QObject autostartParent);
+    Q_INVOKABLE void load(QObject *autostartParent);
 
 protected:
     QString name = "";
@@ -61,6 +61,7 @@ protected:
     QList<QQmlComponent *> qmlComponents;
 
     QList<QQmlComponent *> loadingQmlComponents;
+    QList<QObject *> loadingQmlComponentParents;
 
     QFile *moduleJsonFile;
     QFile *configJsonFile;
