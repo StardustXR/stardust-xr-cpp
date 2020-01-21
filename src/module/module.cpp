@@ -13,19 +13,24 @@ Module::Module(ModuleLoader *loader, QString path) : QObject(nullptr) {
     moduleJsonFile = new QFile(directory->entryInfoList(QStringList("module.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
     configJsonFile = new QFile(directory->entryInfoList(QStringList("config.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
 
-    dependencies = QVector<Module *>();
-    binaries = QVector<QPluginLoader *>();
-    qmlComponents = QVector<QQmlComponent *>();
+    dependencies = QList<Module *>();
+    binaries = QList<QPluginLoader *>();
+    qmlComponents = QList<QQmlComponent *>();
+
+    loadingQmlComponents = QList<QQmlComponent *>();
 
     reloadModuleInfo();
 }
 
 Module::State Module::reloadModuleInfo() {
-    moduleJson = QJsonDocument::fromJson(loadDocument(*moduleJsonFile));
-    configJson = QJsonDocument::fromJson(loadDocument(*configJsonFile));
+    QJsonDocument moduleJsonDocument = QJsonDocument::fromJson(loadDocument(*moduleJsonFile));
+    QJsonDocument configJsonDocument = QJsonDocument::fromJson(loadDocument(*configJsonFile));
 
-    if(moduleJson.isNull() || configJson.isNull())
+    if(moduleJsonDocument.isNull() || configJsonDocument.isNull())
         return Module::State::Failure;
+
+    moduleJson = moduleJsonDocument.object();
+    configJson = configJsonDocument.object();
 
     name = getJsonStringKeyValue(moduleJson, "name");
     description = getJsonStringKeyValue(moduleJson, "description");
@@ -36,6 +41,10 @@ Module::State Module::reloadModuleInfo() {
     id = getJsonStringKeyValue(moduleJson, "id");
     version = getJsonStringKeyValue(moduleJson, "version");
 
+    return Module::State::Success;
+}
+
+void Module::loadModule(QObject autostartParent) {
 //    if(moduleJson.object().contains("deps")) {
 //        QJsonArray dependencyPaths = moduleJson.object()["deps"].toArray();
 //    }
@@ -50,17 +59,42 @@ Module::State Module::reloadModuleInfo() {
 //        }
 //    }
 
-    if(moduleJson.object().contains("qml")) {
-        QJsonArray qmlFilePaths = moduleJson.object()["qml"].toArray();
+    if(moduleJson.contains("qml")) {
+        QJsonArray qmlFilePaths = moduleJson["qml"].toArray();
 
         foreach(QVariant qmlFile, qmlFilePaths.toVariantList()) {
             QString qmlFilePath = directory->absoluteFilePath(qmlFile.toString());
 
             qmlComponents.push_back(new QQmlComponent(moduleLoader->qmlEngine, qmlFilePath, QQmlComponent::PreferSynchronous));
         }
-    }
 
-    return Module::State::Success;
+        if(moduleJson.contains("autostart")) {
+            if(moduleJson["autostart"].toObject().contains("qml")) {
+                QVariantList autostartQml = moduleJson["autostart"].toObject()["qml"].toArray().toVariantList();
+
+                foreach(QVariant autostart, autostartQml) {
+                    QQmlComponent *qmlComponent = componentFromQmlFileName(autostart.toString());
+
+                    connect(qmlComponent, &QQmlComponent::statusChanged, this, &Stardust::Module::qmlComponentStatusChanged);
+                    loadingQmlComponents.append(qmlComponent);
+                }
+            }
+        }
+    }
+}
+
+void Module::qmlComponentStatusChanged() {
+    foreach(QQmlComponent *component, loadingQmlComponents) {
+        switch (component->status()) {
+            case QQmlComponent::Error:
+                qDebug() << "QML file \"" + component->url().toString() + "\" from module \"" + id + "\" failed to parse because:";
+                qDebug() << component->errorString();
+                loadingQmlComponents.removeAll(component);
+                continue;
+            case QQmlComponent::Ready:
+                qDebug() << "QML file \"" + component->url().toString() + "\" from module \"" + id + "\" failed to parse because:";
+        }
+    }
 }
 
 QByteArray Module::loadDocument(QFile &file) {
@@ -77,11 +111,31 @@ QByteArray Module::loadDocument(QFile &file) {
     return json_string.toLocal8Bit();
 }
 
-QString Module::getJsonStringKeyValue(QJsonDocument obj, QString key) {
-    if(!obj.object().contains(key))
+QString Module::getJsonStringKeyValue(QJsonObject obj, QString key) {
+    if(!obj.contains(key))
         return "";
 
-    return obj.object()[key].toString();
+    return obj[key].toString();
+}
+
+QQmlComponent *Module::componentFromQmlFileName(QString fileName) {
+    if(moduleJson.contains("qml")) {
+        QJsonArray qmlFilePaths = moduleJson["qml"].toArray();
+        QList<QString> qmlFileNames = QList<QString>();
+
+        foreach(QVariant qmlFile, qmlFilePaths.toVariantList()) {
+            qmlFileNames.push_back(qmlFile.toString());
+        }
+
+        int index = qmlFileNames.indexOf(fileName);
+
+        if(index < 0)
+            return nullptr;
+
+        return qmlComponents[index];
+    } else {
+        return nullptr;
+    }
 }
 
 }

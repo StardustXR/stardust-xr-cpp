@@ -32,8 +32,6 @@ class Module : public QObject {
     Q_PROPERTY(QString websiteURL MEMBER websiteURL)
     Q_PROPERTY(QString id MEMBER id)
     Q_PROPERTY(QString version MEMBER version)
-
-    Q_PROPERTY(QVector<QQmlComponent *> components MEMBER qmlComponents)
 public:
     enum State {
         None,
@@ -43,6 +41,7 @@ public:
     explicit Module(ModuleLoader *loader = nullptr, QString path = "");
 
     State reloadModuleInfo();
+    void loadModule(QObject autostartParent);
 
 protected:
     QString name = "";
@@ -57,19 +56,25 @@ protected:
     ModuleLoader *moduleLoader;
     QDir *directory = nullptr;
 
-    QVector<Module *> dependencies;
-    QVector<QPluginLoader *> binaries;
-    QVector<QQmlComponent *> qmlComponents;
+    QList<Module *> dependencies;
+    QList<QPluginLoader *> binaries;
+    QList<QQmlComponent *> qmlComponents;
+
+    QList<QQmlComponent *> loadingQmlComponents;
 
     QFile *moduleJsonFile;
     QFile *configJsonFile;
 
-    QJsonDocument moduleJson;
-    QJsonDocument configJson;
+    QJsonObject moduleJson;
+    QJsonObject configJson;
 
     QByteArray loadDocument(QFile &file);
-    QString getJsonStringKeyValue(QJsonDocument obj, QString key);
+    QString getJsonStringKeyValue(QJsonObject obj, QString key);
 
+    QQmlComponent *componentFromQmlFileName(QString fileName);
+
+private slots:
+    void qmlComponentStatusChanged();
 };
 
 }
