@@ -23,12 +23,14 @@ Module::Module(ModuleLoader *loader, QString path) : QQuick3DNode(nullptr) {
     reloadModuleInfo();
 }
 
-Module::State Module::reloadModuleInfo() {
+void Module::reloadModuleInfo() {
     QJsonDocument moduleJsonDocument = QJsonDocument::fromJson(loadDocument(*moduleJsonFile));
     QJsonDocument configJsonDocument = QJsonDocument::fromJson(loadDocument(*configJsonFile));
 
-    if(moduleJsonDocument.isNull() || configJsonDocument.isNull())
-        return Module::State::Failure;
+    if(moduleJsonDocument.isNull() || configJsonDocument.isNull()) {
+         state = State::Error;
+         return;
+    }
 
     moduleJson = moduleJsonDocument.object();
     configJson = configJsonDocument.object();
@@ -42,13 +44,36 @@ Module::State Module::reloadModuleInfo() {
     id = getJsonStringKeyValue(moduleJson, "id");
     version = getJsonStringKeyValue(moduleJson, "version");
 
-    return Module::State::Success;
+    state = State::Analyzed;
 }
 
 void Module::load() {
-//    if(moduleJson.object().contains("deps")) {
-//        QJsonArray dependencyPaths = moduleJson.object()["deps"].toArray();
-//    }
+    if(state == State::Error || state == State::None)
+        reloadModuleInfo();
+
+    if(moduleJson.contains("deps")) {
+        QJsonArray dependencies = moduleJson["deps"].toArray();
+        foreach(QVariant dependencyID, dependencies.toVariantList()) {
+            QString depID = dependencyID.toString();
+            Module *depMod = moduleLoader->getModuleById(depID);
+            if(depMod != nullptr) {
+                switch (depMod->state) {
+                case State::None:
+                case State::Error:
+                    depMod->reloadModuleInfo();
+                    depMod->load();
+                    break;
+                default:
+                    break;
+                }
+                if(depMod->state != State::Loaded && depMod->state != State::Instanced) {
+                    qDebug() << "Dependency [" + depID + "] of module [" + id + "] has not been loaded successfully therefore this module cannot be loaded";
+                    state = State::Error;
+                    return;
+                }
+            }
+        }
+    }
 
 //    if(moduleJson.object().contains("binaries")) {
 //        QJsonArray binaryPaths = moduleJson.object()["binaries"].toArray();
@@ -69,17 +94,17 @@ void Module::load() {
             qmlComponents.push_back(new QQmlComponent(moduleLoader->qmlEngine, qmlFilePath, QQmlComponent::PreferSynchronous));
         }
 
+        state = State::Loaded;
+
         if(moduleJson.contains("autostart")) {
-            if(moduleJson["autostart"].toObject().contains("qml")) {
-                QVariantList autostartQml = moduleJson["autostart"].toObject()["qml"].toArray().toVariantList();
+            QVariantList autostartQml = moduleJson["autostart"].toArray().toVariantList();
 
-                foreach(QVariant autostart, autostartQml) {
-                    QQmlComponent *qmlComponent = componentFromQmlFileName(autostart.toString());
+            foreach(QVariant autostart, autostartQml) {
+                QQmlComponent *qmlComponent = componentFromQmlFileName(autostart.toString());
 
-                    connect(qmlComponent, &QQmlComponent::statusChanged, this, &Stardust::Module::qmlComponentStatusChanged);
-                    loadingQmlComponents.append(qmlComponent);
-                    qmlComponentStatusChanged();
-                }
+                connect(qmlComponent, &QQmlComponent::statusChanged, this, &Stardust::Module::qmlComponentStatusChanged);
+                loadingQmlComponents.append(qmlComponent);
+                qmlComponentStatusChanged();
             }
         }
     }
@@ -90,14 +115,16 @@ void Module::qmlComponentStatusChanged() {
         QQmlComponent *component = loadingQmlComponents[i];
         switch (component->status()) {
             case QQmlComponent::Error:
-                qDebug() << "QML file \"" + component->url().toString() + "\" from module \"" + id + "\" failed to parse because:";
+                qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] failed to parse because:";
                 qDebug() << component->errorString();
                 loadingQmlComponents.removeAt(i);
+
                 continue;
             case QQmlComponent::Ready:
-                qDebug() << "QML file \"" + component->url().toString() + "\" from module \"" + id + "\" has been successfully autoloaded and instantiated";
+                qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] has been successfully autoloaded and instantiated";
                 QQuick3DNode *instance = static_cast<QQuick3DNode *>(component->create(moduleLoader->qmlEngine->rootContext()));
                 instance->setParentItem(this);
+                state = State::Instanced;
         }
     }
 }

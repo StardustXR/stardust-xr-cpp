@@ -34,18 +34,23 @@ class Module : public QQuick3DNode {
     Q_PROPERTY(QString websiteURL MEMBER websiteURL)
     Q_PROPERTY(QString id MEMBER id)
     Q_PROPERTY(QString version MEMBER version)
+    Q_PROPERTY(State state MEMBER state)
 public:
     enum State {
         None,
-        Success,
-        Failure
+        Error,
+        Analyzed,
+        Loaded,
+        Instanced
     };
     explicit Module(ModuleLoader *loader = nullptr, QString path = "");
 
-    State reloadModuleInfo();
+    void reloadModuleInfo();
     Q_INVOKABLE void load();
 
 protected:
+    State state = State::None;
+
     QString name = "";
     QString description = "";
     QString author = "";
@@ -55,15 +60,15 @@ protected:
     QString id = "";
     QString version = "1.0.0";
 
-    ModuleLoader *moduleLoader;
-    QDir *directory = nullptr;
-
     QList<Module *> dependencies;
     QList<QPluginLoader *> binaries;
     QList<QQmlComponent *> qmlComponents;
 
     QList<QQmlComponent *> loadingQmlComponents;
 
+    QQmlComponent *componentFromQmlFileName(QString fileName);
+
+private:
     QFile *moduleJsonFile;
     QFile *configJsonFile;
 
@@ -73,7 +78,9 @@ protected:
     QByteArray loadDocument(QFile &file);
     QString getJsonStringKeyValue(QJsonObject obj, QString key);
 
-    QQmlComponent *componentFromQmlFileName(QString fileName);
+    ModuleLoader *moduleLoader;
+    QDir *directory = nullptr;
+
 
 private slots:
     void qmlComponentStatusChanged();
