@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick3D 1.0
 
-//import Stardust.Core 1.0
+import Stardust.Core 1.0
 //import Stardust.Core.Internal 1.0
 
 import QtQuick3D.OpenXR 1.0
@@ -19,19 +19,14 @@ Node {
 
         lightProbe: Texture {
             source: "qrc:/pond_bridge_night.hdr"
-            mappingMode: Texture.Normal
         }
 
         Component.onCompleted: OpenXR.setEnvironment(skybox)
     }
 
-//    Component.onCompleted: {
-//        autoLauncher.launchDetached("sh -c \""+compositorPrefs.json.autostart.join(";")+"\"");
-//    }
-
-//    Launcher {
-//        id:autoLauncher
-//    }
+    Component.onCompleted: {
+        ModuleLoader.setParentItem(this);
+    }
 
     Model {
         source: "qrc:/Teapot.mesh"

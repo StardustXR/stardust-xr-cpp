@@ -3,19 +3,18 @@
 
 #include <QGuiApplication>
 #include <QQmlEngine>
-#include <Quick3DOpenXR/QOpenXRApplication>
 
-//#include "core/launcher.h"
 //#include "core/fileio.h"
-
-//#include "core/configpathgetter.h"
-
-//#include "core/prefs.h"
-//#include "core/extensionloader.h"
-//#include "core/pluginloader.h"
 
 //#include "keyboard/physicalkeyboardadapter.h"
 //#include "keyboard/passthroughkeyboardhandler.h"
+
+#include "singletons.h"
+#include "module/module.h"
+
+#include <Quick3DOpenXR/QOpenXRApplication>
+
+using namespace Stardust;
 
 QOpenXRApplication *xrApp;
 
@@ -25,20 +24,12 @@ void registerQMLTypes() {
 //    qmlRegisterType<Launcher>("Stardust.Core", 1, 0, "Launcher");
 //    qmlRegisterType<FileIO>("Stardust.Core", 1, 0, "FileIO");
 
-//    qmlRegisterType<ConfigPathGetter>("Stardust.Core", 1, 0, "ConfigPathGetter");
-
-//    qmlRegisterType<Stardust::Prefs>("Stardust.Core", 1, 0, "Preferences");
-//    qmlRegisterType<Stardust::ExtensionLoader>("Stardust.Core", 1, 0, "ExtensionLoader");
-
-//    qmlRegisterSingletonType<Stardust::PluginLoader>("Stardust.Core", 1, 0, "PluginLoader", [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
-//        Q_UNUSED(engine)
-//        Q_UNUSED(scriptEngine)
-
-//        return new Stardust::PluginLoader;
-//    });
-
 //    qmlRegisterType<StardustAPI::PhysicalKeyboardAdapter>("Stardust.Core", 1, 0, "PhysicalKeyboardAdapter");
 //    qmlRegisterType<StardustAPI::PassthroughKeyboardHandler>("Stardust.Core", 1, 0, "PassthroughKeyboardHandler");
+
+    qmlRegisterSingletonInstance("StardustAPI.Core", 1, 0, "Paths", Stardust::PathsSingleton());
+    qmlRegisterType<Stardust::Module>("Stardust.Core", 1, 0, "Module");
+    qmlRegisterSingletonInstance("Stardust.Core", 1, 0, "ModuleLoader", Stardust::ModuleLoaderSingleton());
 }
 
 int main(int argc, char *argv[]) {

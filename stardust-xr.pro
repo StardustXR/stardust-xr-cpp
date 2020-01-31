@@ -1,58 +1,40 @@
 QT += qml quick quick3d-private quick3d-openxr widgets
 CONFIG += c++11
 
-# The following define makes your compiler emit warnings if you use
-# any Qt feature that has been marked deprecated (the exact warnings
-# depend on your compiler). Refer to the documentation for the
-# deprecated API to know how to port your code away from it.
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
 DEFINES += QT_DEPRECATED_WARNINGS
 
-# You can also make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
-SOURCES += \
-    src/core/configpathgetter.cpp \
-    src/core/fileio.cpp \
-    src/core/launcher.cpp \
-    src/core/prefs.cpp \
-    src/core/extensionloader.cpp \
-#    src/pointer/inputpointer.cpp \
-    src/keyboard/keyboard.cpp \
-    src/keyboard/keyboardhandler.cpp \
-    src/keyboard/passthroughkeyboardhandler.cpp \
-    src/core/pluginloader.cpp \
-    src/main.cpp \
-    src/keyboard/physicalkeyboardadapter.cpp
+INCLUDEPATH +=	-i/usr/local/include
+LIBS += -lopenxr_loader
 
 RESOURCES += src/qml.qrc \
     resources/resources.qrc
 
-# Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
-
-# Additional import path used to resolve QML modules just for Qt Quick Designer
-QML_DESIGNER_IMPORT_PATH =
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
-
-INCLUDEPATH +=	-i/usr/local/include
-
-LIBS += -lopenxr_loader
-
 HEADERS += \
-    src/core/configpathgetter.h \
+    src/singletons.h \
     src/core/fileio.h \
     src/core/launcher.h \
+    src/core/paths.h \
     src/core/plugininterfaces.h \
-    src/core/prefs.h \
-    src/core/extensionloader.h \
-#    src/pointer/inputpointer.h \
-    src/keyboard/keyboard.h \
-    src/keyboard/keyboardhandler.h \
-    src/keyboard/passthroughkeyboardhandler.h \
-    src/keyboard/physicalkeyboardadapter.h \
-    src/core/pluginloader.h
+    src/module/module.h \
+    src/module/moduleloader.h \
+#    src/api/input/pointer/inputpointer.h \
+    src/api/input/keyboard/keyboard.h \
+    src/api/input/keyboard/keyboardhandler.h \
+    src/api/input/keyboard/passthroughkeyboardhandler.h \
+    src/api/input/keyboard/physicalkeyboardadapter.h
+
+SOURCES += \
+    src/main.cpp \
+    src/core/fileio.cpp \
+    src/core/launcher.cpp \
+    src/core/paths.cpp \
+    src/module/moduleloader.cpp \
+    src/module/module.cpp \
+#    src/api/input/pointer/inputpointer.cpp \
+    src/api/input/keyboard/keyboard.cpp \
+    src/api/input/keyboard/keyboardhandler.cpp \
+    src/api/input/keyboard/passthroughkeyboardhandler.cpp \
+    src/api/input/keyboard/physicalkeyboardadapter.cpp
