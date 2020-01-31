@@ -70,10 +70,14 @@ protected:
 
 private:
     QFile *moduleJsonFile;
-    QFile *configJsonFile;
-
     QJsonObject moduleJson;
-    QJsonObject configJson;
+
+    QFile *moduleConfigJsonFile;
+    QJsonObject moduleConfigJson;
+    QFile *systemConfigJsonFile;
+    QJsonObject systemConfigJson;
+    QFile *userConfigJsonFile;
+    QJsonObject userConfigJson;
 
     QByteArray loadDocument(QFile &file);
     QString getJsonStringKeyValue(QJsonObject obj, QString key);

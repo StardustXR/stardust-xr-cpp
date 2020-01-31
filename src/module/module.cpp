@@ -12,7 +12,7 @@ Module::Module(ModuleLoader *loader, QString path) : QQuick3DNode(nullptr) {
     directory = new QDir(path);
 
     moduleJsonFile = new QFile(directory->entryInfoList(QStringList("module.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
-    configJsonFile = new QFile(directory->entryInfoList(QStringList("config.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
+    moduleConfigJsonFile = new QFile(directory->entryInfoList(QStringList("config.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
 
     dependencies = QList<Module *>();
     binaries = QList<QPluginLoader *>();
@@ -25,15 +25,19 @@ Module::Module(ModuleLoader *loader, QString path) : QQuick3DNode(nullptr) {
 
 void Module::reloadModuleInfo() {
     QJsonDocument moduleJsonDocument = QJsonDocument::fromJson(loadDocument(*moduleJsonFile));
-    QJsonDocument configJsonDocument = QJsonDocument::fromJson(loadDocument(*configJsonFile));
+    QJsonDocument moduleConfigJsonDocument = QJsonDocument::fromJson(loadDocument(*moduleConfigJsonFile));
+    QJsonDocument systemConfigJsonDocument = QJsonDocument::fromJson(loadDocument(*systemConfigJsonFile));
+    QJsonDocument userConfigJsonDocument = QJsonDocument::fromJson(loadDocument(*userConfigJsonFile));
 
-    if(moduleJsonDocument.isNull() || configJsonDocument.isNull()) {
+    if(moduleJsonDocument.isNull() || moduleConfigJsonDocument.isNull()) {
          state = State::Error;
          return;
     }
 
     moduleJson = moduleJsonDocument.object();
-    configJson = configJsonDocument.object();
+    moduleConfigJson = moduleConfigJsonDocument.object();
+    systemConfigJson = systemConfigJsonDocument.object();
+    moduleConfigJson = userConfigJsonDocument.object();
 
     name = getJsonStringKeyValue(moduleJson, "name");
     description = getJsonStringKeyValue(moduleJson, "description");
