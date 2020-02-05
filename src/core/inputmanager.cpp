@@ -7,4 +7,8 @@ InputManager::InputManager(QObject *parent) : QObject(parent) {
 
 }
 
+void InputManager::processInputs() {
+
+}
+
 }
