@@ -20,6 +20,7 @@ HEADERS += \
     src/core/launcher.h \
     src/core/paths.h \
     src/core/plugininterfaces.h \
+    src/core/inputmanager.h \
     src/module/module.h \
     src/module/moduleloader.h \
     src/api/input/keyboard/keyboard.h \
@@ -32,6 +33,7 @@ SOURCES += \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
     src/core/paths.cpp \
+    src/core/inputmanager.cpp \
     src/module/moduleloader.cpp \
     src/module/module.cpp \
     src/api/input/keyboard/keyboard.cpp \
