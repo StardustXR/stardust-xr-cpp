@@ -26,8 +26,8 @@ Module::Module(ModuleLoader *loader, QString path) : QQuick3DNode(nullptr) {
 void Module::reloadModuleInfo() {
     QJsonDocument moduleJsonDocument = QJsonDocument::fromJson(loadDocument(*moduleJsonFile));
     QJsonDocument moduleConfigJsonDocument = QJsonDocument::fromJson(loadDocument(*moduleConfigJsonFile));
-    QJsonDocument systemConfigJsonDocument = QJsonDocument::fromJson(loadDocument(*systemConfigJsonFile));
-    QJsonDocument userConfigJsonDocument = QJsonDocument::fromJson(loadDocument(*userConfigJsonFile));
+//    QJsonDocument systemConfigJsonDocument = QJsonDocument::fromJson(loadDocument(*systemConfigJsonFile));
+//    QJsonDocument userConfigJsonDocument = QJsonDocument::fromJson(loadDocument(*userConfigJsonFile));
 
     if(moduleJsonDocument.isNull() || moduleConfigJsonDocument.isNull()) {
          state = State::Error;
@@ -36,8 +36,8 @@ void Module::reloadModuleInfo() {
 
     moduleJson = moduleJsonDocument.object();
     moduleConfigJson = moduleConfigJsonDocument.object();
-    systemConfigJson = systemConfigJsonDocument.object();
-    moduleConfigJson = userConfigJsonDocument.object();
+//    systemConfigJson = systemConfigJsonDocument.object();
+//    moduleConfigJson = userConfigJsonDocument.object();
 
     name = getJsonStringKeyValue(moduleJson, "name");
     description = getJsonStringKeyValue(moduleJson, "description");
