@@ -9,7 +9,7 @@ class SphereField : public Field {
     Q_OBJECT
     Q_PROPERTY(float radius MEMBER radius)
 public:
-    explicit SphereField(QQuick3DNode *parent);
+    explicit SphereField(QQuick3DNode *parent) : Field(parent) {}
 
     float radius = 1.0f;
 
