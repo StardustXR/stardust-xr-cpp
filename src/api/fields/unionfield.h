@@ -1,17 +1,14 @@
 #ifndef STARDUSTAPI_UNIONFIELD_H
 #define STARDUSTAPI_UNIONFIELD_H
 
-#include <limits>
-#include "field.h"
+#include "booleanfield.h"
 
 namespace StardustAPI {
 
-class UnionField : public Field {
+class UnionField : public BooleanField {
     Q_OBJECT
 public:
-    explicit UnionField(QQuick3DNode *parent) : Field(parent) {
-        connect(this, &QQuick3DObject::childrenChanged, this, &UnionField::updateFieldList);
-    }
+    explicit UnionField(QQuick3DNode *parent) : BooleanField(parent) {}
 
     float distance(const QVector3D point) const {
         float minimumDistance = std::numeric_limits<float>::max();
@@ -22,20 +19,6 @@ public:
             }
         }
         return minimumDistance;
-    }
-
-private:
-    QList<Field *> fields = QList<Field *>();
-
-private slots:
-    void updateFieldList() {
-        fields.clear();
-        foreach(QQuick3DObject *child, childItems()) {
-            Field *field = qobject_cast<Field *>(child);
-            if(field != nullptr) {
-                fields.append(field);
-            }
-        }
     }
 };
 
