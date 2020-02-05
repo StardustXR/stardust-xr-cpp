@@ -9,9 +9,6 @@ ModuleLoader::ModuleLoader(Paths *paths, QQmlEngine *engine) : QQuick3DNode(null
     this->qmlEngine = engine;
 
     systemConfigReader.setSource(paths->getSystemConfigPath());
-
-    reloadModuleList();
-    loadAllModules();
 }
 
 void ModuleLoader::reloadModuleList() {

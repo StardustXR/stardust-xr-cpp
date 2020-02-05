@@ -26,6 +26,8 @@ Node {
 
     Component.onCompleted: {
         ModuleLoader.setParentItem(this);
+        ModuleLoader.reloadModuleList();
+        ModuleLoader.loadAllModules();
     }
 
     Model {
