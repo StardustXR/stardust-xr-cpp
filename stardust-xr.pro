@@ -23,6 +23,7 @@ HEADERS += \
     src/core/inputmanager.h \
     src/module/module.h \
     src/module/moduleloader.h \
+    src/api/fields/field.h \
     src/api/input/keyboard/keyboard.h \
     src/api/input/keyboard/keyboardhandler.h \
     src/api/input/keyboard/passthroughkeyboardhandler.h \
