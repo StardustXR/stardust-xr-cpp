@@ -24,6 +24,7 @@ HEADERS += \
     src/module/module.h \
     src/module/moduleloader.h \
     src/api/fields/booleanfield.h \
+    src/api/fields/boxfield.h \
     src/api/fields/field.h \
     src/api/fields/spherefield.h \
     src/api/fields/unionfield.h \
