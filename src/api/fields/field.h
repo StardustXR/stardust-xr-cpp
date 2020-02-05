@@ -15,7 +15,9 @@ public:
     virtual float distance(const QVector3D point) const {
         return point.distanceToPoint(closestPoint(point));
     }
-    virtual QVector3D closestPoint(const QVector3D point) const = 0;
+    virtual QVector3D closestPoint(const QVector3D point) const {
+        return point - (normal(point) * distance(point));
+    }
     virtual QVector3D normal(const QVector3D point) const {
         float d = distance(point);
         QVector2D e(.01f, 0);
