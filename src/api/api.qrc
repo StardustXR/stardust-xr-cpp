@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>content/panel/Panel.qml</file>
+    </qresource>
+</RCC>

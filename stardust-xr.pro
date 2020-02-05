@@ -10,9 +10,11 @@ INCLUDEPATH +=	-i/usr/local/include
 LIBS += -lopenxr_loader
 
 RESOURCES += src/qml.qrc \
-    resources/resources.qrc
+    resources/resources.qrc \
+    src/api/api.qrc
 
 HEADERS += \
+    src/panel.h \
     src/singletons.h \
     src/core/fileio.h \
     src/core/launcher.h \
@@ -37,4 +39,5 @@ SOURCES += \
     src/api/input/keyboard/keyboard.cpp \
     src/api/input/keyboard/keyboardhandler.cpp \
     src/api/input/keyboard/passthroughkeyboardhandler.cpp \
-    src/api/input/keyboard/physicalkeyboardadapter.cpp
+    src/api/input/keyboard/physicalkeyboardadapter.cpp \
+    src/panel.cpp
