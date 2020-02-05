@@ -12,6 +12,11 @@
 #include "singletons.h"
 #include "module/module.h"
 
+#include "api/fields/field.h"
+#include "api/fields/spherefield.h"
+#include "api/fields/booleanfield.h"
+#include "api/fields/unionfield.h"
+
 #include <Quick3DOpenXR/QOpenXRApplication>
 
 using namespace Stardust;
@@ -30,6 +35,10 @@ void registerQMLTypes() {
     qmlRegisterSingletonInstance("StardustAPI.Core", 1, 0, "Paths", Stardust::PathsSingleton());
     qmlRegisterType<Stardust::Module>("Stardust.Core", 1, 0, "Module");
     qmlRegisterSingletonInstance("Stardust.Core", 1, 0, "ModuleLoader", Stardust::ModuleLoaderSingleton());
+
+    qmlRegisterUncreatableType<StardustAPI::Field>("StardustAPI", 1, 0, "Field", "Base class for all fields");
+    qmlRegisterType<StardustAPI::SphereField>("StardustAPI", 1, 0, "SphereField");
+    qmlRegisterType<StardustAPI::UnionField>("StardustAPI", 1, 0, "UnionField");
 }
 
 int main(int argc, char *argv[]) {
