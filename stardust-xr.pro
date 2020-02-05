@@ -39,5 +39,4 @@ SOURCES += \
     src/api/input/keyboard/keyboard.cpp \
     src/api/input/keyboard/keyboardhandler.cpp \
     src/api/input/keyboard/passthroughkeyboardhandler.cpp \
-    src/api/input/keyboard/physicalkeyboardadapter.cpp \
-    src/panel.cpp
+    src/api/input/keyboard/physicalkeyboardadapter.cpp
