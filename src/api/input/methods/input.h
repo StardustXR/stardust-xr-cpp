@@ -20,8 +20,6 @@ public:
     explicit Input(QQuick3DNode *parent, InputType inputType) : QQuick3DNode(parent), type(inputType) {}
 
     InputType type;
-
-    QVector3D inputPosition;
     InputDevice *device;
 };
 
