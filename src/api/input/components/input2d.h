@@ -12,7 +12,7 @@ namespace StardustAPI {
 class Input2D : public Input0D {
 public:
     virtual bool isActive() {
-        return abs(position.x()) > deadzone.x() && abs(position.y()) > deadzone.y();
+        return abs(position.x()) > abs(deadzone.x()) && abs(position.y()) > abs(deadzone.y());
     }
 
     virtual QVector2D getPosition() {
