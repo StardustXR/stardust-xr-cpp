@@ -28,6 +28,12 @@ HEADERS += \
     src/api/fields/field.h \
     src/api/fields/spherefield.h \
     src/api/fields/unionfield.h \
+    src/api/input/methods/input.h \
+    src/api/input/methods/controllerinput.h \
+    src/api/input/methods/globalinput.h \
+    src/api/input/methods/handinput.h \
+    src/api/input/methods/pointerinput.h \
+    src/api/input/methods/toolinput.h \
     src/api/input/components/input0d.h \
     src/api/input/components/input1d.h \
     src/api/input/components/input2d.h \
