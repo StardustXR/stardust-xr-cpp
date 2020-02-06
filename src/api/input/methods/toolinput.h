@@ -15,9 +15,9 @@ class ToolInput : public Input {
 public:
     explicit ToolInput(QQuick3DNode *parent, InputType inputType) : Input(parent, inputType) {}
 
-    QHash<QString, Input0D> inputs0d;
-    QHash<QString, Input1D> inputs1d;
-    QHash<QString, Input2D> inputs2d;
+    QHash<QString, Input0D*> inputs0d;
+    QHash<QString, Input1D*> inputs1d;
+    QHash<QString, Input2D*> inputs2d;
 };
 
 }
