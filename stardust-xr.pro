@@ -28,6 +28,9 @@ HEADERS += \
     src/api/fields/field.h \
     src/api/fields/spherefield.h \
     src/api/fields/unionfield.h \
+    src/api/input/components/input0d.h \
+    src/api/input/components/input1d.h \
+    src/api/input/components/input2d.h \
     src/api/input/keyboard/keyboard.h \
     src/api/input/keyboard/keyboardhandler.h \
     src/api/input/keyboard/passthroughkeyboardhandler.h \
