@@ -4,6 +4,7 @@
 #include "input0d.h"
 
 namespace StardustAPI {
+namespace Input {
 
 class Input1D : public Input0D {
 public:
@@ -20,6 +21,7 @@ protected:
     float value = 1.0f;
 };
 
+}
 }
 
 #endif // STARDUSTAPI_INPUT1D_H

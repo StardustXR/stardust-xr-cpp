@@ -8,17 +8,19 @@
 #include <QString>
 
 namespace StardustAPI {
+namespace Input {
 
 class ToolInput : public Input {
     Q_OBJECT
 public:
-    explicit ToolInput(QQuick3DNode *parent, StardustAPI::InputType inputType) : Input(parent, inputType) {}
+    explicit ToolInput(QQuick3DNode *parent, InputType inputType) : Input(parent, inputType) {}
 
     QHash<QString, Input0D> inputs0d;
     QHash<QString, Input1D> inputs1d;
     QHash<QString, Input2D> inputs2d;
 };
 
+}
 }
 
 #endif // STARDUSTAPI_TOOLINPUT_H

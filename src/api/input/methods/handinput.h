@@ -4,6 +4,7 @@
 #include "input.h"
 
 namespace StardustAPI {
+namespace Input {
 
 class HandInput : public Input {
     Q_OBJECT
@@ -11,6 +12,7 @@ public:
     explicit HandInput(QQuick3DNode *parent) : Input(parent, InputType::Hand) {}
 };
 
+}
 }
 
 #endif // STARDUSTAPI_HANDINPUT_H

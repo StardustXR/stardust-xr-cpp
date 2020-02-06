@@ -8,6 +8,7 @@
 using namespace std;
 
 namespace StardustAPI {
+namespace Input {
 
 class Input2D : public Input0D {
 public:
@@ -24,6 +25,7 @@ protected:
     QVector2D position = QVector2D(0,0);
 };
 
+}
 }
 
 #endif // STARDUSTAPI_INPUT2D_H

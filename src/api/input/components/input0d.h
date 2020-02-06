@@ -3,6 +3,7 @@
 
 
 namespace StardustAPI {
+namespace Input {
 
 class Input0D {
 public:
@@ -14,6 +15,7 @@ protected:
     bool active = false;
 };
 
+}
 }
 
 #endif // STARDUSTAPI_INPUT0D_H

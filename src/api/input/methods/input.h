@@ -4,6 +4,7 @@
 #include <QtQuick3D/private/qquick3dnode_p.h>
 
 namespace StardustAPI {
+namespace Input {
 
 enum InputType {
     Hand,
@@ -23,6 +24,7 @@ public:
     InputDevice *device;
 };
 
+}
 }
 
 #endif // STARDUSTAPI_INPUT_H

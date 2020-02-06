@@ -4,6 +4,7 @@
 #include "toolinput.h"
 
 namespace StardustAPI {
+namespace Input {
 
 class GlobalInput : public ToolInput {
     Q_OBJECT
@@ -11,6 +12,7 @@ public:
     explicit GlobalInput(QQuick3DNode *parent) : ToolInput(parent, InputType::Global) {}
 };
 
+}
 }
 
 #endif // STARDUSTAPI_HANDINPUT_H

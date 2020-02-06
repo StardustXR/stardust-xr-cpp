@@ -4,6 +4,7 @@
 #include "toolinput.h"
 
 namespace StardustAPI {
+namespace Input {
 
 class PointerInput : public ToolInput {
     Q_OBJECT
@@ -11,6 +12,7 @@ public:
     explicit PointerInput(QQuick3DNode *parent) : ToolInput(parent, InputType::Controller) {}
 };
 
+}
 }
 
 #endif // STARDUSTAPI_POINTERINPUT_H
