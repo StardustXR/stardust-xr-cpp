@@ -28,6 +28,8 @@ HEADERS += \
     src/api/fields/field.h \
     src/api/fields/spherefield.h \
     src/api/fields/unionfield.h \
+    src/api/input/inputtypes.h \
+    src/api/input/methods/inputdevice.h \
     src/api/input/methods/input.h \
     src/api/input/methods/controllerinput.h \
     src/api/input/methods/globalinput.h \
@@ -37,6 +39,8 @@ HEADERS += \
     src/api/input/components/input0d.h \
     src/api/input/components/input1d.h \
     src/api/input/components/input2d.h \
+    src/api/input/handling/actiontrigger.h \
+    src/api/input/handling/inputhandler.h \
     src/api/input/keyboard/keyboard.h \
     src/api/input/keyboard/keyboardhandler.h \
     src/api/input/keyboard/passthroughkeyboardhandler.h \
@@ -50,6 +54,12 @@ SOURCES += \
     src/core/inputmanager.cpp \
     src/module/moduleloader.cpp \
     src/module/module.cpp \
+    src/api/input/handling/actiontrigger.cpp \
+    src/api/input/handling/inputhandler.cpp \
+    src/api/input/methods/controllerinput.cpp \
+    src/api/input/methods/globalinput.cpp \
+    src/api/input/methods/handinput.cpp \
+    src/api/input/methods/pointerinput.cpp \
     src/api/input/keyboard/keyboard.cpp \
     src/api/input/keyboard/keyboardhandler.cpp \
     src/api/input/keyboard/passthroughkeyboardhandler.cpp \

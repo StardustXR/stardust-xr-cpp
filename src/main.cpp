@@ -17,6 +17,8 @@
 #include "api/fields/booleanfield.h"
 #include "api/fields/unionfield.h"
 
+#include "api/input/methods/input.h"
+
 #include <Quick3DOpenXR/QOpenXRApplication>
 
 using namespace Stardust;
@@ -39,6 +41,8 @@ void registerQMLTypes() {
     qmlRegisterUncreatableType<StardustAPI::Field>("StardustAPI", 1, 0, "Field", "Base class for all fields");
     qmlRegisterType<StardustAPI::SphereField>("StardustAPI", 1, 0, "SphereField");
     qmlRegisterType<StardustAPI::UnionField>("StardustAPI", 1, 0, "UnionField");
+
+//    qmlRegisterType<StardustAPI::Input::Input>("StardustAPI.Input", 1, 0, "Input");
 }
 
 int main(int argc, char *argv[]) {

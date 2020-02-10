@@ -1,7 +1,6 @@
 #ifndef STARDUSTAPI_BOOLEANFIELD_H
 #define STARDUSTAPI_BOOLEANFIELD_H
 
-#include <limits>
 #include "field.h"
 
 namespace StardustAPI {
@@ -9,7 +8,7 @@ namespace StardustAPI {
 class BooleanField : public Field {
     Q_OBJECT
 public:
-    explicit BooleanField(QQuick3DNode *parent) : Field(parent) {}
+    explicit BooleanField(QQuick3DNode *parent = nullptr) : Field(parent) {}
 
 protected:
     QList<Field *> fields = QList<Field *>();

@@ -10,6 +10,9 @@ class HandInput : public Input {
     Q_OBJECT
 public:
     explicit HandInput(QQuick3DNode *parent) : Input(parent, InputType::Hand) {}
+
+    QVector3D localInteractPoint;
+    float distanceToField(Field *field);
 };
 
 }

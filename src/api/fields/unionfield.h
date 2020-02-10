@@ -8,7 +8,7 @@ namespace StardustAPI {
 class UnionField : public BooleanField {
     Q_OBJECT
 public:
-    explicit UnionField(QQuick3DNode *parent) : BooleanField(parent) {}
+    explicit UnionField(QQuick3DNode *parent = nullptr) : BooleanField(parent) {}
 
     float distance(const QVector3D point) const {
         float minimumDistance = std::numeric_limits<float>::max();

@@ -2,7 +2,6 @@
 #define STARDUSTAPI_FIELD_H
 
 #include <QVector2D>
-#include <QVector3D>
 #include <QtQuick3D/private/qquick3dnode_p.h>
 
 namespace StardustAPI {
@@ -10,7 +9,7 @@ namespace StardustAPI {
 class Field : public QQuick3DNode {
     Q_OBJECT
 public:
-    explicit Field(QQuick3DNode *parent);
+    explicit Field(QQuick3DNode *parent = nullptr) : QQuick3DNode(parent) {}
 
     Q_INVOKABLE virtual float distance(const QVector3D point) const {
         return point.distanceToPoint(closestPoint(point));

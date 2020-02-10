@@ -10,6 +10,7 @@ class GlobalInput : public ToolInput {
     Q_OBJECT
 public:
     explicit GlobalInput(QQuick3DNode *parent) : ToolInput(parent, InputType::Global) {}
+    float distanceToField(Field *field);
 };
 
 }

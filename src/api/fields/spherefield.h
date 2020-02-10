@@ -7,9 +7,8 @@ namespace StardustAPI {
 
 class SphereField : public Field {
     Q_OBJECT
-    Q_PROPERTY(float radius MEMBER radius)
 public:
-    explicit SphereField(QQuick3DNode *parent) : Field(parent) {}
+    explicit SphereField(QQuick3DNode *parent = nullptr) : Field(parent) {}
 
     float radius = 1.0f;
 

@@ -1,5 +1,5 @@
-#ifndef STARDUSTAPI_SPHEREFIELD_H
-#define STARDUSTAPI_SPHEREFIELD_H
+#ifndef STARDUSTAPI_BOXFIELD_H
+#define STARDUSTAPI_BOXFIELD_H
 
 #include "field.h"
 #include <math.h>
@@ -8,11 +8,10 @@ using namespace std;
 
 namespace StardustAPI {
 
-class SphereField : public Field {
+class BoxField : public Field {
     Q_OBJECT
-    Q_PROPERTY(QVector3D size MEMBER size)
 public:
-    explicit SphereField(QQuick3DNode *parent) : Field(parent) {}
+    explicit BoxField(QQuick3DNode *parent = nullptr) : Field(parent) {}
 
     QVector3D size;
 
@@ -36,4 +35,4 @@ public:
 
 }
 
-#endif // STARDUSTAPI_SPHEREFIELD_H
+#endif // STARDUSTAPI_BOXFIELD_H

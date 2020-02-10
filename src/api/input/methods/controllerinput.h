@@ -10,6 +10,9 @@ class ControllerInput : public ToolInput {
     Q_OBJECT
 public:
     explicit ControllerInput(QQuick3DNode *parent) : ToolInput(parent, InputType::Controller) {}
+
+    QVector3D localInteractPoint;
+    float distanceToField(Field *field);
 };
 
 }
