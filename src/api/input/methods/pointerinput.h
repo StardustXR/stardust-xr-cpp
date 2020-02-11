@@ -10,7 +10,7 @@ namespace Input {
 class PointerInput : public ToolInput {
     Q_OBJECT
 public:
-    explicit PointerInput(QQuick3DNode *parent) : ToolInput(parent, InputType::Controller) {}
+    explicit PointerInput(QQuick3DNode *parent = nullptr) : ToolInput(parent, InputType::Controller) {}
 
     QVector3D localPointerOrigin;
     QVector3D localPointerDirection;
