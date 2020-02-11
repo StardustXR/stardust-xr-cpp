@@ -17,7 +17,13 @@
 #include "api/fields/booleanfield.h"
 #include "api/fields/unionfield.h"
 
+#include "api/input/handling/actiontrigger.h"
+#include "api/input/handling/inputhandler.h"
 #include "api/input/methods/input.h"
+#include "api/input/methods/handinput.h"
+#include "api/input/methods/controllerinput.h"
+#include "api/input/methods/pointerinput.h"
+#include "api/input/methods/globalinput.h"
 
 #include <Quick3DOpenXR/QOpenXRApplication>
 
@@ -38,11 +44,18 @@ void registerQMLTypes() {
     qmlRegisterType<Stardust::Module>("Stardust.Core", 1, 0, "Module");
     qmlRegisterSingletonInstance("Stardust.Core", 1, 0, "ModuleLoader", Stardust::ModuleLoaderSingleton());
 
-    qmlRegisterUncreatableType<StardustAPI::Field>("StardustAPI", 1, 0, "Field", "Base class for all fields");
-    qmlRegisterType<StardustAPI::SphereField>("StardustAPI", 1, 0, "SphereField");
-    qmlRegisterType<StardustAPI::UnionField>("StardustAPI", 1, 0, "UnionField");
+    qmlRegisterUncreatableType<StardustAPI::Field>("StardustAPI.Fields", 1, 0, "Field", "Base class for all fields");
+    qmlRegisterType<StardustAPI::SphereField>("StardustAPI.Fields", 1, 0, "SphereField");
+    qmlRegisterType<StardustAPI::UnionField>("StardustAPI.Fields", 1, 0, "UnionField");
 
-//    qmlRegisterType<StardustAPI::Input::Input>("StardustAPI.Input", 1, 0, "Input");
+    qmlRegisterUncreatableType<StardustAPI::Input::ActionTrigger>("StardustAPI.Input", 1, 0, "ActionTrigger", "Base class for all action triggers");
+    qmlRegisterType<StardustAPI::Input::InputHandler>("StardustAPI.Input", 1, 0, "InputHandler");
+    qmlRegisterSingletonInstance("StardustAPI.Input", 1, 0, "InputManager", Stardust::InputManagerSingleton());
+    qmlRegisterUncreatableType<StardustAPI::Input::Input>("StardustAPI.Input", 1, 0, "Input", "Base class for all inputs");
+    qmlRegisterType<StardustAPI::Input::HandInput>("StardustAPI.Input", 1, 0, "HandInput");
+    qmlRegisterType<StardustAPI::Input::ControllerInput>("StardustAPI.Input", 1, 0, "ControllerInput");
+    qmlRegisterType<StardustAPI::Input::PointerInput>("StardustAPI.Input", 1, 0, "PointerInput");
+    qmlRegisterType<StardustAPI::Input::GlobalInput>("StardustAPI.Input", 1, 0, "GlobalInput");
 }
 
 int main(int argc, char *argv[]) {
