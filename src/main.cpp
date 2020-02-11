@@ -64,6 +64,7 @@ int main(int argc, char *argv[]) {
     xrApp = new QOpenXRApplication(nullptr);
 
     registerQMLTypes();
+    QObject::connect(xrApp, &QOpenXRApplication::frame, Stardust::InputManagerSingleton(), &Stardust::InputManager::processInputs);
 
     QQmlEngine *mainQmlEngine = new QQmlEngine();
     QQmlComponent *sceneComponent = new QQmlComponent(mainQmlEngine, QUrl("qrc:/core/SceneRoot.qml"), QQmlComponent::PreferSynchronous);
