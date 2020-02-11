@@ -31,9 +31,11 @@ Node {
     }
 
     Model {
-        source: "qrc:/Teapot.mesh"
+        source: "#Sphere"
 
-        position: Qt.vector3d(0, 0.5, -1.65)
+        position: Qt.vector3d(0, 1, 2)
+
+        scale: Qt.vector3d(0.01, 0.01, 0.01)
 
         materials: [
             DefaultMaterial {
