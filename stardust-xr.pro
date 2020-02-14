@@ -56,6 +56,7 @@ SOURCES += \
     src/module/module.cpp \
     src/api/input/handling/actiontrigger.cpp \
     src/api/input/handling/inputhandler.cpp \
+    src/api/input/methods/inputdevice.cpp \
     src/api/input/methods/controllerinput.cpp \
     src/api/input/methods/globalinput.cpp \
     src/api/input/methods/handinput.cpp \

@@ -19,6 +19,7 @@
 
 #include "api/input/handling/actiontrigger.h"
 #include "api/input/handling/inputhandler.h"
+#include "api/input/methods/inputdevice.h"
 #include "api/input/methods/input.h"
 #include "api/input/methods/handinput.h"
 #include "api/input/methods/controllerinput.h"
@@ -50,7 +51,9 @@ void registerQMLTypes() {
 
     qmlRegisterUncreatableType<StardustAPI::Input::ActionTrigger>("StardustAPI.Input", 1, 0, "ActionTrigger", "Base class for all action triggers");
     qmlRegisterType<StardustAPI::Input::InputHandler>("StardustAPI.Input", 1, 0, "InputHandler");
+    qmlRegisterUncreatableType<StardustAPI::Input::InputHandler>("StardustAPI.Input", 1, 0, "InputHandler", "Global input handler");
     qmlRegisterSingletonInstance("StardustAPI.Input", 1, 0, "InputManager", Stardust::InputManagerSingleton());
+    qmlRegisterType<StardustAPI::Input::InputDevice>("StardustAPI.Input", 1, 0, "InputDevice");
     qmlRegisterUncreatableType<StardustAPI::Input::Input>("StardustAPI.Input", 1, 0, "Input", "Base class for all inputs");
     qmlRegisterType<StardustAPI::Input::HandInput>("StardustAPI.Input", 1, 0, "HandInput");
     qmlRegisterType<StardustAPI::Input::ControllerInput>("StardustAPI.Input", 1, 0, "ControllerInput");
