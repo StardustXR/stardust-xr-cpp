@@ -35,6 +35,7 @@ using namespace Stardust;
 QOpenXRApplication *xrApp;
 
 void registerQMLTypes() {
+//    qmlRegisterUncreatableType<QOpenXRApplication>("QtQuick3D.OpenXR", 1, 0, "OpenXR", "Is base OpenXR app");
     qmlRegisterSingletonInstance<QOpenXRApplication>("QtQuick3D.OpenXR", 1, 0, "OpenXR", xrApp);
 
 //    qmlRegisterType<Launcher>("Stardust.Core", 1, 0, "Launcher");
@@ -53,7 +54,6 @@ void registerQMLTypes() {
 
     qmlRegisterUncreatableType<StardustAPI::Input::ActionTrigger>("StardustAPI.Input", 1, 0, "ActionTrigger", "Base class for all action triggers");
     qmlRegisterType<StardustAPI::Input::InputHandler>("StardustAPI.Input", 1, 0, "InputHandler");
-    qmlRegisterUncreatableType<StardustAPI::Input::InputHandler>("StardustAPI.Input", 1, 0, "InputHandler", "Global input handler");
     qmlRegisterSingletonInstance("StardustAPI.Input", 1, 0, "InputManager", Stardust::InputManagerSingleton());
     qmlRegisterType<StardustAPI::Input::InputDevice>("StardustAPI.Input", 1, 0, "InputDevice");
     qmlRegisterUncreatableType<StardustAPI::Input::Input>("StardustAPI.Input", 1, 0, "Input", "Base class for all inputs");
