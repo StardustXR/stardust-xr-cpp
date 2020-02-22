@@ -11,13 +11,19 @@ namespace Input {
 
 class InputDevice : public QQuick3DNode {
     Q_OBJECT
-    Q_PROPERTY(QVariantList inputs READ variantInputs WRITE setInputsVariant)
+    Q_PROPERTY(QQmlListProperty<StardustAPI::Input::Input> inputs READ qmlInputs)
+    Q_CLASSINFO("DefaultProperty", "inputs")
 public:
-    explicit InputDevice(QQuick3DNode *parent = nullptr) : QQuick3DNode(parent) {}
+    explicit InputDevice(QQuick3DNode *parent = nullptr);
 
     QList<Input *> inputs;
-    QVariantList variantInputs();
-    void setInputsVariant(QVariantList variantInputs);
+    QQmlListProperty<Input> qmlInputs();
+
+private:
+    static void appendInput(QQmlListProperty<Input>*, Input *p);
+    static int inputCount(QQmlListProperty<Input>*);
+    static Input *input(QQmlListProperty<Input>*, int index);
+    static void clearInputs(QQmlListProperty<Input>*);
 };
 
 }
