@@ -48,9 +48,9 @@ void registerQMLTypes() {
     qmlRegisterType<Stardust::Module>("Stardust.Core", 1, 0, "Module");
     qmlRegisterSingletonInstance("Stardust.Core", 1, 0, "ModuleLoader", Stardust::ModuleLoaderSingleton());
 
-    qmlRegisterUncreatableType<StardustAPI::Field>("StardustAPI.Fields", 1, 0, "Field", "Base class for all fields");
-    qmlRegisterType<StardustAPI::SphereField>("StardustAPI.Fields", 1, 0, "SphereField");
-    qmlRegisterType<StardustAPI::UnionField>("StardustAPI.Fields", 1, 0, "UnionField");
+    qmlRegisterUncreatableType<StardustAPI::Fields::Field>("StardustAPI.Fields", 1, 0, "Field", "Base class for all fields");
+    qmlRegisterType<StardustAPI::Fields::SphereField>("StardustAPI.Fields", 1, 0, "SphereField");
+    qmlRegisterType<StardustAPI::Fields::UnionField>("StardustAPI.Fields", 1, 0, "UnionField");
 
     qmlRegisterUncreatableType<StardustAPI::Input::ActionTrigger>("StardustAPI.Input", 1, 0, "ActionTrigger", "Base class for all action triggers");
     qmlRegisterType<StardustAPI::Input::InputHandler>("StardustAPI.Input", 1, 0, "InputHandler");
