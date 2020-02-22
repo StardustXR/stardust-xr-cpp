@@ -3,8 +3,10 @@
 namespace StardustAPI {
 namespace Input {
 
-PointerHoverActionTrigger::PointerHoverActionTrigger() {}
 
+PointerHoverActionTrigger::PointerHoverActionTrigger(QObject *parent) : ActionTrigger(parent, InputType::Pointer) {
+
+}
 
 bool PointerHoverActionTrigger::isPerformingAction(Input *input, float distance) {
     Q_UNUSED(input)

@@ -11,7 +11,7 @@ class PointerHoverActionTrigger : public ActionTrigger
 {
     Q_OBJECT
 public:
-    PointerHoverActionTrigger();
+    explicit PointerHoverActionTrigger(QObject *parent = nullptr);
 protected:
     bool isPerformingAction(Input *input, float distance);
 };
