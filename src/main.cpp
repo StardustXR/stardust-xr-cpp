@@ -26,6 +26,8 @@
 #include "api/input/methods/pointerinput.h"
 #include "api/input/methods/globalinput.h"
 
+#include "api/input/handling/pointerhoveractiontrigger.h"
+
 #include <Quick3DOpenXR/QOpenXRApplication>
 
 using namespace Stardust;
@@ -59,6 +61,8 @@ void registerQMLTypes() {
     qmlRegisterType<StardustAPI::Input::ControllerInput>("StardustAPI.Input", 1, 0, "ControllerInput");
     qmlRegisterType<StardustAPI::Input::PointerInput>("StardustAPI.Input", 1, 0, "PointerInput");
     qmlRegisterType<StardustAPI::Input::GlobalInput>("StardustAPI.Input", 1, 0, "GlobalInput");
+
+    qmlRegisterType<StardustAPI::Input::PointerHoverActionTrigger>("StardustAPI.Input", 1, 0, "PointerHoverActionTrigger");
 }
 
 int main(int argc, char *argv[]) {

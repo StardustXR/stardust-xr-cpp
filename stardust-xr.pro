@@ -14,6 +14,7 @@ RESOURCES += src/qml.qrc \
     src/api/api.qrc
 
 HEADERS += \
+    src/api/input/handling/pointerhoveractiontrigger.h \
     src/panel.h \
     src/singletons.h \
     src/core/fileio.h \
@@ -47,6 +48,7 @@ HEADERS += \
     src/api/input/keyboard/physicalkeyboardadapter.h
 
 SOURCES += \
+    src/api/input/handling/pointerhoveractiontrigger.cpp \
     src/main.cpp \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
