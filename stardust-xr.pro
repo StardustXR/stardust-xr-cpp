@@ -14,7 +14,6 @@ RESOURCES += src/qml.qrc \
     src/api/api.qrc
 
 HEADERS += \
-    src/panel.h \
     src/singletons.h \
     src/core/fileio.h \
     src/core/launcher.h \
