@@ -12,7 +12,7 @@ class ActionTrigger : public QObject
 {
     Q_OBJECT
 public:
-    explicit ActionTrigger(QObject *parent = nullptr);
+    explicit ActionTrigger(QObject *parent = nullptr, InputType type = InputType::Global);
 
     InputType type;
 

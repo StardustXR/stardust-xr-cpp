@@ -3,8 +3,8 @@
 namespace StardustAPI {
 namespace Input {
 
-ActionTrigger::ActionTrigger(QObject *parent) : QObject(parent) {
-
+ActionTrigger::ActionTrigger(QObject *parent, InputType type) : QObject(parent) {
+    this->type = type;
 }
 
 void ActionTrigger::testAction(Input *input, float distance) {
