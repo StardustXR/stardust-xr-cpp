@@ -31,7 +31,7 @@ void InputManager::processInputs() {
     float maxDistance = 0.0f;
     QList<InputHandlerLink> distanceLinks;
     foreach(InputHandler *handler, inputHandlers) {
-        maxDistance = std::fminf(maxDistance, handler->maxDistance);
+        maxDistance = std::fmaxf(maxDistance, handler->maxDistance);
         foreach(Input *input, inputs) {
             if(!input->enabled)
                 continue;
