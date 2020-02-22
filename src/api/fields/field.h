@@ -19,10 +19,10 @@ public:
     Q_INVOKABLE virtual QVector3D localNormal(const QVector3D point) const;
     Q_INVOKABLE virtual QVector3D localNormal(const QVector3D point, const float radius) const;
 
-    Q_INVOKABLE virtual float distance(const QVector3D point) const;
-    Q_INVOKABLE virtual QVector3D closestPoint(const QVector3D point) const;
-    Q_INVOKABLE virtual QVector3D normal(const QVector3D point) const;
-    Q_INVOKABLE virtual QVector3D normal(const QVector3D point, const float radius) const;
+    Q_INVOKABLE float distance(const QVector3D point) const;
+    Q_INVOKABLE QVector3D closestPoint(const QVector3D point) const;
+    Q_INVOKABLE QVector3D normal(const QVector3D point) const;
+    Q_INVOKABLE QVector3D normal(const QVector3D point, const float radius) const;
 };
 
 }
