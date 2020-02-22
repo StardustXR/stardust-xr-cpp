@@ -37,7 +37,7 @@ float Field::distance(const QVector3D point) const {
     } else if(fabsf(sceneScale().x()-sceneScale().y()) <= 0.00001f && fabsf(sceneScale().y()-sceneScale().z()) <= 0.00001f) {
         //If the field is scaled uniformly
         float scaleFactor = sceneScale().x();
-        return localDistance(localPoint/scaleFactor)*scaleFactor;
+        return localDistance(localPoint*scaleFactor);
     } else {
         //If the field is scaled non-uniformly. Should be avoided if possible due to inefficiency.
         QVector3D localSurfacePoint = localClosestPoint(localPoint);
