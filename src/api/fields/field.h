@@ -8,26 +8,21 @@ namespace StardustAPI {
 
 class Field : public QQuick3DNode {
     Q_OBJECT
+    Q_PROPERTY(float normalRadius MEMBER normalRadius)
 public:
-    explicit Field(QQuick3DNode *parent = nullptr) : QQuick3DNode(parent) {}
+    explicit Field(QQuick3DNode *parent = nullptr);
 
-    Q_INVOKABLE virtual float distance(const QVector3D point) const {
-        return point.distanceToPoint(closestPoint(point));
-    }
-    Q_INVOKABLE virtual QVector3D closestPoint(const QVector3D point) const {
-        return point - (normal(point) * distance(point));
-    }
-    Q_INVOKABLE virtual QVector3D normal(const QVector3D point) const {
-        float d = distance(point);
-        QVector2D e(.01f, 0);
+    float normalRadius = 0.0000001f;
 
-        QVector3D n = QVector3D(d,d,d) - QVector3D(
-                    distance(QVector3D(e.x(), e.y(), e.y())),
-                    distance(QVector3D(e.y(), e.x(), e.y())),
-                    distance(QVector3D(e.y(), e.y(), e.x())));
+    Q_INVOKABLE virtual float localDistance(const QVector3D point) const;
+    Q_INVOKABLE virtual QVector3D localClosestPoint(const QVector3D point) const;
+    Q_INVOKABLE virtual QVector3D localNormal(const QVector3D point) const;
+    Q_INVOKABLE virtual QVector3D localNormal(const QVector3D point, const float radius) const;
 
-        return n.normalized();
-    }
+    Q_INVOKABLE virtual float distance(const QVector3D point) const;
+    Q_INVOKABLE virtual QVector3D closestPoint(const QVector3D point) const;
+    Q_INVOKABLE virtual QVector3D normal(const QVector3D point) const;
+    Q_INVOKABLE virtual QVector3D normal(const QVector3D point, const float radius) const;
 };
 
 }
