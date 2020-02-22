@@ -16,6 +16,7 @@ float PointerInput::distanceToField(Field *field) {
         float marchDistance = std::max(distance, minMarchDistance);
         rayLength += marchDistance;
         marchPoint += marchDistance*marchDirection;
+        steps++;
     }
 
     return minDistance;
