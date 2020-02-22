@@ -18,6 +18,6 @@ Model {
     SphereField {
         id: sphereField
 
-        radius: parent.radius*100
+        radius: parent.radius
     }
 }
