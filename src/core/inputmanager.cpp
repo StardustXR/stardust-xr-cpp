@@ -31,7 +31,7 @@ void InputManager::processInputs() {
     float maxDistance = 0.0f;
     QList<InputHandlerLink> distanceLinks;
     foreach(InputHandler *handler, inputHandlers) {
-        maxDistance = std::fmaxf(maxDistance, handler->maxDistance);
+        maxDistance = std::fminf(maxDistance, handler->maxDistance);
         foreach(Input *input, inputs) {
             if(!input->enabled)
                 continue;
@@ -63,10 +63,12 @@ void InputManager::processInputs() {
             if(link->distance < minDistance && link->distance >= processedDistance) {
                 minDistance = link->distance;
                 linkToProcess = link;
+            } else {
+                continue;
             }
         }
 
-        if(!linkToProcess->input->rejectAction && !linkToProcess->handler->rejectAction) {
+        if(linkToProcess != nullptr && !linkToProcess->input->rejectAction && !linkToProcess->handler->rejectAction) {
             QList<ActionTrigger *> actionTriggers = linkToProcess->handler->actionTriggers;
             foreach(ActionTrigger *actionTrigger, actionTriggers) {
                 if(linkToProcess->input->type == actionTrigger->type) {
