@@ -12,7 +12,7 @@ class PointerInput : public ToolInput {
     Q_PROPERTY(QVector3D pointerOrigin MEMBER localPointerOrigin)
     Q_PROPERTY(QVector3D pointerDirection MEMBER localPointerDirection)
 public:
-    explicit PointerInput(QQuick3DNode *parent = nullptr) : ToolInput(parent, InputType::Controller) {}
+    explicit PointerInput(QQuick3DNode *parent = nullptr) : ToolInput(parent, InputType::Pointer) {}
 
     QVector3D localPointerOrigin;
     QVector3D localPointerDirection;
