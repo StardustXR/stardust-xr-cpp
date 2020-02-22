@@ -14,7 +14,6 @@ RESOURCES += src/qml.qrc \
     src/api/api.qrc
 
 HEADERS += \
-    src/api/input/handling/pointerhoveractiontrigger.h \
     src/panel.h \
     src/singletons.h \
     src/core/fileio.h \
@@ -41,6 +40,7 @@ HEADERS += \
     src/api/input/components/input1d.h \
     src/api/input/components/input2d.h \
     src/api/input/handling/actiontrigger.h \
+    src/api/input/handling/pointerhoveractiontrigger.h \
     src/api/input/handling/inputhandler.h \
     src/api/input/keyboard/keyboard.h \
     src/api/input/keyboard/keyboardhandler.h \
@@ -48,7 +48,6 @@ HEADERS += \
     src/api/input/keyboard/physicalkeyboardadapter.h
 
 SOURCES += \
-    src/api/input/handling/pointerhoveractiontrigger.cpp \
     src/main.cpp \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
@@ -56,7 +55,9 @@ SOURCES += \
     src/core/inputmanager.cpp \
     src/module/moduleloader.cpp \
     src/module/module.cpp \
+    src/api/fields/field.cpp \
     src/api/input/handling/actiontrigger.cpp \
+    src/api/input/handling/pointerhoveractiontrigger.cpp \
     src/api/input/handling/inputhandler.cpp \
     src/api/input/methods/inputdevice.cpp \
     src/api/input/methods/controllerinput.cpp \
