@@ -56,6 +56,9 @@ SOURCES += \
     src/module/moduleloader.cpp \
     src/module/module.cpp \
     src/api/fields/field.cpp \
+    src/api/fields/boxfield.cpp \
+    src/api/fields/spherefield.cpp \
+    src/api/fields/unionfield.cpp \
     src/api/input/handling/actiontrigger.cpp \
     src/api/input/handling/pointerhoveractiontrigger.cpp \
     src/api/input/handling/inputhandler.cpp \
