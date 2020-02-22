@@ -4,6 +4,7 @@
 #include "field.h"
 
 namespace StardustAPI {
+namespace Fields {
 
 class BooleanField : public Field {
     Q_OBJECT
@@ -25,6 +26,7 @@ protected slots:
     }
 };
 
+}
 }
 
 #endif // STARDUSTAPI_BOOLEANFIELD_H

@@ -3,7 +3,7 @@
 namespace StardustAPI {
 namespace Input {
 
-float HandInput::distanceToField(Field *field) {
+float HandInput::distanceToField(StardustAPI::Fields::Field *field) {
     return field->distance(this->mapPositionToScene(localInteractPoint));
 }
 

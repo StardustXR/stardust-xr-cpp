@@ -20,7 +20,7 @@ public:
 
     InputType type;
     InputDevice *device;
-    virtual float distanceToField(Field *field) = 0;
+    virtual float distanceToField(StardustAPI::Fields::Field *field) = 0;
 };
 
 }

@@ -1,6 +1,7 @@
 #include "boxfield.h"
 
 namespace StardustAPI {
+namespace Fields {
 
 float BoxField::localDistance(const QVector3D point) const {
     QVector3D offsetPoint = mapPositionFromScene(point);
@@ -19,4 +20,5 @@ float BoxField::localDistance(const QVector3D point) const {
     return outsideDistance + insideDistance;
 }
 
+}
 }

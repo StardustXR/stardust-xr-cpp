@@ -1,6 +1,7 @@
 #include "unionfield.h"
 
 namespace StardustAPI {
+namespace Fields {
 
 float UnionField::localDistance(const QVector3D point) const {
     float minimumDistance = std::numeric_limits<float>::max();
@@ -13,4 +14,5 @@ float UnionField::localDistance(const QVector3D point) const {
     return minimumDistance;
 }
 
+}
 }

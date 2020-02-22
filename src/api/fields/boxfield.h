@@ -7,6 +7,7 @@
 using namespace std;
 
 namespace StardustAPI {
+namespace Fields {
 
 class BoxField : public Field {
     Q_OBJECT
@@ -18,6 +19,7 @@ public:
     float localDistance(const QVector3D point) const;
 };
 
+}
 }
 
 #endif // STARDUSTAPI_BOXFIELD_H

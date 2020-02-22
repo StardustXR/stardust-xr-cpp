@@ -21,7 +21,7 @@ public:
     float maxRayLength = 100.0f;
     uint maxRaySteps = 1000;
 
-    virtual float distanceToField(Field *field);
+    virtual float distanceToField(StardustAPI::Fields::Field *field);
 };
 
 }

@@ -1,6 +1,7 @@
 #include "field.h"
 
 namespace StardustAPI {
+namespace Fields {
 
 Field::Field(QQuick3DNode *parent) : QQuick3DNode(parent) {}
 
@@ -61,4 +62,5 @@ QVector3D Field::normal(const QVector3D point, const float radius) const {
     return mapDirectionToScene(localNormal(localPoint, radius));
 }
 
+}
 }

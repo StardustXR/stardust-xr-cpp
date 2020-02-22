@@ -4,6 +4,7 @@
 #include "field.h"
 
 namespace StardustAPI {
+namespace Fields {
 
 class SphereField : public Field {
     Q_OBJECT
@@ -18,6 +19,7 @@ public:
     QVector3D localNormal(const QVector3D point) const;
 };
 
+}
 }
 
 #endif // STARDUSTAPI_SPHEREFIELD_H

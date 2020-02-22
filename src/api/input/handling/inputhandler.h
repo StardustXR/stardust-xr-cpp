@@ -7,6 +7,8 @@
 #include "../methods/input.h"
 #include "../../fields/field.h"
 
+using namespace StardustAPI::Fields;
+
 namespace StardustAPI {
 namespace Input {
 

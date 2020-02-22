@@ -5,6 +5,7 @@
 #include <QtQuick3D/private/qquick3dnode_p.h>
 
 namespace StardustAPI {
+namespace Fields {
 
 class Field : public QQuick3DNode {
     Q_OBJECT
@@ -25,6 +26,7 @@ public:
     Q_INVOKABLE QVector3D normal(const QVector3D point, const float radius) const;
 };
 
+}
 }
 
 #endif // STARDUSTAPI_FIELD_H

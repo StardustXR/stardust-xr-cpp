@@ -12,7 +12,7 @@ public:
     explicit ControllerInput(QQuick3DNode *parent = nullptr) : ToolInput(parent, InputType::Controller) {}
 
     QVector3D localInteractPoint;
-    float distanceToField(Field *field);
+    float distanceToField(StardustAPI::Fields::Field *field);
 };
 
 }

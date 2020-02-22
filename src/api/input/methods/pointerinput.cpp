@@ -3,7 +3,7 @@
 namespace StardustAPI {
 namespace Input {
 
-float PointerInput::distanceToField(Field *field) {
+float PointerInput::distanceToField(StardustAPI::Fields::Field *field) {
     uint steps = 0;
     float minDistance = maxRayLength;
     float rayLength = 0.0f;
