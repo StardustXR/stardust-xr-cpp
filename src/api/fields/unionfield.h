@@ -11,7 +11,7 @@ class UnionField : public BooleanField {
 public:
     explicit UnionField(QQuick3DNode *parent = nullptr) : BooleanField(parent) {}
 
-    float localDistance(const QVector3D point) const;
+    float distance(const QVector3D point) const;
 };
 
 }
