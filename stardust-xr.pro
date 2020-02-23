@@ -22,9 +22,9 @@ HEADERS += \
     src/core/inputmanager.h \
     src/module/module.h \
     src/module/moduleloader.h \
+    src/api/fields/field.h \
     src/api/fields/booleanfield.h \
     src/api/fields/boxfield.h \
-    src/api/fields/field.h \
     src/api/fields/spherefield.h \
     src/api/fields/unionfield.h \
     src/api/input/inputtypes.h \
@@ -55,6 +55,7 @@ SOURCES += \
     src/module/moduleloader.cpp \
     src/module/module.cpp \
     src/api/fields/field.cpp \
+    src/api/fields/booleanfield.cpp \
     src/api/fields/boxfield.cpp \
     src/api/fields/spherefield.cpp \
     src/api/fields/unionfield.cpp \
