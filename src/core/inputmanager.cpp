@@ -1,4 +1,5 @@
 #include "inputmanager.h"
+#include <cfloat>
 
 
 namespace Stardust {
@@ -48,7 +49,7 @@ void InputManager::processInputs() {
     }
 
     QList<InputHandlerLink *> processedLinks;
-    float processedDistance = 0.0f;
+    float processedDistance = -FLT_MAX;
     //Repeat enough times so that all links are covered
     for(int i=0; i<distanceLinks.length(); ++i) {
         InputHandlerLink *linkToProcess = nullptr;
