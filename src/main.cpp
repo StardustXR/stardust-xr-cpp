@@ -12,6 +12,7 @@
 #include "singletons.h"
 #include "module/module.h"
 
+#include "api/fields/ray.h"
 #include "api/fields/field.h"
 #include "api/fields/spherefield.h"
 #include "api/fields/booleanfield.h"
@@ -48,6 +49,7 @@ void registerQMLTypes() {
     qmlRegisterType<Stardust::Module>("Stardust.Core", 1, 0, "Module");
     qmlRegisterSingletonInstance("Stardust.Core", 1, 0, "ModuleLoader", Stardust::ModuleLoaderSingleton());
 
+    qmlRegisterType<StardustAPI::Fields::Ray>("StardustAPI.Fields", 1, 0, "Ray");
     qmlRegisterUncreatableType<StardustAPI::Fields::Field>("StardustAPI.Fields", 1, 0, "Field", "Base class for all fields");
     qmlRegisterType<StardustAPI::Fields::SphereField>("StardustAPI.Fields", 1, 0, "SphereField");
     qmlRegisterType<StardustAPI::Fields::UnionField>("StardustAPI.Fields", 1, 0, "UnionField");

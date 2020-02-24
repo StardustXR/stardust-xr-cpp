@@ -4,22 +4,7 @@ namespace StardustAPI {
 namespace Input {
 
 float PointerInput::distanceToField(StardustAPI::Fields::Field *field) {
-    uint steps = 0;
-    float minDistance = maxRayLength;
-    float rayLength = 0.0f;
-    QVector3D marchPoint = this->mapPositionToScene(localPointerOrigin);
-    QVector3D marchDirection = this->mapDirectionToScene(localPointerDirection);
-    while(rayLength < maxRayLength && steps < maxRaySteps) {
-        float distance = field->distance(marchPoint);
-        if(distance < minDistance)
-            minDistance = distance;
-        float marchDistance = std::max(distance, minMarchDistance);
-        rayLength += marchDistance;
-        marchPoint += marchDistance*marchDirection;
-        steps++;
-    }
-
-    return minDistance;
+    return ray->march(field).closestDistance;
 }
 
 }

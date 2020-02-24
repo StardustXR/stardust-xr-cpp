@@ -62,5 +62,9 @@ QVector3D Field::normal(const QVector3D point, const float radius) const {
     return mapDirectionToScene(localNormal(localPoint, radius));
 }
 
+RayMarchInfo Field::marchRay(Ray &ray) const {
+    return ray.march(this);
+}
+
 }
 }

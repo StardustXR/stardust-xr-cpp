@@ -4,6 +4,8 @@
 #include <QVector2D>
 #include <QtQuick3D/private/qquick3dnode_p.h>
 
+#include "ray.h"
+
 namespace StardustAPI {
 namespace Fields {
 
@@ -24,6 +26,9 @@ public:
     Q_INVOKABLE virtual QVector3D closestPoint(const QVector3D point) const;
     Q_INVOKABLE virtual QVector3D normal(const QVector3D point) const;
     Q_INVOKABLE virtual QVector3D normal(const QVector3D point, const float radius) const;
+
+    Q_INVOKABLE virtual RayMarchInfo marchRay(Ray &ray) const;
+
 };
 
 }

@@ -3,23 +3,20 @@
 
 #include "toolinput.h"
 #include <math.h>
+#include "../../fields/ray.h"
+
+using namespace StardustAPI::Fields;
 
 namespace StardustAPI {
 namespace Input {
 
 class PointerInput : public ToolInput {
     Q_OBJECT
-    Q_PROPERTY(QVector3D pointerOrigin MEMBER localPointerOrigin)
-    Q_PROPERTY(QVector3D pointerDirection MEMBER localPointerDirection)
+    Q_PROPERTY(Ray *pointerRay MEMBER ray)
 public:
     explicit PointerInput(QQuick3DNode *parent = nullptr) : ToolInput(parent, InputType::Pointer) {}
 
-    QVector3D localPointerOrigin;
-    QVector3D localPointerDirection;
-
-    float minMarchDistance = 0.001f;
-    float maxRayLength = 100.0f;
-    uint maxRaySteps = 1000;
+    Ray *ray = nullptr;
 
     virtual float distanceToField(StardustAPI::Fields::Field *field);
 };
