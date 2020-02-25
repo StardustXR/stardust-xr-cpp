@@ -20,6 +20,7 @@ and can be accessed by Stardust::QObjectSingleton();
 
 #include <QQmlEngine>
 
+#include "core/inputmanager.h"
 #include "core/launcher.h"
 #include "core/paths.h"
 #include "module/moduleloader.h"
@@ -30,4 +31,6 @@ namespace Stardust {
     SINGLETON_GENERATOR(Launcher)
     SINGLETON_GENERATOR(Paths)
     SINGLETON_GENERATOR_2ARGS(ModuleLoader, PathsSingleton(), QQmlEngineSingleton())
+
+    SINGLETON_GENERATOR(InputManager)
 }

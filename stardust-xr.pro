@@ -10,7 +10,8 @@ INCLUDEPATH +=	-i/usr/local/include
 LIBS += -lopenxr_loader
 
 RESOURCES += src/qml.qrc \
-    resources/resources.qrc
+    resources/resources.qrc \
+    src/api/api.qrc
 
 HEADERS += \
     src/singletons.h \
@@ -18,9 +19,29 @@ HEADERS += \
     src/core/launcher.h \
     src/core/paths.h \
     src/core/plugininterfaces.h \
+    src/core/inputmanager.h \
     src/module/module.h \
     src/module/moduleloader.h \
-#    src/api/input/pointer/inputpointer.h \
+    src/api/fields/field.h \
+    src/api/fields/booleanfield.h \
+    src/api/fields/boxfield.h \
+    src/api/fields/spherefield.h \
+    src/api/fields/unionfield.h \
+    src/api/fields/ray.h \
+    src/api/input/inputtypes.h \
+    src/api/input/methods/inputdevice.h \
+    src/api/input/methods/input.h \
+    src/api/input/methods/controllerinput.h \
+    src/api/input/methods/globalinput.h \
+    src/api/input/methods/handinput.h \
+    src/api/input/methods/pointerinput.h \
+    src/api/input/methods/toolinput.h \
+    src/api/input/components/input0d.h \
+    src/api/input/components/input1d.h \
+    src/api/input/components/input2d.h \
+    src/api/input/handling/actiontrigger.h \
+    src/api/input/handling/pointerhoveractiontrigger.h \
+    src/api/input/handling/inputhandler.h \
     src/api/input/keyboard/keyboard.h \
     src/api/input/keyboard/keyboardhandler.h \
     src/api/input/keyboard/passthroughkeyboardhandler.h \
@@ -31,9 +52,23 @@ SOURCES += \
     src/core/fileio.cpp \
     src/core/launcher.cpp \
     src/core/paths.cpp \
+    src/core/inputmanager.cpp \
     src/module/moduleloader.cpp \
     src/module/module.cpp \
-#    src/api/input/pointer/inputpointer.cpp \
+    src/api/fields/field.cpp \
+    src/api/fields/booleanfield.cpp \
+    src/api/fields/boxfield.cpp \
+    src/api/fields/spherefield.cpp \
+    src/api/fields/unionfield.cpp \
+    src/api/fields/ray.cpp \
+    src/api/input/handling/actiontrigger.cpp \
+    src/api/input/handling/pointerhoveractiontrigger.cpp \
+    src/api/input/handling/inputhandler.cpp \
+    src/api/input/methods/inputdevice.cpp \
+    src/api/input/methods/controllerinput.cpp \
+    src/api/input/methods/globalinput.cpp \
+    src/api/input/methods/handinput.cpp \
+    src/api/input/methods/pointerinput.cpp \
     src/api/input/keyboard/keyboard.cpp \
     src/api/input/keyboard/keyboardhandler.cpp \
     src/api/input/keyboard/passthroughkeyboardhandler.cpp \
