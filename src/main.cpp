@@ -75,10 +75,9 @@ int main(int argc, char *argv[]) {
     registerQMLTypes();
     QObject::connect(xrApp, &QOpenXRApplication::frame, Stardust::InputManagerSingleton(), &Stardust::InputManager::processInputs);
 
-    QQmlEngine *mainQmlEngine = new QQmlEngine();
-    QQmlComponent *sceneComponent = new QQmlComponent(mainQmlEngine, QUrl("qrc:/core/SceneRoot.qml"), QQmlComponent::PreferSynchronous);
+    QQmlComponent *sceneComponent = new QQmlComponent(Stardust::QQmlEngineSingleton(), QUrl("qrc:/core/SceneRoot.qml"), QQmlComponent::PreferSynchronous);
 
-    xrApp->initialize(mainQmlEngine, sceneComponent);
+    xrApp->initialize(Stardust::QQmlEngineSingleton(), sceneComponent);
 
     return app.exec();
 }
