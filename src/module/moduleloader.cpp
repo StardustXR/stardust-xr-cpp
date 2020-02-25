@@ -22,6 +22,8 @@ void ModuleLoader::reloadModuleList() {
 void ModuleLoader::loadAllModules() {
     QStringList moduleIDs = moduleJSON.keys();
 
+    qDebug() << "Modules [" << moduleIDs << "] found" << endl;
+
     foreach(QString moduleID, moduleIDs) {
         loadModule(moduleID);
     }
