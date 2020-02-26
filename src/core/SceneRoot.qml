@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick3D 1.0
 
+import Stardust.Core 1.0
 import StardustAPI.Fields 1.0
 import StardustAPI.Input 1.0
 
