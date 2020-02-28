@@ -8,7 +8,6 @@ namespace Stardust {
 
 Module::Module(ModuleLoader *loader, QString path) : QQuick3DNode(nullptr) {
     moduleLoader = loader;
-    setParentItem(moduleLoader);
     directory = new QDir(path);
 
     moduleJsonFile = new QFile(directory->entryInfoList(QStringList("module.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
