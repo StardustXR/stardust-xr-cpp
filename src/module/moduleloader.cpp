@@ -41,9 +41,10 @@ Module *ModuleLoader::loadModule(QString id) {
     }
 
     QString modulesFolderPath = modulesFolder.absolutePath();
-
     modulesFolder.cd(moduleJSON[id].toObject()["path"].toString());
+
     moduleToLoad = new Module(this, modulesFolder.absolutePath());
+
     moduleToLoad->load();
 
     modulesFolder.setPath(modulesFolderPath);

@@ -23,7 +23,7 @@ Node {
     }
 
     Component.onCompleted: {
-        ModuleLoader.setParentItem(this);
+        ModuleLoader.sceneRoot = this;
         ModuleLoader.reloadModuleList();
         ModuleLoader.loadAllModules();
     }

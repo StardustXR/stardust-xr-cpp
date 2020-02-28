@@ -6,8 +6,11 @@
 
 namespace Stardust {
 
-Module::Module(ModuleLoader *loader, QString path) : QQuick3DNode(nullptr) {
+Module::Module(ModuleLoader *loader, QString path) : QQuick3DNode(loader->sceneRoot) {
     moduleLoader = loader;
+    setParent(moduleLoader->sceneRoot);
+    setParentItem(moduleLoader->sceneRoot);
+
     directory = new QDir(path);
 
     moduleJsonFile = new QFile(directory->entryInfoList(QStringList("module.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
@@ -94,7 +97,7 @@ void Module::load() {
         foreach(QVariant qmlFile, qmlFilePaths.toVariantList()) {
             QString qmlFilePath = directory->absoluteFilePath(qmlFile.toString());
 
-            qmlComponents.push_back(new QQmlComponent(moduleLoader->qmlEngine, qmlFilePath, QQmlComponent::PreferSynchronous));
+            qmlComponents.push_back(new QQmlComponent(moduleLoader->qmlEngine, qmlFilePath, QQmlComponent::PreferSynchronous, this));
         }
 
         state = State::Loaded;
@@ -125,8 +128,11 @@ void Module::qmlComponentStatusChanged() {
                 continue;
             case QQmlComponent::Ready:
                 qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] has been successfully autoloaded and instantiated";
-                QQuick3DNode *instance = static_cast<QQuick3DNode *>(component->create(moduleLoader->qmlEngine->rootContext()));
-                instance->setParentItem(this);
+                QObject *instance = component->beginCreate(qmlContext(moduleLoader->sceneRoot));
+                QQuick3DObject *instanceObject = qobject_cast<QQuick3DObject *>(instance);
+                instance->setParent(this);
+                instanceObject->setParentItem(this);
+                component->completeCreate();
                 state = State::Instanced;
         }
     }
