@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>test_grid.png</file>
-        <file>pond_bridge_night.hdr</file>
         <file>Plane.mesh</file>
         <file>Teapot.mesh</file>
     </qresource>

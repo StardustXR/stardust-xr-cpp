@@ -16,11 +16,8 @@ Node {
         id: skybox
 
         probeBrightness: 1000
-        backgroundMode: SceneEnvironment.SkyBox
-
-        lightProbe: Texture {
-            source: "qrc:/pond_bridge_night.hdr"
-        }
+        backgroundMode: SceneEnvironment.Color
+        clearColor: "#ff444444"
 
         Component.onCompleted: OpenXR.setEnvironment(skybox)
     }
