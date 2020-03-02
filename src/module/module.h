@@ -41,7 +41,8 @@ public:
         None,
         Error,
         Analyzed,
-        Loaded,
+        BinariesLoaded,
+        QmlLoaded,
         Instanced
     };
     explicit Module(ModuleLoader *loader = nullptr, QString path = "");

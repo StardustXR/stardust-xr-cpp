@@ -81,15 +81,28 @@ void Module::load() {
         }
     }
 
-//    if(moduleJson.object().contains("binaries")) {
-//        QJsonArray binaryPaths = moduleJson.object()["binaries"].toArray();
+    if(moduleJson.contains("binaries")) {
+        QJsonArray binaryPaths = moduleJson["binaries"].toArray();
 
-//        foreach(QVariant binary, binaryPaths.toVariantList()) {
-//            QString binaryPath = directory->absoluteFilePath(binary.toString());
+        foreach(QVariant binary, binaryPaths.toVariantList()) {
+            QString binaryPath = directory->absoluteFilePath(binary.toString());
 
-//            binaries.push_back(new QPluginLoader());
-//        }
-//    }
+            if(qmlEngine(this)->importPlugin(binaryPath, id, &errors)) {
+                qDebug() << "Binary plugin file [" + binaryPath + "] from module [" + id + "] has been successfully loaded";
+                state = State::BinariesLoaded;
+            } else {
+                qDebug() << "Binary plugin file [" + binaryPath + "] from module [" + id + "] failed to load because:";
+                qDebug() << errors;
+                state = State::Error;
+                return;
+            }
+        }
+    }
+
+    if(state == State::Error) {
+        qDebug() << "QML from module [" + id + "] cannot load due to an error.";
+        return;
+    }
 
     if(moduleJson.contains("qml")) {
         QJsonArray qmlFilePaths = moduleJson["qml"].toArray();
@@ -100,7 +113,7 @@ void Module::load() {
             qmlComponents.push_back(new QQmlComponent(moduleLoader->qmlEngine, qmlFilePath, QQmlComponent::PreferSynchronous, this));
         }
 
-        state = State::Loaded;
+        state = State::QmlLoaded;
 
         if(moduleJson.contains("autostart")) {
             QVariantList autostartQml = moduleJson["autostart"].toArray().toVariantList();
