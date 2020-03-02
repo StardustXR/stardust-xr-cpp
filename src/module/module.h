@@ -65,6 +65,8 @@ protected:
     QList<QPluginLoader *> binaries;
     QList<QQmlComponent *> qmlComponents;
 
+    QList<QQmlError> errors;
+
     QList<QQmlComponent *> loadingQmlComponents;
 
     QQmlComponent *componentFromQmlFileName(QString fileName);
