@@ -54,8 +54,7 @@ void Module::reloadModuleInfo() {
 }
 
 void Module::load() {
-    if(state == State::Error || state == State::None)
-        reloadModuleInfo();
+    reloadModuleInfo();
 
     if(moduleJson.contains("deps")) {
         QJsonArray dependencies = moduleJson["deps"].toArray();
