@@ -18,7 +18,6 @@ HEADERS += \
     src/core/fileio.h \
     src/core/launcher.h \
     src/core/paths.h \
-    src/core/plugininterfaces.h \
     src/core/inputmanager.h \
     src/module/module.h \
     src/module/moduleloader.h \
