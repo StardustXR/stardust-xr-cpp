@@ -66,7 +66,6 @@ void Module::load() {
                 switch (depMod->state) {
                 case State::None:
                 case State::Error:
-                    depMod->reloadModuleInfo();
                     depMod->load();
                     break;
                 default:
