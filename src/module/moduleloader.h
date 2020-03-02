@@ -14,6 +14,7 @@ class ModuleLoader : public QQuick3DNode
     Q_OBJECT
     Q_PROPERTY(QVariantMap moduleInfo READ getModuleInfo)
     Q_PROPERTY(QList<Module *> modules READ getModuleList)
+    Q_PROPERTY(QQuick3DNode *sceneRoot MEMBER sceneRoot)
 
 public:
     explicit ModuleLoader(Paths *paths = nullptr, QQmlEngine *engine = nullptr);
@@ -27,6 +28,8 @@ public:
 
     QVariantMap getModuleInfo();
     QList<Module *> getModuleList();
+
+    QQuick3DNode *sceneRoot;
 
 private:
     Paths *paths = nullptr;

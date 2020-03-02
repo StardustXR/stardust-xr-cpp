@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QVariant>
 
 #include <QDir>
 #include <QFile>
@@ -40,7 +41,8 @@ public:
         None,
         Error,
         Analyzed,
-        Loaded,
+        BinariesLoaded,
+        QmlLoaded,
         Instanced
     };
     explicit Module(ModuleLoader *loader = nullptr, QString path = "");
@@ -63,6 +65,8 @@ protected:
     QList<Module *> dependencies;
     QList<QPluginLoader *> binaries;
     QList<QQmlComponent *> qmlComponents;
+
+    QList<QQmlError> errors;
 
     QList<QQmlComponent *> loadingQmlComponents;
 

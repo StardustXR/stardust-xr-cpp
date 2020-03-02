@@ -6,9 +6,11 @@
 
 namespace Stardust {
 
-Module::Module(ModuleLoader *loader, QString path) : QQuick3DNode(nullptr) {
+Module::Module(ModuleLoader *loader, QString path) : QQuick3DNode(loader->sceneRoot) {
     moduleLoader = loader;
-    setParentItem(moduleLoader);
+    setParent(moduleLoader->sceneRoot);
+    setParentItem(moduleLoader->sceneRoot);
+
     directory = new QDir(path);
 
     moduleJsonFile = new QFile(directory->entryInfoList(QStringList("module.json"), QDir::Readable | QDir::Files).first().absoluteFilePath());
@@ -52,26 +54,25 @@ void Module::reloadModuleInfo() {
 }
 
 void Module::load() {
-    if(state == State::Error || state == State::None)
-        reloadModuleInfo();
+    reloadModuleInfo();
 
     if(moduleJson.contains("deps")) {
         QJsonArray dependencies = moduleJson["deps"].toArray();
         foreach(QVariant dependencyID, dependencies.toVariantList()) {
             QString depID = dependencyID.toString();
+            qDebug() << "Loading dependency [" + depID + "] of module [" + id + "].";
             Module *depMod = moduleLoader->getModuleById(depID);
             if(depMod != nullptr) {
                 switch (depMod->state) {
                 case State::None:
                 case State::Error:
-                    depMod->reloadModuleInfo();
                     depMod->load();
                     break;
                 default:
                     break;
                 }
-                if(depMod->state != State::Loaded && depMod->state != State::Instanced) {
-                    qDebug() << "Dependency [" + depID + "] of module [" + id + "] has not been loaded successfully therefore this module cannot be loaded";
+                if(depMod->state == State::None || depMod->state != State::Error || depMod->state != State::Analyzed) {
+                    qDebug() << "Dependency [" + depID + "] of module [" + id + "] has not been loaded successfully therefore this module cannot be loaded.";
                     state = State::Error;
                     return;
                 }
@@ -79,15 +80,28 @@ void Module::load() {
         }
     }
 
-//    if(moduleJson.object().contains("binaries")) {
-//        QJsonArray binaryPaths = moduleJson.object()["binaries"].toArray();
+    if(moduleJson.contains("binaries")) {
+        QJsonArray binaryPaths = moduleJson["binaries"].toArray();
 
-//        foreach(QVariant binary, binaryPaths.toVariantList()) {
-//            QString binaryPath = directory->absoluteFilePath(binary.toString());
+        foreach(QVariant binary, binaryPaths.toVariantList()) {
+            QString binaryPath = directory->absoluteFilePath(binary.toString());
 
-//            binaries.push_back(new QPluginLoader());
-//        }
-//    }
+            if(qmlEngine(moduleLoader->sceneRoot)->importPlugin(binaryPath, id, &errors)) {
+                qDebug() << "Binary plugin file [" + binaryPath + "] from module [" + id + "] has been successfully loaded.";
+                state = State::BinariesLoaded;
+            } else {
+                qDebug() << "Binary plugin file [" + binaryPath + "] from module [" + id + "] failed to load because: ";
+                qDebug() << errors;
+                state = State::Error;
+                return;
+            }
+        }
+    }
+
+    if(state == State::Error) {
+        qDebug() << "QML from module [" + id + "] cannot load due to an error.";
+        return;
+    }
 
     if(moduleJson.contains("qml")) {
         QJsonArray qmlFilePaths = moduleJson["qml"].toArray();
@@ -95,10 +109,10 @@ void Module::load() {
         foreach(QVariant qmlFile, qmlFilePaths.toVariantList()) {
             QString qmlFilePath = directory->absoluteFilePath(qmlFile.toString());
 
-            qmlComponents.push_back(new QQmlComponent(moduleLoader->qmlEngine, qmlFilePath, QQmlComponent::PreferSynchronous));
+            qmlComponents.push_back(new QQmlComponent(moduleLoader->qmlEngine, qmlFilePath, QQmlComponent::PreferSynchronous, this));
         }
 
-        state = State::Loaded;
+        state = State::QmlLoaded;
 
         if(moduleJson.contains("autostart")) {
             QVariantList autostartQml = moduleJson["autostart"].toArray().toVariantList();
@@ -118,17 +132,30 @@ void Module::qmlComponentStatusChanged() {
     for(int i=0; i<loadingQmlComponents.length(); ++i) {
         QQmlComponent *component = loadingQmlComponents[i];
         switch (component->status()) {
-            case QQmlComponent::Error:
-                qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] failed to parse because:";
-                qDebug() << component->errorString();
-                loadingQmlComponents.removeAt(i);
 
-                continue;
-            case QQmlComponent::Ready:
-                qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] has been successfully autoloaded and instantiated";
-                QQuick3DNode *instance = static_cast<QQuick3DNode *>(component->create(moduleLoader->qmlEngine->rootContext()));
-                instance->setParentItem(this);
-                state = State::Instanced;
+        case QQmlComponent::Error: {
+            qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] failed to parse because: ";
+            qDebug() << component->errorString();
+            loadingQmlComponents.removeAt(i);
+        } continue;
+
+        case QQmlComponent::Ready: {
+            qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] has been successfully autoloaded and instantiated.";
+
+            QObject *instance = component->beginCreate(qmlContext(moduleLoader->sceneRoot));
+            instance->setParent(this);
+
+            QQuick3DObject *instanceObject = qobject_cast<QQuick3DObject *>(instance);
+            if(instanceObject != nullptr)
+                instanceObject->setParentItem(this);
+
+            component->completeCreate();
+            state = State::Instanced;
+        } continue;
+
+        default:
+            continue;
+
         }
     }
 }
@@ -137,7 +164,7 @@ QByteArray Module::loadDocument(QFile &file) {
     if(!file.open(QIODevice::ReadOnly)){
         qDebug()<<"Failed to open "<<file.fileName();
 
-        return NULL;
+        return nullptr;
     }
 
     QTextStream file_text(&file);
