@@ -22,7 +22,7 @@ void ModuleLoader::reloadModuleList() {
 void ModuleLoader::loadAllModules() {
     QStringList moduleIDs = moduleJSON.keys();
 
-    qDebug() << "Modules [" << moduleIDs << "] found" << endl;
+    qDebug() << "Modules " << moduleIDs << " found" << endl;
 
     foreach(QString moduleID, moduleIDs) {
         loadModule(moduleID);
@@ -31,7 +31,7 @@ void ModuleLoader::loadAllModules() {
 
 Module *ModuleLoader::loadModule(QString id) {
     if(!moduleJSON.contains(id))
-        qErrnoWarning(("Module "+id+" does not exist.").toStdString().c_str());
+        qErrnoWarning(("Module ["+id+"] does not exist.").toStdString().c_str());
 
     Module *moduleToLoad = getModuleById(id);
 

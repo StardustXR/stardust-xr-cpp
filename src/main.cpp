@@ -71,6 +71,7 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
     xrApp = new QOpenXRApplication(nullptr);
+    QLoggingCategory::setFilterRules("QSSG.*=false");
 
     registerQMLTypes();
     QObject::connect(xrApp, &QOpenXRApplication::frame, Stardust::InputManagerSingleton(), &Stardust::InputManager::processInputs);
