@@ -141,10 +141,14 @@ void Module::qmlComponentStatusChanged() {
 
         case QQmlComponent::Ready: {
             qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] has been successfully autoloaded and instantiated.";
+
             QObject *instance = component->beginCreate(qmlContext(moduleLoader->sceneRoot));
-            QQuick3DObject *instanceObject = qobject_cast<QQuick3DObject *>(instance);
             instance->setParent(this);
-            instanceObject->setParentItem(this);
+
+            QQuick3DObject *instanceObject = qobject_cast<QQuick3DObject *>(instance);
+            if(instanceObject != nullptr)
+                instanceObject->setParentItem(this);
+
             component->completeCreate();
             state = State::Instanced;
         } continue;
