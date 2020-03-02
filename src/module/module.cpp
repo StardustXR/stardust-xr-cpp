@@ -132,20 +132,26 @@ void Module::qmlComponentStatusChanged() {
     for(int i=0; i<loadingQmlComponents.length(); ++i) {
         QQmlComponent *component = loadingQmlComponents[i];
         switch (component->status()) {
-            case QQmlComponent::Error:
-                qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] failed to parse because:";
-                qDebug() << component->errorString();
-                loadingQmlComponents.removeAt(i);
 
-                continue;
-            case QQmlComponent::Ready:
-                qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] has been successfully autoloaded and instantiated";
-                QObject *instance = component->beginCreate(qmlContext(moduleLoader->sceneRoot));
-                QQuick3DObject *instanceObject = qobject_cast<QQuick3DObject *>(instance);
-                instance->setParent(this);
-                instanceObject->setParentItem(this);
-                component->completeCreate();
-                state = State::Instanced;
+        case QQmlComponent::Error: {
+            qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] failed to parse because:";
+            qDebug() << component->errorString();
+            loadingQmlComponents.removeAt(i);
+        } continue;
+
+        case QQmlComponent::Ready: {
+            qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] has been successfully autoloaded and instantiated";
+            QObject *instance = component->beginCreate(qmlContext(moduleLoader->sceneRoot));
+            QQuick3DObject *instanceObject = qobject_cast<QQuick3DObject *>(instance);
+            instance->setParent(this);
+            instanceObject->setParentItem(this);
+            component->completeCreate();
+            state = State::Instanced;
+        } continue;
+
+        default:
+            continue;
+
         }
     }
 }
