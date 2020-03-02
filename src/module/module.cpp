@@ -71,8 +71,8 @@ void Module::load() {
                 default:
                     break;
                 }
-                if(depMod->state != State::Loaded && depMod->state != State::Instanced) {
-                    qDebug() << "Dependency [" + depID + "] of module [" + id + "] has not been loaded successfully therefore this module cannot be loaded";
+                if(depMod->state == State::None || depMod->state != State::Error || depMod->state != State::Analyzed) {
+                    qDebug() << "Dependency [" + depID + "] of module [" + id + "] has not been loaded successfully therefore this module cannot be loaded.";
                     state = State::Error;
                     return;
                 }
