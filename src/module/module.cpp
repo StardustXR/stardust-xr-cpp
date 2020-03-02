@@ -154,7 +154,7 @@ QByteArray Module::loadDocument(QFile &file) {
     if(!file.open(QIODevice::ReadOnly)){
         qDebug()<<"Failed to open "<<file.fileName();
 
-        return NULL;
+        return nullptr;
     }
 
     QTextStream file_text(&file);
