@@ -60,6 +60,7 @@ void Module::load() {
         QJsonArray dependencies = moduleJson["deps"].toArray();
         foreach(QVariant dependencyID, dependencies.toVariantList()) {
             QString depID = dependencyID.toString();
+            qDebug() << "Loading dependency [" + depID + "] of module [" + id + "].";
             Module *depMod = moduleLoader->getModuleById(depID);
             if(depMod != nullptr) {
                 switch (depMod->state) {
