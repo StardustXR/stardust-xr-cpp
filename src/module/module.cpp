@@ -87,10 +87,10 @@ void Module::load() {
             QString binaryPath = directory->absoluteFilePath(binary.toString());
 
             if(qmlEngine(moduleLoader->sceneRoot)->importPlugin(binaryPath, id, &errors)) {
-                qDebug() << "Binary plugin file [" + binaryPath + "] from module [" + id + "] has been successfully loaded";
+                qDebug() << "Binary plugin file [" + binaryPath + "] from module [" + id + "] has been successfully loaded.";
                 state = State::BinariesLoaded;
             } else {
-                qDebug() << "Binary plugin file [" + binaryPath + "] from module [" + id + "] failed to load because:";
+                qDebug() << "Binary plugin file [" + binaryPath + "] from module [" + id + "] failed to load because: ";
                 qDebug() << errors;
                 state = State::Error;
                 return;
@@ -134,13 +134,13 @@ void Module::qmlComponentStatusChanged() {
         switch (component->status()) {
 
         case QQmlComponent::Error: {
-            qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] failed to parse because:";
+            qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] failed to parse because: ";
             qDebug() << component->errorString();
             loadingQmlComponents.removeAt(i);
         } continue;
 
         case QQmlComponent::Ready: {
-            qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] has been successfully autoloaded and instantiated";
+            qDebug() << "QML file [" + component->url().toString() + "] from module [" + id + "] has been successfully autoloaded and instantiated.";
             QObject *instance = component->beginCreate(qmlContext(moduleLoader->sceneRoot));
             QQuick3DObject *instanceObject = qobject_cast<QQuick3DObject *>(instance);
             instance->setParent(this);
