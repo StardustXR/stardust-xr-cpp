@@ -86,7 +86,7 @@ void Module::load() {
         foreach(QVariant binary, binaryPaths.toVariantList()) {
             QString binaryPath = directory->absoluteFilePath(binary.toString());
 
-            if(qmlEngine(this)->importPlugin(binaryPath, id, &errors)) {
+            if(qmlEngine(moduleLoader->sceneRoot)->importPlugin(binaryPath, id, &errors)) {
                 qDebug() << "Binary plugin file [" + binaryPath + "] from module [" + id + "] has been successfully loaded";
                 state = State::BinariesLoaded;
             } else {
