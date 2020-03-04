@@ -3,12 +3,25 @@
 namespace StardustAPI {
 namespace Input {
 
+HandInput::HandInput(QQuick3DNode *parent) : Input(parent, InputType::Hand) {}
+
 float HandInput::distanceToField(StardustAPI::Fields::Field *field) {
     return field->distance(this->mapPositionToScene(localInteractPoint));
 }
 
 HandInputBone::HandInputBone(HandInputBone *parent) : QQuick3DNode(parent), parentBone(parent) {
 
+}
+
+float HandInputBone::length() {
+    if(childBones.isEmpty())
+        return 0.0f;
+
+    return childBones[0]->scenePosition().distanceToPoint(scenePosition());
+}
+
+QVector3D HandInputBone::direction() {
+    return (childBones[0]->scenePosition() - scenePosition()).normalized();
 }
 
 QQmlListProperty<HandInputBone> HandInputBone::qmlChildBones() {
