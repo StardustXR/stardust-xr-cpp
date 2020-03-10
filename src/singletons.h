@@ -23,7 +23,13 @@ and can be accessed by Stardust::QObjectSingleton();
 #include "core/inputmanager.h"
 #include "core/launcher.h"
 #include "core/paths.h"
+
 #include "module/moduleloader.h"
+
+#include <QOpenXRApplication>
+#include "api/info/hmdinfo.h"
+
+SINGLETON_GENERATOR_1ARG(QOpenXRApplication, nullptr)
 
 namespace Stardust {
     SINGLETON_GENERATOR(QQmlEngine)
@@ -33,4 +39,10 @@ namespace Stardust {
     SINGLETON_GENERATOR_2ARGS(ModuleLoader, PathsSingleton(), QQmlEngineSingleton())
 
     SINGLETON_GENERATOR(InputManager)
+}
+
+namespace StardustAPI {
+namespace Info {
+    SINGLETON_GENERATOR_1ARG(HmdInfo, QOpenXRApplicationSingleton())
+}
 }

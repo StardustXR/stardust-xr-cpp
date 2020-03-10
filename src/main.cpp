@@ -54,6 +54,8 @@ void registerQMLTypes() {
     qmlRegisterType<StardustAPI::Fields::SphereField>("StardustAPI.Fields", 1, 0, "SphereField");
     qmlRegisterType<StardustAPI::Fields::UnionField>("StardustAPI.Fields", 1, 0, "UnionField");
 
+    qmlRegisterSingletonInstance("StardustAPI.Info", 1, 0, "HmdInfo", StardustAPI::Info::HmdInfoSingleton());
+
     qmlRegisterUncreatableType<StardustAPI::Input::ActionTrigger>("StardustAPI.Input", 1, 0, "ActionTrigger", "Base class for all action triggers");
     qmlRegisterType<StardustAPI::Input::InputHandler>("StardustAPI.Input", 1, 0, "InputHandler");
     qmlRegisterSingletonInstance("StardustAPI.Input", 1, 0, "InputManager", Stardust::InputManagerSingleton());
@@ -71,7 +73,7 @@ void registerQMLTypes() {
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
-    xrApp = new QOpenXRApplication(nullptr);
+    xrApp = QOpenXRApplicationSingleton();
     QLoggingCategory::setFilterRules("QSSG.*=false");
 
     registerQMLTypes();
