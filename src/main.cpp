@@ -59,6 +59,7 @@ void registerQMLTypes() {
     qmlRegisterSingletonInstance("StardustAPI.Input", 1, 0, "InputManager", Stardust::InputManagerSingleton());
     qmlRegisterType<StardustAPI::Input::InputDevice>("StardustAPI.Input", 1, 0, "InputDevice");
     qmlRegisterUncreatableType<StardustAPI::Input::Input>("StardustAPI.Input", 1, 0, "Input", "Base class for all inputs");
+    qmlRegisterType<StardustAPI::Input::HandInputBone>("StardustAPI.Input", 1, 0, "HandBone");
     qmlRegisterType<StardustAPI::Input::HandInput>("StardustAPI.Input", 1, 0, "HandInput");
     qmlRegisterType<StardustAPI::Input::ControllerInput>("StardustAPI.Input", 1, 0, "ControllerInput");
     qmlRegisterType<StardustAPI::Input::PointerInput>("StardustAPI.Input", 1, 0, "PointerInput");
