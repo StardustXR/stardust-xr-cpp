@@ -27,6 +27,7 @@ HEADERS += \
     src/api/fields/spherefield.h \
     src/api/fields/unionfield.h \
     src/api/fields/ray.h \
+    src/api/info/hmdinfo.h \
     src/api/input/inputtypes.h \
     src/api/input/methods/inputdevice.h \
     src/api/input/methods/input.h \
@@ -60,6 +61,7 @@ SOURCES += \
     src/api/fields/spherefield.cpp \
     src/api/fields/unionfield.cpp \
     src/api/fields/ray.cpp \
+    src/api/info/hmdinfo.cpp \
     src/api/input/handling/actiontrigger.cpp \
     src/api/input/handling/pointerhoveractiontrigger.cpp \
     src/api/input/handling/inputhandler.cpp \
