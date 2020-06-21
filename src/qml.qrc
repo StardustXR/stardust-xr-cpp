@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>core/SceneRoot.qml</file>
-        <file>render/TestSphere.qml</file>
-    </qresource>
-</RCC>

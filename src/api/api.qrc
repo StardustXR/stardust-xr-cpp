@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>content/panel/Panel.qml</file>
-        <file>util/Sphere.qml</file>
-        <file>util/UnlitColorMaterial.qml</file>
-    </qresource>
-</RCC>
