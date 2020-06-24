@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>test_grid.png</file>
-        <file>Plane.mesh</file>
-        <file>Teapot.mesh</file>
-    </qresource>
-</RCC>
