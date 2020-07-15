@@ -15,12 +15,16 @@ _global_script_class_icons={
 
 [application]
 
-config/name="stardust-godot"
+config/name="stardust-xr"
+run/main_scene="res://root.tscn"
+boot_splash/fullsize=false
+boot_splash/use_filter=false
 config/icon="res://icon.png"
+config/quit_on_go_back=false
 
 [gdnative]
 
-singletons=[ "res://addons/pythonscript.gdnlib" ]
+singletons=[  ]
 
 [rendering]
 
