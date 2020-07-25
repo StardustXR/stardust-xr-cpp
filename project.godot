@@ -24,7 +24,7 @@ config/quit_on_go_back=false
 
 [gdnative]
 
-singletons=[  ]
+singletons=[ "res://addons/godot-openxr/godot_openxr.gdnlib" ]
 
 [rendering]
 
