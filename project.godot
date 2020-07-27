@@ -8,9 +8,14 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "",
+"class": "MessengerManager",
+"language": "NativeScript",
+"path": "res://libstardustxr/bin/messenger_manager.gdns"
+} ]
 _global_script_class_icons={
-
+"MessengerManager": ""
 }
 
 [application]

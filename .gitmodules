@@ -1,0 +1,4 @@
+[submodule "libstardustxr/godot-cpp"]
+	path = libstardustxr/godot-cpp
+	url = https://github.com/GodotNativeTools/godot-cpp
+	branch = 3.2
