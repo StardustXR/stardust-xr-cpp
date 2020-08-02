@@ -1,7 +1,0 @@
-[submodule "libstardustxr/godot-cpp"]
-	path = libstardustxr/godot-cpp
-	url = https://github.com/GodotNativeTools/godot-cpp
-	branch = 3.2
-[submodule "godot_openxr"]
-	path = godot_openxr
-	url = https://github.com/slitcch/godot_openxr.git
