@@ -4,7 +4,8 @@ import os, subprocess
 opts = Variables([], ARGUMENTS)
 
 # Gets the standard flags CC, CCX, etc.
-env = DefaultEnvironment()
+env = Environment() 
+# moses says: don't use DefaultEnvironment. if you do that, other SConstructs/SConscripts can affect your environment.
 
 # Define our options
 opts.Add(EnumVariable('target', "Compilation target", 'debug', ['d', 'debug', 'r', 'release']))
@@ -13,7 +14,7 @@ opts.Add(BoolVariable('use_llvm', "Use the LLVM / Clang compiler", 'no'))
 # Local dependency paths, adapt them to your setup
 godot_headers_path = "godot-cpp/godot_headers/"
 cpp_bindings_path = "godot-cpp/"
-#cpp_library = "libgodot-cpp.linux.debug.64"
+cpp_library = "libgodot-cpp.linux.debug.64"
 
 # Updates the environment with the option variables.
 opts.Update(env)
@@ -30,8 +31,8 @@ else:
 
 # make sure our binding library is properly includes
 env.Append(CPPPATH=['.', godot_headers_path, 'include/', cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/', '/usr/local/lib/x86_64-linux-gnu/'])
-env.Append(LIBPATH=[cpp_bindings_path + 'bin/'])
-env.Append(LIBS=[ 'stardustxr-server'])
+env.Append(LIBPATH=["godot-cpp/bin/"])
+env.Append(LIBS=['libgodot-cpp.linux.debug.64', 'stardustxr-server'])
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=['src/'])
@@ -43,3 +44,4 @@ Default(library)
 
 # Generates help for the -h scons option.
 Help(opts.GenerateHelpText(env))
+

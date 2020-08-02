@@ -1,1 +1,1 @@
-SConscript(['libstardustxr/SConstruct','godot_openxr/SConstruct'])
+SConscript(['godot_openxr/SConstruct','libstardustxr/SConstruct'])
