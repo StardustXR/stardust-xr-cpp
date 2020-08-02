@@ -3,7 +3,8 @@
 [ext_resource path="res://stardust/scripts/ar_vr_setup.gd" type="Script" id=1]
 [ext_resource path="res://stardust/scripts/tests/test_visual.vs" type="Script" id=2]
 [ext_resource path="res://stardust/scripts/tests/mesh_test.vs" type="Script" id=3]
-[ext_resource path="res://addons/libstardustxr/bin/messenger_manager.gdns" type="Script" id=4]
+[ext_resource path="res://addons/libstardustxr/messenger_manager.gdns" type="Script" id=4]
+
 
 [sub_resource type="SphereMesh" id=1]
 

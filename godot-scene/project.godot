@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "",
 "class": "MessengerManager",
 "language": "NativeScript",
-"path": "res://addons/libstardustxr/bin/messenger_manager.gdns"
+"path": "res://addons/libstardustxr/messenger_manager.gdns"
 } ]
 _global_script_class_icons={
 "MessengerManager": ""

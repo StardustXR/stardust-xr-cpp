@@ -7,7 +7,7 @@ reloadable=false
 
 [entry]
 
-X11.64="res://libstardustxr/bin/libstardustxr-godot.so"
+X11.64="res://addons/libstardustxr/libstardustxr-godot.so"
 
 [dependencies]
 

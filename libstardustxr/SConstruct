@@ -4,7 +4,7 @@ import os, subprocess
 opts = Variables([], ARGUMENTS)
 
 # Gets the standard flags CC, CCX, etc.
-env = Environment() 
+env = Environment()
 # moses says: don't use DefaultEnvironment. if you do that, other SConstructs/SConscripts can affect your environment.
 
 # Define our options
@@ -30,18 +30,17 @@ else:
     env.Append(CCFLAGS = ['-fPIC', '-g','-O3', '-std=c++17'])
 
 # make sure our binding library is properly includes
-env.Append(CPPPATH=['.', godot_headers_path, 'include/', cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/', '/usr/local/lib/x86_64-linux-gnu/'])
-env.Append(LIBPATH=["godot-cpp/bin/"])
-env.Append(LIBS=['libgodot-cpp.linux.debug.64', 'stardustxr-server'])
+env.Append(CPPPATH=['.', godot_headers_path, 'include/', cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/'])
+env.Append(LIBPATH=['/usr/local/lib/x86_64-linux-gnu/', "godot-cpp/bin/"])
+env.Append(LIBS=['stardustxr-server', 'libgodot-cpp.linux.debug.64'])
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=['src/'])
 sources = Glob('src/*.cpp')
 
-library = env.SharedLibrary(target='../godot-scene/addons/libstardustxr/bin/linux/libstardustxr-godot.so' , source=sources)
+library = env.SharedLibrary(target='../godot-scene/addons/libstardustxr/libstardustxr-godot.so' , source=sources)
 
 Default(library)
 
 # Generates help for the -h scons option.
 Help(opts.GenerateHelpText(env))
-
