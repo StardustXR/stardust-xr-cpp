@@ -1,11 +1,16 @@
 #include "messengermanager.hpp"
 
-namespace godot {
+using namespace godot;
 
 void MessengerManager::_register_methods() {}
 
+MessengerManager::MessengerManager() {
+}
+MessengerManager::~MessengerManager() {
+}
+
 void MessengerManager::_init() {
-	this->messengerManager = StardustXR::MessengerManager(this);
+	// this->messengerManager = StardustXR::MessengerManager(this);
 }
 
 void MessengerManager::sendSignal(std::string path, std::string method, flexbuffers::Reference data) {
@@ -61,5 +66,3 @@ const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffe
 
 	return Variant();
 }
-
-} // namespace godot

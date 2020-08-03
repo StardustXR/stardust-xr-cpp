@@ -7,3 +7,6 @@ export_presets.cfg
 .sconsign.dblite
 *.os
 *.so
+
+# Build directory ignores
+libstardustxr/build

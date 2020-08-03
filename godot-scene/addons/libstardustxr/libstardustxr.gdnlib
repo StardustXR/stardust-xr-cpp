@@ -11,4 +11,4 @@ X11.64="res://addons/libstardustxr/libstardustxr-godot.so"
 
 [dependencies]
 
-X11.64=[  ]
+X11.64=[ "stardustxr-server" ]

@@ -6,11 +6,12 @@
 #include <Variant.hpp>
 #include <stardustxr/scenegraph.hpp>
 #include <stardustxr/server/messengermanager.hpp>
+#include <flatbuffers/util.h>
 #include <unistd.h>
 
 namespace godot {
 
-class MessengerManager : public Node, public StardustXR::Scenegraph {
+class MessengerManager : public Node {//, public StardustXR::Scenegraph {
   GODOT_CLASS(MessengerManager, Node);
 
 public:
