@@ -11,14 +11,14 @@
 
 namespace godot {
 
-class MessengerManager : public Node {//, public StardustXR::Scenegraph {
+class MessengerManager : public Node, public StardustXR::Scenegraph {
   GODOT_CLASS(MessengerManager, Node);
 
 public:
   static void _register_methods();
 
   MessengerManager();
-  ~MessengerManager(){}
+  ~MessengerManager();
 
   void _init();
 
@@ -29,7 +29,7 @@ public:
                                              flexbuffers::Reference args);
 
   private:
-	StardustXR::MessengerManager messengerManager;
+	StardustXR::MessengerManager *messengerManager;
     const Variant flexbufferToVariant(flexbuffers::Reference buffer);
 };
 
