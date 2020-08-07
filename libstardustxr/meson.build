@@ -7,4 +7,11 @@ include = include_directories('include', 'godot-cpp/include', 'godot-cpp/include
 sources = ['src/gdlibrary.cpp', 'src/messengermanager.cpp']
 dependencies = [godot_cpp, libstardustxr]
 
-shared_library('stardustxr-godot', sources, include_directories: include, dependencies: dependencies, link_args: '-lflatbuffers')
+shared_library('stardustxr-godot',
+	sources,
+	include_directories: include,
+	dependencies: dependencies,
+	link_args: '-lflatbuffers',
+	install: true,
+	install_dir: join_paths(meson.build_root(), '../../godot-scene/addons/libstardustxr')
+)
