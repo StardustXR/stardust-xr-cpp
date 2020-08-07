@@ -4,11 +4,6 @@ using namespace godot;
 
 void MessengerManager::_register_methods() {}
 
-MessengerManager::MessengerManager() {
-}
-MessengerManager::~MessengerManager() {
-}
-
 void MessengerManager::_init() {
 	// this->messengerManager = StardustXR::MessengerManager(this);
 }

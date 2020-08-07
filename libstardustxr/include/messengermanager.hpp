@@ -18,7 +18,7 @@ public:
   static void _register_methods();
 
   MessengerManager();
-  ~MessengerManager();
+  ~MessengerManager(){}
 
   void _init();
 
