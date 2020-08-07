@@ -23,6 +23,10 @@ void MessengerManager::sendSignal(std::string path, std::string method, flexbuff
 std::vector<uint8_t> MessengerManager::executeMethod(std::string path, std::string method, flexbuffers::Reference args) {
 	if (args.IsAnyVector()) {
 		this->get_node(path.c_str()+1)->callv(String(method.c_str()), flexbufferToVariant(args));
+	} else {
+		Array array;
+		array.append(flexbufferToVariant(args));
+		this->get_node(path.c_str()+1)->callv(String(method.c_str()), array);
 	}
 	return std::vector<uint8_t>();
 }
