@@ -31,6 +31,8 @@ public:
   private:
 	StardustXR::MessengerManager *messengerManager;
     const Variant flexbufferToVariant(flexbuffers::Reference buffer);
+    const std::vector<uint8_t> variantToFlexbuffer(Variant variant);
+	void flexbufferVariantAdd(flexbuffers::Builder &fbb, Variant variant);
 };
 
 } // namespace godot
