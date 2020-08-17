@@ -65,13 +65,26 @@ const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffe
 	if(buffer.IsTypedVector()) {
 		Array array;
 		flexbuffers::TypedVector vector = buffer.AsTypedVector();
-		if(vector[0].IsFloat() && vector.size() == 3) {
-			real_t x = vector[0].AsDouble();
-			real_t y = vector[1].AsDouble();
-			real_t z = vector[2].AsDouble();
+		if(vector[0].IsFloat()) {
+			switch(vector.size()) {
+				case 3: {
+					real_t x = vector[0].AsDouble();
+					real_t y = vector[1].AsDouble();
+					real_t z = vector[2].AsDouble();
 
-			Vector3 vector = Vector3(x, y, z);
-			return Variant(vector);
+					Vector3 vector = Vector3(x, y, z);
+					return Variant(vector);
+				}
+				case 4: {
+					real_t x = vector[0].AsDouble();
+					real_t y = vector[1].AsDouble();
+					real_t z = vector[2].AsDouble();
+					real_t w = vector[3].AsDouble();
+
+					Quat quat = Quat(x, y, z, w);
+					return Variant(quat);
+				}
+			}
 		}
 		for(int i=0; i<vector.size(); ++i) {
 			array.append(flexbufferToVariant(vector[i]));
