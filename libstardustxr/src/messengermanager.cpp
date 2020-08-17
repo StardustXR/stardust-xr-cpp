@@ -19,11 +19,12 @@ void MessengerManager::_init() {
 }
 
 void MessengerManager::sendSignal(std::string path, std::string method, flexbuffers::Reference data) {
-	if (data.IsAnyVector()) {
-		this->get_node(path.c_str()+1)->callv(String(method.c_str()), flexbufferToVariant(data));
+	Variant variant = flexbufferToVariant(data);
+	if (variant.get_type() == Variant::Type::ARRAY) {
+		this->get_node(path.c_str()+1)->callv(String(method.c_str()), variant);
 	} else {
 		Array array;
-		array.append(flexbufferToVariant(data));
+		array.append(variant);
 		this->get_node(path.c_str()+1)->callv(String(method.c_str()), array);
 	}
 }
@@ -65,11 +66,12 @@ const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffe
 		Array array;
 		flexbuffers::TypedVector vector = buffer.AsTypedVector();
 		if(vector[0].IsFloat() && vector.size() == 3) {
-			return Variant(Vector3(
-				vector[0].AsDouble(),
-				vector[1].AsDouble(),
-				vector[2].AsDouble()
-			));
+			real_t x = vector[0].AsDouble();
+			real_t y = vector[1].AsDouble();
+			real_t z = vector[2].AsDouble();
+
+			Vector3 vector = Vector3(x, y, z);
+			return Variant(vector);
 		}
 		for(int i=0; i<vector.size(); ++i) {
 			array.append(flexbufferToVariant(vector[i]));
