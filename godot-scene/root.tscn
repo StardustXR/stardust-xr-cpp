@@ -1,26 +1,25 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://stardust/scripts/ar_vr_setup.gd" type="Script" id=1]
-[ext_resource path="res://stardust/scripts/tests/mesh_test.vs" type="Script" id=3]
+[ext_resource path="res://stardust/scripts/objects/hmd.vs" type="Script" id=2]
+[ext_resource path="res://stardust/res/icon/icon.gltf" type="PackedScene" id=3]
 [ext_resource path="res://addons/libstardustxr/messenger_manager.gdns" type="Script" id=4]
 [ext_resource path="res://stardust/scripts/tests/echo.vs" type="Script" id=5]
+[ext_resource path="res://stardust/scripts/tests/test_mesh.vs" type="Script" id=6]
 
-[sub_resource type="SphereMesh" id=1]
-
-[node name="Space" type="ARVROrigin"]
+[node name="Space" type="Spatial"]
 script = ExtResource( 1 )
 
-[node name="ARVRCamera" type="ARVRCamera" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0 )
-
-[node name="Messenger" type="Spatial" parent="."]
+[node name="XR" type="ARVROrigin" parent="."]
 script = ExtResource( 4 )
 
-[node name="test" type="Node" parent="Messenger"]
+[node name="hmd" type="ARVRCamera" parent="XR"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0 )
+script = ExtResource( 2 )
+
+[node name="test" type="Node" parent="XR"]
 script = ExtResource( 5 )
 
-[node name="mesh" type="MeshInstance" parent="Messenger/test"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.53696, -2.09823 )
-mesh = SubResource( 1 )
-material/0 = null
-script = ExtResource( 3 )
+[node name="mesh" parent="XR/test" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, -2 )
+script = ExtResource( 6 )
