@@ -1,10 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://stardust/scripts/ar_vr_setup.gd" type="Script" id=1]
 [ext_resource path="res://stardust/scripts/tests/test_visual.vs" type="Script" id=2]
 [ext_resource path="res://stardust/scripts/tests/mesh_test.vs" type="Script" id=3]
 [ext_resource path="res://addons/libstardustxr/messenger_manager.gdns" type="Script" id=4]
-
+[ext_resource path="res://stardust/scripts/tests/echo.vs" type="Script" id=5]
 
 [sub_resource type="SphereMesh" id=1]
 
@@ -24,6 +24,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.53696, -2.09823 )
 mesh = SubResource( 1 )
 material/0 = null
 script = ExtResource( 3 )
+
+[node name="test" type="Node" parent="Messenger"]
+script = ExtResource( 5 )
 
 [node name="Node" type="Node" parent="."]
 script = ExtResource( 2 )
