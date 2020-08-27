@@ -6,8 +6,9 @@
 
 using namespace godot;
 
-void MessengerManager::_register_methods() {}
-
+void MessengerManager::_register_methods() {
+	register_method("send_signal", &MessengerManager::send_signal);
+}
 
 MessengerManager::MessengerManager(){}
 MessengerManager::~MessengerManager(){
@@ -16,6 +17,10 @@ MessengerManager::~MessengerManager(){
 
 void MessengerManager::_init() {
 	this->messengerManager = new StardustXR::MessengerManager(this);
+}
+
+void MessengerManager::send_signal(std::string path, std::string method, Variant data) {
+	// this->messengerManager
 }
 
 void MessengerManager::sendSignal(std::string path, std::string method, flexbuffers::Reference data) {

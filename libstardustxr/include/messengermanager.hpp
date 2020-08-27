@@ -12,26 +12,24 @@
 namespace godot {
 
 class MessengerManager : public Node, public StardustXR::Scenegraph {
-  GODOT_CLASS(MessengerManager, Node);
+	GODOT_CLASS(MessengerManager, Node);
 
 public:
-  static void _register_methods();
+	static void _register_methods();
 
-  MessengerManager();
-  ~MessengerManager();
+	MessengerManager();
+	~MessengerManager();
 
-  void _init();
+	void _init();
 
-  void sendSignal(std::string path, std::string method,
-                  flexbuffers::Reference data);
-  std::vector<uint8_t> executeMethod(std::string path,
-                                             std::string method,
-                                             flexbuffers::Reference args);
+	void send_signal(std::string path, std::string method, Variant data);
+	void sendSignal(std::string path, std::string method, flexbuffers::Reference data);
+	std::vector<uint8_t> executeMethod(std::string path, std::string method, flexbuffers::Reference args);
 
-  private:
+	private:
 	StardustXR::MessengerManager *messengerManager;
-    const Variant flexbufferToVariant(flexbuffers::Reference buffer);
-    const std::vector<uint8_t> variantToFlexbuffer(Variant variant);
+		const Variant flexbufferToVariant(flexbuffers::Reference buffer);
+		const std::vector<uint8_t> variantToFlexbuffer(Variant variant);
 	void flexbufferVariantAdd(flexbuffers::Builder &fbb, Variant variant);
 };
 
