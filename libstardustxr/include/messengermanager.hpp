@@ -22,7 +22,7 @@ public:
 
 	void _init();
 
-	void send_signal(std::string path, std::string method, Variant data);
+	void send_signal(String path, String method, Variant data);
 	void sendSignal(std::string path, std::string method, flexbuffers::Reference data);
 	std::vector<uint8_t> executeMethod(std::string path, std::string method, flexbuffers::Reference args);
 
