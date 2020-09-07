@@ -7,7 +7,7 @@
 using namespace godot;
 
 void MessengerManager::_register_methods() {
-	register_signal("send_signal", &MessengerManager::send_signal);
+	register_method("send_signal", &MessengerManager::send_signal);
 }
 
 MessengerManager::MessengerManager(){}
@@ -21,6 +21,7 @@ void MessengerManager::_init() {
 
 void MessengerManager::send_signal(String path, String method, Variant data) {
 	// this->messengerManager
+	printf("Sending signal to client");
 }
 
 void MessengerManager::sendSignal(std::string path, std::string method, flexbuffers::Reference data) {

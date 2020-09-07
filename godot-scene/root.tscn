@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://stardust/scripts/ar_vr_setup.gd" type="Script" id=1]
 [ext_resource path="res://stardust/scripts/objects/hmd.vs" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://stardust/scripts/tests/echo.vs" type="Script" id=5]
 [ext_resource path="res://stardust/scripts/tests/test_mesh.vs" type="Script" id=6]
 [ext_resource path="res://stardust/scripts/objects/lifecycle.vs" type="Script" id=7]
+[ext_resource path="res://stardust/scripts/tests/test_signal.vs" type="Script" id=8]
 
 [node name="Space" type="Spatial"]
 script = ExtResource( 1 )
@@ -25,5 +26,9 @@ script = ExtResource( 5 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, -2 )
 script = ExtResource( 6 )
 
+[node name="signal" type="Node" parent="XR/test"]
+script = ExtResource( 8 )
+
 [node name="lifecycle" type="Node" parent="XR"]
 script = ExtResource( 7 )
+[connection signal="out_signal" from="XR/test/signal" to="XR" method="send_signal"]
