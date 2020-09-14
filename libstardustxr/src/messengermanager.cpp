@@ -19,32 +19,30 @@ void MessengerManager::_init() {
 	this->messengerManager = new StardustXR::MessengerManager(this);
 }
 
-void MessengerManager::send_signal(String path, String method, Variant data) {
-	// this->messengerManager
-	printf("Sending signal to client");
+void MessengerManager::send_signal(int clientID, String path, String method, Variant data) {
+	std::vector<uint8_t> flexData = variantToFlexbuffer(data);
+	this->messengerManager->messengers[clientID]->sendSignal(path.ascii().get_data(), method.ascii().get_data(), flexData);
 }
 
-void MessengerManager::sendSignal(std::string path, std::string method, flexbuffers::Reference data) {
-	Variant variant = flexbufferToVariant(data);
-	if (variant.get_type() == Variant::Type::ARRAY) {
-		this->get_node(path.c_str()+1)->callv(String(method.c_str()), variant);
-	} else {
-		Array array;
-		array.append(variant);
-		this->get_node(path.c_str()+1)->callv(String(method.c_str()), array);
-	}
+void MessengerManager::sendSignal(int sessionID, std::string path, std::string method, flexbuffers::Reference data) {
+	nodeMethodExecute(sessionID, path, method, data, false);
 }
 
-std::vector<uint8_t> MessengerManager::executeMethod(std::string path, std::string method, flexbuffers::Reference args) {
-	Variant returnVal;
+std::vector<uint8_t> MessengerManager::executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args) {
+	return nodeMethodExecute(sessionID, path, method, args, true);
+}
+
+std::vector<uint8_t> MessengerManager::nodeMethodExecute(int sessionID, std::string path, std::string method, flexbuffers::Reference args, bool returnValue) {
+	Array array;
 	if (args.IsAnyVector()) {
-		returnVal = get_node(path.c_str()+1)->callv(String(method.c_str()), flexbufferToVariant(args));
+		array = flexbufferToVariant(args);
 	} else {
-		Array array;
 		array.append(flexbufferToVariant(args));
-		returnVal = get_node(path.c_str()+1)->callv(String(method.c_str()), array);
 	}
-	return variantToFlexbuffer(returnVal);
+	array.push_front(sessionID);
+
+	Variant returnVal = get_node(path.c_str()+1)->callv(String(method.c_str()), array);
+	return (returnValue) ? variantToFlexbuffer(returnVal) : std::vector<uint8_t>();
 }
 
 const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffer) {
@@ -146,13 +144,21 @@ void MessengerManager::flexbufferVariantAdd(flexbuffers::Builder &fbb, Variant v
 				fbb.Double(quat.w);
 			});
 		} break;
+		case Variant::Type::ARRAY: {
+			Array array = variant;
+			fbb.Vector([&]() {
+				for(int i=0; i<array.size(); ++i) {
+					flexbufferVariantAdd(fbb, array[i]);
+				}
+			});
+		} break;
 		// default: {
 		// 	fbb.Add(variant);
 		// } break;
 	}
 }
 
-const std::vector<uint8_t> MessengerManager::variantToFlexbuffer(Variant variant) {
+std::vector<uint8_t> MessengerManager::variantToFlexbuffer(Variant variant) {
 	flexbuffers::Builder fbb;
 	flexbufferVariantAdd(fbb, variant);
 	fbb.Finish();

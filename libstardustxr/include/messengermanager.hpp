@@ -4,7 +4,7 @@
 #include <Godot.hpp>
 #include <Node.hpp>
 #include <Variant.hpp>
-#include <stardustxr/server/server_scenegraph.hpp>
+#include <stardustxr/server/scenegraph.hpp>
 #include <stardustxr/server/messengermanager.hpp>
 #include <flatbuffers/util.h>
 #include <unistd.h>
@@ -22,15 +22,19 @@ public:
 
 	void _init();
 
-	void send_signal(String path, String method, Variant data);
-	void sendSignal(std::string path, std::string method, flexbuffers::Reference data);
-	std::vector<uint8_t> executeMethod(std::string path, std::string method, flexbuffers::Reference args);
+	void send_signal(int sessionID, String path, String method, Variant data);
+	void sendSignal(int sessionID, std::string path, std::string method, flexbuffers::Reference data);
+	std::vector<uint8_t> executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args);
 
-	private:
+private:
 	StardustXR::MessengerManager *messengerManager;
-		const Variant flexbufferToVariant(flexbuffers::Reference buffer);
-		const std::vector<uint8_t> variantToFlexbuffer(Variant variant);
+
+	const Variant flexbufferToVariant(flexbuffers::Reference buffer);
+
+	std::vector<uint8_t> variantToFlexbuffer(Variant variant);
 	void flexbufferVariantAdd(flexbuffers::Builder &fbb, Variant variant);
+
+	std::vector<uint8_t> nodeMethodExecute(int sessionID, std::string path, std::string method, flexbuffers::Reference args, bool returnValue);
 };
 
 } // namespace godot
