@@ -1,12 +1,12 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://stardust/scripts/ar_vr_setup.gd" type="Script" id=1]
-[ext_resource path="res://stardust/scripts/objects/hmd.vs" type="Script" id=2]
+[ext_resource path="res://stardust/scripts/objects/hmd.gd" type="Script" id=2]
 [ext_resource path="res://stardust/res/icon/icon.gltf" type="PackedScene" id=3]
 [ext_resource path="res://addons/libstardustxr/messenger_manager.gdns" type="Script" id=4]
 [ext_resource path="res://stardust/scripts/tests/echo.vs" type="Script" id=5]
 [ext_resource path="res://stardust/scripts/tests/test_mesh.vs" type="Script" id=6]
-[ext_resource path="res://stardust/scripts/objects/lifecycle.vs" type="Script" id=7]
+[ext_resource path="res://stardust/scripts/objects/lifecycle.gd" type="Script" id=7]
 
 [node name="Space" type="Spatial"]
 script = ExtResource( 1 )
