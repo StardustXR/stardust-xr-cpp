@@ -2,6 +2,7 @@ extends Spatial
 
 
 func _ready():
+	return
 	var arvr_interface = ARVRServer.find_interface("OpenXR")
 	if arvr_interface and arvr_interface.initialize():
 		# list devices
@@ -21,3 +22,4 @@ func _process(_delta):
 	elif (Input.is_key_pressed(KEY_SPACE)):
 		# Calling center_on_hmd will cause the ARVRServer to adjust all tracking data so the player is centered on the origin point looking forward
 		ARVRServer.center_on_hmd(true, true)
+
