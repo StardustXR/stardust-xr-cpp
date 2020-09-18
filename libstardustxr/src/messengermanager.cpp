@@ -25,10 +25,10 @@ void MessengerManager::send_signal(int clientID, String path, String method, Var
 	this->messengerManager->messengers[clientID]->sendSignal(path.ascii().get_data(), method.ascii().get_data(), flexData);
 }
 
-void execute_remote_method(int clientID, String remotePath, String remoteMethod, Variant args, String callbackPath, String callbackMethod) {
+void MessengerManager::execute_remote_method(int clientID, String remotePath, String remoteMethod, Variant args, String callbackPath, String callbackMethod) {
 	std::vector<uint8_t> flexData = variantToFlexbuffer(args);
 	this->messengerManager->messengers[clientID]->executeRemoteMethod(remotePath.ascii().get_data(), remoteMethod.ascii().get_data(), flexData, [&](flexbuffers::Reference data) {
-		nodeMethodExecute(clientID, callbackPath, callbackMethod, data, false);
+		nodeMethodExecute(clientID, callbackPath.ascii().get_data(), callbackMethod.ascii().get_data(), data, false);
 	});
 }
 
