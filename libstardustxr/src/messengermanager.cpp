@@ -61,7 +61,7 @@ const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffe
 	if(buffer.IsVector()) {
 		Array array;
 		flexbuffers::Vector vector = buffer.AsVector();
-		for(int i=0; i<vector.size(); ++i) {
+		for(size_t i=0; i<vector.size(); ++i) {
 			array.append(flexbufferToVariant(vector[i]));
 		}
 		return Variant(array);
@@ -90,7 +90,7 @@ const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffe
 				}
 			}
 		}
-		for(int i=0; i<vector.size(); ++i) {
+		for(size_t i=0; i<vector.size(); ++i) {
 			array.append(flexbufferToVariant(vector[i]));
 		}
 		return Variant(array);
@@ -152,9 +152,8 @@ void MessengerManager::flexbufferVariantAdd(flexbuffers::Builder &fbb, Variant v
 				}
 			});
 		} break;
-		// default: {
-		// 	fbb.Add(variant);
-		// } break;
+		default: {
+		} break;
 	}
 }
 
