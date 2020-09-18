@@ -7,15 +7,15 @@ var localPoint : Vector3
 var globalPoint : Vector3
 
 # Property setting for fields
-func setOrigin(origin: Vector3):
+func setOrigin(_sessionID: int, origin: Vector3):
 	set_translation(origin)
 	
-func setOrientation(orientation: Quat):
+func setOrientation(_sessionID: int, orientation: Quat):
 	set_rotation(orientation.get_euler())
 
-func setPose(origin: Vector3, orientation: Quat):
-	setOrigin(origin)
-	setOrientation(orientation)
+func setPose(_sessionID: int, origin: Vector3, orientation: Quat):
+	setOrigin(_sessionID, origin)
+	setOrientation(_sessionID, orientation)
 
 
 # Virtual functions to define distance per field type
