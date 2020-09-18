@@ -34,7 +34,9 @@ std::vector<uint8_t> MessengerManager::executeMethod(int sessionID, std::string 
 
 std::vector<uint8_t> MessengerManager::nodeMethodExecute(int sessionID, std::string path, std::string method, flexbuffers::Reference args, bool returnValue) {
 	Array array;
-	if (args.IsAnyVector()) {
+	Variant data = flexbufferToVariant(args);
+
+	if (data.get_type() == Variant::Type::ARRAY) {
 		array = flexbufferToVariant(args);
 	} else {
 		array.append(flexbufferToVariant(args));
