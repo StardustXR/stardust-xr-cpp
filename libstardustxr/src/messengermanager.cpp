@@ -8,6 +8,7 @@ using namespace godot;
 
 void MessengerManager::_register_methods() {
 	register_method("send_signal", &MessengerManager::send_signal);
+	register_method("execute_remote_method", &MessengerManager::execute_remote_method);
 }
 
 MessengerManager::MessengerManager(){}
@@ -22,6 +23,13 @@ void MessengerManager::_init() {
 void MessengerManager::send_signal(int clientID, String path, String method, Variant data) {
 	std::vector<uint8_t> flexData = variantToFlexbuffer(data);
 	this->messengerManager->messengers[clientID]->sendSignal(path.ascii().get_data(), method.ascii().get_data(), flexData);
+}
+
+void execute_remote_method(int clientID, String remotePath, String remoteMethod, Variant args, String callbackPath, String callbackMethod) {
+	std::vector<uint8_t> flexData = variantToFlexbuffer(args);
+	this->messengerManager->messengers[clientID]->executeRemoteMethod(remotePath.ascii().get_data(), remoteMethod.ascii().get_data(), flexData, [&](flexbuffers::Reference data) {
+		nodeMethodExecute(clientID, callbackPath, callbackMethod, data, false);
+	});
 }
 
 void MessengerManager::sendSignal(int sessionID, std::string path, std::string method, flexbuffers::Reference data) {
