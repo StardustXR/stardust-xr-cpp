@@ -1,8 +1,8 @@
 #include "messengermanager.hpp"
+#include <Quat.hpp>
 #include <String.hpp>
 #include <Vector2.hpp>
 #include <Vector3.hpp>
-#include <Quat.hpp>
 
 using namespace godot;
 
@@ -11,8 +11,8 @@ void MessengerManager::_register_methods() {
 	register_method("execute_remote_method", &MessengerManager::execute_remote_method);
 }
 
-MessengerManager::MessengerManager(){}
-MessengerManager::~MessengerManager(){
+MessengerManager::MessengerManager() {}
+MessengerManager::~MessengerManager() {
 	delete this->messengerManager;
 }
 
@@ -51,24 +51,24 @@ std::vector<uint8_t> MessengerManager::nodeMethodExecute(int sessionID, std::str
 	}
 	array.push_front(sessionID);
 
-	Variant returnVal = get_node(path.c_str()+1)->callv(String(method.c_str()), array);
+	Variant returnVal = get_node(path.c_str() + 1)->callv(String(method.c_str()), array);
 	return (returnValue) ? variantToFlexbuffer(returnVal) : std::vector<uint8_t>();
 }
 
 const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffer) {
-	if(buffer.IsNull())
+	if (buffer.IsNull())
 		return Variant();
-	if(buffer.IsBool())
+	if (buffer.IsBool())
 		return Variant(buffer.AsBool());
-	if(buffer.IsInt())
+	if (buffer.IsInt())
 		return Variant(buffer.AsInt64());
-	if(buffer.IsUInt())
+	if (buffer.IsUInt())
 		return Variant(buffer.AsUInt64());
-	if(buffer.IsFloat())
+	if (buffer.IsFloat())
 		return Variant(buffer.AsFloat());
-	if(buffer.IsString())
+	if (buffer.IsString())
 		return Variant(buffer.AsString().c_str());
-	if(buffer.IsVector()) {
+	if (buffer.IsVector()) {
 		Array array;
 		flexbuffers::Vector vector = buffer.AsVector();
 		for(size_t i=0; i<vector.size(); ++i) {
@@ -76,11 +76,11 @@ const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffe
 		}
 		return Variant(array);
 	}
-	if(buffer.IsTypedVector()) {
+	if (buffer.IsTypedVector()) {
 		Array array;
 		flexbuffers::TypedVector vector = buffer.AsTypedVector();
-		if(vector[0].IsFloat()) {
-			switch(vector.size()) {
+		if (vector[0].IsFloat()) {
+			switch (vector.size()) {
 				case 3: {
 					real_t x = vector[0].AsDouble();
 					real_t y = vector[1].AsDouble();
@@ -157,7 +157,7 @@ void MessengerManager::flexbufferVariantAdd(flexbuffers::Builder &fbb, Variant v
 		case Variant::Type::ARRAY: {
 			Array array = variant;
 			fbb.Vector([&]() {
-				for(int i=0; i<array.size(); ++i) {
+				for (int i = 0; i < array.size(); ++i) {
 					flexbufferVariantAdd(fbb, array[i]);
 				}
 			});

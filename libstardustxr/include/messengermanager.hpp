@@ -1,13 +1,13 @@
 #ifndef MESSENGERMANAGER_H
 #define MESSENGERMANAGER_H
 
+#include <flatbuffers/util.h>
+#include <unistd.h>
 #include <Godot.hpp>
 #include <Node.hpp>
 #include <Variant.hpp>
-#include <stardustxr/server/scenegraph.hpp>
 #include <stardustxr/server/messengermanager.hpp>
-#include <flatbuffers/util.h>
-#include <unistd.h>
+#include <stardustxr/server/scenegraph.hpp>
 
 namespace godot {
 

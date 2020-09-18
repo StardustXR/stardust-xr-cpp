@@ -11,7 +11,7 @@ func _ready():
 		# and tell our viewport to render
 		get_viewport().arvr = true
 		print("Started ARVR")
-		
+
 		Engine.iterations_per_second = 120
 
 
