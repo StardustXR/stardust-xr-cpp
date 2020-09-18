@@ -8,6 +8,7 @@ using namespace godot;
 
 void MessengerManager::_register_methods() {
 	register_method("send_signal", &MessengerManager::send_signal);
+	register_method("execute_remote_method", &MessengerManager::execute_remote_method);
 }
 
 MessengerManager::MessengerManager() {}
@@ -24,6 +25,13 @@ void MessengerManager::send_signal(int clientID, String path, String method, Var
 	this->messengerManager->messengers[clientID]->sendSignal(path.ascii().get_data(), method.ascii().get_data(), flexData);
 }
 
+void MessengerManager::execute_remote_method(int clientID, String remotePath, String remoteMethod, Variant args, String callbackPath, String callbackMethod) {
+	std::vector<uint8_t> flexData = variantToFlexbuffer(args);
+	this->messengerManager->messengers[clientID]->executeRemoteMethod(remotePath.ascii().get_data(), remoteMethod.ascii().get_data(), flexData, [&](flexbuffers::Reference data) {
+		nodeMethodExecute(clientID, callbackPath.ascii().get_data(), callbackMethod.ascii().get_data(), data, false);
+	});
+}
+
 void MessengerManager::sendSignal(int sessionID, std::string path, std::string method, flexbuffers::Reference data) {
 	nodeMethodExecute(sessionID, path, method, data, false);
 }
@@ -34,7 +42,9 @@ std::vector<uint8_t> MessengerManager::executeMethod(int sessionID, std::string 
 
 std::vector<uint8_t> MessengerManager::nodeMethodExecute(int sessionID, std::string path, std::string method, flexbuffers::Reference args, bool returnValue) {
 	Array array;
-	if (args.IsAnyVector()) {
+	Variant data = flexbufferToVariant(args);
+
+	if (data.get_type() == Variant::Type::ARRAY) {
 		array = flexbufferToVariant(args);
 	} else {
 		array.append(flexbufferToVariant(args));
@@ -61,7 +71,7 @@ const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffe
 	if (buffer.IsVector()) {
 		Array array;
 		flexbuffers::Vector vector = buffer.AsVector();
-		for (int i = 0; i < vector.size(); ++i) {
+		for(size_t i=0; i<vector.size(); ++i) {
 			array.append(flexbufferToVariant(vector[i]));
 		}
 		return Variant(array);
@@ -90,7 +100,7 @@ const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffe
 				}
 			}
 		}
-		for (int i = 0; i < vector.size(); ++i) {
+		for(size_t i=0; i<vector.size(); ++i) {
 			array.append(flexbufferToVariant(vector[i]));
 		}
 		return Variant(array);
@@ -152,9 +162,8 @@ void MessengerManager::flexbufferVariantAdd(flexbuffers::Builder &fbb, Variant v
 				}
 			});
 		} break;
-			// default: {
-			// 	fbb.Add(variant);
-			// } break;
+		default: {
+		} break;
 	}
 }
 

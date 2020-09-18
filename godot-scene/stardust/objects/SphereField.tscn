@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://stardust/scripts/types/field/SphereField.gd" type="Script" id=1]
+
+[node name="SphereField" type="Spatial"]
+script = ExtResource( 1 )
+normalRadius = 0.001
+radius = 0.5

@@ -23,6 +23,7 @@ public:
 	void _init();
 
 	void send_signal(int sessionID, String path, String method, Variant data);
+	void execute_remote_method(int clientID, String remotePath, String remoteMethod, Variant args, String callbackPath, String callbackMethod);
 	void sendSignal(int sessionID, std::string path, std::string method, flexbuffers::Reference data);
 	std::vector<uint8_t> executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args);
 
