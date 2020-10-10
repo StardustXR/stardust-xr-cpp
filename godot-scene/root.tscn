@@ -31,3 +31,5 @@ script = ExtResource( 5 )
 [node name="mesh" parent="XR/test" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, -2 )
 script = ExtResource( 6 )
+
+[node name="Node" type="Node" parent="XR"]
