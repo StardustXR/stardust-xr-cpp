@@ -25,22 +25,27 @@ void MessengerManager::send_signal(int clientID, String path, String method, Var
 	this->messengerManager->messengers[clientID]->sendSignal(path.ascii().get_data(), method.ascii().get_data(), flexData);
 }
 
-void MessengerManager::execute_remote_method(int clientID, String remotePath, String remoteMethod, Variant args, String callbackPath, String callbackMethod) {
+void MessengerManager::execute_remote_method(int clientID, String remotePath, String remoteMethod, Variant args, String callbackPath, String callbackMethod, Array callbackArgsPrefix) {
 	std::vector<uint8_t> flexData = variantToFlexbuffer(args);
 	this->messengerManager->messengers[clientID]->executeRemoteMethod(remotePath.ascii().get_data(), remoteMethod.ascii().get_data(), flexData, [&](flexbuffers::Reference data) {
-		nodeMethodExecute(clientID, callbackPath.ascii().get_data(), callbackMethod.ascii().get_data(), data, false);
+		callbackArgsPrefix.push_front(clientID);
+		nodeMethodExecute(callbackArgsPrefix, callbackPath.ascii().get_data(), callbackMethod.ascii().get_data(), data, false);
 	});
 }
 
 void MessengerManager::sendSignal(int sessionID, std::string path, std::string method, flexbuffers::Reference data) {
-	nodeMethodExecute(sessionID, path, method, data, false);
+	Array prefix;
+	prefix.append(sessionID);
+	nodeMethodExecute(prefix, path, method, data, false);
 }
 
 std::vector<uint8_t> MessengerManager::executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args) {
-	return nodeMethodExecute(sessionID, path, method, args, true);
+	Array prefix;
+	prefix.append(sessionID);
+	return nodeMethodExecute(prefix, path, method, args, true);
 }
 
-std::vector<uint8_t> MessengerManager::nodeMethodExecute(int sessionID, std::string path, std::string method, flexbuffers::Reference args, bool returnValue) {
+std::vector<uint8_t> MessengerManager::nodeMethodExecute(Array prefix, std::string path, std::string method, flexbuffers::Reference args, bool returnValue) {
 	Array array;
 	Variant data = flexbufferToVariant(args);
 
@@ -49,7 +54,9 @@ std::vector<uint8_t> MessengerManager::nodeMethodExecute(int sessionID, std::str
 	} else {
 		array.append(flexbufferToVariant(args));
 	}
-	array.push_front(sessionID);
+	while(prefix.size() > 0) {
+		array.push_front(prefix.pop_back());
+	}
 
 	Variant returnVal = get_node(path.c_str() + 1)->callv(String(method.c_str()), array);
 	return (returnValue) ? variantToFlexbuffer(returnVal) : std::vector<uint8_t>();
