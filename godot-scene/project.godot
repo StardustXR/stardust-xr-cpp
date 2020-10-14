@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "MessengerManager",
 "language": "NativeScript",
 "path": "res://addons/libstardustxr/messenger_manager.gdns"
+}, {
+"base": "Spatial",
+"class": "PointerInput",
+"language": "GDScript",
+"path": "res://stardust/scripts/types/input/inputmethods/PointerInput.gd"
 } ]
 _global_script_class_icons={
-"MessengerManager": ""
+"MessengerManager": "",
+"PointerInput": ""
 }
 
 [application]

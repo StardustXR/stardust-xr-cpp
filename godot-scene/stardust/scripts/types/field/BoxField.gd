@@ -1,3 +1,4 @@
+class_name BoxField
 extends "res://stardust/scripts/types/field/Field.gd"
 
 export var size = Vector3.ONE

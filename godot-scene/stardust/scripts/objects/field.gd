@@ -1,7 +1,7 @@
 extends Node
 
-var boxFieldScene = load("res://stardust/objects/BoxField.tscn")
-var sphereFieldScene = load("res://stardust/objects/SphereField.tscn")
+var boxFieldScene = load("res://stardust/objects/fields/BoxField.tscn")
+var sphereFieldScene = load("res://stardust/objects/fields/SphereField.tscn")
 
 func createBoxField(_sessionID: int, name: String, origin: Vector3, orientation: Quat, size: Vector3):
 	var boxField = boxFieldScene.instance()

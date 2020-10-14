@@ -1,3 +1,4 @@
+class_name SphereField
 extends "res://stardust/scripts/types/field/Field.gd"
 
 export var radius := 0.0
