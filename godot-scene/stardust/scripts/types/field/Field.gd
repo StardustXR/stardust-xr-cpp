@@ -9,7 +9,7 @@ var globalPoint : Vector3
 # Property setting for fields
 func setOrigin(_sessionID: int, origin: Vector3):
 	set_translation(origin)
-	
+
 func setOrientation(_sessionID: int, orientation: Quat):
 	set_rotation(orientation.get_euler())
 
@@ -21,18 +21,18 @@ func setPose(_sessionID: int, origin: Vector3, orientation: Quat):
 # Virtual functions to define distance per field type
 func localDistance(point: Vector3) -> float:
 	return point.length()
-	
+
 func localNormal(point: Vector3, radius: float) -> Vector3:
 	var d := localDistance(point)
 	var e := Vector2(radius, 0)
-	
+
 	var n := Vector3(d, d, d) - Vector3(
 		localDistance(Vector3(e.x, e.y, e.y)),
 		localDistance(Vector3(e.y, e.x, e.y)),
 		localDistance(Vector3(e.y, e.y, e.x)))
-	
+
 	return n.normalized()
-	
+
 func localClosestPoint(point: Vector3, radius: float) -> Vector3:
 	return point - (localNormal(point, radius) * localDistance(point))
 
@@ -41,7 +41,7 @@ func localClosestPoint(point: Vector3, radius: float) -> Vector3:
 func distance(_sessionID: int, point: Vector3) -> float:
 	globalPoint = point
 	localPoint = to_local(point)
-	
+
 	if get_scale() == Vector3.ONE:
 		# Unscaled
 		return localDistance(localPoint)
@@ -54,7 +54,7 @@ func distance(_sessionID: int, point: Vector3) -> float:
 		var localSurfacePoint := localClosestPoint(localPoint, normalRadius)
 		var surfacePoint := to_global(localSurfacePoint)
 		var distance := distance(0, globalPoint - surfacePoint)
-		
+
 		# Don't calculate the distance for its sign if we already know the field doesn't support it
 		if supportsInsideDistance || distance == 0.0:
 			return distance
@@ -65,13 +65,13 @@ func distance(_sessionID: int, point: Vector3) -> float:
 func normal(_sessionID: int, point: Vector3, radius: float) -> Vector3:
 	globalPoint = point
 	localPoint = to_local(point)
-	
+
 	var localDirection := localNormal(point, radius)
 	return to_global(localDirection).normalized()
-	
+
 func closestPoint(_sessionID: int, point: Vector3) -> Vector3:
 	globalPoint = point
 	localPoint = to_local(point)
-	
+
 	var localNearestPoint := localClosestPoint(point, normalRadius)
 	return to_global(localNearestPoint)
