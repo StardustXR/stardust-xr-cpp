@@ -112,6 +112,18 @@ const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffe
 		}
 		return Variant(array);
 	}
+	if (buffer.IsMap()) {
+		Dictionary dictionary;
+
+		flexbuffers::Map map = buffer.AsMap();
+		flexbuffers::TypedVector keys = map.Keys();
+		flexbuffers::Vector values = map.Values();
+
+		for(size_t i=0; i<map.size(); ++i) {
+			dictionary[keys[i].AsString().c_str()] = flexbufferToVariant(values[i]);
+		}
+		return Variant(dictionary);
+	}
 
 	return Variant();
 }
@@ -166,6 +178,20 @@ void MessengerManager::flexbufferVariantAdd(flexbuffers::Builder &fbb, Variant v
 			fbb.Vector([&]() {
 				for (int i = 0; i < array.size(); ++i) {
 					flexbufferVariantAdd(fbb, array[i]);
+				}
+			});
+		} break;
+		case Variant::Type::DICTIONARY: {
+			Dictionary dictionary = variant;
+			Array keys = dictionary.keys();
+			Array values = dictionary.values();
+
+			fbb.Vector([&]() {
+				for (int i = 0; i < dictionary.size(); ++i) {
+					String key = keys[i];
+
+					fbb.Key(key.ascii().get_data());
+					flexbufferVariantAdd(fbb, values[i]);
 				}
 			});
 		} break;
