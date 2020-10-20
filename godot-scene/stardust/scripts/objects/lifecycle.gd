@@ -5,7 +5,7 @@ var logicStepSubscriptions := []
 func subscribeLogicStep(sessionID: int, path: String, method: String):
 	logicStepSubscriptions.append([sessionID, path, method, []])
 
-func _process(delta):
+func _physics_process(delta):
 	if logicStepSubscriptions.size() > 0:
 		for logicStepSubscription in logicStepSubscriptions:
 			logicStepSubscription[3] = [delta, 0]
