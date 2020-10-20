@@ -1,7 +1,7 @@
+class_name InputMethod
 extends Spatial
 
 var sessionID := 0
-var rejectAction := false
 var datamap := {}
 var origin := Vector3.ZERO
 

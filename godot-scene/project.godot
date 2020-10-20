@@ -24,12 +24,17 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://stardust/scripts/types/input/InputHandler.gd"
 }, {
+"base": "Spatial",
+"class": "InputMethod",
+"language": "GDScript",
+"path": "res://stardust/scripts/types/input/InputMethod.gd"
+}, {
 "base": "",
 "class": "MessengerManager",
 "language": "NativeScript",
 "path": "res://addons/libstardustxr/messenger_manager.gdns"
 }, {
-"base": "Spatial",
+"base": "InputMethod",
 "class": "PointerInput",
 "language": "GDScript",
 "path": "res://stardust/scripts/types/input/inputmethods/PointerInput.gd"
@@ -43,8 +48,9 @@ _global_script_class_icons={
 "BoxField": "",
 "Field": "",
 "InputHandler": "",
+"InputMethod": "",
 "MessengerManager": "",
-"PointerInput": ""
+"PointerInput": "",
 "SphereField": ""
 }
 

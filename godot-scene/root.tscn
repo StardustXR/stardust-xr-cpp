@@ -28,6 +28,8 @@ script = ExtResource( 9 )
 
 [node name="handlers" type="Node" parent="XR/input"]
 
+[node name="methods" type="Node" parent="XR/input"]
+
 [node name="lifecycle" type="Node" parent="XR"]
 script = ExtResource( 7 )
 
