@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://stardust/scripts/ar_vr_setup.gd" type="Script" id=1]
 [ext_resource path="res://stardust/scripts/objects/hmd.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://stardust/scripts/objects/lifecycle.gd" type="Script" id=7]
 [ext_resource path="res://stardust/scripts/objects/field.gd" type="Script" id=8]
 [ext_resource path="res://stardust/scripts/objects/input.gd" type="Script" id=9]
+[ext_resource path="res://stardust/scripts/tests/cursor_input.gd" type="Script" id=10]
 
 [node name="Space" type="Spatial"]
 script = ExtResource( 1 )
@@ -29,6 +30,9 @@ script = ExtResource( 9 )
 [node name="handlers" type="Node" parent="XR/input"]
 
 [node name="methods" type="Node" parent="XR/input"]
+
+[node name="cursor_pointer" type="Spatial" parent="XR/input/methods"]
+script = ExtResource( 10 )
 
 [node name="lifecycle" type="Node" parent="XR"]
 script = ExtResource( 7 )
