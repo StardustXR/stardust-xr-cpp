@@ -58,8 +58,13 @@ std::vector<uint8_t> MessengerManager::nodeMethodExecute(Array prefix, std::stri
 		array.push_front(prefix.pop_back());
 	}
 
-	Variant returnVal = get_node(path.c_str() + 1)->callv(String(method.c_str()), array);
-	return (returnValue) ? variantToFlexbuffer(returnVal) : std::vector<uint8_t>();
+	if(returnValue) {
+		Variant returnVal = get_node(path.c_str() + 1)->callv(String(method.c_str()), array);
+		return variantToFlexbuffer(get_node(path.c_str() + 1)->callv(String(method.c_str()), array));
+	} else {
+		get_node(path.c_str() + 1)->call_deferred(String(method.c_str()), array);
+		return std::vector<uint8_t>();
+	}
 }
 
 const Variant MessengerManager::flexbufferToVariant(flexbuffers::Reference buffer) {
@@ -186,7 +191,7 @@ void MessengerManager::flexbufferVariantAdd(flexbuffers::Builder &fbb, Variant v
 			Array keys = dictionary.keys();
 			Array values = dictionary.values();
 
-			fbb.Vector([&]() {
+			fbb.Map([&]() {
 				for (int i = 0; i < dictionary.size(); ++i) {
 					String key = keys[i];
 
