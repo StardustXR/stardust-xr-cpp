@@ -1,3 +1,4 @@
+class_name Field
 extends Spatial
 
 export var normalRadius : float = 0.0001

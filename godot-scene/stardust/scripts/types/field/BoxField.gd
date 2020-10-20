@@ -1,5 +1,5 @@
 class_name BoxField
-extends "res://stardust/scripts/types/field/Field.gd"
+extends Field
 
 export var size = Vector3.ONE
 
