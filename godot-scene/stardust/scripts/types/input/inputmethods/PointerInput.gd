@@ -1,7 +1,8 @@
 class_name PointerInput
-extends "res://stardust/scripts/types/input/InputMethod.gd"
+extends InputMethod
 
 const MAX_RAY_STEPS := 1000
+const MAX_RAY_LENGTH := 1000
 
 const MIN_RAY_MARCH := 0.001
 const MAX_RAY_MARCH := INF
@@ -32,11 +33,31 @@ func update_transform():
 	look_at_from_position(origin, origin+direction, Vector3.UP)
 	rotate_object_local(Vector3.BACK, tilt) 
 
-func distanceToField(field: String) -> float:
-	var distance := 0.0
+func distance_to_field(field: Field) -> float:
+	var min_distance := INF
+	
 	var ray_steps := 0
-	
+	var ray_length := 0
 	var ray_point := origin
-#	get_node("../../field/"+field).callv()
 	
-	return distance
+	while ray_steps < MAX_RAY_STEPS and ray_length < MAX_RAY_LENGTH:
+		ray_steps += 1
+		
+		var distance: float = field.distance(0, ray_point)
+		min_distance = min(min_distance, ray_length+distance)
+		
+		var march_distance := clamp(distance, MIN_RAY_MARCH, MAX_RAY_MARCH)
+		ray_point += march_distance * direction
+		
+		ray_length += march_distance
+	
+	return min_distance
+
+func serialize() -> Dictionary:
+	return {
+		"type": 2,
+		"origin": origin,
+		"direction": direction,
+		"tilt": tilt,
+		"datamap": datamap
+	}
