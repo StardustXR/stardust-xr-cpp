@@ -7,11 +7,14 @@ using namespace StardustXR;
 namespace StardustXRServer {
 
 class Node : public ServerNode {
+public:
 	Node() {}
-	~Node() {}
+	virtual ~Node() {}
 
 	virtual void update() = 0;
-}
+
+	void propagateUpdate();
+};
 
 } //namespace StardustXRServer
 
