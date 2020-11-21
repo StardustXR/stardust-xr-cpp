@@ -13,6 +13,8 @@ executable(
 	include_directories: includes,
 	dependencies: [
 		libstardustxr,
-		stereokit
+		stereokit,
+		# After here are all the internal dependencies
+		scenegraph
 	]
 )
