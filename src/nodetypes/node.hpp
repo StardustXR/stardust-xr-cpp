@@ -14,8 +14,9 @@ public:
 	virtual ~Node() {}
 
 	virtual void update() {}
-
 	void propagate(std::function<void(Node *)> &function);
+
+	int sessionID = 0;
 };
 
 } //namespace StardustXRServer
