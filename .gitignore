@@ -1,2 +1,4 @@
 # Build directory ignore
 build/
+
+*.user
