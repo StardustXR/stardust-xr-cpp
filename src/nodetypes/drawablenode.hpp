@@ -10,7 +10,7 @@ public:
 	DrawableNode() {}
 	virtual ~DrawableNode() {}
 
-	virtual void draw() = 0;
+	virtual void draw() {}
 };
 
 } //namespace StardustXRServer

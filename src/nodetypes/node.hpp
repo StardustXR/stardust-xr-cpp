@@ -12,7 +12,7 @@ public:
 	Node() {}
 	virtual ~Node() {}
 
-	virtual void update() = 0;
+	virtual void update() {}
 
 	void propagate(std::function<void(Node *)> &function);
 };

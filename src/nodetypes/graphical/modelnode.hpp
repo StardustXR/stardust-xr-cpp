@@ -11,7 +11,6 @@ public:
 	ModelNode();
 	virtual ~ModelNode() {}
 
-	void update();
 	void draw();
 
 	sk::model_t model = nullptr;
