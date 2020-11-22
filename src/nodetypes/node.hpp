@@ -1,6 +1,7 @@
 #ifndef STARDUSTXR_NODE_H
 #define STARDUSTXR_NODE_H
 
+#include <functional>
 #include <stardustxr/server/node.hpp>
 
 using namespace StardustXR;
@@ -13,7 +14,7 @@ public:
 
 	virtual void update() = 0;
 
-	void propagateUpdate();
+	void propagate(std::function<void(Node *)> &function);
 };
 
 } //namespace StardustXRServer
