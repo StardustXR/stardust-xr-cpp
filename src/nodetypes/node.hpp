@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <stardustxr/server/node.hpp>
+#include <stardustxr/util.hpp>
 
 using namespace StardustXR;
 namespace StardustXRServer {
