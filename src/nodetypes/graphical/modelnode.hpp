@@ -13,9 +13,8 @@ public:
 
 	void update();
 	void draw();
-protected:
-	sk::mesh_t mesh;
-	sk::material_t material;
+
+	sk::model_t model = nullptr;
 };
 
 }
