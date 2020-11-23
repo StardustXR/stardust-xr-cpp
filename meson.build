@@ -16,7 +16,7 @@ executable(
 		stereokit,
 		# After here are all the internal dependencies
 		nodetypes,
-#		scenegraph,
+		scenegraph,
 		tests,
 	]
 )

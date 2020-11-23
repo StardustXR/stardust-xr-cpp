@@ -1,7 +1,7 @@
 #include <stardustxr/server/messengermanager.hpp>
 #include <stardustxr/server/stardust_scenegraph.hpp>
 
-#include "nodetypes/graphical/modelnode.hpp"
+#include "scenegraph/model.hpp"
 using namespace StardustXRServer;
 
 #include <stereokit.h>
@@ -23,8 +23,10 @@ int main() {
 
 	StardustXR::MessengerManager messengerManager(&scenegraph);
 
-	ModelNode testNode;
-	scenegraph.addNode("/mesh", &testNode);
+
+	ModelInterface model;
+	scenegraph.addNode("/model", &model);
+
 
 	while (sk_step([]() {
 		for(const auto &rawNode : scenegraph.root.children) {
