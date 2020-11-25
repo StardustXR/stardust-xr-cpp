@@ -14,9 +14,9 @@ executable(
 	dependencies: [
 		libstardustxr,
 		stereokit,
-		# After here are all the internal dependencies
+# After here are all the internal dependencies
 		nodetypes,
 		scenegraph,
-		tests,
+#		tests,
 	]
 )
