@@ -1,11 +1,11 @@
 #ifndef STARDUSTXR_DRAWABLE_NODE_H
 #define STARDUSTXR_DRAWABLE_NODE_H
 
-#include "node.hpp"
+#include "spatialnode.hpp"
 
 namespace StardustXRServer {
 
-class DrawableNode : public Node {
+class DrawableNode : public SpatialNode {
 public:
 	DrawableNode() {}
 	virtual ~DrawableNode() {}

@@ -1,5 +1,5 @@
-#ifndef STARDUSTXR_NODE_H
-#define STARDUSTXR_NODE_H
+#ifndef STARDUSTXR_NODE_HPP
+#define STARDUSTXR_NODE_HPP
 
 #include <functional>
 #include <stardustxr/server/node.hpp>
@@ -21,4 +21,4 @@ public:
 
 } //namespace StardustXRServer
 
-#endif //STARDUSTXR_NODE_H
+#endif //STARDUSTXR_NODE_HPP

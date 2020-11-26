@@ -6,6 +6,7 @@ lib_nodetypes = static_library(
 	'nodetypes',
 	files(
 		'node.cpp',
+		'spatialnode.cpp',
 	),
 	include_directories: [nodetypes_includes],
 	dependencies: [graphical_nodetypes]
