@@ -29,6 +29,9 @@ public:
 	// Matrix get operations
 	matrix localTransform();
 	matrix worldTransform();
+	matrix localToSpaceMatrix(SpatialNode *space);
+	matrix spaceToLocalMatrix(SpatialNode *space);
+
 	// Spatial heirarchy relationships
 	SpatialNode *spatialParent = nullptr;
 

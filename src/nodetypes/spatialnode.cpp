@@ -59,6 +59,30 @@ std::vector<uint8_t> SpatialNode::setTransform(uint sessionID, flexbuffers::Refe
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
+matrix SpatialNode::localToSpaceMatrix(SpatialNode *space) {
+	matrix localToWorldMatrix = worldTransform();
+
+	if(space == nullptr)
+		return localToWorldMatrix;
+
+	matrix worldToSpaceMatrix;
+	matrix_inverse(space->worldTransform(), worldToSpaceMatrix);
+
+	return localToWorldMatrix * worldToSpaceMatrix;
+}
+
+matrix SpatialNode::spaceToLocalMatrix(SpatialNode *space) {
+	matrix worldToLocalMatrix;
+	matrix_inverse(worldTransform(), worldToLocalMatrix);
+
+	if(space == nullptr)
+		return worldToLocalMatrix;
+
+	matrix spaceToWorldMatrix = space->worldTransform();
+
+	return spaceToWorldMatrix * worldToLocalMatrix;
+}
+
 matrix SpatialNode::localTransform() {
 	if(transformMatrixDirty)
 		transform = matrix_trs(position, rotation, scale);
