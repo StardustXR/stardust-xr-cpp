@@ -19,6 +19,18 @@ std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, 
 	return this->executeMethod(sessionID, path, method, args, true);
 }
 
+void Scenegraph::handleMessengerDeletion(uint sessionID) {
+	PropagateFunction messengerDeletionFunction = [&](std::string name, Node *node) {
+		if(node && node->sessionID == sessionID) {
+			node->parent->children.erase(name);
+			delete node;
+			return false;
+		}
+		return true;
+	};
+	root.propagate("", messengerDeletionFunction);
+}
+
 std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args, bool returnValue) {
 	//Find the node referenced by the path string
 	Node *currentNode = &root;
