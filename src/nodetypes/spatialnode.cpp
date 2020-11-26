@@ -60,6 +60,9 @@ std::vector<uint8_t> SpatialNode::setTransform(uint sessionID, flexbuffers::Refe
 }
 
 matrix SpatialNode::localToSpaceMatrix(SpatialNode *space) {
+	// TODO: Optimize this to check if space and this SpatialNode share a common ancestor
+	// and calculate the transform matrix between the two.
+
 	matrix localToWorldMatrix = worldTransform();
 
 	if(space == nullptr)
@@ -72,6 +75,9 @@ matrix SpatialNode::localToSpaceMatrix(SpatialNode *space) {
 }
 
 matrix SpatialNode::spaceToLocalMatrix(SpatialNode *space) {
+	// TODO: Optimize this to check if space and this SpatialNode share a common ancestor
+	// and calculate the transform matrix between the two.
+
 	matrix worldToLocalMatrix;
 	matrix_inverse(worldTransform(), worldToLocalMatrix);
 
