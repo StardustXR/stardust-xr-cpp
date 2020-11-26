@@ -2,6 +2,7 @@
 #define STARDUSTXR_NODE_HPP
 
 #include <functional>
+#include <stardustxr/server/messengermanager.hpp>
 #include <stardustxr/server/node.hpp>
 #include <stardustxr/util.hpp>
 
@@ -18,8 +19,10 @@ public:
 	virtual void update() {}
 	void propagate(std::function<void(Node *)> &function);
 
-	uint sessionID = 0;
+	static StardustXR::MessengerManager *messengerManager;
 	static Scenegraph *scenegraph;
+
+	uint sessionID = 0;
 	std::map<std::string, Node *> children;
 };
 

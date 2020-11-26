@@ -1,6 +1,7 @@
 #include <stardustxr/server/messengermanager.hpp>
 
 #include "scenegraph/scenegraph.hpp"
+#include "scenegraph/nodes/lifecycle.hpp"
 #include "scenegraph/nodes/model.hpp"
 using namespace StardustXRServer;
 
@@ -10,6 +11,7 @@ using namespace sk;
 Scenegraph scenegraph;
 Scenegraph *Node::scenegraph = scenegraph;
 
+LifeCycleInterface lifeCycle;
 std::function<void(Node *)> updateFunction = [](Node *node) {
 	node->update();
 };
@@ -27,7 +29,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	StardustXR::MessengerManager messengerManager(&scenegraph);
-
+	scenegraph.addNode("/lifecycle", &lifeCycle);
 	ModelInterface model;
 	scenegraph.addNode("/model", &model);
 
