@@ -17,7 +17,7 @@ public:
 	std::vector<uint8_t> setPosition(flexbuffers::Reference &data, bool returnValue);
 
 	vec3 position = vec3_zero;
-	quat orientation = quat_identity;
+	quat rotation = quat_identity;
 	vec3 scale = vec3_one;
 
 protected:
