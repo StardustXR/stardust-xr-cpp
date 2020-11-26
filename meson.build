@@ -11,6 +11,7 @@ executable(
 	'stardustxr',
 	'src/main.cpp',
 	include_directories: includes,
+	link_args: '-lflatbuffers',
 	dependencies: [
 		libstardustxr,
 		stereokit,
@@ -18,5 +19,5 @@ executable(
 		nodetypes,
 		scenegraph,
 #		tests,
-	]
+	],
 )
