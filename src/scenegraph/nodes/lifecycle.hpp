@@ -12,6 +12,7 @@ public:
 	virtual ~LifeCycleInterface() {}
 
 	void sendLogicStepSignals();
+	void handleMessengerDeletion(uint sessionID);
 
 	std::vector<uint8_t> subscribeLogicStep(uint sessionID, flexbuffers::Reference data, bool returnValue);
 

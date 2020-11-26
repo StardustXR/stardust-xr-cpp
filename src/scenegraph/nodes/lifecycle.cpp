@@ -32,6 +32,14 @@ void LifeCycleInterface::sendLogicStepSignals() {
 	prevFrameTime = frameTime;
 }
 
+void LifeCycleInterface::handleMessengerDeletion(uint sessionID) {
+	for(auto i = lifeCycleUpdateMethodList.cbegin(); i != lifeCycleUpdateMethodList.end(); ++i) {
+		if(i->sessionID == sessionID) {
+			lifeCycleUpdateMethodList.erase(i--);
+		}
+	}
+}
+
 std::vector<uint8_t> LifeCycleInterface::subscribeLogicStep(uint sessionID, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector vector = data.AsVector();
 	LifeCycleUpdateMethod logicStepMethod = {
