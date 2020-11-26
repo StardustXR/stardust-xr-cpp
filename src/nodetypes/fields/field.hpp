@@ -12,15 +12,15 @@ public:
 
 	float normalRadius = 0.0000001f;
 
-	virtual float localDistance(const vec3 point);
-	virtual const vec3 localClosestPoint(const vec3 point);
-	virtual const vec3 localNormal(const vec3 point);
-	virtual const vec3 localNormal(const vec3 point, const float radius);
+	virtual       float localDistance     (const vec3 point);
+	virtual const vec3  localClosestPoint (const vec3 point);
+	virtual const vec3  localNormal       (const vec3 point);
+	virtual const vec3  localNormal       (const vec3 point, const float radius);
 
-	virtual float distance(const vec3 point);
-	virtual const vec3 closestPoint(const vec3 point);
-	virtual const vec3 normal(const vec3 point);
-	virtual const vec3 normal(const vec3 point, const float radius);
+	virtual       float distance     (SpatialNode *space, const vec3 point);
+	virtual const vec3  closestPoint (SpatialNode *space, const vec3 point);
+	virtual const vec3  normal       (SpatialNode *space, const vec3 point);
+	virtual const vec3  normal       (SpatialNode *space, const vec3 point, const float radius);
 };
 
 } // namespace StardustXRServer
