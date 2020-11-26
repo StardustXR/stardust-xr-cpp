@@ -8,7 +8,7 @@ namespace StardustXRServer {
 RoundedBoxField::RoundedBoxField() {}
 
 float RoundedBoxField::localDistance(const vec3 point) {
-	float minSizeDimension = min(size.x, size.y, size.z);
+	float minSizeDimension = min(size.x, min(size.y, size.z));
 	float clampedRadius = clamp(radius, 0.0f, minSizeDimension);
 
 	vec3 offsetPoint = localToSpacePoint(nullptr, point);
