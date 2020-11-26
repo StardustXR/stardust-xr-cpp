@@ -10,6 +10,7 @@ public:
 	DrawableNode() {}
 	virtual ~DrawableNode() {}
 
+	bool visible = true;
 	virtual void draw() {}
 };
 

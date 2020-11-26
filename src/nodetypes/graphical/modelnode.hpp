@@ -11,8 +11,11 @@ public:
 	ModelNode();
 	virtual ~ModelNode() {}
 
+	void update();
 	void draw();
 
+	bool queued = true;
+	std::string modelPath;
 	sk::model_t model = nullptr;
 };
 

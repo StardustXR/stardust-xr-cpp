@@ -11,20 +11,7 @@ public:
 	ModelInterface();
 	virtual ~ModelInterface() {}
 
-	virtual void update();
-
 	std::vector<uint8_t> createFromFile(uint sessionID, flexbuffers::Reference data, bool returnValue);
-protected:
-	typedef struct {
-		uint id;
-		std::string name;
-		std::string path;
-		vec3 position;
-		quat rotation;
-		vec3 scale;
-	} QueuedModel;
-
-	std::vector<QueuedModel> modelQueue;
 };
 
 }
