@@ -1,7 +1,7 @@
 #ifndef STARDUSTXR_DRAWABLE_NODE_H
 #define STARDUSTXR_DRAWABLE_NODE_H
 
-#include "spatialnode.hpp"
+#include "../spatialnode.hpp"
 
 namespace StardustXRServer {
 

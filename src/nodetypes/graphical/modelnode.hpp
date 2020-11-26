@@ -1,7 +1,7 @@
 #ifndef STARDUSTXR_MODEL_NODE_H
 #define STARDUSTXR_MODEL_NODE_H
 
-#include "../drawablenode.hpp"
+#include "drawablenode.hpp"
 #include <stereokit.h>
 
 namespace StardustXRServer {
