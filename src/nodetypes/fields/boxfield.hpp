@@ -12,7 +12,7 @@ public:
 
 	vec3 size;
 
-	float localDistance(const vec3 point);
+	virtual float localDistance(const vec3 point);
 };
 
 } // namespace StardustXRServer

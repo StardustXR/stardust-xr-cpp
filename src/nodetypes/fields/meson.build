@@ -5,6 +5,7 @@ lib_fields_nodetypes = static_library(
 	files(
 		'boxfield.cpp',
 		'field.cpp',
+		'roundedboxfield.cpp',
 		'spherefield.cpp',
 	),
 	include_directories: [fields_nodetypes_includes]
