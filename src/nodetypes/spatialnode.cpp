@@ -66,4 +66,12 @@ matrix SpatialNode::localTransform() {
 	return transform;
 }
 
+matrix SpatialNode::worldTransform() {
+	if(spatialParent)
+		return localTransform() * spatialParent->worldTransform();
+	else
+		return localTransform();
+}
+
+
 } // namespace StardustXRServer

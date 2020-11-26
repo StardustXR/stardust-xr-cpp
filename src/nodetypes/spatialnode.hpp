@@ -35,6 +35,7 @@ protected:
 	matrix transform = matrix_identity;
 
 	matrix localTransform();
+	matrix worldTransform();
 };
 
 } // namespace StardustXRServer
