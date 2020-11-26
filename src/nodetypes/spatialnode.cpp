@@ -59,4 +59,10 @@ std::vector<uint8_t> SpatialNode::setTransform(uint sessionID, flexbuffers::Refe
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
+void SpatialNode::cleanTransform() {
+	if(transformMatrixDirty)
+		transform = matrix_trs(position, rotation, scale);
+	transformMatrixDirty = false;
+}
+
 } // namespace StardustXRServer

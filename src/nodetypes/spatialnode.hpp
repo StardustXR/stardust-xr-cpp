@@ -29,6 +29,8 @@ public:
 protected:
 	bool transformMatrixDirty = false;
 	matrix transform = matrix_identity;
+
+	void cleanTransform();
 };
 
 } // namespace StardustXRServer
