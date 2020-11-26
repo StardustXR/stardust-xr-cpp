@@ -6,7 +6,7 @@ Field::Field() {
 
 }
 
-const float Field::localDistance(const vec3 point) {
+float Field::localDistance(const vec3 point) {
 	return vec3_magnitude(point - localClosestPoint(point));
 }
 
@@ -31,7 +31,7 @@ const vec3 Field::localNormal(const vec3 point, float radius) {
 		return vec3_normalize(n);
 }
 
-const float Field::distance(const vec3 point) {
+float Field::distance(const vec3 point) {
 	cleanTransform();
 	matrix inverse_transform_matrix;
 	matrix_inverse(transform, inverse_transform_matrix);
