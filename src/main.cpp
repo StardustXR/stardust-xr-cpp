@@ -17,9 +17,14 @@ std::function<void(Node *)> drawFunction = [](Node *node) {
 		drawNode->draw();
 };
 
-int main() {
+
+int main(int argc, char *argv[]) {
 	// log_set_filter(log_diagnostic);
-	sk_init("Stardust XR", runtime_mixedreality);
+	if(argc > 1 && (strcmp("-F", argv[1]) || strcmp("--flatscreen", argv[1]))) {
+		sk_init("Stardust XR (Flatscreen)", runtime_flatscreen);
+	} else {
+		sk_init("Stardust XR", runtime_mixedreality);
+	}
 
 	StardustXR::MessengerManager messengerManager(&scenegraph);
 
