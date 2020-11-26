@@ -1,11 +1,14 @@
 scenegraph_includes = include_directories('.')
 
+subdir('nodes')
+
 lib_scenegraph = static_library(
 	'scenegraph',
 	files(
-		'model.cpp',
+		'scenegraph.cpp',
 	),
-	include_directories: [scenegraph_includes]
+	include_directories: [scenegraph_includes],
+	dependencies: [scenegraph_nodes]
 )
 
 scenegraph = declare_dependency(

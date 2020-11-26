@@ -1,7 +1,7 @@
 #include <stardustxr/server/messengermanager.hpp>
 #include <stardustxr/server/stardust_scenegraph.hpp>
 
-#include "scenegraph/model.hpp"
+#include "scenegraph/nodes/model.hpp"
 using namespace StardustXRServer;
 
 #include <stereokit.h>
