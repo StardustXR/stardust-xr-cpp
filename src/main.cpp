@@ -1,20 +1,29 @@
+// libstardustxr includes
 #include <stardustxr/server/messengermanager.hpp>
 
+// Stardust XR Server includes
 #include "scenegraph/scenegraph.hpp"
 #include "scenegraph/nodes/lifecycle.hpp"
 #include "scenegraph/nodes/model.hpp"
 using namespace StardustXRServer;
 
+// StereoKit includes
 #include <stereokit.h>
 using namespace sk;
 
+// Initialize scnenegraph and messenger manager
 Scenegraph scenegraph;
 StardustXR::MessengerManager messengerManager(&scenegraph);
 
+// Set Node static variables
 StardustXR::MessengerManager *Node::messengerManager = messengerManager;
 Scenegraph *Node::scenegraph = scenegraph;
 
+// Initialize scenegraph object nodes
 LifeCycleInterface lifeCycle;
+ModelInterface model;
+
+// Define lambda functions for update and draw functions to be propagated
 std::function<void(Node *)> updateFunction = [](Node *node) {
 	node->update();
 };
@@ -35,17 +44,14 @@ int main(int argc, char *argv[]) {
 	scenegraph.addNode("/lifecycle", &lifeCycle);
 	scenegraph.addNode("/model", &model);
 
+	// Every stereokit step
 	while (sk_step([]() {
-		for(const auto &rawNode : scenegraph.root.children) {
-			if(Node *node = dynamic_cast<Node *>(rawNode.second)) {
-				node->propagate(updateFunction);
-			}
-		}
-		for(const auto &rawDrawNode : scenegraph.root.children) {
-			if(Node *drawNode = dynamic_cast<Node *>(rawDrawNode.second)) {
-				drawNode->propagate(drawFunction);
-			}
-		}
+		// Send logicStep signals to clients
+		lifeCycle.sendLogicStepSignals();
+
+		//Propagate the update and draw methods on scenegraph nodes
+		scenegraph.root.propagate(updateFunction);
+		scenegraph.root.propagate(drawFunction);
 	})) {}
 
 	sk_shutdown();
