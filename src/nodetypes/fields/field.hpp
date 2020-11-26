@@ -12,15 +12,17 @@ public:
 
 	float normalRadius = 0.0000001f;
 
-	virtual       float localDistance     (const vec3 point);
-	virtual const vec3  localClosestPoint (const vec3 point);
-	virtual const vec3  localNormal       (const vec3 point);
-	virtual const vec3  localNormal       (const vec3 point, const float radius);
-
+	// Stardust XR Server specific methods, overriding them is only for optimization
 	virtual       float distance     (SpatialNode *space, const vec3 point);
 	virtual const vec3  closestPoint (SpatialNode *space, const vec3 point);
 	virtual const vec3  normal       (SpatialNode *space, const vec3 point);
 	virtual const vec3  normal       (SpatialNode *space, const vec3 point, const float radius);
+
+	// Internal field methods, overriding localDistance and/or localClosestPoint is required in all subclasses
+	virtual       float localDistance     (const vec3 point);
+	virtual const vec3  localClosestPoint (const vec3 point);
+	virtual const vec3  localNormal       (const vec3 point);
+	virtual const vec3  localNormal       (const vec3 point, const float radius);
 };
 
 } // namespace StardustXRServer
