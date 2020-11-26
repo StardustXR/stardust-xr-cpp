@@ -26,6 +26,9 @@ public:
 	quat rotation = quat_identity;
 	vec3 scale = vec3_one;
 
+	// Spatial heirarchy relationships
+	SpatialNode *spatialParent = nullptr;
+
 	void transformDirty() { transformMatrixDirty = true; }
 protected:
 	bool transformMatrixDirty = false;
