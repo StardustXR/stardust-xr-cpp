@@ -14,7 +14,9 @@ public:
 	SpatialNode();
 	virtual ~SpatialNode() {}
 
-	std::vector<uint8_t> setPosition(flexbuffers::Reference &data, bool returnValue);
+	std::vector<uint8_t> setPosition(uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setRotation(uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setScale(uint sessionID, flexbuffers::Reference data, bool returnValue);
 
 	vec3 position = vec3_zero;
 	quat rotation = quat_identity;
