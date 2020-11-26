@@ -16,11 +16,9 @@ void ModelNode::update() {
 void ModelNode::draw() {
 	if(!visible)
 		return;
-	if(transformMatrixDirty)
-		transform = matrix_trs(position, rotation, scale);
 
 	if(model != nullptr)
-		render_add_model(model, transform);
+		render_add_model(model, worldTransform());
 }
 
 }
