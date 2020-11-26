@@ -21,10 +21,12 @@ std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, 
 
 void Scenegraph::handleMessengerDeletion(uint sessionID) {
 	PropagateFunction messengerDeletionFunction = [&](std::string name, Node *node) {
-		if(node && node->sessionID == sessionID) {
+		if(node->sessionID == sessionID) {
 			node->parent->children.erase(name);
 			delete node;
 			return false;
+		} else {
+			node->handleMessengerDeletion(sessionID);
 		}
 		return true;
 	};

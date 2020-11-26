@@ -20,6 +20,7 @@ public:
 	virtual ~Node() {}
 
 	virtual void update() {}
+	virtual void handleMessengerDeletion(uint sessionID) {}
 	void propagate(std::string name, PropagateFunction &function);
 
 	uint sessionID = 0;
