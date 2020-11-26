@@ -34,6 +34,13 @@ public:
 
 	// Spatial heirarchy relationships
 	SpatialNode *spatialParent = nullptr;
+	vec3 spaceToLocalPoint    (SpatialNode *space, vec3 point    ) { return matrix_mul_point    (spaceToLocalMatrix(space), point    ); }
+	vec3 spaceToLocalDirection(SpatialNode *space, vec3 direction) { return matrix_mul_direction(spaceToLocalMatrix(space), direction); }
+	quat spaceToLocalRotation (SpatialNode *space, quat rot      ) { return matrix_mul_rotation (spaceToLocalMatrix(space), rot      ); }
+
+	vec3 localToSpacePoint    (SpatialNode *space, vec3 point    ) { return matrix_mul_point    (localToSpaceMatrix(space), point    ); }
+	vec3 localToSpaceDirection(SpatialNode *space, vec3 direction) { return matrix_mul_direction(localToSpaceMatrix(space), direction); }
+	quat localToSpaceRotation (SpatialNode *space, quat rot      ) { return matrix_mul_rotation (localToSpaceMatrix(space), rot      ); }
 
 	void transformDirty() { transformMatrixDirty = true; }
 protected:
