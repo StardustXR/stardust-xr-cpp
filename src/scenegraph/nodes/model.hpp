@@ -19,6 +19,9 @@ protected:
 		uint id;
 		std::string name;
 		std::string path;
+		vec3 position;
+		quat rotation;
+		vec3 scale;
 	} QueuedModel;
 
 	std::vector<QueuedModel> modelQueue;

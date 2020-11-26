@@ -25,6 +25,7 @@ public:
 	quat rotation = quat_identity;
 	vec3 scale = vec3_one;
 
+	void transformDirty() { transformMatrixDirty = true; }
 protected:
 	bool transformMatrixDirty = false;
 	matrix transform = matrix_identity;
