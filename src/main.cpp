@@ -9,6 +9,9 @@ using namespace StardustXRServer;
 using namespace sk;
 
 Scenegraph scenegraph;
+StardustXR::MessengerManager messengerManager(&scenegraph);
+
+StardustXR::MessengerManager *Node::messengerManager = messengerManager;
 Scenegraph *Node::scenegraph = scenegraph;
 
 LifeCycleInterface lifeCycle;
@@ -28,9 +31,8 @@ int main(int argc, char *argv[]) {
 		sk_init("Stardust XR", runtime_mixedreality);
 	}
 
-	StardustXR::MessengerManager messengerManager(&scenegraph);
+	// Add the nodes to the scenegraph
 	scenegraph.addNode("/lifecycle", &lifeCycle);
-	ModelInterface model;
 	scenegraph.addNode("/model", &model);
 
 	while (sk_step([]() {
