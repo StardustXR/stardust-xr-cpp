@@ -46,6 +46,8 @@ void Scenegraph::addNode(std::string path, Node *node) {
 			currentNode->children[pathStep] = node;
 		else if(currentNode->children[pathStep] == nullptr)
 			currentNode->children[pathStep] = new Node();
+
+		currentNode->children[pathStep]->parent = currentNode;
 		currentNode = currentNode->children[pathStep];
 	});
 }

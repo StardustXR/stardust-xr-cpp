@@ -23,6 +23,7 @@ public:
 	void propagate(std::string name, PropagateFunction &function);
 
 	uint sessionID = 0;
+	Node *parent = nullptr;
 	std::map<std::string, Node *> children;
 };
 

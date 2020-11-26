@@ -10,6 +10,7 @@ void ModelInterface::update() {
 	for(const auto &model : modelQueue) {
 
 		ModelNode *modelNode = new ModelNode();
+		modelNode->parent = this;
 		modelNode->sessionID = model.id;
 		modelNode->model = sk::model_create_file(model.path.c_str());
 		children[model.name.c_str()] = modelNode;
