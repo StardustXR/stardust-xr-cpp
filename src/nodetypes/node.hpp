@@ -19,9 +19,6 @@ public:
 	virtual void update() {}
 	void propagate(std::function<void(Node *)> &function);
 
-	static StardustXR::MessengerManager *messengerManager;
-	static Scenegraph *scenegraph;
-
 	uint sessionID = 0;
 	std::map<std::string, Node *> children;
 };

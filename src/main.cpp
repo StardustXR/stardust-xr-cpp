@@ -1,3 +1,6 @@
+// Globals includes
+#include "globals.h"
+
 // libstardustxr includes
 #include <stardustxr/server/messengermanager.hpp>
 
@@ -14,10 +17,6 @@ using namespace sk;
 // Initialize scnenegraph and messenger manager
 Scenegraph scenegraph;
 StardustXR::MessengerManager messengerManager(&scenegraph);
-
-// Set Node static variables
-StardustXR::MessengerManager *Node::messengerManager = messengerManager;
-Scenegraph *Node::scenegraph = scenegraph;
 
 // Initialize scenegraph object nodes
 LifeCycleInterface lifeCycle;

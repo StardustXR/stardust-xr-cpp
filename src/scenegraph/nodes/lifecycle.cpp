@@ -1,5 +1,6 @@
 #include "lifecycle.hpp"
 #include "../scenegraph.hpp"
+#include "../../globals.h"
 #include <stereokit.h>
 
 namespace StardustXRServer {
@@ -16,7 +17,7 @@ void LifeCycleInterface::sendLogicStepSignals() {
 	double delta = frameTime - prevFrameTime;
 
 	for(const auto &method : lifeCycleUpdateMethodList) {
-		messengerManager->messengers[method.sessionID]->sendSignal(
+		messengerManager.messengers[method.sessionID]->sendSignal(
 			method.nodePath.c_str(),
 			method.methodName.c_str(),
 			[&](flexbuffers::Builder &fbb) {
