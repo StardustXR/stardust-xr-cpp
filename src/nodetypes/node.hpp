@@ -16,7 +16,7 @@ public:
 	virtual void update() {}
 	void propagate(std::function<void(Node *)> &function);
 
-	int sessionID = 0;
+	uint sessionID = 0;
 	std::map<std::string, Node *> children;
 };
 
