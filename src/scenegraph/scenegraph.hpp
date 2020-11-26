@@ -6,9 +6,9 @@
 
 namespace StardustXRServer {
 
-class ServerStardustScenegraph : public StardustXR::ServerScenegraph {
+class Scenegraph : public StardustXR::ServerScenegraph {
 public:
-	ServerStardustScenegraph() : StardustXR::ServerScenegraph() {}
+	Scenegraph() : StardustXR::ServerScenegraph() {}
 
 	void sendSignal(int sessionID, std::string path, std::string method, flexbuffers::Reference data);
 	std::vector<uint8_t> executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args);
