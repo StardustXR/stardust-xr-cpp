@@ -1,13 +1,13 @@
 #include <stardustxr/server/messengermanager.hpp>
-#include <stardustxr/server/stardust_scenegraph.hpp>
 
+#include "scenegraph/scenegraph.hpp"
 #include "scenegraph/nodes/model.hpp"
 using namespace StardustXRServer;
 
 #include <stereokit.h>
 using namespace sk;
 
-StardustXR::ServerStardustScenegraph scenegraph;
+Scenegraph scenegraph;
 
 std::function<void(Node *)> updateFunction = [](Node *node) {
 	node->update();
@@ -31,7 +31,6 @@ int main(int argc, char *argv[]) {
 
 	ModelInterface model;
 	scenegraph.addNode("/model", &model);
-
 
 	while (sk_step([]() {
 		for(const auto &rawNode : scenegraph.root.children) {
