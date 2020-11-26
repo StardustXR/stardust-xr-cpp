@@ -8,6 +8,8 @@
 using namespace StardustXR;
 namespace StardustXRServer {
 
+class Scenegraph;
+
 class Node : public ServerNode {
 public:
 	Node() {}
@@ -17,6 +19,7 @@ public:
 	void propagate(std::function<void(Node *)> &function);
 
 	uint sessionID = 0;
+	static Scenegraph *scenegraph;
 	std::map<std::string, Node *> children;
 };
 

@@ -8,6 +8,7 @@ using namespace StardustXRServer;
 using namespace sk;
 
 Scenegraph scenegraph;
+Scenegraph *Node::scenegraph = scenegraph;
 
 std::function<void(Node *)> updateFunction = [](Node *node) {
 	node->update();
@@ -16,7 +17,6 @@ std::function<void(Node *)> drawFunction = [](Node *node) {
 	if(DrawableNode *drawNode = dynamic_cast<DrawableNode *>(node))
 		drawNode->draw();
 };
-
 
 int main(int argc, char *argv[]) {
 	// log_set_filter(log_diagnostic);
@@ -27,7 +27,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	StardustXR::MessengerManager messengerManager(&scenegraph);
-
 
 	ModelInterface model;
 	scenegraph.addNode("/model", &model);
