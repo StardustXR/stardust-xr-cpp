@@ -2,11 +2,14 @@
 
 namespace StardustXRServer {
 
-void Node::propagate(std::function<void(Node *)> &function) {
-	function(this);
-	for(const auto &child : children) {
-		if(Node *nodeChild = dynamic_cast<Node *>(child.second)) //Check if child node is the StardustXRServer
-			nodeChild->propagate(function);
+void Node::propagate(std::string name, PropagateFunction &function) {
+	if(function(name, this)) {
+		for(const auto &child : children) {
+			child.second->propagate(child.first, function);
+
+			if(children.size() == 0)
+				break;
+		}
 	}
 }
 

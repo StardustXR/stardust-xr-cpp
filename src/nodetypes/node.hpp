@@ -9,7 +9,10 @@
 using namespace StardustXR;
 namespace StardustXRServer {
 
+class Node;
 class Scenegraph;
+
+typedef std::function<bool (std::string, Node *)> PropagateFunction;
 
 class Node : public ServerNode {
 public:
@@ -17,7 +20,7 @@ public:
 	virtual ~Node() {}
 
 	virtual void update() {}
-	void propagate(std::function<void(Node *)> &function);
+	void propagate(std::string name, PropagateFunction &function);
 
 	uint sessionID = 0;
 	std::map<std::string, Node *> children;

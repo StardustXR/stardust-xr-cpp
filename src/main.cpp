@@ -23,12 +23,15 @@ LifeCycleInterface lifeCycle;
 ModelInterface model;
 
 // Define lambda functions for update and draw functions to be propagated
-std::function<void(Node *)> updateFunction = [](Node *node) {
-	node->update();
+PropagateFunction updateFunction = [](std::string name, Node *node) {
+	if(node)
+		node->update();
+	return node;
 };
-std::function<void(Node *)> drawFunction = [](Node *node) {
+PropagateFunction drawFunction = [](std::string name, Node *node) {
 	if(DrawableNode *drawNode = dynamic_cast<DrawableNode *>(node))
 		drawNode->draw();
+	return true;
 };
 
 int main(int argc, char *argv[]) {
@@ -49,8 +52,8 @@ int main(int argc, char *argv[]) {
 		lifeCycle.sendLogicStepSignals();
 
 		//Propagate the update and draw methods on scenegraph nodes
-		scenegraph.root.propagate(updateFunction);
-		scenegraph.root.propagate(drawFunction);
+		scenegraph.root.propagate("", updateFunction);
+		scenegraph.root.propagate("", drawFunction);
 	})) {}
 
 	sk_shutdown();
