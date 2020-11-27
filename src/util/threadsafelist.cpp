@@ -83,6 +83,20 @@ T &ThreadSafeList<T>::at(int i) {
 }
 
 template<class T>
+void ThreadSafeList<T>::forEach(void (*function)(uint32_t, T)) {
+	tryLock();
+
+	uint32_t i = 0;
+	ListItem *currentItem = begin;
+	while(currentItem) {
+		ListItem *nextItem = currentItem->next;
+		function(i, currentItem);
+		currentItem = nextItem;
+		i++;
+	}
+}
+
+template<class T>
 T &ThreadSafeList<T>::operator[](int i) {
 	return at(i);
 }

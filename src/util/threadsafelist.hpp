@@ -18,6 +18,7 @@ public:
 
 	T &operator[](int i);
 	T &at(int i);
+	void forEach(void (*function)(uint32_t, T));
 
 	void pushFront(const T &object);
 	void pushBack(const T &object);
