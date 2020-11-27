@@ -24,11 +24,13 @@ std::vector<uint8_t> FieldInterface::createSphereField(uint sessionID, flexbuffe
 	float radius = vector[2].AsFloat();
 
 	SphereField *field = new SphereField();
+	field->ready = false;
 	field->sessionID = sessionID;
 	field->position = position;
 	field->transformDirty();
 	field->radius = radius;
 	children[name] = field;
+	field->ready = true;
 
 	return std::vector<uint8_t>();
 }

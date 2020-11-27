@@ -35,6 +35,7 @@ std::vector<uint8_t> ModelInterface::createFromFile(uint sessionID, flexbuffers:
 
 
 	ModelNode *modelNode = new ModelNode();
+	modelNode->ready = false;
 	modelNode->parent = this;
 	modelNode->sessionID = sessionID;
 	modelNode->modelPath = path;
@@ -44,6 +45,7 @@ std::vector<uint8_t> ModelInterface::createFromFile(uint sessionID, flexbuffers:
 	modelNode->queued = true;
 	modelNode->transformDirty();
 	children[name.c_str()] = modelNode;
+	modelNode->ready = false;
 
 	return std::vector<uint8_t>();
 }

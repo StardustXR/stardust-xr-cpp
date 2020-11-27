@@ -14,7 +14,7 @@ void ModelNode::update() {
 }
 
 void ModelNode::draw() {
-	if(!visible)
+	if(!ready || !visible)
 		return;
 
 	if(model != nullptr)

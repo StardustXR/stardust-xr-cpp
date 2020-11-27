@@ -23,6 +23,7 @@ public:
 	virtual void handleMessengerDeletion(uint sessionID) {}
 	void propagate(std::string name, PropagateFunction &function);
 
+	bool ready = true;
 	uint sessionID = 0;
 	Node *parent = nullptr;
 	std::map<std::string, Node *> children;

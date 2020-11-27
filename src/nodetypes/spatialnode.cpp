@@ -65,7 +65,7 @@ matrix SpatialNode::localToSpaceMatrix(SpatialNode *space) {
 
 	matrix localToWorldMatrix = worldTransform();
 
-	if(space == nullptr)
+	if(space == nullptr || space->ready == false)
 		return localToWorldMatrix;
 
 	matrix worldToSpaceMatrix;
@@ -81,7 +81,7 @@ matrix SpatialNode::spaceToLocalMatrix(SpatialNode *space) {
 	matrix worldToLocalMatrix;
 	matrix_inverse(worldTransform(), worldToLocalMatrix);
 
-	if(space == nullptr)
+	if(space == nullptr || space->ready == false)
 		return worldToLocalMatrix;
 
 	matrix spaceToWorldMatrix = space->worldTransform();
