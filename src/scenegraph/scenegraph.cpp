@@ -21,9 +21,10 @@ std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, 
 
 void Scenegraph::handleMessengerDeletion(uint sessionID) {
 	PropagateFunction messengerDeletionFunction = [&](std::string name, Node *node) {
-		if(node->sessionID == sessionID) {
-			node->parent->children.erase(name);
+		if(node->sessionID == sessionID && node->parent) {
+			Node *nodeParent = node->parent;
 			delete node;
+			nodeParent->children.erase(name);
 			return false;
 		} else {
 			node->handleMessengerDeletion(sessionID);
@@ -43,6 +44,8 @@ std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, 
 			return;
 		}
 	});
+
+	while(currentNode == nullptr) {}
 
 	if(currentNode->methods[method] == nullptr) {
 		printf("Method %s on node %s not found", method.c_str(), path.c_str());
