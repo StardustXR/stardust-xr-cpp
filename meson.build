@@ -19,5 +19,6 @@ executable(
 		nodetypes,
 		scenegraph,
 #		tests,
+		util,
 	],
 )
