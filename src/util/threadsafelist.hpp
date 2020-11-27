@@ -2,6 +2,7 @@
 #define STARDUSTXRSERVER_THREADSAFELIST_HPP
 
 #include <pthread.h>
+#include <functional>
 #include <stddef.h>
 #include <inttypes.h>
 
@@ -18,7 +19,9 @@ public:
 
 	T &operator[](int i);
 	T &at(int i);
-	void forEach(void (*function)(uint32_t, T));
+
+	typedef std::function<void(uint32_t, T &)> ForEachFunction;
+	void forEach(ForEachFunction function);
 
 	void pushFront(const T &object);
 	void pushBack(const T &object);
@@ -47,5 +50,7 @@ protected:
 };
 
 } // namespace StardustXRServer
+
+#include "threadsafelist_impl.hpp"
 
 #endif // STARDUSTXRSERVER_THREADSAFELIST_HPP
