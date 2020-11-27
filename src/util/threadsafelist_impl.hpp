@@ -68,6 +68,7 @@ void ThreadSafeList<T>::erase(int index) {
 	else
 		item->next->previous = item->previous;
 
+	delete item->value;
 	delete item;
 }
 
