@@ -6,6 +6,7 @@
 
 // Stardust XR Server includes
 #include "scenegraph/scenegraph.hpp"
+#include "scenegraph/nodes/field.hpp"
 #include "scenegraph/nodes/lifecycle.hpp"
 #include "scenegraph/nodes/model.hpp"
 using namespace StardustXRServer;
@@ -19,6 +20,7 @@ Scenegraph scenegraph;
 StardustXR::MessengerManager messengerManager(&scenegraph);
 
 // Initialize scenegraph object nodes
+FieldInterface field;
 LifeCycleInterface lifeCycle;
 ModelInterface model;
 
@@ -43,6 +45,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Add the nodes to the scenegraph
+	scenegraph.addNode("/field", &field);
 	scenegraph.addNode("/lifecycle", &lifeCycle);
 	scenegraph.addNode("/model", &model);
 
