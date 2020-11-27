@@ -16,7 +16,7 @@ void LifeCycleInterface::sendLogicStepSignals() {
 	frameTime = sk::time_get();
 	double delta = frameTime - prevFrameTime;
 
-	for(const auto &method : lifeCycleUpdateMethodList) {
+	lifeCycleUpdateMethodList.forEach([delta](uint32_t index, LifeCycleUpdateMethod &method) {
 		messengerManager.messengers[method.sessionID]->sendSignal(
 			method.nodePath.c_str(),
 			method.methodName.c_str(),
@@ -27,17 +27,19 @@ void LifeCycleInterface::sendLogicStepSignals() {
 				});
 			}
 		);
-	}
+	});
+	lifeCycleUpdateMethodList.done();
 
 	prevFrameTime = frameTime;
 }
 
 void LifeCycleInterface::handleMessengerDeletion(uint sessionID) {
-	for(auto i = lifeCycleUpdateMethodList.cbegin(); i != lifeCycleUpdateMethodList.end(); ++i) {
-		if(i->sessionID == sessionID) {
-			lifeCycleUpdateMethodList.erase(i--);
+	lifeCycleUpdateMethodList.forEach([&](uint32_t index, LifeCycleUpdateMethod &method) {
+		if(method.sessionID == sessionID) {
+			lifeCycleUpdateMethodList.erase(index);
 		}
-	}
+	});
+	lifeCycleUpdateMethodList.done();
 }
 
 std::vector<uint8_t> LifeCycleInterface::subscribeLogicStep(uint sessionID, flexbuffers::Reference data, bool returnValue) {
@@ -48,7 +50,8 @@ std::vector<uint8_t> LifeCycleInterface::subscribeLogicStep(uint sessionID, flex
 		vector[1].AsString().str()
 	};
 
-	lifeCycleUpdateMethodList.push_back(logicStepMethod);
+	lifeCycleUpdateMethodList.pushBack(logicStepMethod);
+	lifeCycleUpdateMethodList.done();
 
 	return std::vector<uint8_t>();
 }

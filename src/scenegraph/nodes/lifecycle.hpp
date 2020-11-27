@@ -2,7 +2,7 @@
 #define STARDUSTXRSERVER_LIFECYCLEINTERFACE_HPP
 
 #include "../../nodetypes/node.hpp"
-#include <list>
+#include "../../util/threadsafelist.hpp"
 
 namespace StardustXRServer {
 
@@ -23,11 +23,12 @@ protected:
 		std::string methodName;
 	} LifeCycleUpdateMethod;
 
-	std::list<LifeCycleUpdateMethod> lifeCycleUpdateMethodList;
+	void logicStepSignal(uint32_t index, LifeCycleUpdateMethod &updateMethod);
+	ThreadSafeList<LifeCycleUpdateMethod> lifeCycleUpdateMethodList;
 
 	double prevFrameTime;
 	double frameTime;
-
+	double delta;
 };
 
 } // namespace StardustXRServer
