@@ -12,21 +12,21 @@ FieldInterface::FieldInterface() {
 }
 
 std::vector<uint8_t> FieldInterface::createSphereField(uint sessionID, flexbuffers::Reference data, bool returnValue) {
-	flexbuffers::Vector vector = data.AsVector();
-	flexbuffers::TypedVector origin = vector[1].AsTypedVector();
+	flexbuffers::Vector vector          = data.AsVector();
+	flexbuffers::TypedVector flexOrigin = vector[1].AsTypedVector();
 
 	string name = vector[0].AsString().str();
-	vec3 position = {
-		origin[0].AsFloat(),
-		origin[1].AsFloat(),
-		origin[2].AsFloat()
+	vec3 origin = {
+		flexOrigin[0].AsFloat(),
+		flexOrigin[1].AsFloat(),
+		flexOrigin[2].AsFloat()
 	};
 	float radius = vector[2].AsFloat();
 
 	SphereField *field = new SphereField();
 	field->ready = false;
 	field->sessionID = sessionID;
-	field->position = position;
+	field->position = origin;
 	field->transformDirty();
 	field->radius = radius;
 	children[name] = field;
