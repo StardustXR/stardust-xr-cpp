@@ -15,7 +15,6 @@ ThreadSafeList<T>::~ThreadSafeList() {
 
 template<class T>
 uint32_t ThreadSafeList<T>::length() {
-	tryLock();
 	if(!lengthDirty)
 		return listLength;
 
@@ -30,7 +29,6 @@ uint32_t ThreadSafeList<T>::length() {
 
 template<class T>
 void ThreadSafeList<T>::pushFront(const T &object) {
-	tryLock();
 	lengthDirty = true;
 	ListItem *newItem = new ListItem();
 	newItem->value = new T(object);
@@ -42,7 +40,6 @@ void ThreadSafeList<T>::pushFront(const T &object) {
 
 template<class T>
 void ThreadSafeList<T>::pushBack(const T &object) {
-	tryLock();
 	lengthDirty = true;
 	ListItem *newItem = new ListItem();
 	newItem->value = new T(object);
@@ -54,7 +51,6 @@ void ThreadSafeList<T>::pushBack(const T &object) {
 
 template<class T>
 void ThreadSafeList<T>::erase(int index) {
-	tryLock();
 	lengthDirty = true;
 	ListItem *item = get(index);
 
@@ -79,14 +75,11 @@ bool ThreadSafeList<T>::exists(int index) {
 
 template<class T>
 T &ThreadSafeList<T>::at(int i) {
-	tryLock();
 	return *get(i).value;
 }
 
 template<class T>
 void ThreadSafeList<T>::forEach(ForEachFunction function) {
-	tryLock();
-
 	uint32_t i = 0;
 	ListItem *currentItem = begin;
 	while(currentItem) {
@@ -103,25 +96,17 @@ T &ThreadSafeList<T>::operator[](int i) {
 }
 
 template<class T>
-void ThreadSafeList<T>::done() {
-	if(locked) {
-		locked = false;
-		pthread_mutex_unlock(&lockMutex);
-	}
+void ThreadSafeList<T>::unlock() {
+	pthread_mutex_unlock(&lockMutex);
 }
 
 template<class T>
-void ThreadSafeList<T>::tryLock() {
-	if(!locked) {
-		locked = true;
-		pthread_mutex_lock(&lockMutex);
-	}
+void ThreadSafeList<T>::lock() {
+	pthread_mutex_lock(&lockMutex);
 }
 
 template<class T>
 typename ThreadSafeList<T>::ListItem *ThreadSafeList<T>::get(int index) {
-	tryLock();
-
 	int iMax = (index >= 0) ? index : length() + index;
 	ListItem *currentItem = begin;
 

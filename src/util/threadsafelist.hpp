@@ -27,12 +27,11 @@ public:
 	void pushBack(const T &object);
 	void erase(int index);
 
-	void done();
+	void lock();
+	void unlock();
 
 protected:
 	pthread_mutex_t lockMutex;
-	bool locked;
-	void tryLock();
 
 	struct ListItem {
 		struct ListItem *previous;
