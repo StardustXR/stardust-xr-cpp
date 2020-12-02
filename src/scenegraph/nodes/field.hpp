@@ -10,6 +10,7 @@ public:
 	FieldInterface();
 	virtual ~FieldInterface() {}
 
+	std::vector<uint8_t> createBoxField(uint sessionID, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> createSphereField(uint sessionID, flexbuffers::Reference data, bool returnValue);
 };
 
