@@ -1,4 +1,5 @@
 #include "scenegraph.hpp"
+#include "../globals.h"
 
 namespace StardustXRServer {
 
@@ -17,6 +18,12 @@ void Scenegraph::sendSignal(int sessionID, std::string path, std::string method,
 }
 std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args) {
 	return this->executeMethod(sessionID, path, method, args, true);
+}
+
+void Scenegraph::executeRemoteMethod(uint sessionID, std::string remotePath, std::string remoteMethod, std::vector<uint8_t> args, void *extraData, ServerCallback callback) {
+	messengerManager.messengers[sessionID]->executeRemoteMethod(remotePath.c_str(), remoteMethod.c_str(), args, [&](flexbuffers::Reference data) {
+		callback(sessionID, data, extraData);
+	});
 }
 
 void Scenegraph::handleMessengerDeletion(uint sessionID) {
