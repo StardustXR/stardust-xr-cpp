@@ -2,6 +2,7 @@ nodetypes_includes = include_directories('.')
 
 subdir('fields')
 subdir('graphical')
+subdir('input')
 
 lib_nodetypes = static_library(
 	'nodetypes',
@@ -10,7 +11,7 @@ lib_nodetypes = static_library(
 		'spatialnode.cpp',
 	),
 	include_directories: [nodetypes_includes],
-	dependencies: [fields_nodetypes, graphical_nodetypes]
+	dependencies: [fields_nodetypes, graphical_nodetypes, input_nodetypes]
 )
 
 nodetypes = declare_dependency(
