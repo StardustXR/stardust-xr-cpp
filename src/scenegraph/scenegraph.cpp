@@ -58,7 +58,9 @@ void Scenegraph::addNode(std::string path, Node *node) {
 	//Get the name of the node to create
 	std::string lastNodeName = path.substr(path.find_last_of("/")+1);
 	Node *currentNode = &root;
+
 	this->onPathStep(path, [&](std::string pathStep) {
+
 		if(pathStep == lastNodeName)
 			currentNode->children[pathStep] = node;
 		else if(currentNode->children[pathStep] == nullptr)
@@ -66,7 +68,24 @@ void Scenegraph::addNode(std::string path, Node *node) {
 
 		currentNode->children[pathStep]->parent = currentNode;
 		currentNode = currentNode->children[pathStep];
+
 	});
+}
+
+Node *Scenegraph::findNode(std::string path) {
+	std::string lastNodeName = path.substr(path.find_last_of("/")+1);
+	Node *currentNode = &root;
+	bool doesNotExist = false;
+
+	this->onPathStep(path, [&](std::string pathStep) {
+		if(!doesNotExist)
+			currentNode = currentNode->children[pathStep];
+
+		if(!doesNotExist && currentNode == nullptr)
+			doesNotExist = true;
+	});
+
+	return currentNode;
 }
 
 } // namespace StardustXRServer
