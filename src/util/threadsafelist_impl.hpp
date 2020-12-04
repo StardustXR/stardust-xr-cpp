@@ -33,6 +33,8 @@ void ThreadSafeList<T>::pushFront(const T &object) {
 	ListItem *newItem = new ListItem();
 	newItem->value = new T(object);
 	newItem->next = begin;
+	if(begin)
+		begin->previous = newItem;
 	begin = newItem;
 	if(end == nullptr)
 		end = begin;
@@ -44,6 +46,8 @@ void ThreadSafeList<T>::pushBack(const T &object) {
 	ListItem *newItem = new ListItem();
 	newItem->value = new T(object);
 	newItem->previous = end;
+	if(end)
+		end->next = newItem;
 	end = newItem;
 	if(begin == nullptr)
 		begin = end;
