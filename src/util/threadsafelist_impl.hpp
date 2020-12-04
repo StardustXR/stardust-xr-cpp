@@ -56,12 +56,12 @@ void ThreadSafeList<T>::erase(int index) {
 
 	if(item == begin)
 		begin = item->next;
-	else
+	else if(item->previous)
 		item->previous->next = item->next;
 
 	if(item == end)
 		end = item->previous;
-	else
+	else if(item->next)
 		item->next->previous = item->previous;
 
 	delete item->value;
