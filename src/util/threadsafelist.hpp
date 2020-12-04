@@ -5,6 +5,7 @@
 #include <functional>
 #include <stddef.h>
 #include <inttypes.h>
+#include <vector>
 
 namespace StardustXRServer {
 
@@ -27,11 +28,14 @@ public:
 	void pushBack(const T &object);
 	void erase(int index);
 
-	void lock();
-	void unlock();
+	void done();
 
 protected:
 	pthread_mutex_t lockMutex;
+	std::vector<pthread_t> lockedThreads;
+	void tryLock();
+	bool isLocked(pthread_t &currentThread);
+	int lockPosition(pthread_t &currentThread);
 
 	struct ListItem {
 		struct ListItem *previous;

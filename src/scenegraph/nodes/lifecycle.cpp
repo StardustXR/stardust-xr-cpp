@@ -16,7 +16,6 @@ void LifeCycleInterface::sendLogicStepSignals() {
 	frameTime = sk::time_get();
 	double delta = frameTime - prevFrameTime;
 
-	lifeCycleUpdateMethodList.lock();
 	lifeCycleUpdateMethodList.forEach([delta](uint32_t index, LifeCycleUpdateMethod &method) {
 		messengerManager.messengers[method.sessionID]->sendSignal(
 			method.nodePath.c_str(),
@@ -29,19 +28,18 @@ void LifeCycleInterface::sendLogicStepSignals() {
 			}
 		);
 	});
-	lifeCycleUpdateMethodList.unlock();
+	lifeCycleUpdateMethodList.done();
 
 	prevFrameTime = frameTime;
 }
 
 void LifeCycleInterface::handleMessengerDeletion(uint sessionID) {
-	lifeCycleUpdateMethodList.lock();
 	lifeCycleUpdateMethodList.forEach([&](uint32_t index, LifeCycleUpdateMethod &method) {
 		if(method.sessionID == sessionID) {
 			lifeCycleUpdateMethodList.erase(index);
 		}
 	});
-	lifeCycleUpdateMethodList.unlock();
+	lifeCycleUpdateMethodList.done();
 }
 
 std::vector<uint8_t> LifeCycleInterface::subscribeLogicStep(uint sessionID, flexbuffers::Reference data, bool returnValue) {
@@ -52,9 +50,8 @@ std::vector<uint8_t> LifeCycleInterface::subscribeLogicStep(uint sessionID, flex
 		vector[1].AsString().str()
 	};
 
-	lifeCycleUpdateMethodList.lock();
 	lifeCycleUpdateMethodList.pushBack(logicStepMethod);
-	lifeCycleUpdateMethodList.unlock();
+	lifeCycleUpdateMethodList.done();
 
 	return std::vector<uint8_t>();
 }
