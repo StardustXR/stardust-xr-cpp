@@ -44,8 +44,8 @@ std::vector<uint8_t> ModelInterface::createFromFile(uint sessionID, flexbuffers:
 	modelNode->scale = scale;
 	modelNode->queued = true;
 	modelNode->transformDirty();
-	children[name.c_str()] = modelNode;
-	modelNode->ready = false;
+	children[name] = modelNode;
+	modelNode->ready = true;
 
 	return std::vector<uint8_t>();
 }
