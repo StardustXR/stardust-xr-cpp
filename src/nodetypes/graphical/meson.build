@@ -3,7 +3,7 @@ graphical_nodetypes_includes = include_directories('.')
 lib_graphical_nodetypes = static_library(
 	'graphical_nodetypes',
 	files(
-		'modelnode.cpp',
+		'model.cpp',
 	),
 	include_directories: [graphical_nodetypes_includes]
 )

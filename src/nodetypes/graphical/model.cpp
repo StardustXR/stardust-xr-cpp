@@ -1,11 +1,11 @@
-#include "modelnode.hpp"
+#include "model.hpp"
 using namespace sk;
 
 namespace StardustXRServer {
 
-ModelNode::ModelNode() {}
+Model::Model() {}
 
-void ModelNode::update() {
+void Model::update() {
 	if(queued) {
 		queued = false;
 		model = sk::model_create_file(modelPath.c_str());
@@ -13,7 +13,7 @@ void ModelNode::update() {
 	}
 }
 
-void ModelNode::draw() {
+void Model::draw() {
 	if(!ready || !visible)
 		return;
 

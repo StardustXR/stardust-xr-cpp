@@ -6,10 +6,10 @@
 
 namespace StardustXRServer {
 
-class ModelNode : public DrawableNode {
+class Model : public DrawableNode {
 public:
-	ModelNode();
-	virtual ~ModelNode() {}
+	Model();
+	virtual ~Model() {}
 
 	void update();
 	void draw();

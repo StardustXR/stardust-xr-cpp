@@ -34,18 +34,18 @@ std::vector<uint8_t> ModelInterface::createFromFile(uint sessionID, flexbuffers:
 	};
 
 
-	ModelNode *modelNode = new ModelNode();
-	modelNode->ready = false;
-	modelNode->parent = this;
-	modelNode->sessionID = sessionID;
-	modelNode->modelPath = path;
-	modelNode->position = position;
-	modelNode->rotation = rotation;
-	modelNode->scale = scale;
-	modelNode->queued = true;
-	modelNode->transformDirty();
-	children[name] = modelNode;
-	modelNode->ready = true;
+	Model *model = new Model();
+	model->ready = false;
+	model->parent = this;
+	model->sessionID = sessionID;
+	model->modelPath = path;
+	model->position = position;
+	model->rotation = rotation;
+	model->scale = scale;
+	model->queued = true;
+	model->transformDirty();
+	children[name] = model;
+	model->ready = true;
 
 	return std::vector<uint8_t>();
 }

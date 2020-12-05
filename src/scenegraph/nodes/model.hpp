@@ -1,7 +1,7 @@
 #ifndef STARDUSTXR_MODEL_INTERFACE_H
 #define STARDUSTXR_MODEL_INTERFACE_H
 
-#include "../../nodetypes/graphical/modelnode.hpp"
+#include "../../nodetypes/graphical/model.hpp"
 #include <stereokit.h>
 
 namespace StardustXRServer {
