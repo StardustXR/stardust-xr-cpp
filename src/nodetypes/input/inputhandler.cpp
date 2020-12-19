@@ -11,7 +11,7 @@ InputHandler::~InputHandler() {
 
 }
 
-std::vector<uint8_t> InputHandler::setCallback(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> InputHandler::setCallback(uint sessionID, flexbuffers::Reference data, bool) {
 	if(sessionID != this->sessionID)
 		return std::vector<uint8_t>();
 

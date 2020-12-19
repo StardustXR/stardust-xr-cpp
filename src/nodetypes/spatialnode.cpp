@@ -11,7 +11,7 @@ SpatialNode::SpatialNode() {
 	STARDUSTXR_NODE_METHOD("setTransform", &SpatialNode::setTransform)
 }
 
-std::vector<uint8_t> SpatialNode::setPosition(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> SpatialNode::setPosition(uint sessionID, flexbuffers::Reference data, bool) {
 	if(sessionID == this->sessionID) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		position = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
@@ -21,7 +21,7 @@ std::vector<uint8_t> SpatialNode::setPosition(uint sessionID, flexbuffers::Refer
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::setRotation(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> SpatialNode::setRotation(uint sessionID, flexbuffers::Reference data, bool) {
 	if(sessionID == this->sessionID) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		rotation = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
@@ -31,7 +31,7 @@ std::vector<uint8_t> SpatialNode::setRotation(uint sessionID, flexbuffers::Refer
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::setScale(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> SpatialNode::setScale(uint sessionID, flexbuffers::Reference data, bool) {
 	if(sessionID == this->sessionID) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		scale = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
@@ -41,7 +41,7 @@ std::vector<uint8_t> SpatialNode::setScale(uint sessionID, flexbuffers::Referenc
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::setPose(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> SpatialNode::setPose(uint sessionID, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector = data.AsVector();
 	setPosition(sessionID, vector[0], false);
 	setRotation(sessionID, vector[1], false);
@@ -50,7 +50,7 @@ std::vector<uint8_t> SpatialNode::setPose(uint sessionID, flexbuffers::Reference
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::setTransform(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> SpatialNode::setTransform(uint sessionID, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector = data.AsVector();
 	setPosition(sessionID, vector[0], false);
 	setRotation(sessionID, vector[1], false);

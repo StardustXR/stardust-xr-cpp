@@ -6,7 +6,7 @@ ModelInterface::ModelInterface() {
 	STARDUSTXR_NODE_METHOD("createFromFile", &ModelInterface::createFromFile)
 }
 
-std::vector<uint8_t> ModelInterface::createFromFile(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> ModelInterface::createFromFile(uint sessionID, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector = data.AsVector();
 
 	std::string name = vector[0].AsString().str();

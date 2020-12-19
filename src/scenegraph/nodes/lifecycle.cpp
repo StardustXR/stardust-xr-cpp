@@ -16,7 +16,7 @@ void LifeCycleInterface::sendLogicStepSignals() {
 	frameTime = sk::time_get();
 	double delta = frameTime - prevFrameTime;
 
-	lifeCycleUpdateMethodList.forEach([delta](uint32_t index, LifeCycleUpdateMethod &method) {
+	lifeCycleUpdateMethodList.forEach([delta](uint32_t, LifeCycleUpdateMethod &method) {
 		messengerManager.messengers[method.sessionID]->sendSignal(
 			method.nodePath.c_str(),
 			method.methodName.c_str(),
@@ -42,7 +42,7 @@ void LifeCycleInterface::handleMessengerDeletion(uint sessionID) {
 	lifeCycleUpdateMethodList.done();
 }
 
-std::vector<uint8_t> LifeCycleInterface::subscribeLogicStep(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> LifeCycleInterface::subscribeLogicStep(uint sessionID, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector = data.AsVector();
 	LifeCycleUpdateMethod logicStepMethod = {
 		sessionID,

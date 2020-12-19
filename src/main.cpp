@@ -25,12 +25,12 @@ LifeCycleInterface lifeCycle;
 ModelInterface model;
 
 // Define lambda functions for update and draw functions to be propagated
-PropagateFunction updateFunction = [](std::string name, Node *node) {
+PropagateFunction updateFunction = [](std::string, Node *node) {
 	if(node)
 		node->update();
 	return node;
 };
-PropagateFunction drawFunction = [](std::string name, Node *node) {
+PropagateFunction drawFunction = [](std::string, Node *node) {
 	if(DrawableNode *drawNode = dynamic_cast<DrawableNode *>(node))
 		drawNode->draw();
 	return true;

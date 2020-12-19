@@ -6,7 +6,7 @@ namespace StardustXRServer {
 InputMethod::InputMethod() {}
 InputMethod::~InputMethod() {}
 
-vector<uint8_t> InputMethod::modifyDatamap(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+vector<uint8_t> InputMethod::modifyDatamap(uint sessionID, flexbuffers::Reference data, bool) {
 	flexbuffers::Map map = data.AsMap();
 	flexbuffers::TypedVector keys = map.Keys();
 	flexbuffers::Vector values = map.Values();
