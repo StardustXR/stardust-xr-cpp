@@ -4,6 +4,7 @@ lib_input_nodetypes = static_library(
 	'input_nodetypes',
 	files(
 		'inputhandler.cpp',
+		'inputmethod.cpp'
 	),
 	include_directories: [input_nodetypes_includes]
 )
