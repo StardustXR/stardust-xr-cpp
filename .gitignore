@@ -2,3 +2,9 @@
 build/
 
 *.user
+
+*.srctrlbm
+
+stardust-xr.srctrldb
+
+stardust-xr.srctrlprj
