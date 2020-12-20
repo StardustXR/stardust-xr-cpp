@@ -3,6 +3,7 @@
 
 #include "../node.hpp"
 #include "../fields/field.hpp"
+#include <list>
 
 namespace StardustXRServer {
 
@@ -14,6 +15,8 @@ public:
 	Field *field = nullptr;
 	std::string callbackPath;
 	std::string callbackMethod;
+
+	void sendInput(std::list<InputHandler *> &handlerList, std::vector<uint8_t> &inputData);
 
 	std::vector<uint8_t> setCallback(uint sessionID, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setField(uint sessionID, flexbuffers::Reference data, bool returnValue);
