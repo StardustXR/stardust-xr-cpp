@@ -30,6 +30,8 @@ std::vector<uint8_t> InputInterface::registerInputHandler(uint sessionID, flexbu
 	handler->callbackPath              = callbackPath;
 	handler->callbackMethod            = callbackMethod;
 	handler->ready                     = true;
+
+	return std::vector<uint8_t>();
 }
 
 } // namespace StardustXRServer
