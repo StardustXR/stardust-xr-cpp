@@ -21,15 +21,15 @@ std::vector<uint8_t> InputInterface::registerInputHandler(uint sessionID, flexbu
 	std::string callbackPath   = vec[2].AsString().str();
 	std::string callbackMethod = vec[3].AsString().str();
 
-	InputHandler *handler              = new InputHandler();
-	handler->ready                     = false;
-	handler->parent                    = this;
-	children["method"]->children[name] = handler;
-	handler->sessionID                 = sessionID;
-	handler->field                     = dynamic_cast<Field *>(scenegraph.findNode(field));
-	handler->callbackPath              = callbackPath;
-	handler->callbackMethod            = callbackMethod;
-	handler->ready                     = true;
+	InputHandler *handler               = new InputHandler();
+	handler->ready                      = false;
+	handler->parent                     = children["handler"];
+	children["handler"]->children[name] = handler;
+	handler->sessionID                  = sessionID;
+	handler->field                      = dynamic_cast<Field *>(scenegraph.findNode(field));
+	handler->callbackPath               = callbackPath;
+	handler->callbackMethod             = callbackMethod;
+	handler->ready                      = true;
 
 	return std::vector<uint8_t>();
 }
