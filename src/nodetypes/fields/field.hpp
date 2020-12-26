@@ -23,6 +23,11 @@ public:
 	virtual const vec3  localClosestPoint (const vec3 point);
 	virtual const vec3  localNormal       (const vec3 point);
 	virtual const vec3  localNormal       (const vec3 point, const float radius);
+
+	// Client-facing methods
+	std::vector<uint8_t> distance(uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> normal(uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> closestPoint(uint sessionID, flexbuffers::Reference data, bool returnValue);
 };
 
 } // namespace StardustXRServer
