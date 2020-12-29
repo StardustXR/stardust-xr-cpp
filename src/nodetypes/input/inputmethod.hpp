@@ -2,6 +2,7 @@
 #define STARDUSTXRSERVER_INPUTMETHOD_HPP
 
 #include "../node.hpp"
+#include "inputhandler.hpp"
 #include <stereokit.h>
 #include <variant>
 
@@ -16,6 +17,7 @@ public:
 
 	vector<uint8_t> modifyDatamap(uint sessionID, flexbuffers::Reference data, bool returnValue);
 
+	virtual float distanceTo(InputHandler *handler) = 0;
 	virtual vector<uint8_t> serialize(float distance) = 0;
 protected:
 	typedef variant<bool, int32_t, float, vec2, vec3> DatamapVariant;
