@@ -31,6 +31,9 @@ std::vector<uint8_t> InputInterface::registerInputHandler(uint sessionID, flexbu
 	handler->callbackMethod             = callbackMethod;
 	handler->ready                      = true;
 
+	inputHandlers.pushBack(handler);
+	inputHandlers.done();
+
 	return std::vector<uint8_t>();
 }
 

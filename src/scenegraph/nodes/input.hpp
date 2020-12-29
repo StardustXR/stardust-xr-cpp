@@ -13,6 +13,9 @@ public:
 	~InputInterface();
 
 	std::vector<uint8_t> registerInputHandler(uint sessionID, flexbuffers::Reference data, bool returnValue);
+
+	ThreadSafeList<InputMethod *> inputMethods;
+	ThreadSafeList<InputHandler *> inputHandlers;
 };
 
 } // namespace StardustXRServer
