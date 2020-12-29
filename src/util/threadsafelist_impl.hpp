@@ -84,7 +84,7 @@ bool ThreadSafeList<T>::exists(int index) {
 template<class T>
 T &ThreadSafeList<T>::at(int i) {
 	tryLock();
-	return *get(i).value;
+	return *get(i)->value;
 }
 
 template<class T>
