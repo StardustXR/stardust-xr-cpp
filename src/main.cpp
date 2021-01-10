@@ -40,11 +40,16 @@ PropagateFunction drawFunction = [](std::string, Node *node) {
 
 int main(int argc, char *argv[]) {
 	// log_set_filter(log_diagnostic);
+	sk_settings_t settings;
+
 	if(argc > 1 && (strcmp("-F", argv[1]) || strcmp("--flatscreen", argv[1]))) {
-		sk_init("Stardust XR (Flatscreen)", runtime_flatscreen);
+		settings.app_name = "Stardust XR (Flatscreen)";
+		settings.display_preference = display_mode_flatscreen;
 	} else {
-		sk_init("Stardust XR", runtime_mixedreality);
+		settings.app_name = "Stardust XR";
+		settings.display_preference = display_mode_mixedreality;
 	}
+	sk_init(settings);
 
 	// Add the nodes to the scenegraph
 	scenegraph.addNode("/field", &field);
