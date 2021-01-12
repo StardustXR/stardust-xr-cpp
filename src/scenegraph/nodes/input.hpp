@@ -4,6 +4,7 @@
 #include "../../nodetypes/node.hpp"
 #include "../../nodetypes/input/inputhandler.hpp"
 #include "../../nodetypes/input/inputmethod.hpp"
+#include "../../util/threadsafelist.hpp"
 
 namespace StardustXRServer {
 
@@ -13,6 +14,7 @@ public:
 	~InputInterface();
 
 	std::vector<uint8_t> registerInputHandler(uint sessionID, flexbuffers::Reference data, bool returnValue);
+	void processInput();
 
 	ThreadSafeList<InputMethod *> inputMethods;
 	ThreadSafeList<InputHandler *> inputHandlers;

@@ -37,4 +37,29 @@ std::vector<uint8_t> InputInterface::registerInputHandler(uint sessionID, flexbu
 	return std::vector<uint8_t>();
 }
 
+void InputInterface::processInput() {
+	const uint32_t inputMethodCount = inputMethods.length();
+	const uint32_t inputHandlerCount = inputHandlers.length();
+
+	for(uint32_t i=0; i<inputMethodCount; ++i) {
+		std::list<DistanceLink> distanceLinks;
+		for(uint32_t j=0; j<inputHandlerCount; ++j) {
+			distanceLinks.push_front({
+				inputMethods[i],
+				inputMethods[i]->distanceTo(inputHandlers[j]),
+				inputHandlers[j]
+			});
+		}
+		distanceLinks.sort();
+		std::vector<uint8_t> inputData = distanceLinks.begin()->method->serialize(distanceLinks.begin()->distance);
+		distanceLinks.begin()->handler->sendInput(
+			distanceLinks,
+			inputData
+		);
+	}
+
+	inputMethods.done();
+	inputHandlers.done();
+}
+
 } // namespace StardustXRServer

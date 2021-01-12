@@ -11,16 +11,16 @@ InputHandler::~InputHandler() {
 
 }
 
-void InputHandler::sendInput(std::list<InputHandler *> &handlerList, std::vector<uint8_t> &inputData) {
+void InputHandler::sendInput(std::list<DistanceLink> distanceLinks, std::vector<uint8_t> &inputData) {
+	distanceLinks.pop_front();
 	messengerManager.messengers[sessionID]->executeRemoteMethod(
 		callbackPath.c_str(),
 		callbackMethod.c_str(),
 		inputData,
-		[&](flexbuffers::Reference returnData) {
-			if(handlerList.begin() != handlerList.end() && !returnData.AsBool()) { // If handlerList is not empty and not captured
-				InputHandler *handler = *handlerList.begin();
-				handlerList.pop_front();
-				handler->sendInput(handlerList, inputData);
+		[&distanceLinks, &inputData](flexbuffers::Reference returnData) {
+			if(distanceLinks.begin() != distanceLinks.end() && !returnData.AsBool()) { // If handlerList is not empty and not captured
+				InputHandler *handler = distanceLinks.begin()->handler;
+				handler->sendInput(distanceLinks, inputData);
 			}
 		}
 	);

@@ -3,6 +3,7 @@
 
 #include "../node.hpp"
 #include "../fields/field.hpp"
+#include "distancelink.hpp"
 #include <list>
 
 namespace StardustXRServer {
@@ -16,7 +17,7 @@ public:
 	std::string callbackPath;
 	std::string callbackMethod;
 
-	void sendInput(std::list<InputHandler *> &handlerList, std::vector<uint8_t> &inputData);
+	void sendInput(std::list<DistanceLink> distanceLinks, std::vector<uint8_t> &inputData);
 
 	std::vector<uint8_t> setCallback(uint sessionID, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setField(uint sessionID, flexbuffers::Reference data, bool returnValue);
