@@ -40,7 +40,9 @@ PropagateFunction drawFunction = [](std::string, Node *node) {
 
 int main(int argc, char *argv[]) {
 	// log_set_filter(log_diagnostic);
-	sk_settings_t settings;
+	sk_settings_t settings = {};
+	settings.assets_folder = "/tmp/stardust";
+	settings.display_fallback = true;
 
 	if(argc > 1 && (strcmp("-F", argv[1]) || strcmp("--flatscreen", argv[1]))) {
 		settings.app_name = "Stardust XR (Flatscreen)";
@@ -49,7 +51,8 @@ int main(int argc, char *argv[]) {
 		settings.app_name = "Stardust XR";
 		settings.display_preference = display_mode_mixedreality;
 	}
-	sk_init(settings);
+	if(!sk_init(settings))
+		perror("Stereokit initialization failed!");
 
 	// Add the nodes to the scenegraph
 	scenegraph.addNode("/field", &field);
@@ -65,6 +68,9 @@ int main(int argc, char *argv[]) {
 		//Propagate the update and draw methods on scenegraph nodes
 		scenegraph.root.propagate("", updateFunction);
 		scenegraph.root.propagate("", drawFunction);
+
+		// Process all the input and send it to the clients
+		input.processInput();
 	})) {}
 
 	sk_shutdown();
