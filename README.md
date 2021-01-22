@@ -1,8 +1,13 @@
-# Stardust XR Core
+# Stardust XR
 
-This project is a Linux display server that allows traditionally 2D applications to be interactive in 3D for use in immersive devices, such as AR glasses and VR headsets. As well as simple display and interaction, Stardust will allow for "app shells" that can transform 2D app interactions into 3D making said applications much easier to use in XR.
+This project is a Linux display server that reinvents human-computer interaction for all kinds of XR, from putting 2D/XR apps into various 3D shells for varying uses to SDF-based interaction.
 
 
 ## Building instructions:
 
-Use Godot 3.2.2 and run!
+1. Build/install StereoKit using meson at https://github.com/maluoi/StereoKit/tree/develop.
+2. Build/install Stardust using meson:
+```bash
+$ meson build; cd build
+$ ninja install
+```
