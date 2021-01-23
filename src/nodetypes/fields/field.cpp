@@ -4,6 +4,8 @@
 namespace StardustXRServer {
 
 Field::Field() {
+	scalable = false;
+
 	STARDUSTXR_NODE_METHOD("distance",     static_cast<std::vector<uint8_t>(Field::*)(uint, flexbuffers::Reference, bool)>(&Field::distance))
 	STARDUSTXR_NODE_METHOD("normal",       static_cast<std::vector<uint8_t>(Field::*)(uint, flexbuffers::Reference, bool)>(&Field::normal))
 	STARDUSTXR_NODE_METHOD("closestPoint", static_cast<std::vector<uint8_t>(Field::*)(uint, flexbuffers::Reference, bool)>(&Field::closestPoint))
