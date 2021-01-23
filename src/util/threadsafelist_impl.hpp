@@ -132,7 +132,7 @@ bool ThreadSafeList<T>::isLocked(pthread_t &currentThread) {
 
 template<class T>
 int ThreadSafeList<T>::lockPosition(pthread_t &currentThread) {
-	for(int i=0; i<lockedThreads.size(); ++i) {
+	for(uint32_t i=0; i<lockedThreads.size(); ++i) {
 		if(pthread_equal(lockedThreads[i], currentThread)) {
 			return i;
 		}
