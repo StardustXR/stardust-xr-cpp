@@ -12,7 +12,7 @@ SpatialNode::SpatialNode() {
 }
 
 std::vector<uint8_t> SpatialNode::setPosition(uint sessionID, flexbuffers::Reference data, bool) {
-	if(sessionID == this->sessionID) {
+	if(sessionID == this->sessionID && translatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		position = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
 		transformMatrixDirty = true;
@@ -22,7 +22,7 @@ std::vector<uint8_t> SpatialNode::setPosition(uint sessionID, flexbuffers::Refer
 }
 
 std::vector<uint8_t> SpatialNode::setRotation(uint sessionID, flexbuffers::Reference data, bool) {
-	if(sessionID == this->sessionID) {
+	if(sessionID == this->sessionID && rotatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		rotation = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
 		transformMatrixDirty = true;
@@ -32,7 +32,7 @@ std::vector<uint8_t> SpatialNode::setRotation(uint sessionID, flexbuffers::Refer
 }
 
 std::vector<uint8_t> SpatialNode::setScale(uint sessionID, flexbuffers::Reference data, bool) {
-	if(sessionID == this->sessionID) {
+	if(sessionID == this->sessionID && scalable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		scale = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
 		transformMatrixDirty = true;
@@ -42,19 +42,23 @@ std::vector<uint8_t> SpatialNode::setScale(uint sessionID, flexbuffers::Referenc
 }
 
 std::vector<uint8_t> SpatialNode::setPose(uint sessionID, flexbuffers::Reference data, bool) {
-	flexbuffers::Vector vector = data.AsVector();
-	setPosition(sessionID, vector[0], false);
-	setRotation(sessionID, vector[1], false);
-	setScale(sessionID, vector[2], false);
+	if(sessionID == this->sessionID && translatable && rotatable) {
+		flexbuffers::Vector vector = data.AsVector();
+		setPosition(sessionID, vector[0], false);
+		setRotation(sessionID, vector[1], false);
+		setScale(sessionID, vector[2], false);
+	}
 
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
 std::vector<uint8_t> SpatialNode::setTransform(uint sessionID, flexbuffers::Reference data, bool) {
-	flexbuffers::Vector vector = data.AsVector();
-	setPosition(sessionID, vector[0], false);
-	setRotation(sessionID, vector[1], false);
-	setScale(sessionID, vector[2], false);
+	if(sessionID == this->sessionID && translatable && rotatable && scalable) {
+		flexbuffers::Vector vector = data.AsVector();
+		setPosition(sessionID, vector[0], false);
+		setRotation(sessionID, vector[1], false);
+		setScale(sessionID, vector[2], false);
+	}
 
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }

@@ -26,6 +26,11 @@ public:
 	quat rotation = quat_identity;
 	vec3 scale    = vec3_one;
 
+	// Disable parts of this spatialnode (e.g. fields should not be scalable)
+	bool translatable = true;
+	bool rotatable    = true;
+	bool scalable     = true;
+
 	// Matrix get operations
 	matrix localTransform();
 	matrix worldTransform();
