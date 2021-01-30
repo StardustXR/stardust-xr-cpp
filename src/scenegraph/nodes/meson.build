@@ -7,6 +7,7 @@ lib_scenegraph_nodes = static_library(
 		'input.cpp',
 		'lifecycle.cpp',
 		'model.cpp',
+		'skybox.cpp',
 	),
 	include_directories: [scenegraph_nodes_includes]
 )

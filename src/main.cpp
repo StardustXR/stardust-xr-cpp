@@ -10,6 +10,7 @@
 #include "scenegraph/nodes/input.hpp"
 #include "scenegraph/nodes/lifecycle.hpp"
 #include "scenegraph/nodes/model.hpp"
+#include "scenegraph/nodes/skybox.hpp"
 using namespace StardustXRServer;
 
 // StereoKit includes
@@ -25,6 +26,7 @@ FieldInterface field;
 InputInterface input;
 LifeCycleInterface lifeCycle;
 ModelInterface model;
+SkyboxInterface skybox;
 
 // Define lambda functions for update and draw functions to be propagated
 PropagateFunction updateFunction = [](std::string, Node *node) {
@@ -59,6 +61,7 @@ int main(int argc, char *argv[]) {
 	scenegraph.addNode("/input", &input);
 	scenegraph.addNode("/lifecycle", &lifeCycle);
 	scenegraph.addNode("/model", &model);
+	scenegraph.addNode("/skybox", &skybox);
 
 	// Every stereokit step
 	while (sk_step([]() {
