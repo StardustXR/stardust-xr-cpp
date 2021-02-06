@@ -18,6 +18,10 @@ public:
 
 	ThreadSafeList<InputMethod *> inputMethods;
 	ThreadSafeList<InputHandler *> inputHandlers;
+
+private:
+	std::vector<uint8_t> CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod* inputMethod, float distance);
+	flatbuffers::FlatBufferBuilder fbb;
 };
 
 } // namespace StardustXRServer

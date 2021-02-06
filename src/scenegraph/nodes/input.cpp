@@ -1,5 +1,7 @@
 #include "input.hpp"
 #include "../../globals.h"
+#include "../../nodetypes/input/inputmethods/pointer.hpp"
+#include "../../nodetypes/input/inputmethods/flatbuffers/Input_generated.h"
 
 namespace StardustXRServer {
 
@@ -51,7 +53,15 @@ void InputInterface::processInput() {
 			});
 		}
 		distanceLinks.sort();
-		std::vector<uint8_t> inputData = distanceLinks.begin()->method->serialize(distanceLinks.begin()->distance);
+
+		vector<uint8_t> inputData = CreateInputData(
+			fbb,
+			distanceLinks.begin()->method,
+			distanceLinks.begin()->method->distanceTo(
+				distanceLinks.begin()->handler
+			)
+		);
+
 		distanceLinks.begin()->handler->sendInput(
 			distanceLinks,
 			inputData
@@ -60,6 +70,22 @@ void InputInterface::processInput() {
 
 	inputMethods.done();
 	inputHandlers.done();
+}
+
+std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod* inputMethod, float distance) {
+	StardustXR::InputDataRaw inputMethodType = inputMethod->type();
+	flatbuffers::Offset<void> flatInputMethod = inputMethod->generateInput(fbb, nullptr);
+	const vector<uint8_t> datamap = inputMethod->serializeDatamap();
+
+	CreateInputDataDirect(fbb, inputMethodType, flatInputMethod, distance, &datamap);
+
+	std::vector<uint8_t> data;
+	data.resize(fbb.GetSize());
+	memcpy(data.data(), fbb.GetBufferPointer(), fbb.GetSize());
+
+	fbb.Clear();
+
+	return data;
 }
 
 } // namespace StardustXRServer

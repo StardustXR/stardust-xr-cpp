@@ -1,5 +1,7 @@
 #include "inputhandler.hpp"
+#include "inputmethod.hpp"
 #include "../../globals.h"
+#include "inputmethods/flatbuffers/Input_generated.h"
 
 namespace StardustXRServer {
 
@@ -16,10 +18,16 @@ void InputHandler::sendInput(std::list<DistanceLink> distanceLinks, std::vector<
 	messengerManager.messengers[sessionID]->executeRemoteMethod(
 		callbackPath.c_str(),
 		callbackMethod.c_str(),
-		inputData,
+		[&](flexbuffers::Builder &fbb) {
+			fbb.Blob(inputData);
+		},
 		[&distanceLinks, &inputData](flexbuffers::Reference returnData) {
 			if(distanceLinks.begin() != distanceLinks.end() && !returnData.AsBool()) { // If handlerList is not empty and not captured
+				InputData *parsedInputData = GetMutableInputData(inputData.data());
+//				parsedInputData->
+				InputMethod *method = distanceLinks.begin()->method;
 				InputHandler *handler = distanceLinks.begin()->handler;
+				method->updateInput(parsedInputData, nullptr);
 				handler->sendInput(distanceLinks, inputData);
 			}
 		}

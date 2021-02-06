@@ -34,12 +34,12 @@ InputMethod::DatamapVariant InputMethod::flexRefToVar(flexbuffers::Reference ref
 	else if (ref.IsTypedVector()) {
 		flexbuffers::TypedVector vec = ref.AsTypedVector();
 		if(vec.size() == 2) {
-			return vec2 {
+			return sk::vec2 {
 				vec[0].AsFloat(),
 				vec[1].AsFloat()
 			};
 		} else if(vec.size() == 3) {
-			return vec3 {
+			return sk::vec3 {
 				vec[0].AsFloat(),
 				vec[1].AsFloat(),
 				vec[2].AsFloat()
@@ -59,14 +59,14 @@ void InputMethod::varToFlex(flexbuffers::Builder &fbb, InputMethod::DatamapVaria
 			fbb.Int(arg);
 		else if constexpr (std::is_same_v<T, float>)
 			fbb.Float(arg);
-		else if constexpr (std::is_same_v<T, vec2>) {
-			vec2 vec = arg;
+		else if constexpr (std::is_same_v<T, sk::vec2>) {
+			sk::vec2 vec = arg;
 			fbb.TypedVector([&]() {
 				fbb.Float(vec.x);
 				fbb.Float(vec.y);
 			});
-		} else if constexpr (std::is_same_v<T, vec3>) {
-			vec3 vec = arg;
+		} else if constexpr (std::is_same_v<T, sk::vec3>) {
+			sk::vec3 vec = arg;
 			fbb.TypedVector([&]() {
 				fbb.Float(vec.x);
 				fbb.Float(vec.y);
