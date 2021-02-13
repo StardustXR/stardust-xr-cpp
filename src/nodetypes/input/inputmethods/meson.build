@@ -3,8 +3,7 @@ input_methods_includes = include_directories('.')
 lib_input_methods = static_library(
 	'input_methods',
 	files(
-#		'inputhandler.cpp',
-#		'inputmethod.cpp'
+		'pointer.cpp',
 	),
 	include_directories: [input_methods_includes]
 )
