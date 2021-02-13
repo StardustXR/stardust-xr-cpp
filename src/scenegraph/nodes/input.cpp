@@ -16,6 +16,21 @@ InputInterface::InputInterface() {
 }
 InputInterface::~InputInterface() {}
 
+void InputInterface::handleMessengerDeletion(uint sessionID) {
+	inputMethods.forEach([&](uint32_t index, InputMethod *method) {
+		if(method->sessionID == sessionID) {
+			inputMethods.erase(index);
+		}
+	});
+	inputHandlers.forEach([&](uint32_t index, InputHandler *handler) {
+		if(handler->sessionID == sessionID) {
+			inputHandlers.erase(index);
+		}
+	});
+	inputMethods.done();
+	inputHandlers.done();
+}
+
 std::vector<uint8_t> InputInterface::registerInputHandler(uint sessionID, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vec    = data.AsVector();
 	std::string name           = vec[0].AsString().str();

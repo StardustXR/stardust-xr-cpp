@@ -12,6 +12,7 @@ class InputInterface : public Node {
 public:
 	InputInterface();
 	~InputInterface();
+	void handleMessengerDeletion(uint sessionID);
 
 	std::vector<uint8_t> registerInputHandler(uint sessionID, flexbuffers::Reference data, bool returnValue);
 	void processInput();
