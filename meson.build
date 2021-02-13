@@ -18,7 +18,7 @@ executable(
 # After here are all the internal dependencies
 		nodetypes,
 		scenegraph,
-#		tests,
+		tests,
 		util,
 	],
 )

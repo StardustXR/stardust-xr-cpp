@@ -11,11 +11,15 @@
 #include "scenegraph/nodes/lifecycle.hpp"
 #include "scenegraph/nodes/model.hpp"
 #include "scenegraph/nodes/skybox.hpp"
+#include "tests/flatscreenpointer.hpp"
 using namespace StardustXRServer;
 
 // StereoKit includes
 #include <stereokit.h>
 using namespace sk;
+
+// Global variables
+bool flatscreen = false;
 
 // Initialize scnenegraph and messenger manager
 Scenegraph scenegraph;
@@ -49,9 +53,11 @@ int main(int argc, char *argv[]) {
 	if(argc > 1 && (strcmp("-F", argv[1]) || strcmp("--flatscreen", argv[1]))) {
 		settings.app_name = "Stardust XR (Flatscreen)";
 		settings.display_preference = display_mode_flatscreen;
+		flatscreen = true;
 	} else {
 		settings.app_name = "Stardust XR";
 		settings.display_preference = display_mode_mixedreality;
+		flatscreen = false;
 	}
 	if(!sk_init(settings))
 		perror("Stereokit initialization failed!");
@@ -62,6 +68,12 @@ int main(int argc, char *argv[]) {
 	scenegraph.addNode("/lifecycle", &lifeCycle);
 	scenegraph.addNode("/model", &model);
 	scenegraph.addNode("/skybox", &skybox);
+	if(flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
+		FlatscreenPointer *flatscreenPointer = new FlatscreenPointer();
+		scenegraph.addNode("/test/flatscreenpointer", static_cast<SpatialNode *>(flatscreenPointer));
+		input.inputMethods.pushBack(flatscreenPointer);
+		input.inputMethods.done();
+	}
 
 	// Every stereokit step
 	while (sk_step([]() {

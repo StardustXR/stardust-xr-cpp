@@ -7,4 +7,6 @@
 extern StardustXRServer::Scenegraph scenegraph;
 extern StardustXR::MessengerManager messengerManager;
 
+extern bool flatscreen;
+
 #endif // STARDUSTXR_GLOBALS_H
