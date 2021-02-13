@@ -98,7 +98,8 @@ std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuil
 	flatbuffers::Offset<void> flatInputMethod = inputMethod->generateInput(fbb, nullptr);
 	const vector<uint8_t> datamap = inputMethod->serializeDatamap();
 
-	CreateInputDataDirect(fbb, inputMethodType, flatInputMethod, distance, &datamap);
+	auto inputDataOffset = CreateInputDataDirect(fbb, inputMethodType, flatInputMethod, distance, &datamap);
+	fbb.Finish(inputDataOffset);
 
 	std::vector<uint8_t> data;
 	data.resize(fbb.GetSize());
