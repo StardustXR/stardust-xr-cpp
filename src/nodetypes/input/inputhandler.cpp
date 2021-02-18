@@ -21,14 +21,16 @@ void InputHandler::sendInput(std::list<DistanceLink> distanceLinks, std::vector<
 		[&](flexbuffers::Builder &fbb) {
 			fbb.Blob(inputData);
 		},
-		[&distanceLinks, &inputData](flexbuffers::Reference returnData) {
+		[distanceLinks, inputData](flexbuffers::Reference returnData) {
 			if(distanceLinks.begin() != distanceLinks.end() && !returnData.AsBool()) { // If handlerList is not empty and not captured
-				InputData *parsedInputData = GetMutableInputData(inputData.data());
-//				parsedInputData->
+				std::vector<uint8_t> inputDataCopy = inputData;
+				InputData *parsedInputData = GetMutableInputData(inputDataCopy.data());
+
 				InputMethod *method = distanceLinks.begin()->method;
 				InputHandler *handler = distanceLinks.begin()->handler;
 				method->updateInput(parsedInputData, nullptr);
-				handler->sendInput(distanceLinks, inputData);
+
+				handler->sendInput(distanceLinks, inputDataCopy);
 			}
 		}
 	);
