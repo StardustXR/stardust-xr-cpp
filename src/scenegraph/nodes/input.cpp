@@ -58,11 +58,8 @@ void InputInterface::processInput() {
 	const uint32_t inputMethodCount = inputMethods.length();
 	const uint32_t inputHandlerCount = inputHandlers.length();
 
-	if(inputMethodCount == 0 || inputHandlerCount == 0) {
-		inputMethods.done();
-		inputHandlers.done();
-		return;
-	}
+	if(inputMethodCount == 0 || inputHandlerCount == 0)
+		goto RETURN;
 
 	for(uint32_t i=0; i<inputMethodCount; ++i) {
 		std::list<DistanceLink> distanceLinks;
@@ -89,6 +86,7 @@ void InputInterface::processInput() {
 		);
 	}
 
+	RETURN:
 	inputMethods.done();
 	inputHandlers.done();
 }
