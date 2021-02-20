@@ -22,16 +22,16 @@ using namespace sk;
 namespace StardustXRServer {
 
 typedef struct {
-	vec3 origin;
-	vec3 direction;
+	sk::vec3 origin;
+	sk::vec3 direction;
 	SpatialNode *space;
 } Ray;
 
 typedef struct {
 	Ray ray;
 	float distance;
-	vec3 deepestPoint;
-	vec3 deepestSurfacePoint;
+	sk::vec3 deepestPoint;
+	sk::vec3 deepestSurfacePoint;
 	float rayLength;
 	int raySteps;
 } RayMarchResult;
@@ -43,8 +43,7 @@ static RayMarchResult RayMarch(Ray ray, Field *field) {
 	result.rayLength = 0.0f;
 	result.raySteps = 0;
 
-
-	vec3 rayPoint = ray.origin;
+	sk::vec3 rayPoint = ray.origin;
 
 	while (result.raySteps < MAX_RAY_STEPS && result.rayLength < MAX_RAY_LENGTH) {
 		result.raySteps++;
