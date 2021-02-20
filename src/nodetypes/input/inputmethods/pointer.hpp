@@ -2,6 +2,8 @@
 #define STARDUSTXRSERVER_POINTERINPUT_HPP
 
 #include "../inputmethod.hpp"
+using namespace sk;
+#include "../../../util/raymarch.hpp"
 
 namespace StardustXRServer {
 
@@ -10,6 +12,7 @@ public:
 	PointerInput();
 	virtual ~PointerInput();
 
+	Ray ray;
 	float distanceTo(InputHandler *handler);
 	InputDataRaw type();
 	flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, SpatialNode *space);

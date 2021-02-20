@@ -14,7 +14,13 @@ PointerInput::~PointerInput() {
 }
 
 float PointerInput::distanceTo(InputHandler *handler) {
-	return 0; // Obviously need to fix this, but for now not worth it
+	ray = {
+		vec3_zero,
+		vec3_forward,
+		this
+	};
+	RayMarchResult rayInfo = RayMarch(ray, handler->field);
+	return rayInfo.distance;
 }
 
 InputDataRaw PointerInput::type() {
