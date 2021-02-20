@@ -22,7 +22,7 @@ uint32_t ThreadSafeList<T>::length() {
 	listLength = (bool) begin;
 	ListItem *currentItem = begin;
 
-	for(; currentItem->next != nullptr; listLength++)
+	for(; currentItem && currentItem->next != nullptr; listLength++)
 		currentItem = currentItem->next;
 
 	return listLength;
