@@ -43,22 +43,22 @@ static RayMarchResult RayMarch(Ray ray, Field *field) {
 	result.rayLength = 0.0f;
 	result.raySteps = 0;
 
-	sk::vec3 rayPoint = ray.origin;
+	sk::vec3 rayPoint = field->spaceToLocalPoint(ray.space, ray.origin);
+	sk::vec3 rayDirection = field->spaceToLocalDirection(ray.space, ray.direction);
 
 	while (result.raySteps < MAX_RAY_STEPS && result.rayLength < MAX_RAY_LENGTH) {
-		result.raySteps++;
-
-		float distance = field->distance(ray.space, rayPoint);
+		float distance = field->localDistance(rayPoint);
 		if(result.distance > distance)
 			result.deepestPoint = rayPoint;
 		result.distance = std::min(distance, result.distance);
 
 		float marchDistance = std::clamp(distance, MIN_RAY_MARCH, MAX_RAY_MARCH);
-		rayPoint += ray.direction * marchDistance;
+		rayPoint += rayDirection * marchDistance;
 		result.rayLength += marchDistance;
+		result.raySteps++;
 	}
 
-	result.deepestSurfacePoint = field->closestPoint(ray.space, result.deepestPoint);
+	result.deepestSurfacePoint = field->localClosestPoint(result.deepestPoint);
 
 	return result;
 }
