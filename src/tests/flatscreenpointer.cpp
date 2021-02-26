@@ -10,7 +10,7 @@ FlatscreenPointer::FlatscreenPointer() {
 
 void FlatscreenPointer::update() {
 	position = input_head()->position;
-	rotation = quat_lookat(vec3_forward, input_hand(handed_right)->fingers[1]->position - input_head()->position);
+	rotation = quat_lookat(input_head()->position, input_hand(handed_right)->fingers[1][4].position);
 	datamap["select"] = ((input_hand(handed_right)->pinch_state & button_state_active) != 0) ? 1.0f : 0.0f;
 }
 
