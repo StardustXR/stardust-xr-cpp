@@ -69,6 +69,7 @@ int main(int argc, char *argv[]) {
 	scenegraph.addNode("/model", &model);
 	scenegraph.addNode("/skybox", &skybox);
 	if(flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
+		input_hand_visible(handed_right, false);
 		FlatscreenPointer *flatscreenPointer = new FlatscreenPointer();
 		scenegraph.addNode("/test/flatscreenpointer", static_cast<SpatialNode *>(flatscreenPointer));
 		input.inputMethods.pushBack(flatscreenPointer);
