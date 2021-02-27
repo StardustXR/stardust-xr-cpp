@@ -22,14 +22,14 @@ public:
 	virtual InputDataRaw type() = 0;
 	virtual flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, SpatialNode *space) = 0;
 	virtual void	 updateInput(InputData *data, SpatialNode *space) = 0;
-	virtual vector<uint8_t> serializeDatamap() = 0;
+	virtual vector<uint8_t> serializeDatamap();
 
 protected:
 	typedef variant<bool, int32_t, float, sk::vec2, sk::vec3> DatamapVariant;
 	map<string, DatamapVariant> datamap;
 
 	DatamapVariant flexRefToVar(flexbuffers::Reference ref);
-	void varToFlex(flexbuffers::Builder &fbb, DatamapVariant var);
+	void varToMapFlex(flexbuffers::Builder &fbb, std::string key, InputMethod::DatamapVariant value);
 };
 
 } // namespace StardustXRServer

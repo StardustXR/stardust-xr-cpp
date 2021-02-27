@@ -58,8 +58,4 @@ void PointerInput::updateInput(InputData *data, SpatialNode *space) {
 	pointerInput->mutate_tilt(tilt);
 }
 
-vector<uint8_t> PointerInput::serializeDatamap() {
-	return vector<uint8_t>();
-}
-
 } // namespace StardustXRServer

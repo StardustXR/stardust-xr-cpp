@@ -17,7 +17,6 @@ public:
 	InputDataRaw type();
 	flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, SpatialNode *space);
 	void updateInput(InputData *data, SpatialNode *space);
-	vector<uint8_t> serializeDatamap();
 };
 
 } // namespace StardustXRServer

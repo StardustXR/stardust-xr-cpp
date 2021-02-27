@@ -50,30 +50,40 @@ InputMethod::DatamapVariant InputMethod::flexRefToVar(flexbuffers::Reference ref
 	return false;
 }
 
-void InputMethod::varToFlex(flexbuffers::Builder &fbb, InputMethod::DatamapVariant var) {
+void InputMethod::varToMapFlex(flexbuffers::Builder &fbb, std::string key, InputMethod::DatamapVariant value) {
 	std::visit([&](auto&& arg) {
 		using T = std::decay_t<decltype(arg)>;
 		if constexpr (std::is_same_v<T, bool>)
-			fbb.Bool(arg);
+			fbb.Bool(key.c_str(), arg);
 		else if constexpr (std::is_same_v<T, int>)
-			fbb.Int(arg);
+			fbb.Int(key.c_str(), arg);
 		else if constexpr (std::is_same_v<T, float>)
-			fbb.Float(arg);
+			fbb.Float(key.c_str(), arg);
 		else if constexpr (std::is_same_v<T, sk::vec2>) {
 			sk::vec2 vec = arg;
-			fbb.TypedVector([&]() {
+			fbb.TypedVector(key.c_str(), [&]() {
 				fbb.Float(vec.x);
 				fbb.Float(vec.y);
 			});
 		} else if constexpr (std::is_same_v<T, sk::vec3>) {
 			sk::vec3 vec = arg;
-			fbb.TypedVector([&]() {
+			fbb.TypedVector(key.c_str(), [&]() {
 				fbb.Float(vec.x);
 				fbb.Float(vec.y);
 				fbb.Float(vec.z);
 			});
 		}
-	}, var);
+	}, value);
+}
+
+vector<uint8_t> InputMethod::serializeDatamap() {
+	return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
+		fbb.Map([&](){
+			for(auto const& [mapKey, mapItem] : datamap) {
+				varToMapFlex(fbb, mapKey, mapItem);
+			}
+		});
+	});
 }
 
 } // namespace StardustXRServer
