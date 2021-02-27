@@ -1,5 +1,4 @@
-#ifndef STARDUSTXR_DRAWABLE_NODE_H
-#define STARDUSTXR_DRAWABLE_NODE_H
+#pragma once
 
 #include "../spatialnode.hpp"
 
@@ -15,5 +14,3 @@ public:
 };
 
 } //namespace StardustXRServer
-
-#endif //STARDUSTXR_DRAWABLE_NODE_H

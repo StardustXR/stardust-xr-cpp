@@ -1,5 +1,4 @@
-#ifndef STARDUSTXR_MODEL_INTERFACE_H
-#define STARDUSTXR_MODEL_INTERFACE_H
+#pragma once
 
 #include "../../nodetypes/graphical/model.hpp"
 #include <stereokit.h>
@@ -15,5 +14,3 @@ public:
 };
 
 }
-
-#endif // STARDUSTXR_MODEL_INTERFACE_H

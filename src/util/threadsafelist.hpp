@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_THREADSAFELIST_HPP
-#define STARDUSTXRSERVER_THREADSAFELIST_HPP
+#pragma once
 
 #include <pthread.h>
 #include <functional>
@@ -55,5 +54,3 @@ protected:
 } // namespace StardustXRServer
 
 #include "threadsafelist_impl.hpp"
-
-#endif // STARDUSTXRSERVER_THREADSAFELIST_HPP

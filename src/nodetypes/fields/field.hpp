@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_FIELD_HPP
-#define STARDUSTXRSERVER_FIELD_HPP
+#pragma once
 
 #include "../spatialnode.hpp"
 
@@ -31,5 +30,3 @@ public:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_FIELD_HPP

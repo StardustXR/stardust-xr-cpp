@@ -1,5 +1,4 @@
-#ifndef STARDUSTXR_SCENEGRAPH_HPP
-#define STARDUSTXR_SCENEGRAPH_HPP
+#pragma once
 
 #include <stardustxr/server/scenegraph.hpp>
 #include "../nodetypes/node.hpp"
@@ -29,5 +28,3 @@ protected:
 };
 
 } // namespace StardustXR
-
-#endif //STARDUSTXR_SCENEGRAPH_HPP

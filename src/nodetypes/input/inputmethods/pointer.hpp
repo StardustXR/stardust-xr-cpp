@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_POINTERINPUT_HPP
-#define STARDUSTXRSERVER_POINTERINPUT_HPP
+#pragma once
 
 #include "../inputmethod.hpp"
 using namespace sk;
@@ -20,5 +19,3 @@ public:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_POINTERINPUT_HPP

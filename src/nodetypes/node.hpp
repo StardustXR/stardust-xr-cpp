@@ -1,5 +1,4 @@
-#ifndef STARDUSTXR_NODE_HPP
-#define STARDUSTXR_NODE_HPP
+#pragma once
 
 #include <functional>
 #include <stardustxr/server/messengermanager.hpp>
@@ -30,5 +29,3 @@ public:
 };
 
 } //namespace StardustXRServer
-
-#endif //STARDUSTXR_NODE_HPP

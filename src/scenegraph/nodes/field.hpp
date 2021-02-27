@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_FIELDINTERFACE_HPP
-#define STARDUSTXRSERVER_FIELDINTERFACE_HPP
+#pragma once
 
 #include "../../nodetypes/node.hpp"
 
@@ -15,5 +14,3 @@ public:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_FIELDINTERFACE_HPP

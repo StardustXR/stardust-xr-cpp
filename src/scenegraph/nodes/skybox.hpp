@@ -1,5 +1,4 @@
-#ifndef STARDUSTXR_SKYBOXINTERFACE_H
-#define STARDUSTXR_SKYBOXINTERFACE_H
+#pragma once
 
 #include "../../nodetypes/node.hpp"
 
@@ -17,5 +16,3 @@ private:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXR_SKYBOXINTERFACE_H

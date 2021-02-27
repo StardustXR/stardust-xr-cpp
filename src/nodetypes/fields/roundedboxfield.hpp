@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_ROUNDEDBOXFIELD_HPP
-#define STARDUSTXRSERVER_ROUNDEDBOXFIELD_HPP
+#pragma once
 
 #include "boxfield.hpp"
 
@@ -16,5 +15,3 @@ public:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_ROUNDEDBOXFIELD_HPP

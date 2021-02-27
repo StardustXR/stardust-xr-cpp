@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_INPUTHANDLER_HPP
-#define STARDUSTXRSERVER_INPUTHANDLER_HPP
+#pragma once
 
 #include "../node.hpp"
 #include "../fields/field.hpp"
@@ -24,5 +23,3 @@ public:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_INPUTHANDLER_HPP

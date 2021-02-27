@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_FLATSCREENPOINTER_HPP
-#define STARDUSTXRSERVER_FLATSCREENPOINTER_HPP
+#pragma once
 
 #include "../nodetypes/input/inputmethods/pointer.hpp"
 
@@ -13,5 +12,3 @@ public:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_FLATSCREENPOINTER_HPP

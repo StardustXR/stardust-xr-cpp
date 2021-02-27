@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_BOXFIELD_HPP
-#define STARDUSTXRSERVER_BOXFIELD_HPP
+#pragma once
 
 #include "field.hpp"
 
@@ -16,5 +15,3 @@ public:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_BOXFIELD_HPP

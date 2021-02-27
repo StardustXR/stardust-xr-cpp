@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_INPUTMETHOD_HPP
-#define STARDUSTXRSERVER_INPUTMETHOD_HPP
+#pragma once
 
 #include "../node.hpp"
 #include "inputhandler.hpp"
@@ -33,5 +32,3 @@ protected:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_INPUTMETHOD_HPP

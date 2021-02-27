@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_SPATIALNODE_HPP
-#define STARDUSTXRSERVER_SPATIALNODE_HPP
+#pragma once
 
 #include "node.hpp"
 #include <stereokit.h>
@@ -54,5 +53,3 @@ protected:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_SPATIALNODE_HPP

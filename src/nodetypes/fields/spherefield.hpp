@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_SPHEREFIELD_HPP
-#define STARDUSTXRSERVER_SPHEREFIELD_HPP
+#pragma once
 
 #include "field.hpp"
 
@@ -18,5 +17,3 @@ public:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_SPHEREFIELD_HPP

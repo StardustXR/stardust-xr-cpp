@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_RAYMARCH_HPP
-#define STARDUSTXRSERVER_RAYMARCH_HPP
+#pragma once
 
 #include <cmath>
 #include <limits>
@@ -64,5 +63,3 @@ static RayMarchResult RayMarch(Ray ray, Field *field) {
 }
 
 }
-
-#endif // STARDUSTXRSERVER_RAYMARCH_HPP

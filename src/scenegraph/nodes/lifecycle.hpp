@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_LIFECYCLEINTERFACE_HPP
-#define STARDUSTXRSERVER_LIFECYCLEINTERFACE_HPP
+#pragma once
 
 #include "../../nodetypes/node.hpp"
 #include "../../util/threadsafelist.hpp"
@@ -32,5 +31,3 @@ protected:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_LIFECYCLEINTERFACE_HPP

@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_INPUTINTERFACE_HPP
-#define STARDUSTXRSERVER_INPUTINTERFACE_HPP
+#pragma once
 
 #include "../../nodetypes/node.hpp"
 #include "../../nodetypes/input/inputhandler.hpp"
@@ -26,5 +25,3 @@ private:
 };
 
 } // namespace StardustXRServer
-
-#endif // STARDUSTXRSERVER_INPUTINTERFACE_HPP

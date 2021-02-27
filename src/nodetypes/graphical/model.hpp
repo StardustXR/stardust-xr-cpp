@@ -1,5 +1,4 @@
-#ifndef STARDUSTXR_MODEL_NODE_H
-#define STARDUSTXR_MODEL_NODE_H
+#pragma once
 
 #include "drawablenode.hpp"
 #include <stereokit.h>
@@ -20,6 +19,3 @@ public:
 };
 
 }
-
-
-#endif // STARDUSTXR_MODEL_NODE_H

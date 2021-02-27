@@ -1,5 +1,4 @@
-#ifndef STARDUSTXRSERVER_DISTANCELINK_HPP
-#define STARDUSTXRSERVER_DISTANCELINK_HPP
+#pragma once
 
 namespace StardustXRServer {
 
@@ -17,5 +16,3 @@ inline bool operator<(DistanceLink &a, DistanceLink &b) {
 }
 
 }
-
-#endif // STARDUSTXRSERVER_DISTANCELINK_HPP
