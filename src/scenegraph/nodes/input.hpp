@@ -21,7 +21,7 @@ public:
 	ThreadSafeList<InputHandler *> inputHandlers;
 
 private:
-	std::vector<uint8_t> CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod* inputMethod, float distance);
+	std::vector<uint8_t> CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod *inputMethod, InputHandler *inputHandler);
 	flatbuffers::FlatBufferBuilder fbb;
 };
 
