@@ -14,7 +14,7 @@ public:
 	Ray ray;
 	float distanceTo(InputHandler *handler);
 	InputDataRaw type();
-	flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, SpatialNode *space);
+	flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler);
 	void updateInput(InputData *data, SpatialNode *space);
 };
 

@@ -20,6 +20,10 @@ float PointerInput::distanceTo(InputHandler *handler) {
 		this
 	};
 	RayMarchResult rayInfo = RayMarch(ray, handler->field);
+
+	datamap["deepestPoint"] = rayInfo.deepestPoint;
+	datamap["deepestSurfacePoint"] = rayInfo.deepestSurfacePoint;
+
 	return rayInfo.distance;
 }
 
@@ -27,7 +31,8 @@ InputDataRaw PointerInput::type() {
 	return InputDataRaw_Pointer;
 }
 
-flatbuffers::Offset<void> PointerInput::generateInput(flatbuffers::FlatBufferBuilder &fbb, SpatialNode *space) {
+flatbuffers::Offset<void> PointerInput::generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler) {
+	SpatialNode *space = handler->field;
 	sk::vec3 pos = localToSpacePoint(space, vec3_zero);
 	sk::vec3 dir = localToSpaceDirection(space, vec3_forward);
 	float tilt = 0;

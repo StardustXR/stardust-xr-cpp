@@ -18,7 +18,9 @@ struct Pointer FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ORIGIN = 4,
     VT_DIRECTION = 6,
-    VT_TILT = 8
+    VT_TILT = 8,
+    VT_DEEPEST_POINT = 10,
+    VT_DEEPEST_SURFACE_POINT = 12
   };
   const StardustXR::vec3 *origin() const {
     return GetStruct<const StardustXR::vec3 *>(VT_ORIGIN);
@@ -38,11 +40,25 @@ struct Pointer FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool mutate_tilt(float _tilt) {
     return SetField<float>(VT_TILT, _tilt, 0.0f);
   }
+  const StardustXR::vec3 *deepest_point() const {
+    return GetStruct<const StardustXR::vec3 *>(VT_DEEPEST_POINT);
+  }
+  StardustXR::vec3 *mutable_deepest_point() {
+    return GetStruct<StardustXR::vec3 *>(VT_DEEPEST_POINT);
+  }
+  const StardustXR::vec3 *deepest_surface_point() const {
+    return GetStruct<const StardustXR::vec3 *>(VT_DEEPEST_SURFACE_POINT);
+  }
+  StardustXR::vec3 *mutable_deepest_surface_point() {
+    return GetStruct<StardustXR::vec3 *>(VT_DEEPEST_SURFACE_POINT);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<StardustXR::vec3>(verifier, VT_ORIGIN) &&
            VerifyField<StardustXR::vec3>(verifier, VT_DIRECTION) &&
            VerifyField<float>(verifier, VT_TILT) &&
+           VerifyField<StardustXR::vec3>(verifier, VT_DEEPEST_POINT) &&
+           VerifyField<StardustXR::vec3>(verifier, VT_DEEPEST_SURFACE_POINT) &&
            verifier.EndTable();
   }
 };
@@ -60,6 +76,12 @@ struct PointerBuilder {
   void add_tilt(float tilt) {
     fbb_.AddElement<float>(Pointer::VT_TILT, tilt, 0.0f);
   }
+  void add_deepest_point(const StardustXR::vec3 *deepest_point) {
+    fbb_.AddStruct(Pointer::VT_DEEPEST_POINT, deepest_point);
+  }
+  void add_deepest_surface_point(const StardustXR::vec3 *deepest_surface_point) {
+    fbb_.AddStruct(Pointer::VT_DEEPEST_SURFACE_POINT, deepest_surface_point);
+  }
   explicit PointerBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -75,8 +97,12 @@ inline flatbuffers::Offset<Pointer> CreatePointer(
     flatbuffers::FlatBufferBuilder &_fbb,
     const StardustXR::vec3 *origin = 0,
     const StardustXR::vec3 *direction = 0,
-    float tilt = 0.0f) {
+    float tilt = 0.0f,
+    const StardustXR::vec3 *deepest_point = 0,
+    const StardustXR::vec3 *deepest_surface_point = 0) {
   PointerBuilder builder_(_fbb);
+  builder_.add_deepest_surface_point(deepest_surface_point);
+  builder_.add_deepest_point(deepest_point);
   builder_.add_tilt(tilt);
   builder_.add_direction(direction);
   builder_.add_origin(origin);

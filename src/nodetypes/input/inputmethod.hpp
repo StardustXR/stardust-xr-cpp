@@ -19,7 +19,7 @@ public:
 
 	virtual float distanceTo(InputHandler *handler) = 0;
 	virtual InputDataRaw type() = 0;
-	virtual flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, SpatialNode *space) = 0;
+	virtual flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler) = 0;
 	virtual void	 updateInput(InputData *data, SpatialNode *space) = 0;
 	virtual vector<uint8_t> serializeDatamap();
 

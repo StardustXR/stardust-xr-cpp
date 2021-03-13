@@ -92,7 +92,7 @@ void InputInterface::processInput() {
 std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod* inputMethod, InputHandler *inputHandler) {
 	float distance = inputMethod->distanceTo(inputHandler);
 	StardustXR::InputDataRaw inputMethodType = inputMethod->type();
-	flatbuffers::Offset<void> flatInputMethod = inputMethod->generateInput(fbb, inputHandler->field);
+	flatbuffers::Offset<void> flatInputMethod = inputMethod->generateInput(fbb, inputHandler);
 	const vector<uint8_t> datamap = inputMethod->serializeDatamap();
 
 	auto inputDataOffset = CreateInputDataDirect(fbb, inputMethodType, flatInputMethod, distance, &datamap);
