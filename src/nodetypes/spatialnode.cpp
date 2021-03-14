@@ -1,4 +1,5 @@
 #include "spatialnode.hpp"
+#include "../globals.h"
 
 namespace StardustXRServer {
 
@@ -91,6 +92,19 @@ matrix SpatialNode::spaceToLocalMatrix(SpatialNode *space) {
 	matrix spaceToWorldMatrix = space->worldTransform();
 
 	return spaceToWorldMatrix * worldToLocalMatrix;
+}
+
+bool SpatialNode::setSpatialParent(std::string spacePath) {
+	if(spacePath == "") {
+		spatialParent = nullptr;
+		return true;
+	}
+	SpatialNode *potentialParent = dynamic_cast<SpatialNode *>(scenegraph.findNode(spacePath));
+	if(potentialParent) {
+		spatialParent = potentialParent;
+		return true;
+	}
+	return false;
 }
 
 matrix SpatialNode::localTransform() {

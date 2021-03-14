@@ -38,6 +38,8 @@ public:
 
 	// Spatial heirarchy relationships
 	SpatialNode *spatialParent = nullptr;
+	bool setSpatialParent(std::string spacePath);
+
 	vec3 spaceToLocalPoint    (SpatialNode *space, vec3 point    ) { return matrix_mul_point    (spaceToLocalMatrix(space), point    ); }
 	vec3 spaceToLocalDirection(SpatialNode *space, vec3 direction) { return matrix_mul_direction(spaceToLocalMatrix(space), direction); }
 	quat spaceToLocalRotation (SpatialNode *space, quat rot      ) { return matrix_mul_rotation (spaceToLocalMatrix(space), rot      ); }
