@@ -6,7 +6,9 @@
 namespace StardustXRServer {
 
 InputHandler::InputHandler() {
-
+	translatable = true;
+	rotatable = true;
+	scalable = false;
 }
 
 InputHandler::~InputHandler() {
@@ -28,7 +30,7 @@ void InputHandler::sendInput(std::list<DistanceLink> distanceLinks, std::vector<
 
 				InputMethod *method = distanceLinks.begin()->method;
 				InputHandler *handler = distanceLinks.begin()->handler;
-				method->updateInput(parsedInputData, nullptr);
+				method->updateInput(parsedInputData, handler);
 
 				handler->sendInput(distanceLinks, inputDataCopy);
 			}

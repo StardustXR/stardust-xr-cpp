@@ -32,9 +32,8 @@ InputDataRaw PointerInput::type() {
 }
 
 flatbuffers::Offset<void> PointerInput::generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler) {
-	SpatialNode *space = handler->field;
-	sk::vec3 pos = localToSpacePoint(space, vec3_zero);
-	sk::vec3 dir = localToSpaceDirection(space, vec3_forward);
+	sk::vec3 pos = localToSpacePoint(handler, vec3_zero);
+	sk::vec3 dir = localToSpaceDirection(handler, vec3_forward);
 	float tilt = 0;
 
 	StardustXR::vec3 flatPos(pos.x, pos.y, pos.z);

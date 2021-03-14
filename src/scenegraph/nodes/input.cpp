@@ -32,11 +32,13 @@ void InputInterface::handleMessengerDeletion(uint sessionID) {
 }
 
 std::vector<uint8_t> InputInterface::registerInputHandler(uint sessionID, flexbuffers::Reference data, bool) {
-	flexbuffers::Vector vec    = data.AsVector();
-	std::string name           = vec[0].AsString().str();
-	std::string field          = vec[1].AsString().str();
-	std::string callbackPath   = vec[2].AsString().str();
-	std::string callbackMethod = vec[3].AsString().str();
+	flexbuffers::Vector vec      = data.AsVector();
+	std::string name             = vec[0].AsString().str();
+	std::string field            = vec[1].AsString().str();
+	flexbuffers::TypedVector pos = vec[2].AsTypedVector();
+	flexbuffers::TypedVector rot = vec[3].AsTypedVector();
+	std::string callbackPath     = vec[4].AsString().str();
+	std::string callbackMethod   = vec[5].AsString().str();
 
 	InputHandler *handler               = new InputHandler();
 	handler->ready                      = false;
@@ -44,8 +46,11 @@ std::vector<uint8_t> InputInterface::registerInputHandler(uint sessionID, flexbu
 	children["handler"]->children[name] = handler;
 	handler->sessionID                  = sessionID;
 	handler->field                      = dynamic_cast<Field *>(scenegraph.findNode(field));
+	handler->position                   = { pos[0].AsFloat(), pos[1].AsFloat(), pos[2].AsFloat() };
+	handler->rotation                   = { rot[0].AsFloat(), rot[1].AsFloat(), rot[2].AsFloat(), rot[3].AsFloat() };
 	handler->callbackPath               = callbackPath;
 	handler->callbackMethod             = callbackMethod;
+	handler->transformDirty();
 	handler->ready                      = true;
 
 	inputHandlers.pushBack(handler);
