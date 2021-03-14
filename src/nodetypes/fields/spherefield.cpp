@@ -2,7 +2,9 @@
 
 namespace StardustXRServer {
 
-SphereField::SphereField() {}
+SphereField::SphereField() {
+	rotatable = false; // Spheres can't be rotated :p
+}
 
 float SphereField::localDistance(const vec3 point) {
 	return vec3_magnitude(point) - radius;
