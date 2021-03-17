@@ -10,6 +10,8 @@ SpatialNode::SpatialNode() {
 
 	STARDUSTXR_NODE_METHOD("setPose", &SpatialNode::setPose)
 	STARDUSTXR_NODE_METHOD("setTransform", &SpatialNode::setTransform)
+
+	STARDUSTXR_NODE_METHOD("setSpatialParent", &SpatialNode::setSpatialParentFlex)
 }
 
 std::vector<uint8_t> SpatialNode::setPosition(uint sessionID, flexbuffers::Reference data, bool) {
@@ -61,6 +63,14 @@ std::vector<uint8_t> SpatialNode::setTransform(uint sessionID, flexbuffers::Refe
 		setScale(sessionID, vector[2], false);
 	}
 
+	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+}
+
+std::vector<uint8_t> SpatialNode::setSpatialParentFlex(uint sessionID, flexbuffers::Reference data, bool) {
+	if(sessionID == this->sessionID) {
+		std::string spacePath = data.AsString().str();
+		setSpatialParent(spacePath);
+	}
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
