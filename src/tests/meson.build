@@ -4,6 +4,7 @@ lib_tests = static_library(
 	'tests',
 	files(
 		'flatscreenpointer.cpp',
+		'skhand.cpp',
 	),
 	include_directories: [tests_includes]
 )

@@ -12,6 +12,7 @@
 #include "scenegraph/nodes/model.hpp"
 #include "scenegraph/nodes/skybox.hpp"
 #include "tests/flatscreenpointer.hpp"
+#include "tests/skhand.hpp"
 using namespace StardustXRServer;
 
 // StereoKit includes
@@ -73,6 +74,15 @@ int main(int argc, char *argv[]) {
 		FlatscreenPointer *flatscreenPointer = new FlatscreenPointer();
 		scenegraph.addNode("/test/flatscreenpointer", static_cast<SpatialNode *>(flatscreenPointer));
 		input.inputMethods.pushBack(flatscreenPointer);
+		input.inputMethods.done();
+	} else { // Add the StereoKit hand representation if we're not in flatscreen
+		SKHandInput *stereokitHands[2];
+//		stereokitHands[0] = new SKHandInput(handed_left);
+		stereokitHands[1] = new SKHandInput(handed_right);
+//		scenegraph.addNode("/test/skhandleft", static_cast<SpatialNode *>(stereokitHands[0]));
+		scenegraph.addNode("/test/skhandright", static_cast<SpatialNode *>(stereokitHands[1]));
+//		input.inputMethods.pushBack(stereokitHands[0]);
+		input.inputMethods.pushBack(stereokitHands[1]);
 		input.inputMethods.done();
 	}
 
