@@ -49,7 +49,6 @@ int main(int argc, char *argv[]) {
 	// log_set_filter(log_diagnostic);
 	sk_settings_t settings = {};
 	settings.assets_folder = "";
-	settings.display_fallback = true;
 
 	if(argc > 1 && (strcmp("-F", argv[1]) || strcmp("--flatscreen", argv[1]))) {
 		settings.app_name = "Stardust XR (Flatscreen)";
