@@ -47,7 +47,7 @@ std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, 
 	this->onPathStep(path, [&](std::string pathStep) {
 		currentNode = currentNode->children[pathStep];
 		if(currentNode == nullptr) {
-			printf("Node %s not found", pathStep.c_str());
+			printf("Node %s not found\n", pathStep.c_str());
 			return;
 		}
 	});
@@ -55,7 +55,7 @@ std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, 
 	while(currentNode == nullptr) {}
 
 	if(currentNode->methods[method] == nullptr) {
-		printf("Method %s on node %s not found", method.c_str(), path.c_str());
+		printf("Method %s on node %s not found\n", method.c_str(), path.c_str());
 		return std::vector<uint8_t>();
 	}
 	return (currentNode->methods[method])(sessionID, args, returnValue);
