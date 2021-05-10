@@ -4,6 +4,11 @@
 namespace StardustXRServer {
 
 SpatialNode::SpatialNode() {
+	STARDUSTXR_NODE_METHOD("move", &SpatialNode::move)
+	STARDUSTXR_NODE_METHOD("rotate", &SpatialNode::rotate)
+	STARDUSTXR_NODE_METHOD("rotateAround", &SpatialNode::rotateAround)
+	STARDUSTXR_NODE_METHOD("scale", &SpatialNode::scaleThis)
+
 	STARDUSTXR_NODE_METHOD("setOrigin", &SpatialNode::setOrigin)
 	STARDUSTXR_NODE_METHOD("setOrientation", &SpatialNode::setOrientation)
 	STARDUSTXR_NODE_METHOD("setScale", &SpatialNode::setScale)
@@ -12,6 +17,57 @@ SpatialNode::SpatialNode() {
 	STARDUSTXR_NODE_METHOD("setTransform", &SpatialNode::setTransform)
 
 	STARDUSTXR_NODE_METHOD("setSpatialParent", &SpatialNode::setSpatialParentFlex)
+}
+
+std::vector<uint8_t> SpatialNode::move(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+	if(sessionID == this->sessionID && translatable) {
+		flexbuffers::TypedVector vector = data.AsTypedVector();
+		vec3 moveDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
+		position += rotation * moveDelta;
+		transformMatrixDirty = true;
+	}
+
+	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+}
+
+std::vector<uint8_t> SpatialNode::rotate(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+	if(sessionID == this->sessionID && rotatable) {
+		flexbuffers::TypedVector vector = data.AsTypedVector();
+		quat rotationDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
+		rotation = rotation * rotationDelta;
+		transformMatrixDirty = true;
+	}
+
+	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+}
+
+std::vector<uint8_t> SpatialNode::rotateAround(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+	if(sessionID == this->sessionID && rotatable) {
+		flexbuffers::Vector vec = data.AsVector();
+		flexbuffers::TypedVector flexPoint = vec[0].AsTypedVector();
+		flexbuffers::TypedVector flexRotation = vec[0].AsTypedVector();
+
+		vec3 point = { flexPoint[0].AsFloat(), flexPoint[1].AsFloat(), flexPoint[2].AsFloat() };
+		quat rotationDelta = { flexRotation[0].AsFloat(), flexRotation[1].AsFloat(), flexRotation[2].AsFloat(), flexRotation[3].AsFloat() };
+
+		position += rotation * point;
+		rotation = rotation * rotationDelta;
+		position -= rotation * point;
+
+		transformMatrixDirty = true;
+	}
+
+	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+}
+
+std::vector<uint8_t> SpatialNode::scaleThis(uint sessionID, flexbuffers::Reference data, bool returnValue) {
+	if(sessionID == this->sessionID && translatable) {
+		float scaleDelta = data.AsFloat();
+		scale = scale * scaleDelta;
+		transformMatrixDirty = true;
+	}
+
+	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
 std::vector<uint8_t> SpatialNode::setOrigin(uint sessionID, flexbuffers::Reference data, bool) {

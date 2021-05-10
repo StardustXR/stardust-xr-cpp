@@ -14,6 +14,11 @@ public:
 	virtual ~SpatialNode() {}
 
 	// Client accessible functions
+	std::vector<uint8_t> move                 (uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> rotate               (uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> rotateAround         (uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> scaleThis            (uint sessionID, flexbuffers::Reference data, bool returnValue);
+
 	std::vector<uint8_t> setOrigin            (uint sessionID, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setOrientation       (uint sessionID, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setScale             (uint sessionID, flexbuffers::Reference data, bool returnValue);
