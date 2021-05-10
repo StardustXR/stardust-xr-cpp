@@ -11,6 +11,7 @@
 #include "scenegraph/nodes/lifecycle.hpp"
 #include "scenegraph/nodes/model.hpp"
 #include "scenegraph/nodes/skybox.hpp"
+#include "scenegraph/nodes/spatial.hpp"
 #include "tests/flatscreenpointer.hpp"
 #include "tests/skhand.hpp"
 using namespace StardustXRServer;
@@ -32,6 +33,7 @@ InputInterface input;
 LifeCycleInterface lifeCycle;
 ModelInterface model;
 SkyboxInterface skybox;
+SpatialFactory spatial;
 
 // Define lambda functions for update and draw functions to be propagated
 PropagateFunction updateFunction = [](std::string, Node *node) {
@@ -68,6 +70,7 @@ int main(int argc, char *argv[]) {
 	scenegraph.addNode("/lifecycle", &lifeCycle);
 	scenegraph.addNode("/model", &model);
 	scenegraph.addNode("/skybox", &skybox);
+	scenegraph.addNode("/spatial", &spatial);
 	if(flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_right, false);
 		FlatscreenPointer *flatscreenPointer = new FlatscreenPointer();
