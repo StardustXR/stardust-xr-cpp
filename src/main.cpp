@@ -6,11 +6,11 @@
 
 // Stardust XR Server includes
 #include "scenegraph/scenegraph.hpp"
+#include "scenegraph/nodes/environment.hpp"
 #include "scenegraph/nodes/field.hpp"
 #include "scenegraph/nodes/input.hpp"
 #include "scenegraph/nodes/lifecycle.hpp"
 #include "scenegraph/nodes/model.hpp"
-#include "scenegraph/nodes/skybox.hpp"
 #include "scenegraph/nodes/spatial.hpp"
 #include "tests/flatscreenpointer.hpp"
 #include "tests/skhand.hpp"
@@ -28,11 +28,11 @@ Scenegraph scenegraph;
 StardustXR::MessengerManager messengerManager(&scenegraph);
 
 // Initialize scenegraph object nodes
+EnvironmentInterface environment;
 FieldInterface field;
 InputInterface input;
 LifeCycleInterface lifeCycle;
 ModelInterface model;
-SkyboxInterface skybox;
 SpatialFactory spatial;
 
 // Define lambda functions for update and draw functions to be propagated
@@ -51,6 +51,7 @@ int main(int argc, char *argv[]) {
 	// log_set_filter(log_diagnostic);
 	sk_settings_t settings = {};
 	settings.assets_folder = "";
+	settings.log_filter = log_diagnostic;
 
 	if(argc > 1 && (strcmp("-F", argv[1]) || strcmp("--flatscreen", argv[1]))) {
 		settings.app_name = "Stardust XR (Flatscreen)";
@@ -65,11 +66,11 @@ int main(int argc, char *argv[]) {
 		perror("Stereokit initialization failed!");
 
 	// Add the nodes to the scenegraph
+	scenegraph.addNode("/environment", &environment);
 	scenegraph.addNode("/field", &field);
 	scenegraph.addNode("/input", &input);
 	scenegraph.addNode("/lifecycle", &lifeCycle);
 	scenegraph.addNode("/model", &model);
-	scenegraph.addNode("/skybox", &skybox);
 	scenegraph.addNode("/spatial", &spatial);
 	if(flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_right, false);
