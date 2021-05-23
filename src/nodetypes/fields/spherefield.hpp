@@ -6,7 +6,7 @@ namespace StardustXRServer {
 
 class SphereField : public Field {
 public:
-	SphereField();
+	SphereField(float radius);
 	virtual ~SphereField() {}
 
 	float radius = 1.0f;

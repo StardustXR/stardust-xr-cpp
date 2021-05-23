@@ -2,7 +2,8 @@
 
 namespace StardustXRServer {
 
-SphereField::SphereField() {
+SphereField::SphereField(float radius) {
+	this->radius = radius;
 	rotatable = false; // Spheres can't be rotated :p
 }
 

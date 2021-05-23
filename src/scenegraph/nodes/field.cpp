@@ -36,13 +36,12 @@ std::vector<uint8_t> FieldInterface::createBoxField(uint sessionID, flexbuffers:
 		flexSize[2].AsFloat()
 	};
 
-	BoxField *field = new BoxField();
+	BoxField *field = new BoxField(size);
 	field->ready = false;
 	field->sessionID = sessionID;
 	field->position = position;
 	field->rotation = rotation;
 	field->transformDirty();
-	field->size = size;
 	children[name] = field;
 	field->ready = true;
 
@@ -61,12 +60,11 @@ std::vector<uint8_t> FieldInterface::createSphereField(uint sessionID, flexbuffe
 	};
 	float radius = vector[2].AsFloat();
 
-	SphereField *field = new SphereField();
+	SphereField *field = new SphereField(radius);
 	field->ready = false;
 	field->sessionID = sessionID;
 	field->position = origin;
 	field->transformDirty();
-	field->radius = radius;
 	children[name] = field;
 	field->ready = true;
 

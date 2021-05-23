@@ -6,7 +6,7 @@ namespace StardustXRServer {
 
 class RoundedBoxField : public BoxField {
 public:
-	RoundedBoxField();
+	RoundedBoxField(vec3 size, float radius);
 	virtual ~RoundedBoxField() {}
 
 	float radius;

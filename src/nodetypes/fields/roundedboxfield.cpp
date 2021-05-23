@@ -5,7 +5,10 @@ using namespace std;
 
 namespace StardustXRServer {
 
-RoundedBoxField::RoundedBoxField() {}
+RoundedBoxField::RoundedBoxField(vec3 size, float radius) :
+	BoxField::BoxField(size) {
+	this->radius = radius;
+}
 
 float RoundedBoxField::localDistance(const vec3 point) {
 	float minSizeDimension = min(size.x, min(size.y, size.z));
