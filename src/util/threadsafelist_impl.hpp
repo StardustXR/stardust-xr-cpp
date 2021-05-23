@@ -147,7 +147,7 @@ typename ThreadSafeList<T>::ListItem *ThreadSafeList<T>::get(int index) {
 	int iMax = (index >= 0) ? index : length() + index;
 	ListItem *currentItem = begin;
 
-	for(int i=1; i<iMax; ++i)
+	for(int i=0; i<iMax; ++i)
 		currentItem = currentItem->next;
 
 	return currentItem;
