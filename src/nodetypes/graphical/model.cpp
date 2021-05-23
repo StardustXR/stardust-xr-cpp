@@ -8,7 +8,7 @@ Model::Model() {}
 void Model::update() {
 	if(queued) {
 		queued = false;
-		model = sk::model_create_file(modelPath.c_str());
+		model = model_create_file(modelPath.c_str());
 		visible = true;
 	}
 }
