@@ -12,6 +12,12 @@ public:
 	vec3 size;
 
 	virtual float localDistance(const vec3 point);
+
+	void update();
+
+private:
+	mesh_t debugMesh = nullptr;
+	model_t debugModel = nullptr;
 };
 
 } // namespace StardustXRServer

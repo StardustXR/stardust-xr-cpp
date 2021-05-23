@@ -11,3 +11,5 @@ struct CLIArgs {
 	bool fieldDebug = false;
 	int parse(int argc, const char* const argv[]);
 };
+
+extern sk::material_t fieldDebugMat;

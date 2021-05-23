@@ -36,6 +36,7 @@ int CLIArgs::parse(int argc, const char* const argv[]) {
 	return -1;
 }
 CLIArgs args;
+extern void debugSetup();
 
 // Initialize scnenegraph and messenger manager
 Scenegraph scenegraph;
@@ -73,6 +74,10 @@ int main(int argc, char *argv[]) {
 
 	if(!sk_init(settings))
 		perror("Stereokit initialization failed!");
+
+	// Set up debugging
+	if(args.fieldDebug)
+		debugSetup();
 
 	// Add the nodes to the scenegraph
 	scenegraph.addNode("/environment", &environment);

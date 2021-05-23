@@ -1,11 +1,14 @@
 #include "boxfield.hpp"
 #include <cmath>
+#include "../../globals.h"
 
 using namespace std;
 
 namespace StardustXRServer {
 
-BoxField::BoxField() {}
+BoxField::BoxField(vec3 size) {
+	this->size = size;
+}
 
 float BoxField::localDistance(const vec3 point) {
 	vec3 q = {
@@ -20,6 +23,16 @@ float BoxField::localDistance(const vec3 point) {
 	};
 
 	return vec3_magnitude(v) + std::min(std::max(q.x, std::max(q.y, q.z)), 0.0f);
+}
+
+void BoxField::update() {
+	if(args.fieldDebug) {
+		if(!debugMesh)
+			debugMesh = mesh_gen_cube(size);
+		if(!debugModel)
+			debugModel = model_create_mesh(debugMesh, fieldDebugMat);
+		render_add_model(debugModel, worldTransform());
+	}
 }
 
 } // namespace StardustXRServer
