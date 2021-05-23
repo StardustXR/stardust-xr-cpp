@@ -29,8 +29,7 @@ typedef struct {
 typedef struct {
 	Ray ray;
 	float distance;
-	sk::vec3 deepestPoint;
-	sk::vec3 deepestSurfacePoint;
+	float deepestDistance;
 	float rayLength;
 	int raySteps;
 } RayMarchResult;
@@ -47,17 +46,17 @@ static RayMarchResult RayMarch(Ray ray, Field *field) {
 
 	while (result.raySteps < MAX_RAY_STEPS && result.rayLength < MAX_RAY_LENGTH) {
 		float distance = field->localDistance(rayPoint);
+		float marchDistance = std::clamp(distance, MIN_RAY_MARCH, MAX_RAY_MARCH);
+
+		result.rayLength += marchDistance;
+		rayPoint += rayDirection * marchDistance;
+
 		if(result.distance > distance)
-			result.deepestPoint = rayPoint;
+			result.deepestDistance = result.rayLength;
 		result.distance = std::min(distance, result.distance);
 
-		float marchDistance = std::clamp(distance, MIN_RAY_MARCH, MAX_RAY_MARCH);
-		rayPoint += rayDirection * marchDistance;
-		result.rayLength += marchDistance;
 		result.raySteps++;
 	}
-
-	result.deepestSurfacePoint = field->localClosestPoint(result.deepestPoint);
 
 	return result;
 }

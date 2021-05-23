@@ -21,7 +21,7 @@ float PointerInput::distanceTo(InputHandler *handler) {
 	};
 	RayMarchResult rayInfo = RayMarch(ray, handler->field);
 
-	datamap["deepestPointDistance"] = sk::vec3_magnitude(rayInfo.deepestPoint);
+	datamap["deepestPointDistance"] = rayInfo.deepestDistance;
 
 	return rayInfo.distance;
 }
