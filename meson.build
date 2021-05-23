@@ -4,7 +4,10 @@ pkg = import('pkgconfig')
 libstardustxr = dependency('stardustxr-server', required: true)
 stereokit = dependency('StereoKitC', required: true)
 
-includes = include_directories('src')
+src_includes = include_directories('src')
+thirdparty_includes = include_directories('thirdparty')
+includes = [src_includes, thirdparty_includes]
+
 subdir('src')
 
 executable(

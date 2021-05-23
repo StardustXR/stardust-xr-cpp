@@ -20,8 +20,22 @@ using namespace StardustXRServer;
 #include <stereokit.h>
 using namespace sk;
 
+// Third party local includes
+#include "CLI11.hpp"
+
 // Global variables
-bool flatscreen = false;
+int CLIArgs::parse(int argc, const char* const argv[]) {
+	CLI::App app("Stardust XR");
+	app.add_flag("-F,--flatscreen", flatscreen, "Run Stardust in flatscreen mode");
+	app.add_flag("--field-debug", fieldDebug, "Draw translucent meshes around fields");
+	try {
+		(app).parse((argc), (argv));
+	} catch(const CLI::ParseError &e) {
+		return (app).exit(e);
+	}
+	return -1;
+}
+CLIArgs args;
 
 // Initialize scnenegraph and messenger manager
 Scenegraph scenegraph;
@@ -48,20 +62,15 @@ PropagateFunction drawFunction = [](std::string, Node *node) {
 };
 
 int main(int argc, char *argv[]) {
-	// log_set_filter(log_diagnostic);
+	int parse_result = args.parse(argc, argv);
+	if (parse_result != -1) return parse_result;
+
 	sk_settings_t settings = {};
 	settings.assets_folder = "";
 	settings.log_filter = log_diagnostic;
+	settings.app_name = args.flatscreen ? "Stardust XR (Flatscreen)" : "Stardust XR";
+	settings.display_preference = args.flatscreen ? display_mode_flatscreen : display_mode_mixedreality;
 
-	if(argc > 1 && (strcmp("-F", argv[1]) || strcmp("--flatscreen", argv[1]))) {
-		settings.app_name = "Stardust XR (Flatscreen)";
-		settings.display_preference = display_mode_flatscreen;
-		flatscreen = true;
-	} else {
-		settings.app_name = "Stardust XR";
-		settings.display_preference = display_mode_mixedreality;
-		flatscreen = false;
-	}
 	if(!sk_init(settings))
 		perror("Stereokit initialization failed!");
 
@@ -72,7 +81,7 @@ int main(int argc, char *argv[]) {
 	scenegraph.addNode("/lifecycle", &lifeCycle);
 	scenegraph.addNode("/model", &model);
 	scenegraph.addNode("/spatial", &spatial);
-	if(flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
+	if(args.flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_right, false);
 		FlatscreenPointer *flatscreenPointer = new FlatscreenPointer();
 		scenegraph.addNode("/test/flatscreenpointer", static_cast<SpatialNode *>(flatscreenPointer));

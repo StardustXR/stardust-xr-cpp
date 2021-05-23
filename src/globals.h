@@ -6,4 +6,8 @@
 extern StardustXRServer::Scenegraph scenegraph;
 extern StardustXR::MessengerManager messengerManager;
 
-extern bool flatscreen;
+struct CLIArgs {
+	bool flatscreen = false;
+	bool fieldDebug = false;
+	int parse(int argc, const char* const argv[]);
+};
