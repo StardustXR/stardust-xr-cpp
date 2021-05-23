@@ -7,7 +7,7 @@ namespace StardustXRServer {
 class BoxField : public Field {
 public:
 	BoxField(vec3 size);
-	virtual ~BoxField() {}
+	virtual ~BoxField();
 
 	vec3 size;
 

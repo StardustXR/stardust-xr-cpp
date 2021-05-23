@@ -10,6 +10,13 @@ BoxField::BoxField(vec3 size) {
 	this->size = size;
 }
 
+BoxField::~BoxField() {
+	if(args.fieldDebug) {
+		mesh_release(debugMesh);
+		model_release(debugModel);
+	}
+}
+
 float BoxField::localDistance(const vec3 point) {
 	vec3 q = {
 		std::abs(point.x) - (size.x * 0.5f),
