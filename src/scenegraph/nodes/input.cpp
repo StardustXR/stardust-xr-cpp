@@ -17,15 +17,20 @@ InputInterface::InputInterface() {
 InputInterface::~InputInterface() {}
 
 void InputInterface::handleMessengerDeletion(uint sessionID) {
-	inputMethods.forEach([&](uint32_t index, InputMethod *method) {
-		if(method->sessionID == sessionID) {
-			inputMethods.erase(index);
-		}
+	//Since all the methods/handlers that are to be deleted shift every other index, the proper index to erase from is the # of items not deleted.
+	uint32_t methodsToKeep = 0;
+	inputMethods.forEach([&](uint32_t, InputMethod *method) {
+		if(method->sessionID == sessionID)
+			inputMethods.erase(methodsToKeep);
+		else
+			methodsToKeep++;
 	});
-	inputHandlers.forEach([&](uint32_t index, InputHandler *handler) {
-		if(handler->sessionID == sessionID) {
-			inputHandlers.erase(index);
-		}
+	uint32_t handlersToKeep = 0;
+	inputHandlers.forEach([&](uint32_t, InputHandler *handler) {
+		if(handler->sessionID == sessionID)
+			inputHandlers.erase(handlersToKeep);
+		else
+			handlersToKeep++;
 	});
 	inputMethods.done();
 	inputHandlers.done();
