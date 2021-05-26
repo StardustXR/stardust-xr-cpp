@@ -1,5 +1,7 @@
 #pragma once
 
+#include "threadsafe.hpp"
+
 #include <pthread.h>
 #include <functional>
 #include <stddef.h>
@@ -9,17 +11,13 @@
 namespace StardustXRServer {
 
 template <class T>
-class ThreadSafeList {
+class ThreadSafeList : public ThreadSafe<T> {
 public:
-	ThreadSafeList() {
-		pthread_mutex_init(&lockMutex, nullptr);
-	}
-	~ThreadSafeList() {
-		pthread_mutex_destroy(&lockMutex);
-	}
+	ThreadSafeList() {}
+	~ThreadSafeList() {}
 
 	uint32_t length() {
-		tryLock();
+		this->tryLock();
 		if(!lengthDirty)
 			return listLength;
 
@@ -39,13 +37,13 @@ public:
 		return at(i);
 	}
 	T &at(int i) {
-		tryLock();
+		this->tryLock();
 		return *get(i)->value;
 	}
 
 	typedef std::function<void(uint32_t, T &)> ForEachFunction;
 	void forEach(ForEachFunction function) {
-		tryLock();
+		this->tryLock();
 
 		uint32_t i = 0;
 		ListItem *currentItem = begin;
@@ -58,7 +56,7 @@ public:
 	}
 
 	void pushFront(const T &object) {
-		tryLock();
+		this->tryLock();
 		lengthDirty = true;
 		ListItem *newItem = new ListItem();
 		newItem->value = new T(object);
@@ -70,7 +68,7 @@ public:
 			end = begin;
 	}
 	void pushBack(const T &object) {
-		tryLock();
+		this->tryLock();
 		lengthDirty = true;
 		ListItem *newItem = new ListItem();
 		newItem->value = new T(object);
@@ -82,7 +80,7 @@ public:
 			begin = end;
 	}
 	void erase(int index) {
-		tryLock();
+		this->tryLock();
 		lengthDirty = true;
 		ListItem *item = get(index);
 
@@ -100,36 +98,7 @@ public:
 		delete item;
 	}
 
-	void done() {
-		pthread_t thisThread = pthread_self();
-		int lockedPosition = lockPosition(thisThread);
-		if(lockedPosition >= 0) {
-			lockedThreads.erase(lockedThreads.begin()+lockedPosition);
-			pthread_mutex_unlock(&lockMutex);
-		}
-	}
-
 protected:
-	pthread_mutex_t lockMutex;
-	std::vector<pthread_t> lockedThreads;
-	void tryLock() {
-		pthread_t thisThread = pthread_self();
-		if(!isLocked(thisThread)) {
-			lockedThreads.push_back(thisThread);
-			pthread_mutex_lock(&lockMutex);
-		}
-	}
-	bool isLocked(pthread_t &currentThread) {
-		return lockPosition(currentThread) != -1;
-	}
-	int lockPosition(pthread_t &currentThread) {
-		for(uint32_t i=0; i<lockedThreads.size(); ++i) {
-			if(pthread_equal(lockedThreads[i], currentThread)) {
-				return i;
-			}
-		}
-		return -1;
-	}
 
 	struct ListItem {
 		struct ListItem *previous;
@@ -144,7 +113,7 @@ protected:
 	uint32_t listLength;
 	bool lengthDirty;
 	ListItem *get(int index) {
-		tryLock();
+		this->tryLock();
 
 		int iMax = (index >= 0) ? index : length() + index;
 		ListItem *currentItem = begin;
