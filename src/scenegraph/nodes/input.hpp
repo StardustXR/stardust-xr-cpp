@@ -3,7 +3,7 @@
 #include "../../nodetypes/node.hpp"
 #include "../../nodetypes/input/inputhandler.hpp"
 #include "../../nodetypes/input/inputmethod.hpp"
-#include "../../util/threadsafelist.hpp"
+#include <stardustxr/util/threadsafelist.hpp>
 
 namespace StardustXRServer {
 

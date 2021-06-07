@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../nodetypes/node.hpp"
-#include "../../util/threadsafelist.hpp"
+#include <stardustxr/util/threadsafelist.hpp>
 
 namespace StardustXRServer {
 
