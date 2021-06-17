@@ -8,7 +8,8 @@ lib_fields_nodetypes = static_library(
 		'roundedboxfield.cpp',
 		'spherefield.cpp',
 	),
-	include_directories: [fields_nodetypes_includes]
+        include_directories: [fields_nodetypes_includes],
+        dependencies: [stereokit]
 )
 
 fields_nodetypes = declare_dependency(

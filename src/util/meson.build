@@ -5,7 +5,8 @@ lib_util = static_library(
 	files(
 		'debug.cpp',
 	),
-	include_directories: [util_includes]
+        include_directories: [util_includes],
+        dependencies: [stereokit]
 )
 
 util = declare_dependency(

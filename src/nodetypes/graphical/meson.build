@@ -5,7 +5,8 @@ lib_graphical_nodetypes = static_library(
 	files(
 		'model.cpp',
 	),
-	include_directories: [graphical_nodetypes_includes]
+        include_directories: [graphical_nodetypes_includes],
+        dependencies: [stereokit]
 )
 
 graphical_nodetypes = declare_dependency(

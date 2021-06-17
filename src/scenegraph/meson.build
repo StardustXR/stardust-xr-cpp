@@ -8,7 +8,7 @@ lib_scenegraph = static_library(
 		'scenegraph.cpp',
 	),
 	include_directories: [scenegraph_includes],
-	dependencies: [scenegraph_nodes]
+        dependencies: [scenegraph_nodes, stereokit]
 )
 
 scenegraph = declare_dependency(

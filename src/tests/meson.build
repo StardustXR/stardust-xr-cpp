@@ -6,7 +6,8 @@ lib_tests = static_library(
 		'flatscreenpointer.cpp',
 		'skhand.cpp',
 	),
-	include_directories: [tests_includes]
+        include_directories: [tests_includes],
+        dependencies: [stereokit]
 )
 
 tests = declare_dependency(

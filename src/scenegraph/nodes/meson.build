@@ -10,7 +10,8 @@ lib_scenegraph_nodes = static_library(
 		'model.cpp',
 		'spatial.cpp',
 	),
-	include_directories: [scenegraph_nodes_includes]
+        include_directories: [scenegraph_nodes_includes],
+        dependencies: [stereokit]
 )
 
 scenegraph_nodes = declare_dependency(

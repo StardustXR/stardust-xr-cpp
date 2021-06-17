@@ -6,7 +6,8 @@ lib_input_methods = static_library(
 		'hand.cpp',
 		'pointer.cpp',
 	),
-	include_directories: [input_methods_includes]
+        include_directories: [input_methods_includes],
+        dependencies: [stereokit]
 )
 
 input_methods = declare_dependency(

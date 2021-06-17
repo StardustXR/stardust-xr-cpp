@@ -11,7 +11,7 @@ lib_nodetypes = static_library(
 		'spatialnode.cpp',
 	),
 	include_directories: [nodetypes_includes],
-	dependencies: [fields_nodetypes, graphical_nodetypes, input_nodetypes]
+        dependencies: [fields_nodetypes, graphical_nodetypes, input_nodetypes, stereokit]
 )
 
 nodetypes = declare_dependency(

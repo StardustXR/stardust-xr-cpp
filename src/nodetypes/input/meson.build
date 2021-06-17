@@ -9,7 +9,7 @@ lib_input_nodetypes = static_library(
 		'inputmethod.cpp'
 	),
 	include_directories: [input_nodetypes_includes],
-	dependencies: [input_methods]
+        dependencies: [input_methods, stereokit]
 )
 
 input_nodetypes = declare_dependency(
