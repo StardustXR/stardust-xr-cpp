@@ -15,6 +15,16 @@ void EnvironmentInterface::update() {
 		render_enable_skytex(false);
 		skytexDisableLatch = false;
 	}
+	if(skytexQueuedPath != "") {
+		skytex = tex_create_cubemap_file(skytexQueuedPath.c_str(), true);
+		render_set_skytex(skytex);
+		skytexQueuedPath = "";
+	}
+	if(skylightQueuedPath != "") {
+		tex_create_cubemap_file(skylightQueuedPath.c_str(), true, &skylight);
+		render_set_skylight(skylight);
+		skylightQueuedPath = "";
+	}
 }
 
 std::vector<uint8_t> EnvironmentInterface::visible(uint, flexbuffers::Reference data, bool) {
@@ -24,15 +34,13 @@ std::vector<uint8_t> EnvironmentInterface::visible(uint, flexbuffers::Reference 
 
 std::vector<uint8_t> EnvironmentInterface::setSkytex(uint, flexbuffers::Reference data, bool) {
 	const char *path = data.AsString().c_str();
-	skytex = tex_create_cubemap_file(path, true);
-	render_set_skytex(skytex);
+	skytexQueuedPath = std::string(path);
 	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> EnvironmentInterface::setLighting(uint, flexbuffers::Reference data, bool) {
 	const char *path = data.AsString().c_str();
-	tex_create_cubemap_file(path, true, &lighting);
-	render_set_skylight(lighting);
+	skylightQueuedPath = std::string(path);
 	return std::vector<uint8_t>();
 }
 

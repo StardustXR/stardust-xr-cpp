@@ -19,8 +19,11 @@ public:
 private:
 	bool skytexDisableLatch = true;
 
+	std::string skytexQueuedPath;
 	sk::tex_t skytex;
-	sk::spherical_harmonics_t lighting;
+
+	std::string skylightQueuedPath;
+	sk::spherical_harmonics_t skylight;
 };
 
 } // namespace StardustXRServer
