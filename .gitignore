@@ -8,3 +8,5 @@ build/
 stardust-xr.srctrldb
 
 stardust-xr.srctrlprj
+
+.vscode/
