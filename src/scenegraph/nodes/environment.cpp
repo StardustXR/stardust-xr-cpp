@@ -15,15 +15,15 @@ void EnvironmentInterface::update() {
 		render_enable_skytex(false);
 		skytexDisableLatch = false;
 	}
-	if(skytexQueuedPath != "") {
-		skytex = tex_create_cubemap_file(skytexQueuedPath.c_str(), true);
-		render_set_skytex(skytex);
-		skytexQueuedPath = "";
-	}
 	if(skylightQueuedPath != "") {
 		tex_create_cubemap_file(skylightQueuedPath.c_str(), true, &skylight);
 		render_set_skylight(skylight);
 		skylightQueuedPath = "";
+	}
+	if(skytexQueuedPath != "") {
+		skytex = tex_create_cubemap_file(skytexQueuedPath.c_str(), true);
+		render_set_skytex(skytex);
+		skytexQueuedPath = "";
 	}
 }
 
