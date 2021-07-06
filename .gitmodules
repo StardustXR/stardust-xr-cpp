@@ -1,4 +1,4 @@
 [submodule "subprojects/StereoKit"]
 	path = subprojects/StereoKit
-	url = https://github.com/slitcch/StereoKit.git
-	branch = moses-cmake
+	url = https://github.com/technobaboo/StereoKit.git
+	branch = moses-cmake-3
