@@ -9,4 +9,6 @@ stardust-xr.srctrldb
 
 stardust-xr.srctrlprj
 
+.cache/
+
 .vscode/
