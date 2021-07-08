@@ -4,10 +4,11 @@ cmake = import('cmake')
 pkg = import('pkgconfig')
 libstardustxr = dependency('stardustxr-server', required: true)
 
-stereokit_project = cmake.subproject('StereoKit')
 stereokit_options = cmake.subproject_options()
+stereokit_options.add_cmake_defines({'LINUX_EGL': true})
 stereokit_options.set_install(false)
-stereokit = stereokit_project.dependency('StereoKitC', options: stereokit_options)
+stereokit_project = cmake.subproject('StereoKit', options: stereokit_options)
+stereokit = stereokit_project.dependency('StereoKitC')
 
 src_includes = include_directories('src')
 thirdparty_includes = include_directories('thirdparty')
