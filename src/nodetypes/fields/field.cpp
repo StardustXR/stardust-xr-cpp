@@ -1,9 +1,10 @@
 #include "field.hpp"
 #include "../../globals.h"
+#include "../../core/client.hpp"
 
 namespace StardustXRServer {
 
-Field::Field() {
+Field::Field(Client *client) : SpatialNode(client) {
 	scalable = false;
 
 	STARDUSTXR_NODE_METHOD("distance",     static_cast<std::vector<uint8_t>(Field::*)(uint, flexbuffers::Reference, bool)>(&Field::distance))
@@ -85,7 +86,7 @@ std::vector<uint8_t> Field::distance(uint sessionID, flexbuffers::Reference data
 	};
 
 	//If the spacePath doesn't exist, it must be world space
-	float distance = this->distance(dynamic_cast<SpatialNode *>(scenegraph.findNode(spacePath)), point);
+	float distance = this->distance(dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath)), point);
 
 	return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
 		fbb.Float(distance);
@@ -106,7 +107,7 @@ std::vector<uint8_t> Field::normal(uint sessionID, flexbuffers::Reference data, 
 	};
 
 	//If the spacePath doesn't exist, it must be world space
-	vec3 normal = this->normal(dynamic_cast<SpatialNode *>(scenegraph.findNode(spacePath)), point);
+	vec3 normal = this->normal(dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath)), point);
 
 	return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
 		fbb.TypedVector([&]() {
@@ -131,7 +132,7 @@ std::vector<uint8_t> Field::closestPoint(uint sessionID, flexbuffers::Reference 
 	};
 
 	//If the spacePath doesn't exist, it must be world space
-	vec3 closestPoint = this->normal(dynamic_cast<SpatialNode *>(scenegraph.findNode(spacePath)), point);
+	vec3 closestPoint = this->normal(dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath)), point);
 
 	return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
 		fbb.TypedVector([&]() {

@@ -6,7 +6,7 @@ namespace StardustXRServer {
 
 class Field : public SpatialNode {
 public:
-	Field();
+	Field(Client *client);
 	virtual ~Field() {}
 
 	float normalRadius = 0.0000001f;

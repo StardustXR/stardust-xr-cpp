@@ -3,7 +3,7 @@ using namespace sk;
 
 namespace StardustXRServer {
 
-Model::Model() {}
+Model::Model(Client *client) : DrawableNode(client) {}
 
 void Model::update() {
 	if(queued) {

@@ -6,7 +6,7 @@ namespace StardustXRServer {
 
 class SKHandInput : public HandInput {
 public:
-	SKHandInput(handed_ handed);
+	SKHandInput(Client *client, handed_ handed);
 	virtual ~SKHandInput();
 
 	void update();

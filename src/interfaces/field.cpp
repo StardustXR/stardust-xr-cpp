@@ -1,13 +1,13 @@
 #include "field.hpp"
-#include "../../nodetypes/fields/boxfield.hpp"
-#include "../../nodetypes/fields/spherefield.hpp"
+#include "../nodetypes/fields/boxfield.hpp"
+#include "../nodetypes/fields/spherefield.hpp"
 
 using namespace sk;
 using namespace std;
 
 namespace StardustXRServer {
 
-FieldInterface::FieldInterface() {
+FieldInterface::FieldInterface(Client *client) : Node(client) {
 	STARDUSTXR_NODE_METHOD("createBoxField", &FieldInterface::createBoxField)
 	STARDUSTXR_NODE_METHOD("createSphereField", &FieldInterface::createSphereField)
 }
@@ -36,7 +36,7 @@ std::vector<uint8_t> FieldInterface::createBoxField(uint sessionID, flexbuffers:
 		flexSize[2].AsFloat()
 	};
 
-	BoxField *field = new BoxField(size);
+	BoxField *field = new BoxField(client, size);
 	field->ready = false;
 	field->parent = this;
 	field->sessionID = sessionID;
@@ -61,7 +61,7 @@ std::vector<uint8_t> FieldInterface::createSphereField(uint sessionID, flexbuffe
 	};
 	float radius = vector[2].AsFloat();
 
-	SphereField *field = new SphereField(radius);
+	SphereField *field = new SphereField(client, radius);
 	field->ready = false;
 	field->parent = this;
 	field->sessionID = sessionID;

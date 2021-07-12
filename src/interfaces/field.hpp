@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../../nodetypes/node.hpp"
+#include "../nodetypes/node.hpp"
 
 namespace StardustXRServer {
 
 class FieldInterface : public Node {
 public:
-	FieldInterface();
+	FieldInterface(Client *client);
 	virtual ~FieldInterface() {}
 
 	std::vector<uint8_t> createBoxField(uint sessionID, flexbuffers::Reference data, bool returnValue);

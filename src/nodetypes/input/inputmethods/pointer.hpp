@@ -6,9 +6,9 @@ using namespace sk;
 
 namespace StardustXRServer {
 
-class PointerInput : public InputMethod, public SpatialNode {
+class PointerInput : public InputMethod {
 public:
-	PointerInput();
+	PointerInput(Client *client);
 	virtual ~PointerInput();
 
 	Ray ray;

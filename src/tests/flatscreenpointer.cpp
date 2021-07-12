@@ -2,7 +2,7 @@
 
 namespace StardustXRServer {
 
-FlatscreenPointer::FlatscreenPointer() {
+FlatscreenPointer::FlatscreenPointer(Client *client) : PointerInput(client) {
 	datamap["select"] = 0.0f;
 	datamap["grab"] = 0.0f;
 	datamap["scroll"] = vec2{0, 0};

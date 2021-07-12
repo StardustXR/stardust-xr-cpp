@@ -10,7 +10,7 @@ namespace StardustXRServer {
 class SpatialNode : public Node
 {
 public:
-	SpatialNode();
+	SpatialNode(Client *client);
 	virtual ~SpatialNode() {}
 
 	// Client accessible functions

@@ -1,13 +1,13 @@
 #include "spatial.hpp"
-#include "../../nodetypes/fields/boxfield.hpp"
-#include "../../nodetypes/fields/spherefield.hpp"
+#include "../nodetypes/fields/boxfield.hpp"
+#include "../nodetypes/fields/spherefield.hpp"
 
 using namespace sk;
 using namespace std;
 
 namespace StardustXRServer {
 
-SpatialFactory::SpatialFactory() {
+SpatialFactory::SpatialFactory(Client *client) : Node(client) {
 	STARDUSTXR_NODE_METHOD("create", &SpatialFactory::create)
 }
 
@@ -38,7 +38,7 @@ std::vector<uint8_t> SpatialFactory::create(uint sessionID, flexbuffers::Referen
 		flexScale[2].AsFloat()
 	};
 
-	SpatialNode *spatial = new SpatialNode();
+	SpatialNode *spatial = new SpatialNode(client);
 	spatial->ready = false;
 	spatial->sessionID = sessionID;
 	spatial->position = position;

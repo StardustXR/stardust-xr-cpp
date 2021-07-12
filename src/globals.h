@@ -1,11 +1,9 @@
 #pragma once
 
 #include <stereokit.h>
-#include "scenegraph/scenegraph.hpp"
-#include <stardustxr/server/messengermanager.hpp>
+#include "core/clientmanager.hpp"
 
-extern StardustXRServer::Scenegraph scenegraph;
-extern StardustXR::MessengerManager messengerManager;
+extern StardustXRServer::ClientManager clientManager;
 
 struct CLIArgs {
 	bool flatscreen = false;

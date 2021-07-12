@@ -1,4 +1,5 @@
+subdir('core')
+subdir('interfaces')
 subdir('nodetypes')
-subdir('scenegraph')
 subdir('tests')
 subdir('util')

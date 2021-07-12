@@ -1,7 +1,12 @@
-#include "scenegraph.hpp"
 #include "../globals.h"
 
+#include "scenegraph.hpp"
+#include "scenegraphpropagation.hpp"
+
 namespace StardustXRServer {
+
+Scenegraph::Scenegraph(Client *client) : StardustXR::ServerScenegraph(), root(client) {}
+Scenegraph::~Scenegraph() {}
 
 void Scenegraph::onPathStep(std::string path, std::function<void(std::string)> pathStepFunction) {
 	std::istringstream stream(path);
@@ -21,9 +26,9 @@ std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, 
 }
 
 void Scenegraph::executeRemoteMethod(uint sessionID, std::string remotePath, std::string remoteMethod, std::vector<uint8_t> args, void *extraData, ServerCallback callback) {
-	messengerManager.messengers[sessionID]->executeRemoteMethod(remotePath.c_str(), remoteMethod.c_str(), args, [&](flexbuffers::Reference data) {
-		callback(sessionID, data, extraData);
-	});
+	// messengerManager.messengers[sessionID]->executeRemoteMethod(remotePath.c_str(), remoteMethod.c_str(), args, [&](flexbuffers::Reference data) {
+	// 	callback(sessionID, data, extraData);
+	// });
 }
 
 void Scenegraph::handleMessengerDeletion(uint sessionID) {
@@ -39,6 +44,7 @@ void Scenegraph::handleMessengerDeletion(uint sessionID) {
 		return true;
 	};
 	root.propagate("", messengerDeletionFunction);
+	clientManager.disconnectClient(root.client);
 }
 
 std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args, bool returnValue) {
@@ -71,7 +77,7 @@ void Scenegraph::addNode(std::string path, Node *node) {
 		if(pathStep == lastNodeName)
 			currentNode->children[pathStep] = node;
 		else if(currentNode->children[pathStep] == nullptr)
-			currentNode->children[pathStep] = new Node();
+			currentNode->children[pathStep] = new Node(root.client);
 
 		currentNode->children[pathStep]->parent = currentNode;
 		currentNode = currentNode->children[pathStep];

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../../nodetypes/node.hpp"
+#include "../nodetypes/node.hpp"
 
 namespace StardustXRServer {
 
 class SpatialFactory : public Node {
 public:
-	SpatialFactory();
+	SpatialFactory(Client *client);
 	virtual ~SpatialFactory() {}
 
 	std::vector<uint8_t> create(uint sessionID, flexbuffers::Reference data, bool returnValue);

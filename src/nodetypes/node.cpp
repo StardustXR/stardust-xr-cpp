@@ -5,7 +5,9 @@ using namespace std;
 
 namespace StardustXRServer {
 
-void Node::propagate(std::string name, PropagateFunction &function) {
+Node::Node(Client *client) : client(client) {}
+
+void Node::propagate(std::string name, std::function<bool (std::string, Node *)> &function) {
 	if(ready && function(name, this)) {
 		// Cache names of all children
 		vector<string> childNames;

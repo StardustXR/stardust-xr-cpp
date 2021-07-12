@@ -1,17 +1,14 @@
 // Globals includes
 #include "globals.h"
 
-// libstardustxr includes
-#include <stardustxr/server/messengermanager.hpp>
-
 // Stardust XR Server includes
-#include "scenegraph/scenegraph.hpp"
-#include "scenegraph/nodes/environment.hpp"
-#include "scenegraph/nodes/field.hpp"
-#include "scenegraph/nodes/input.hpp"
-#include "scenegraph/nodes/lifecycle.hpp"
-#include "scenegraph/nodes/model.hpp"
-#include "scenegraph/nodes/spatial.hpp"
+#include "core/clientmanager.hpp"
+#include "core/scenegraphpropagation.hpp"
+#include "interfaces/environment.hpp"
+#include "interfaces/lifecycle.hpp"
+#include "interfaces/input.hpp"
+#include "node.hpp"
+#include "nodetypes/graphical/drawablenode.hpp"
 #include "tests/flatscreenpointer.hpp"
 #include "tests/skhand.hpp"
 using namespace StardustXRServer;
@@ -38,29 +35,9 @@ int CLIArgs::parse(int argc, const char* const argv[]) {
 CLIArgs args;
 extern void debugSetup();
 
-// Initialize scnenegraph and messenger manager
-Scenegraph scenegraph;
-StardustXR::MessengerManager messengerManager(&scenegraph);
-
-// Initialize scenegraph object nodes
-EnvironmentInterface environment;
-FieldInterface field;
-InputInterface input;
-LifeCycleInterface lifeCycle;
-ModelInterface model;
-SpatialFactory spatial;
-
-// Define lambda functions for update and draw functions to be propagated
-PropagateFunction updateFunction = [](std::string, Node *node) {
-	if(node)
-		node->update();
-	return node;
-};
-PropagateFunction drawFunction = [](std::string, Node *node) {
-	if(DrawableNode *drawNode = dynamic_cast<DrawableNode *>(node))
-		drawNode->draw();
-	return true;
-};
+// Initialize scenegraph and client manager
+ClientManager clientManager;
+Client serverInternalClient(0, 0, 0, &clientManager);
 
 int main(int argc, char *argv[]) {
 	int parse_result = args.parse(argc, argv);
@@ -74,46 +51,48 @@ int main(int argc, char *argv[]) {
 
 	if(!sk_init(settings))
 		perror("Stereokit initialization failed!");
+	render_enable_skytex(false);
 
 	// Set up debugging
 	if(args.fieldDebug)
 		debugSetup();
 
-	// Add the nodes to the scenegraph
-	scenegraph.addNode("/environment", &environment);
-	scenegraph.addNode("/field", &field);
-	scenegraph.addNode("/input", &input);
-	scenegraph.addNode("/lifecycle", &lifeCycle);
-	scenegraph.addNode("/model", &model);
-	scenegraph.addNode("/spatial", &spatial);
 	if(args.flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_right, false);
-		FlatscreenPointer *flatscreenPointer = new FlatscreenPointer();
-		scenegraph.addNode("/test/flatscreenpointer", static_cast<SpatialNode *>(flatscreenPointer));
-		input.inputMethods.pushBack(flatscreenPointer);
-		input.inputMethods.done();
+		FlatscreenPointer *flatscreenPointer = new FlatscreenPointer(&serverInternalClient);
+		serverInternalClient.scenegraph.addNode("/test/flatscreenpointer", static_cast<SpatialNode *>(flatscreenPointer));
+		InputInterface::inputMethods.pushBack(flatscreenPointer);
+		InputInterface::inputMethods.done();
 	} else { // Add the StereoKit hand representation if we're not in flatscreen
 		SKHandInput *stereokitHands[2];
 //		stereokitHands[0] = new SKHandInput(handed_left);
-		stereokitHands[1] = new SKHandInput(handed_right);
+		stereokitHands[1] = new SKHandInput(&serverInternalClient, handed_right);
 //		scenegraph.addNode("/test/skhandleft", static_cast<SpatialNode *>(stereokitHands[0]));
-		scenegraph.addNode("/test/skhandright", static_cast<SpatialNode *>(stereokitHands[1]));
+		serverInternalClient.scenegraph.addNode("/test/skhandright", static_cast<SpatialNode *>(stereokitHands[1]));
 //		input.inputMethods.pushBack(stereokitHands[0]);
-		input.inputMethods.pushBack(stereokitHands[1]);
-		input.inputMethods.done();
+		InputInterface::inputMethods.pushBack(stereokitHands[1]);
+		InputInterface::inputMethods.done();
 	}
 
 	// Every stereokit step
 	while (sk_step([]() {
+		// Handle disconnected clients before anything else to ensure scenegraph is clean
+		clientManager.handleDisconnectedClients();
+
+		// Update environment settings
+		EnvironmentInterface::updateEnvironment();
+
 		// Send logicStep signals to clients
-		lifeCycle.sendLogicStepSignals();
+		LifeCycleInterface::sendLogicStepSignals();
 
 		//Propagate the update and draw methods on scenegraph nodes
-		scenegraph.root.propagate("", updateFunction);
-		scenegraph.root.propagate("", drawFunction);
+		serverInternalClient.scenegraph.root.propagate("", ScenegraphUpdateFunction);
+		clientManager.callClientsUpdate();
+		serverInternalClient.scenegraph.root.propagate("", ScenegraphDrawFunction);
+		clientManager.callClientsDraw();
 
 		// Process all the input and send it to the clients
-		input.processInput();
+		InputInterface::processInput();
 	})) {}
 
 	sk_shutdown();

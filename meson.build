@@ -25,8 +25,9 @@ executable(
 		libstardustxr,
 		stereokit,
 # After here are all the internal dependencies
+		core,
+		interfaces,
 		nodetypes,
-		scenegraph,
 		tests,
 		util,
 	],

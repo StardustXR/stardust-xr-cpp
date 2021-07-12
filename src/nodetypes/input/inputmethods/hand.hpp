@@ -6,9 +6,9 @@ using namespace sk;
 
 namespace StardustXRServer {
 
-class HandInput : public InputMethod, public SpatialNode {
+class HandInput : public InputMethod {
 public:
-	HandInput();
+	HandInput(Client *client);
 	virtual ~HandInput();
 
 	static constexpr uint fingerJointCount = 21;

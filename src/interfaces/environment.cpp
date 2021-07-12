@@ -4,17 +4,18 @@ using namespace sk;
 
 namespace StardustXRServer {
 
-EnvironmentInterface::EnvironmentInterface() {
+std::string EnvironmentInterface::skytexQueuedPath;
+sk::tex_t EnvironmentInterface::skytex;
+std::string EnvironmentInterface::skylightQueuedPath;
+sk::spherical_harmonics_t EnvironmentInterface::skylight;
+
+EnvironmentInterface::EnvironmentInterface(Client *client) : Node(client) {
 	STARDUSTXR_NODE_METHOD("visible", &EnvironmentInterface::visible)
 	STARDUSTXR_NODE_METHOD("setSkytex", &EnvironmentInterface::setSkytex)
 	STARDUSTXR_NODE_METHOD("setLighting", &EnvironmentInterface::setLighting)
 }
 
-void EnvironmentInterface::update() {
-	if(skytexDisableLatch) {
-		render_enable_skytex(false);
-		skytexDisableLatch = false;
-	}
+void EnvironmentInterface::updateEnvironment() {
 	if(skylightQueuedPath != "") {
 		tex_create_cubemap_file(skylightQueuedPath.c_str(), true, &skylight);
 		render_set_skylight(skylight);

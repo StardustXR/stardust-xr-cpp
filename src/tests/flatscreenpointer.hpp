@@ -6,7 +6,7 @@ namespace StardustXRServer {
 
 class FlatscreenPointer : public PointerInput {
 public:
-	FlatscreenPointer();
+	FlatscreenPointer(Client *client);
 
 	void update();
 };

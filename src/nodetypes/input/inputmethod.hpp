@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../node.hpp"
+#include "../spatialnode.hpp"
 #include "inputhandler.hpp"
 #include <stereokit.h>
 #include <variant>
@@ -10,9 +10,9 @@ using namespace std;
 using namespace sk;
 namespace StardustXRServer {
 
-class InputMethod : public Node {
+class InputMethod : public SpatialNode {
 public:
-	InputMethod();
+	InputMethod(Client *client);
 	virtual ~InputMethod();
 
 	vector<uint8_t> modifyDatamap(uint sessionID, flexbuffers::Reference data, bool returnValue);

@@ -6,7 +6,7 @@ using namespace std;
 
 namespace StardustXRServer {
 
-BoxField::BoxField(vec3 size) {
+BoxField::BoxField(Client *client, vec3 size) : Field(client) {
 	this->size = size;
 }
 

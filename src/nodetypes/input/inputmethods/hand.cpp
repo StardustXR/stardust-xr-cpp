@@ -7,7 +7,7 @@ using namespace std;
 
 namespace StardustXRServer {
 
-HandInput::HandInput() {
+HandInput::HandInput(Client *client) : InputMethod(client) {
 	translatable = true;
 	rotatable = true;
 	scalable = false;

@@ -1,29 +1,27 @@
 #pragma once
 
 #include <stereokit.h>
-#include "../../nodetypes/node.hpp"
+#include "../nodetypes/node.hpp"
 
 namespace StardustXRServer {
 
 class EnvironmentInterface : public Node {
 public:
-	EnvironmentInterface();
+	EnvironmentInterface(Client *client);
 	virtual ~EnvironmentInterface() {}
 
-	void update();
+	static void updateEnvironment();
 
 	std::vector<uint8_t> visible(uint sessionID, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setSkytex(uint sessionID, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setLighting(uint sessionID, flexbuffers::Reference data, bool returnValue);
 
 private:
-	bool skytexDisableLatch = true;
+	static std::string skytexQueuedPath;
+	static sk::tex_t skytex;
 
-	std::string skytexQueuedPath;
-	sk::tex_t skytex;
-
-	std::string skylightQueuedPath;
-	sk::spherical_harmonics_t skylight;
+	static std::string skylightQueuedPath;
+	static sk::spherical_harmonics_t skylight;
 };
 
 } // namespace StardustXRServer

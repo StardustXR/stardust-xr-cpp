@@ -2,7 +2,7 @@
 
 namespace StardustXRServer {
 
-ModelInterface::ModelInterface() {
+ModelInterface::ModelInterface(Client *client) : Node(client) {
 	STARDUSTXR_NODE_METHOD("createFromFile", &ModelInterface::createFromFile)
 }
 
@@ -34,7 +34,7 @@ std::vector<uint8_t> ModelInterface::createFromFile(uint sessionID, flexbuffers:
 	};
 
 
-	Model *model = new Model();
+	Model *model = new Model(client);
 	model->ready = false;
 	model->parent = this;
 	model->sessionID = sessionID;

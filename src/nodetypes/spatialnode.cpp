@@ -1,9 +1,12 @@
 #include "spatialnode.hpp"
 #include "../globals.h"
 
+#include "../core/client.hpp"
+#include "../core/scenegraph.hpp"
+
 namespace StardustXRServer {
 
-SpatialNode::SpatialNode() {
+SpatialNode::SpatialNode(Client *client) : Node(client) {
 	STARDUSTXR_NODE_METHOD("move", &SpatialNode::move)
 	STARDUSTXR_NODE_METHOD("rotate", &SpatialNode::rotate)
 	STARDUSTXR_NODE_METHOD("rotateAround", &SpatialNode::rotateAround)
@@ -165,7 +168,7 @@ bool SpatialNode::setSpatialParent(std::string spacePath) {
 		spatialParent = nullptr;
 		return true;
 	}
-	SpatialNode *potentialParent = dynamic_cast<SpatialNode *>(scenegraph.findNode(spacePath));
+	SpatialNode *potentialParent = dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath));
 	if(potentialParent) {
 		spatialParent = potentialParent;
 		return true;

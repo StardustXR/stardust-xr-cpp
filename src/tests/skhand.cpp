@@ -4,7 +4,7 @@ using namespace sk;
 
 namespace StardustXRServer {
 
-SKHandInput::SKHandInput(handed_ handed) {
+SKHandInput::SKHandInput(Client *client, handed_ handed) : HandInput(client) {
 	this->handed = handed;
 	this->hand = input_hand(handed);
 	this->hasForearm = false;

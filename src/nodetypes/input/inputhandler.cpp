@@ -3,21 +3,21 @@
 #include "../../globals.h"
 #include "inputmethods/flatbuffers/Input_generated.h"
 
+#include "../../core/client.hpp"
+
 namespace StardustXRServer {
 
-InputHandler::InputHandler() {
+InputHandler::InputHandler(Client *client) : SpatialNode(client) {
 	translatable = true;
 	rotatable = true;
 	scalable = false;
 }
 
-InputHandler::~InputHandler() {
-
-}
+InputHandler::~InputHandler() {}
 
 void InputHandler::sendInput(std::list<DistanceLink> distanceLinks, std::vector<uint8_t> &inputData) {
 	distanceLinks.pop_front();
-	messengerManager.messengers[sessionID]->executeRemoteMethod(
+	client->messenger.executeRemoteMethod(
 		callbackPath.c_str(),
 		callbackMethod.c_str(),
 		[&](flexbuffers::Builder &fbb) {
@@ -54,7 +54,7 @@ std::vector<uint8_t> InputHandler::setField(uint sessionID, flexbuffers::Referen
 		return std::vector<uint8_t>();
 
 	std::string fieldPath = data.AsString().str();
-	field = dynamic_cast<Field *>(scenegraph.findNode(fieldPath));
+	field = dynamic_cast<Field *>(client->scenegraph.findNode(fieldPath));
 
 	if(returnValue) {
 		return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {

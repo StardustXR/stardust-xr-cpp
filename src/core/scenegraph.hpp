@@ -7,9 +7,12 @@ namespace StardustXRServer {
 
 typedef std::function<void(uint, flexbuffers::Reference, void *)> ServerCallback;
 
+class Client;
+
 class Scenegraph : public StardustXR::ServerScenegraph {
 public:
-	Scenegraph() : StardustXR::ServerScenegraph() {}
+	explicit Scenegraph(Client *client);
+	~Scenegraph();
 
 	void sendSignal(int sessionID, std::string path, std::string method, flexbuffers::Reference data);
 	std::vector<uint8_t> executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args);

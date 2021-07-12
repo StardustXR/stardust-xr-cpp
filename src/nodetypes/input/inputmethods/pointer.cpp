@@ -3,15 +3,13 @@
 
 namespace StardustXRServer {
 
-PointerInput::PointerInput() {
+PointerInput::PointerInput(Client *client) : InputMethod(client) {
 	translatable = true;
 	rotatable = true;
 	scalable = false;
 }
 
-PointerInput::~PointerInput() {
-
-}
+PointerInput::~PointerInput() {}
 
 float PointerInput::distanceTo(InputHandler *handler) {
 	ray = {

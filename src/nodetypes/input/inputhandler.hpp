@@ -9,7 +9,7 @@ namespace StardustXRServer {
 
 class InputHandler : public SpatialNode {
 public:
-	InputHandler();
+	InputHandler(Client *client);
 	virtual ~InputHandler();
 
 	Field *field = nullptr;
