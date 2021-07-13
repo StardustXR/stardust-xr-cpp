@@ -12,9 +12,9 @@ public:
 
 	static void updateEnvironment();
 
-	std::vector<uint8_t> visible(uint sessionID, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setSkytex(uint sessionID, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setLighting(uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> visible(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setSkytex(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setLighting(flexbuffers::Reference data, bool returnValue);
 
 private:
 	static std::string skytexQueuedPath;

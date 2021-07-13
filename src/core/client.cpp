@@ -1,5 +1,6 @@
 #include "client.hpp"
 #include "clientmanager.hpp"
+#include "messenger.hpp"
 #include "scenegraph.hpp"
 #include "scenegraphpropagation.hpp"
 
@@ -12,7 +13,8 @@
 
 namespace StardustXRServer {
 
-Client::Client(uint clientID, int inFD, int outFD, ClientManager *clientManager) : scenegraph(this), messenger(clientID, inFD, outFD, &this->scenegraph, clientManager) {
+Client::Client(int inFD, int outFD, ClientManager *clientManager) : scenegraph(this), messenger(this, inFD, outFD) {
+	this->manager = clientManager;
 	EnvironmentInterface *environment = new EnvironmentInterface(this);
 	FieldInterface *field = new FieldInterface(this);
 	InputInterface *input = new InputInterface(this);

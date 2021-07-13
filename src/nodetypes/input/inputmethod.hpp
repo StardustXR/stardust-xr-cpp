@@ -15,7 +15,7 @@ public:
 	InputMethod(Client *client);
 	virtual ~InputMethod();
 
-	vector<uint8_t> modifyDatamap(uint sessionID, flexbuffers::Reference data, bool returnValue);
+	vector<uint8_t> modifyDatamap(flexbuffers::Reference data, bool returnValue);
 
 	virtual float distanceTo(InputHandler *handler) = 0;
 	virtual InputDataRaw type() = 0;

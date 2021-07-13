@@ -7,9 +7,9 @@ namespace StardustXRServer {
 Field::Field(Client *client) : SpatialNode(client) {
 	scalable = false;
 
-	STARDUSTXR_NODE_METHOD("distance",     static_cast<std::vector<uint8_t>(Field::*)(uint, flexbuffers::Reference, bool)>(&Field::distance))
-	STARDUSTXR_NODE_METHOD("normal",       static_cast<std::vector<uint8_t>(Field::*)(uint, flexbuffers::Reference, bool)>(&Field::normal))
-	STARDUSTXR_NODE_METHOD("closestPoint", static_cast<std::vector<uint8_t>(Field::*)(uint, flexbuffers::Reference, bool)>(&Field::closestPoint))
+	STARDUSTXR_NODE_METHOD("distance",     static_cast<std::vector<uint8_t>(Field::*)(flexbuffers::Reference, bool)>(&Field::distance))
+	STARDUSTXR_NODE_METHOD("normal",       static_cast<std::vector<uint8_t>(Field::*)(flexbuffers::Reference, bool)>(&Field::normal))
+	STARDUSTXR_NODE_METHOD("closestPoint", static_cast<std::vector<uint8_t>(Field::*)(flexbuffers::Reference, bool)>(&Field::closestPoint))
 }
 
 float Field::localDistance(const vec3 point) {
@@ -72,8 +72,8 @@ const vec3 Field::normal(SpatialNode *space, const vec3 point, float radius) {
 	return localToSpaceDirection(space, localNormal(localPoint, radius));
 }
 
-std::vector<uint8_t> Field::distance(uint sessionID, flexbuffers::Reference data, bool returnValue) {
-	if(!returnValue || sessionID != this->sessionID) // Don't do anything if the function doesn't return a value or you don't have access to it (why would you even run this without expecting something back??)
+std::vector<uint8_t> Field::distance(flexbuffers::Reference data, bool returnValue) {
+	if(!returnValue) // Don't do anything if the function doesn't return a value or you don't have access to it (why would you even run this without expecting something back??)
 		return std::vector<uint8_t>();
 
 	flexbuffers::Vector vec = data.AsVector();
@@ -93,8 +93,8 @@ std::vector<uint8_t> Field::distance(uint sessionID, flexbuffers::Reference data
 	});
 }
 
-std::vector<uint8_t> Field::normal(uint sessionID, flexbuffers::Reference data, bool returnValue) {
-	if(!returnValue || sessionID != this->sessionID) // Don't do anything if the function doesn't return a value or you don't have access to it (why would you even run this without expecting something back??)
+std::vector<uint8_t> Field::normal(flexbuffers::Reference data, bool returnValue) {
+	if(!returnValue) // Don't do anything if the function doesn't return a value or you don't have access to it (why would you even run this without expecting something back??)
 		return std::vector<uint8_t>();
 
 	flexbuffers::Vector vec = data.AsVector();
@@ -118,8 +118,8 @@ std::vector<uint8_t> Field::normal(uint sessionID, flexbuffers::Reference data, 
 	});
 }
 
-std::vector<uint8_t> Field::closestPoint(uint sessionID, flexbuffers::Reference data, bool returnValue) {
-	if(!returnValue || sessionID != this->sessionID) // Don't do anything if the function doesn't return a value or you don't have access to it (why would you even run this without expecting something back??)
+std::vector<uint8_t> Field::closestPoint(flexbuffers::Reference data, bool returnValue) {
+	if(!returnValue) // Don't do anything if the function doesn't return a value or you don't have access to it (why would you even run this without expecting something back??)
 		return std::vector<uint8_t>();
 
 	flexbuffers::Vector vec = data.AsVector();

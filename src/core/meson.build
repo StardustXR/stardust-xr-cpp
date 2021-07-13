@@ -5,6 +5,7 @@ lib_core = static_library(
 	files(
 		'client.cpp',
 		'clientmanager.cpp',
+		'messenger.cpp',
 		'scenegraph.cpp',
 	),
 	include_directories: [core_includes],

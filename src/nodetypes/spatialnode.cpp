@@ -22,8 +22,8 @@ SpatialNode::SpatialNode(Client *client) : Node(client) {
 	STARDUSTXR_NODE_METHOD("setSpatialParent", &SpatialNode::setSpatialParentFlex)
 }
 
-std::vector<uint8_t> SpatialNode::move(uint sessionID, flexbuffers::Reference data, bool returnValue) {
-	if(sessionID == this->sessionID && translatable) {
+std::vector<uint8_t> SpatialNode::move(flexbuffers::Reference data, bool returnValue) {
+	if(translatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		vec3 moveDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
 		position += rotation * moveDelta;
@@ -33,8 +33,8 @@ std::vector<uint8_t> SpatialNode::move(uint sessionID, flexbuffers::Reference da
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::rotate(uint sessionID, flexbuffers::Reference data, bool returnValue) {
-	if(sessionID == this->sessionID && rotatable) {
+std::vector<uint8_t> SpatialNode::rotate(flexbuffers::Reference data, bool returnValue) {
+	if(rotatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		quat rotationDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
 		rotation = rotation * rotationDelta;
@@ -44,8 +44,8 @@ std::vector<uint8_t> SpatialNode::rotate(uint sessionID, flexbuffers::Reference 
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::rotateAround(uint sessionID, flexbuffers::Reference data, bool returnValue) {
-	if(sessionID == this->sessionID && rotatable) {
+std::vector<uint8_t> SpatialNode::rotateAround(flexbuffers::Reference data, bool returnValue) {
+	if(rotatable) {
 		flexbuffers::Vector vec = data.AsVector();
 		flexbuffers::TypedVector flexPoint = vec[0].AsTypedVector();
 		flexbuffers::TypedVector flexRotation = vec[0].AsTypedVector();
@@ -63,8 +63,8 @@ std::vector<uint8_t> SpatialNode::rotateAround(uint sessionID, flexbuffers::Refe
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::scaleThis(uint sessionID, flexbuffers::Reference data, bool returnValue) {
-	if(sessionID == this->sessionID && translatable) {
+std::vector<uint8_t> SpatialNode::scaleThis(flexbuffers::Reference data, bool returnValue) {
+	if(translatable) {
 		float scaleDelta = data.AsFloat();
 		scale = scale * scaleDelta;
 		transformMatrixDirty = true;
@@ -73,8 +73,8 @@ std::vector<uint8_t> SpatialNode::scaleThis(uint sessionID, flexbuffers::Referen
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::setOrigin(uint sessionID, flexbuffers::Reference data, bool) {
-	if(sessionID == this->sessionID && translatable) {
+std::vector<uint8_t> SpatialNode::setOrigin(flexbuffers::Reference data, bool) {
+	if(translatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		position = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
 		transformMatrixDirty = true;
@@ -83,8 +83,8 @@ std::vector<uint8_t> SpatialNode::setOrigin(uint sessionID, flexbuffers::Referen
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::setOrientation(uint sessionID, flexbuffers::Reference data, bool) {
-	if(sessionID == this->sessionID && rotatable) {
+std::vector<uint8_t> SpatialNode::setOrientation(flexbuffers::Reference data, bool) {
+	if(rotatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		rotation = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
 		transformMatrixDirty = true;
@@ -93,8 +93,8 @@ std::vector<uint8_t> SpatialNode::setOrientation(uint sessionID, flexbuffers::Re
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::setScale(uint sessionID, flexbuffers::Reference data, bool) {
-	if(sessionID == this->sessionID && scalable) {
+std::vector<uint8_t> SpatialNode::setScale(flexbuffers::Reference data, bool) {
+	if(scalable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		scale = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
 		transformMatrixDirty = true;
@@ -103,33 +103,31 @@ std::vector<uint8_t> SpatialNode::setScale(uint sessionID, flexbuffers::Referenc
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::setPose(uint sessionID, flexbuffers::Reference data, bool) {
-	if(sessionID == this->sessionID && translatable && rotatable) {
+std::vector<uint8_t> SpatialNode::setPose(flexbuffers::Reference data, bool) {
+	if(translatable && rotatable) {
 		flexbuffers::Vector vector = data.AsVector();
-		setOrigin(sessionID, vector[0], false);
-		setOrientation(sessionID, vector[1], false);
-		setScale(sessionID, vector[2], false);
+		setOrigin(vector[0], false);
+		setOrientation(vector[1], false);
+		setScale(vector[2], false);
 	}
 
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::setTransform(uint sessionID, flexbuffers::Reference data, bool) {
-	if(sessionID == this->sessionID && translatable && rotatable && scalable) {
+std::vector<uint8_t> SpatialNode::setTransform(flexbuffers::Reference data, bool) {
+	if(translatable && rotatable && scalable) {
 		flexbuffers::Vector vector = data.AsVector();
-		setOrigin(sessionID, vector[0], false);
-		setOrientation(sessionID, vector[1], false);
-		setScale(sessionID, vector[2], false);
+		setOrigin(vector[0], false);
+		setOrientation(vector[1], false);
+		setScale(vector[2], false);
 	}
 
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 
-std::vector<uint8_t> SpatialNode::setSpatialParentFlex(uint sessionID, flexbuffers::Reference data, bool) {
-	if(sessionID == this->sessionID) {
-		std::string spacePath = data.AsString().str();
-		setSpatialParent(spacePath);
-	}
+std::vector<uint8_t> SpatialNode::setSpatialParentFlex(flexbuffers::Reference data, bool) {
+	std::string spacePath = data.AsString().str();
+	setSpatialParent(spacePath);
 	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
 }
 

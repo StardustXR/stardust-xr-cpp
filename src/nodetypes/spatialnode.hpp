@@ -14,17 +14,17 @@ public:
 	virtual ~SpatialNode() {}
 
 	// Client accessible functions
-	std::vector<uint8_t> move                 (uint sessionID, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> rotate               (uint sessionID, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> rotateAround         (uint sessionID, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> scaleThis            (uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> move                 (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> rotate               (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> rotateAround         (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> scaleThis            (flexbuffers::Reference data, bool returnValue);
 
-	std::vector<uint8_t> setOrigin            (uint sessionID, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setOrientation       (uint sessionID, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setScale             (uint sessionID, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setPose              (uint sessionID, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setTransform         (uint sessionID, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setSpatialParentFlex (uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setOrigin            (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setOrientation       (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setScale             (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setPose              (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setTransform         (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setSpatialParentFlex (flexbuffers::Reference data, bool returnValue);
 
 	// Surface level parameters
 	vec3 position = vec3_zero;

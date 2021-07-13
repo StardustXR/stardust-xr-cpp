@@ -23,7 +23,6 @@ protected:
 	std::vector<Client *> disconnectedClients;
 
 	void clientConnected(int inFD, int outFD);
-	uint clientCount = 0;
 };
 
 }

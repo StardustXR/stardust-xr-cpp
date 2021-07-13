@@ -18,36 +18,35 @@ void Scenegraph::onPathStep(std::string path, std::function<void(std::string)> p
 	}
 }
 
-void Scenegraph::sendSignal(int sessionID, std::string path, std::string method, flexbuffers::Reference data) {
-	this->executeMethod(sessionID, path, method, data, false);
+void Scenegraph::sendSignal(std::string path, std::string method, flexbuffers::Reference data) {
+	this->executeMethod(path, method, data, false);
 }
-std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args) {
-	return this->executeMethod(sessionID, path, method, args, true);
-}
-
-void Scenegraph::executeRemoteMethod(uint sessionID, std::string remotePath, std::string remoteMethod, std::vector<uint8_t> args, void *extraData, ServerCallback callback) {
-	// messengerManager.messengers[sessionID]->executeRemoteMethod(remotePath.c_str(), remoteMethod.c_str(), args, [&](flexbuffers::Reference data) {
-	// 	callback(sessionID, data, extraData);
-	// });
+std::vector<uint8_t> Scenegraph::executeMethod(std::string path, std::string method, flexbuffers::Reference args) {
+	return this->executeMethod(path, method, args, true);
 }
 
-void Scenegraph::handleMessengerDeletion(uint sessionID) {
+void Scenegraph::executeRemoteMethod(std::string remotePath, std::string remoteMethod, std::vector<uint8_t> args, void *extraData, ServerCallback callback) {
+	root.client->messenger.executeRemoteMethod(remotePath.c_str(), remoteMethod.c_str(), args, [&](flexbuffers::Reference data) {
+		callback(data, extraData);
+	});
+}
+
+void Scenegraph::handleClientDisconnect(Client *client) {
 	PropagateFunction messengerDeletionFunction = [&](std::string name, Node *node) {
-		if(node->sessionID == sessionID && node->parent) {
+		if(node->parent) {
 			Node *nodeParent = node->parent;
 			delete node;
 			nodeParent->children.erase(name);
 			return false;
 		} else {
-			node->handleMessengerDeletion(sessionID);
+			node->handleClientDisconnect(client);
 		}
 		return true;
 	};
 	root.propagate("", messengerDeletionFunction);
-	clientManager.disconnectClient(root.client);
 }
 
-std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, std::string method, flexbuffers::Reference args, bool returnValue) {
+std::vector<uint8_t> Scenegraph::executeMethod(std::string path, std::string method, flexbuffers::Reference args, bool returnValue) {
 	//Find the node referenced by the path string
 	Node *currentNode = &root;
 	this->onPathStep(path, [&](std::string pathStep) {
@@ -64,7 +63,7 @@ std::vector<uint8_t> Scenegraph::executeMethod(int sessionID, std::string path, 
 		printf("Method %s on node %s not found\n", method.c_str(), path.c_str());
 		return std::vector<uint8_t>();
 	}
-	return (currentNode->methods[method])(sessionID, args, returnValue);
+	return (currentNode->methods[method])(args, returnValue);
 }
 
 void Scenegraph::addNode(std::string path, Node *node) {

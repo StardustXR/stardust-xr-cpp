@@ -37,7 +37,7 @@ extern void debugSetup();
 
 // Initialize scenegraph and client manager
 ClientManager clientManager;
-Client serverInternalClient(0, 0, 0, &clientManager);
+Client serverInternalClient(0, 0, &clientManager);
 
 int main(int argc, char *argv[]) {
 	int parse_result = args.parse(argc, argv);

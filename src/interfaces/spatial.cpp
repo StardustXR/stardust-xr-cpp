@@ -11,7 +11,7 @@ SpatialFactory::SpatialFactory(Client *client) : Node(client) {
 	STARDUSTXR_NODE_METHOD("create", &SpatialFactory::create)
 }
 
-std::vector<uint8_t> SpatialFactory::create(uint sessionID, flexbuffers::Reference data, bool) {
+std::vector<uint8_t> SpatialFactory::create(flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector            = data.AsVector();
 	flexbuffers::TypedVector flexPosition = vector[1].AsTypedVector();
 	flexbuffers::TypedVector flexRotation = vector[2].AsTypedVector();
@@ -40,7 +40,6 @@ std::vector<uint8_t> SpatialFactory::create(uint sessionID, flexbuffers::Referen
 
 	SpatialNode *spatial = new SpatialNode(client);
 	spatial->ready = false;
-	spatial->sessionID = sessionID;
 	spatial->position = position;
 	spatial->rotation = rotation;
 	spatial->scale = scale;

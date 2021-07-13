@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stardustxr/server/messenger.hpp>
+#include "messenger.hpp"
 #include "scenegraph.hpp"
 #include "scenegraphpropagation.hpp"
 
@@ -10,14 +10,15 @@ class ClientManager;
 
 class Client {
 public:
-	explicit Client(uint clientID, int inFD, int outFD, StardustXRServer::ClientManager *messengerManager);
+	explicit Client(int inFD, int outFD, ClientManager *messengerManager);
 	~Client();
 
 	void startHandler();
 	void scenegraphPropagate(std::string name, PropagateFunction &function);
 	
-	StardustXR::ServerMessenger messenger;
+	Messenger messenger;
 	Scenegraph scenegraph;
+	ClientManager *manager;
 };
 
 }

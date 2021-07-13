@@ -12,7 +12,7 @@ FieldInterface::FieldInterface(Client *client) : Node(client) {
 	STARDUSTXR_NODE_METHOD("createSphereField", &FieldInterface::createSphereField)
 }
 
-std::vector<uint8_t> FieldInterface::createBoxField(uint sessionID, flexbuffers::Reference data, bool) {
+std::vector<uint8_t> FieldInterface::createBoxField(flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector            = data.AsVector();
 	flexbuffers::TypedVector flexPosition = vector[1].AsTypedVector();
 	flexbuffers::TypedVector flexRotation = vector[2].AsTypedVector();
@@ -39,7 +39,6 @@ std::vector<uint8_t> FieldInterface::createBoxField(uint sessionID, flexbuffers:
 	BoxField *field = new BoxField(client, size);
 	field->ready = false;
 	field->parent = this;
-	field->sessionID = sessionID;
 	field->position = position;
 	field->rotation = rotation;
 	field->transformDirty();
@@ -49,7 +48,7 @@ std::vector<uint8_t> FieldInterface::createBoxField(uint sessionID, flexbuffers:
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> FieldInterface::createSphereField(uint sessionID, flexbuffers::Reference data, bool) {
+std::vector<uint8_t> FieldInterface::createSphereField(flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector          = data.AsVector();
 	flexbuffers::TypedVector flexOrigin = vector[1].AsTypedVector();
 
@@ -64,7 +63,6 @@ std::vector<uint8_t> FieldInterface::createSphereField(uint sessionID, flexbuffe
 	SphereField *field = new SphereField(client, radius);
 	field->ready = false;
 	field->parent = this;
-	field->sessionID = sessionID;
 	field->position = origin;
 	field->transformDirty();
 	children[name] = field;

@@ -28,18 +28,18 @@ void EnvironmentInterface::updateEnvironment() {
 	}
 }
 
-std::vector<uint8_t> EnvironmentInterface::visible(uint, flexbuffers::Reference data, bool) {
+std::vector<uint8_t> EnvironmentInterface::visible(flexbuffers::Reference data, bool) {
 	render_enable_skytex(data.AsBool());
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> EnvironmentInterface::setSkytex(uint, flexbuffers::Reference data, bool) {
+std::vector<uint8_t> EnvironmentInterface::setSkytex(flexbuffers::Reference data, bool) {
 	const char *path = data.AsString().c_str();
 	skytexQueuedPath = std::string(path);
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> EnvironmentInterface::setLighting(uint, flexbuffers::Reference data, bool) {
+std::vector<uint8_t> EnvironmentInterface::setLighting(flexbuffers::Reference data, bool) {
 	const char *path = data.AsString().c_str();
 	skylightQueuedPath = std::string(path);
 	return std::vector<uint8_t>();

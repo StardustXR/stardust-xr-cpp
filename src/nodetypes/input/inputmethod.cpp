@@ -6,13 +6,10 @@ namespace StardustXRServer {
 InputMethod::InputMethod(Client *client) : SpatialNode(client) {}
 InputMethod::~InputMethod() {}
 
-vector<uint8_t> InputMethod::modifyDatamap(uint sessionID, flexbuffers::Reference data, bool) {
+vector<uint8_t> InputMethod::modifyDatamap(flexbuffers::Reference data, bool) {
 	flexbuffers::Map map = data.AsMap();
 	flexbuffers::TypedVector keys = map.Keys();
 	flexbuffers::Vector values = map.Values();
-
-	if(sessionID != this->sessionID)
-		goto RETURN;
 
 	for(size_t i=0; i<map.size(); ++i) {
 		std::string key = keys[i].AsString().str();
@@ -20,7 +17,6 @@ vector<uint8_t> InputMethod::modifyDatamap(uint sessionID, flexbuffers::Referenc
 		datamap[key] = value;
 	}
 
-	RETURN:
 	return vector<uint8_t>();
 }
 

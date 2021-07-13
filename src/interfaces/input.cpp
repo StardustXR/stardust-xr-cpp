@@ -21,18 +21,18 @@ InputInterface::InputInterface(Client *client) : Node(client) {
 }
 InputInterface::~InputInterface() {}
 
-void InputInterface::handleMessengerDeletion(uint sessionID) {
+void InputInterface::handleClientDisconnect(Client *client) {
 	//Since all the methods/handlers that are to be deleted shift every other index, the proper index to erase from is the # of items not deleted.
 	uint32_t methodsToKeep = 0;
 	inputMethods.forEach([&](uint32_t, InputMethod *method) {
-		if(method->sessionID == sessionID)
+		if(method->client == client)
 			inputMethods.erase(methodsToKeep);
 		else
 			methodsToKeep++;
 	});
 	uint32_t handlersToKeep = 0;
 	inputHandlers.forEach([&](uint32_t, InputHandler *handler) {
-		if(handler->sessionID == sessionID)
+		if(handler->client == client)
 			inputHandlers.erase(handlersToKeep);
 		else
 			handlersToKeep++;
@@ -41,7 +41,7 @@ void InputInterface::handleMessengerDeletion(uint sessionID) {
 	inputHandlers.done();
 }
 
-std::vector<uint8_t> InputInterface::registerInputHandler(uint sessionID, flexbuffers::Reference data, bool) {
+std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vec      = data.AsVector();
 	std::string name             = vec[0].AsString().str();
 	std::string field            = vec[1].AsString().str();
@@ -54,7 +54,6 @@ std::vector<uint8_t> InputInterface::registerInputHandler(uint sessionID, flexbu
 	handler->ready                      = false;
 	handler->parent                     = children["handler"];
 	children["handler"]->children[name] = handler;
-	handler->sessionID                  = sessionID;
 	handler->field                      = dynamic_cast<Field *>(client->scenegraph.findNode(field));
 	handler->position                   = { pos[0].AsFloat(), pos[1].AsFloat(), pos[2].AsFloat() };
 	handler->rotation                   = { rot[0].AsFloat(), rot[1].AsFloat(), rot[2].AsFloat(), rot[3].AsFloat() };

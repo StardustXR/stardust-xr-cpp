@@ -9,8 +9,7 @@ ClientManager::ClientManager(const char *socketPath) : StardustXR::MessengerMana
 ClientManager::~ClientManager() {}
 
 void ClientManager::clientConnected(int inFD, int outFD) {
-	clientCount++;
-	Client *client = new Client(clientCount, inFD, outFD, this);
+	Client *client = new Client(inFD, outFD, this);
 	clients.push_back(client);
 	client->startHandler();
 }
@@ -32,6 +31,7 @@ void ClientManager::disconnectClient(Client *client) {
 }
 void ClientManager::handleDisconnectedClients() {
 	for(Client *disconnectedClient : disconnectedClients) {
+		disconnectedClient->scenegraph.handleClientDisconnect(disconnectedClient);
 		for(auto clientsIterator = clients.begin(); clientsIterator != clients.end(); ++clientsIterator) {
 			if(*clientsIterator == disconnectedClient) {
 				clients.erase(clientsIterator);

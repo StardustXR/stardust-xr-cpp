@@ -11,9 +11,9 @@ class InputInterface : public Node {
 public:
 	InputInterface(Client *client);
 	~InputInterface();
-	void handleMessengerDeletion(uint sessionID);
+	void handleClientDisconnect(Client *client);
 
-	std::vector<uint8_t> registerInputHandler(uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> registerInputHandler(flexbuffers::Reference data, bool returnValue);
 	static void processInput();
 
 	static ThreadSafeList<InputMethod *> inputMethods;

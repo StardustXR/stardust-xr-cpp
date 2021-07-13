@@ -10,7 +10,7 @@ public:
 	ModelInterface(Client *client);
 	virtual ~ModelInterface() {}
 
-	std::vector<uint8_t> createFromFile(uint sessionID, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> createFromFile(flexbuffers::Reference data, bool returnValue);
 };
 
 }
