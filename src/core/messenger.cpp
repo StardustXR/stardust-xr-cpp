@@ -4,7 +4,7 @@
 
 namespace StardustXRServer {
 
-Messenger::Messenger(Client *client, int readFD, int writeFD) : StardustXR::ServerMessenger(readFD, writeFD, &client->scenegraph, client->manager) {
+Messenger::Messenger(Client *client, int readFD, int writeFD) : StardustXR::Messenger(readFD, writeFD, &client->scenegraph) {
 	this->client = client;
 }
 Messenger::~Messenger() {}

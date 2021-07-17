@@ -5,7 +5,7 @@
 
 namespace StardustXRServer {
 
-Scenegraph::Scenegraph(Client *client) : StardustXR::ServerScenegraph(), root(client) {}
+Scenegraph::Scenegraph(Client *client) : root(client) {}
 Scenegraph::~Scenegraph() {}
 
 void Scenegraph::onPathStep(std::string path, std::function<void(std::string)> pathStepFunction) {

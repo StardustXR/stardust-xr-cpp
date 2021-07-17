@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stardustxr/server/scenegraph.hpp>
+#include <stardustxr/scenegraph.hpp>
 #include "../nodetypes/node.hpp"
 
 namespace StardustXRServer {
@@ -9,7 +9,7 @@ typedef std::function<void(flexbuffers::Reference, void *)> ServerCallback;
 
 class Client;
 
-class Scenegraph : public StardustXR::ServerScenegraph {
+class Scenegraph : public StardustXR::Scenegraph {
 public:
 	explicit Scenegraph(Client *client);
 	~Scenegraph();

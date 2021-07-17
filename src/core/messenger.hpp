@@ -1,13 +1,12 @@
 #pragma once
 
 #include <stardustxr/messenger.hpp>
-#include <stardustxr/server/messenger.hpp>
 
 namespace StardustXRServer {
 
 class Client;
 
-class Messenger : public StardustXR::ServerMessenger {
+class Messenger : public StardustXR::Messenger {
 public:
 	explicit Messenger(Client *client, int readFD, int writeFD);
 	virtual ~Messenger();
