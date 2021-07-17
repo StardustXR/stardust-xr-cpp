@@ -1,5 +1,5 @@
 #include "inputmethod.hpp"
-#include "flatbuffers/flexbuffers.h"
+#include <stardustxr/flex.hpp>
 
 namespace StardustXRServer {
 
