@@ -2,7 +2,6 @@
 
 #include <functional>
 #include <stardustxr/node.hpp>
-#include <stardustxr/util.hpp>
 
 using namespace StardustXR;
 namespace StardustXRServer {
@@ -13,7 +12,7 @@ class Client;
 class Node : public StardustXR::Node {
 public:
 	Node(Client *client);
-	virtual ~Node() {}
+	virtual ~Node();
 
 	virtual void update() {}
 	virtual void handleClientDisconnect(Client *client) {}
