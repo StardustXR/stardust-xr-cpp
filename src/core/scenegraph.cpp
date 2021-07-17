@@ -33,14 +33,7 @@ void Scenegraph::executeRemoteMethod(std::string remotePath, std::string remoteM
 
 void Scenegraph::handleClientDisconnect(Client *client) {
 	PropagateFunction messengerDeletionFunction = [&](std::string name, Node *node) {
-		if(node->parent) {
-			Node *nodeParent = node->parent;
-			delete node;
-			nodeParent->children.erase(name);
-			return false;
-		} else {
-			node->handleClientDisconnect(client);
-		}
+		node->handleClientDisconnect(client);
 		return true;
 	};
 	root.propagate("", messengerDeletionFunction);
