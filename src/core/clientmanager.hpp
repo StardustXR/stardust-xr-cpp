@@ -14,6 +14,7 @@ public:
 	~ClientManager();
 
 	std::vector<Client *> clients;
+	void handleNewlyConnectedClients();
 	void disconnectClient(Client *client);
 	void handleDisconnectedClients();
 
@@ -23,7 +24,7 @@ public:
 protected:
 	std::mutex connectedClientsMutex;
 
-protected:
+	std::vector<std::pair<int, int>> newlyConnectedClients;
 	std::vector<Client *> disconnectedClients;
 
 	void clientConnected(int inFD, int outFD);

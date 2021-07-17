@@ -1,6 +1,7 @@
 #include "clientmanager.hpp"
 #include "../nodetypes/graphical/drawablenode.hpp"
 #include "scenegraphpropagation.hpp"
+#include <mutex>
 #include <vector>
 
 namespace StardustXRServer {
@@ -13,16 +14,18 @@ void ClientManager::clientConnected(int inFD, int outFD) {
 	newlyConnectedClients.emplace_back(inFD, outFD);
 }
 
-void ClientManager::callClientsUpdate() {
-	for(Client *client : clients) {
-		client->scenegraphPropagate("", ScenegraphUpdateFunction);
+void ClientManager::handleNewlyConnectedClients() {
+	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
+	
+	if(newlyConnectedClients.size() == 0)
+		return;
+	
+	for(auto newlyConnectedClient : newlyConnectedClients) {
+		Client *client = new Client(newlyConnectedClient.first, newlyConnectedClient.second, this);
+		clients.push_back(client);
+		client->startHandler();
 	}
-}
-
-void ClientManager::callClientsDraw() {
-	for(Client *client : clients) {
-		client->scenegraphPropagate("", ScenegraphDrawFunction);
-	}
+	newlyConnectedClients.clear();
 }
 
 void ClientManager::disconnectClient(Client *client) {

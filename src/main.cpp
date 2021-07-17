@@ -78,6 +78,7 @@ int main(int argc, char *argv[]) {
 	while (sk_step([]() {
 		// Handle disconnected clients before anything else to ensure scenegraph is clean
 		clientManager.handleDisconnectedClients();
+		clientManager.handleNewlyConnectedClients();
 
 		// Update environment settings
 		EnvironmentInterface::updateEnvironment();
