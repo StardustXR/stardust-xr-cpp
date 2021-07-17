@@ -9,9 +9,8 @@ ClientManager::ClientManager(const char *socketPath) : StardustXR::MessengerMana
 ClientManager::~ClientManager() {}
 
 void ClientManager::clientConnected(int inFD, int outFD) {
-	Client *client = new Client(inFD, outFD, this);
-	clients.push_back(client);
-	client->startHandler();
+	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
+	newlyConnectedClients.emplace_back(inFD, outFD);
 }
 
 void ClientManager::callClientsUpdate() {
@@ -27,10 +26,17 @@ void ClientManager::callClientsDraw() {
 }
 
 void ClientManager::disconnectClient(Client *client) {
+	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
+
 	disconnectedClients.push_back(client);
 }
 void ClientManager::handleDisconnectedClients() {
-	for(Client *disconnectedClient : disconnectedClients) {
+	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
+
+	if(disconnectedClients.size() == 0)
+		return;
+	
+	for(auto &disconnectedClient : disconnectedClients) {
 		disconnectedClient->scenegraph.handleClientDisconnect(disconnectedClient);
 		for(auto clientsIterator = clients.begin(); clientsIterator != clients.end(); ++clientsIterator) {
 			if(*clientsIterator == disconnectedClient) {
@@ -40,8 +46,19 @@ void ClientManager::handleDisconnectedClients() {
 		}
 		delete disconnectedClient;
 	}
-	if(disconnectedClients.size() > 0)
-		disconnectedClients = std::vector<Client *>();
+	disconnectedClients.clear();
+}
+
+void ClientManager::callClientsUpdate() {
+	for(Client *client : clients) {
+		client->scenegraphPropagate("", ScenegraphUpdateFunction);
+	}
+}
+
+void ClientManager::callClientsDraw() {
+	for(Client *client : clients) {
+		client->scenegraphPropagate("", ScenegraphDrawFunction);
+	}
 }
 
 }

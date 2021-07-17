@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "client.hpp"
+#include <mutex>
 
 namespace StardustXRServer {
 
@@ -13,11 +14,14 @@ public:
 	~ClientManager();
 
 	std::vector<Client *> clients;
+	void disconnectClient(Client *client);
+	void handleDisconnectedClients();
+
 	void callClientsUpdate();
 	void callClientsDraw();
 
-	void disconnectClient(Client *client);
-	void handleDisconnectedClients();
+protected:
+	std::mutex connectedClientsMutex;
 
 protected:
 	std::vector<Client *> disconnectedClients;
