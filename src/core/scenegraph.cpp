@@ -43,7 +43,7 @@ std::vector<uint8_t> Scenegraph::executeMethod(std::string path, std::string met
 	//Find the node referenced by the path string
 	Node *currentNode = &root;
 	this->onPathStep(path, [&](std::string pathStep) {
-		currentNode = currentNode->children[pathStep];
+		currentNode = currentNode->children[pathStep].get();
 		if(currentNode == nullptr) {
 			printf("Node %s not found\n", pathStep.c_str());
 			return;
@@ -67,12 +67,12 @@ void Scenegraph::addNode(std::string path, Node *node) {
 	this->onPathStep(path, [&](std::string pathStep) {
 
 		if(pathStep == lastNodeName)
-			currentNode->children[pathStep] = node;
-		else if(currentNode->children[pathStep] == nullptr)
-			currentNode->children[pathStep] = new Node(root.client);
+			currentNode->children.emplace(pathStep, node);
+		else if(currentNode->children.find(pathStep) == currentNode->children.end())
+			currentNode->children.emplace(pathStep, new Node(root.client));
 
 		currentNode->children[pathStep]->parent = currentNode;
-		currentNode = currentNode->children[pathStep];
+		currentNode = currentNode->children[pathStep].get();
 
 	});
 }
@@ -84,7 +84,7 @@ Node *Scenegraph::findNode(std::string path) {
 
 	this->onPathStep(path, [&](std::string pathStep) {
 		if(!doesNotExist)
-			currentNode = currentNode->children[pathStep];
+			currentNode = currentNode->children[pathStep].get();
 
 		if(!doesNotExist && currentNode == nullptr)
 			doesNotExist = true;

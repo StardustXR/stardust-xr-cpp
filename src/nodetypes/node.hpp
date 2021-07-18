@@ -21,7 +21,8 @@ public:
 	bool ready = true;
 	Client *client;
 	Node *parent = nullptr;
-	std::map<std::string, Node *> children;
+
+	std::map<std::string, std::unique_ptr<Node>> children;
 };
 
 } //namespace StardustXRServer

@@ -47,7 +47,7 @@ std::vector<uint8_t> SpatialFactory::create(flexbuffers::Reference data, bool) {
 	spatial->rotatable = rotatable;
 	spatial->scalable = scalable;
 	spatial->transformDirty();
-	children[name] = spatial;
+	children.emplace(name, spatial);
 	spatial->ready = true;
 
 	return std::vector<uint8_t>();

@@ -11,10 +11,10 @@ ThreadSafeList<InputHandler *> InputInterface::inputHandlers;
 flatbuffers::FlatBufferBuilder InputInterface::fbb;
 
 InputInterface::InputInterface(Client *client) : Node(client) {
-	children["handler"] = new Node(client);
+	children.emplace("handler", new Node(client));
 	children["handler"]->parent = this;
 
-	children["method"] = new Node(client);
+	children.emplace("method", new Node(client));
 	children["method"]->parent = this;
 
 	STARDUSTXR_NODE_METHOD("registerInputHandler", &InputInterface::registerInputHandler)
@@ -52,8 +52,8 @@ std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference
 
 	InputHandler *handler               = new InputHandler(client);
 	handler->ready                      = false;
-	handler->parent                     = children["handler"];
-	children["handler"]->children[name] = handler;
+	handler->parent                     = children["handler"].get();
+	children["handler"]->children.emplace(name, handler);
 	handler->field                      = dynamic_cast<Field *>(client->scenegraph.findNode(field));
 	handler->position                   = { pos[0].AsFloat(), pos[1].AsFloat(), pos[2].AsFloat() };
 	handler->rotation                   = { rot[0].AsFloat(), rot[1].AsFloat(), rot[2].AsFloat(), rot[3].AsFloat() };

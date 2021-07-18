@@ -43,7 +43,7 @@ std::vector<uint8_t> ModelInterface::createFromFile(flexbuffers::Reference data,
 	model->scale = scale;
 	model->queued = true;
 	model->transformDirty();
-	children[name] = model;
+	children.emplace(name, model);
 	model->ready = true;
 
 	return std::vector<uint8_t>();

@@ -42,7 +42,7 @@ std::vector<uint8_t> FieldInterface::createBoxField(flexbuffers::Reference data,
 	field->position = position;
 	field->rotation = rotation;
 	field->transformDirty();
-	children[name] = field;
+	children.emplace(name, field);
 	field->ready = true;
 
 	return std::vector<uint8_t>();
@@ -65,7 +65,7 @@ std::vector<uint8_t> FieldInterface::createSphereField(flexbuffers::Reference da
 	field->parent = this;
 	field->position = origin;
 	field->transformDirty();
-	children[name] = field;
+	children.emplace(name, field);
 	field->ready = true;
 
 	return std::vector<uint8_t>();
