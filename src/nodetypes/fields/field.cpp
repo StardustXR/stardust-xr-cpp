@@ -1,7 +1,8 @@
 #include "field.hpp"
-#include "../../globals.h"
+#include <stardustxr/flex.hpp>
 #include "../../core/client.hpp"
 
+using namespace StardustXR;
 namespace StardustXRServer {
 
 Field::Field(Client *client) : SpatialNode(client) {
@@ -88,7 +89,7 @@ std::vector<uint8_t> Field::distance(flexbuffers::Reference data, bool returnVal
 	//If the spacePath doesn't exist, it must be world space
 	float distance = this->distance(dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath)), point);
 
-	return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
+	return StardustXR::FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
 		fbb.Float(distance);
 	});
 }
