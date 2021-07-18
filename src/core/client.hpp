@@ -1,5 +1,7 @@
 #pragma once
 
+#include <atomic>
+
 #include "messenger.hpp"
 #include "scenegraph.hpp"
 #include "scenegraphpropagation.hpp"
@@ -15,7 +17,8 @@ public:
 
 	void startHandler();
 	void scenegraphPropagate(std::string name, PropagateFunction &function);
-	
+
+	std::atomic<bool> disconnected{false};
 	Messenger messenger;
 	Scenegraph scenegraph;
 	ClientManager *manager;

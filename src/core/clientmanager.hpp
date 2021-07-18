@@ -1,10 +1,11 @@
 #pragma once
 
-#include <stardustxr/server/messengermanager.hpp>
+#include <mutex>
+#include <memory>
 #include <vector>
 
+#include <stardustxr/server/messengermanager.hpp>
 #include "client.hpp"
-#include <mutex>
 
 namespace StardustXRServer {
 
@@ -13,9 +14,8 @@ public:
 	explicit ClientManager(const char *socketPath = "/tmp/stardust.sock");
 	~ClientManager();
 
-	std::vector<Client *> clients;
+	std::vector<std::unique_ptr<Client>> clients;
 	void handleNewlyConnectedClients();
-	void disconnectClient(Client *client);
 	void handleDisconnectedClients();
 
 	void callClientsUpdate();
@@ -25,7 +25,6 @@ protected:
 	std::mutex connectedClientsMutex;
 
 	std::vector<std::pair<int, int>> newlyConnectedClients;
-	std::vector<Client *> disconnectedClients;
 
 	void clientConnected(int inFD, int outFD);
 };

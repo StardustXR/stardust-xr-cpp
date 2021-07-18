@@ -10,7 +10,7 @@ Messenger::Messenger(Client *client, int readFD, int writeFD) : StardustXR::Mess
 Messenger::~Messenger() {}
 
 void Messenger::onPipeBreak() {
-	client->manager->disconnectClient(client);
+	client->disconnected = true;
 }
 
 }

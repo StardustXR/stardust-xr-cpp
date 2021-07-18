@@ -1,6 +1,7 @@
 #include "clientmanager.hpp"
 #include "../nodetypes/graphical/drawablenode.hpp"
 #include "scenegraphpropagation.hpp"
+#include <memory>
 #include <mutex>
 #include <vector>
 
@@ -22,44 +23,30 @@ void ClientManager::handleNewlyConnectedClients() {
 	
 	for(auto newlyConnectedClient : newlyConnectedClients) {
 		Client *client = new Client(newlyConnectedClient.first, newlyConnectedClient.second, this);
-		clients.push_back(client);
+		clients.emplace_back(client);
 		client->startHandler();
 	}
 	newlyConnectedClients.clear();
 }
 
-void ClientManager::disconnectClient(Client *client) {
-	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
-
-	disconnectedClients.push_back(client);
-}
 void ClientManager::handleDisconnectedClients() {
-	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
-
-	if(disconnectedClients.size() == 0)
+	if(clients.size() == 0)
 		return;
-	
-	for(auto &disconnectedClient : disconnectedClients) {
-		disconnectedClient->scenegraph.handleClientDisconnect(disconnectedClient);
-		for(auto clientsIterator = clients.begin(); clientsIterator != clients.end(); ++clientsIterator) {
-			if(*clientsIterator == disconnectedClient) {
-				clients.erase(clientsIterator);
-			}
-			break;
-		}
-		delete disconnectedClient;
-	}
-	disconnectedClients.clear();
+
+	clients.erase(std::remove_if(clients.begin(), clients.end(), [](std::unique_ptr<Client> &client) {
+		bool disconnected = !!client->disconnected; // !! inverts the atomic bool twice, gently converting it to a regular bool
+		return disconnected;
+	}), clients.end());
 }
 
 void ClientManager::callClientsUpdate() {
-	for(Client *client : clients) {
+	for(auto &client : clients) {
 		client->scenegraphPropagate("", ScenegraphUpdateFunction);
 	}
 }
 
 void ClientManager::callClientsDraw() {
-	for(Client *client : clients) {
+	for(auto &client : clients) {
 		client->scenegraphPropagate("", ScenegraphDrawFunction);
 	}
 }
