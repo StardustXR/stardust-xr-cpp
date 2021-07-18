@@ -1,15 +1,20 @@
 #pragma once
 
 #include <functional>
-#include <stardustxr/node.hpp>
+#include <map>
+#include <memory>
+#include <string>
+#include <flatbuffers/flexbuffers.h>
 
-using namespace StardustXR;
 namespace StardustXRServer {
+
+#define STARDUSTXR_NODE_METHOD(method_name, method_ref) methods[method_name] = std::bind(method_ref, this, std::placeholders::_1, std::placeholders::_2);
+typedef std::function<std::vector<uint8_t>(flexbuffers::Reference, bool)> NodeMethod;
 
 class Node;
 class Client;
 
-class Node : public StardustXR::Node {
+class Node {
 public:
 	Node(Client *client);
 	virtual ~Node();
@@ -22,6 +27,7 @@ public:
 	Client *client;
 	Node *parent = nullptr;
 
+	std::map<std::string, NodeMethod> methods;
 	std::map<std::string, std::unique_ptr<Node>> children;
 };
 

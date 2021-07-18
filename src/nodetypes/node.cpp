@@ -6,6 +6,7 @@ using namespace std;
 namespace StardustXRServer {
 
 Node::Node(Client *client) : client(client) {}
+Node::~Node() {}
 
 void Node::propagate(std::string name, std::function<bool (std::string, Node *)> &function) {
 	if(ready && function(name, this)) {
