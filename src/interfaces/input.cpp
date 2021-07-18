@@ -3,11 +3,14 @@
 #include "../nodetypes/input/inputmethods/pointer.hpp"
 #include "../nodetypes/input/inputmethods/flatbuffers/Input_generated.h"
 #include "../core/client.hpp"
+#include <mutex>
 
 namespace StardustXRServer {
 
-ThreadSafeList<InputMethod *> InputInterface::inputMethods;
-ThreadSafeList<InputHandler *> InputInterface::inputHandlers;
+std::mutex InputInterface::inputVectorsMutex;
+std::vector<InputMethod *> InputInterface::inputMethods;
+std::vector<InputHandler *> InputInterface::inputHandlers;
+
 flatbuffers::FlatBufferBuilder InputInterface::fbb;
 
 InputInterface::InputInterface(Client *client) : Node(client) {
@@ -22,24 +25,19 @@ InputInterface::InputInterface(Client *client) : Node(client) {
 InputInterface::~InputInterface() {}
 
 void InputInterface::handleClientDisconnect(Client *client) {
-	//Since all the methods/handlers that are to be deleted shift every other index, the proper index to erase from is the # of items not deleted.
-	uint32_t methodsToKeep = 0;
-	inputMethods.forEach([&](uint32_t, InputMethod *method) {
-		if(method->client == client)
-			inputMethods.erase(methodsToKeep);
-		else
-			methodsToKeep++;
-	});
-	uint32_t handlersToKeep = 0;
-	inputHandlers.forEach([&](uint32_t, InputHandler *handler) {
-		if(handler->client == client)
-			inputHandlers.erase(handlersToKeep);
-		else
-			handlersToKeep++;
-	});
+	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
+	
+	inputMethods.erase(std::remove_if(inputMethods.begin(), inputMethods.end(), [&client](InputMethod *method) {
+		return method->client == client;
+	}), inputMethods.end());
+	inputHandlers.erase(std::remove_if(inputHandlers.begin(), inputHandlers.end(), [&client](InputHandler *handler) {
+		return handler->client == client;
+	}), inputHandlers.end());
 }
 
 std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference data, bool) {
+	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
+
 	flexbuffers::Vector vec      = data.AsVector();
 	std::string name             = vec[0].AsString().str();
 	std::string field            = vec[1].AsString().str();
@@ -60,14 +58,16 @@ std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference
 	handler->transformDirty();
 	handler->ready                      = true;
 
-	inputHandlers.pushBack(handler);
+	inputHandlers.push_back(handler);
 
 	return std::vector<uint8_t>();
 }
 
 void InputInterface::processInput() {
-	const uint32_t inputMethodCount = inputMethods.length();
-	const uint32_t inputHandlerCount = inputHandlers.length();
+	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
+
+	const uint32_t inputMethodCount = inputMethods.size();
+	const uint32_t inputHandlerCount = inputHandlers.size();
 
 	if(inputMethodCount == 0 || inputHandlerCount == 0)
 		return;
@@ -94,6 +94,18 @@ void InputInterface::processInput() {
 			inputData
 		);
 	}
+}
+
+void InputInterface::addInputMethod(InputMethod *method) {
+	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
+
+	inputMethods.push_back(method);
+}
+
+void InputInterface::addInputHandler(InputHandler *handler) {
+	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
+
+	inputHandlers.push_back(handler);
 }
 
 std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod* inputMethod, InputHandler *inputHandler) {

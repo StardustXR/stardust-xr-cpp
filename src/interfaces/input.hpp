@@ -3,7 +3,7 @@
 #include "../nodetypes/node.hpp"
 #include "../nodetypes/input/inputhandler.hpp"
 #include "../nodetypes/input/inputmethod.hpp"
-#include <stardustxr/util/threadsafelist.hpp>
+#include <mutex>
 
 namespace StardustXRServer {
 
@@ -16,10 +16,15 @@ public:
 	std::vector<uint8_t> registerInputHandler(flexbuffers::Reference data, bool returnValue);
 	static void processInput();
 
-	static ThreadSafeList<InputMethod *> inputMethods;
-	static ThreadSafeList<InputHandler *> inputHandlers;
+	static void addInputMethod(InputMethod *method);
+	static void addInputHandler(InputHandler *handler);
 
 private:
+	static std::mutex inputVectorsMutex;
+
+	static std::vector<InputMethod *> inputMethods;
+	static std::vector<InputHandler *> inputHandlers;
+	
 	static std::vector<uint8_t> CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod *inputMethod, InputHandler *inputHandler);
 	static flatbuffers::FlatBufferBuilder fbb;
 };

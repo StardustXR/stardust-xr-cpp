@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 		input_hand_visible(handed_right, false);
 		FlatscreenPointer *flatscreenPointer = new FlatscreenPointer(&serverInternalClient);
 		serverInternalClient.scenegraph.addNode("/test/flatscreenpointer", static_cast<SpatialNode *>(flatscreenPointer));
-		InputInterface::inputMethods.pushBack(flatscreenPointer);
+		InputInterface::addInputMethod(flatscreenPointer);
 	} else { // Add the StereoKit hand representation if we're not in flatscreen
 		SKHandInput *stereokitHands[2];
 //		stereokitHands[0] = new SKHandInput(handed_left);
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
 //		scenegraph.addNode("/test/skhandleft", static_cast<SpatialNode *>(stereokitHands[0]));
 		serverInternalClient.scenegraph.addNode("/test/skhandright", static_cast<SpatialNode *>(stereokitHands[1]));
 //		input.inputMethods.pushBack(stereokitHands[0]);
-		InputInterface::inputMethods.pushBack(stereokitHands[1]);
+		InputInterface::addInputMethod(stereokitHands[1]);
 	}
 
 	// Every stereokit step
