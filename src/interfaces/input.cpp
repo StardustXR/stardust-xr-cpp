@@ -72,13 +72,13 @@ void InputInterface::processInput() {
 	if(inputMethodCount == 0 || inputHandlerCount == 0)
 		return;
 
-	for(uint32_t i=0; i<inputMethodCount; ++i) {
+	for(auto &inputMethod : inputMethods) {
 		std::list<DistanceLink> distanceLinks;
-		for(uint32_t j=0; j<inputHandlerCount; ++j) {
-			distanceLinks.push_front({
-				inputMethods[i],
-				inputMethods[i]->distanceTo(inputHandlers[j]),
-				inputHandlers[j]
+		for(auto &inputHandler : inputHandlers) {
+			distanceLinks.push_front(DistanceLink {
+				inputMethod,
+				inputMethod->distanceTo(inputHandler),
+				inputHandler
 			});
 		}
 		distanceLinks.sort();
