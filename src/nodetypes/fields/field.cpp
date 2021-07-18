@@ -5,7 +5,7 @@
 using namespace StardustXR;
 namespace StardustXRServer {
 
-Field::Field(Client *client) : SpatialNode(client) {
+Field::Field(Client *client) : Spatial(client) {
 	scalable = false;
 
 	STARDUSTXR_NODE_METHOD("distance",     static_cast<std::vector<uint8_t>(Field::*)(flexbuffers::Reference, bool)>(&Field::distance))
@@ -38,7 +38,7 @@ const vec3 Field::localNormal(const vec3 point, float radius) {
 	return vec3_normalize(n);
 }
 
-float Field::distance(SpatialNode *space, const vec3 point) {
+float Field::distance(Spatial *space, const vec3 point) {
 	vec3 localPoint = spaceToLocalPoint(space, point);
 
 	if(scale.x == 1.0f && scale.x == scale.y && scale.y == scale.z) { // We should really fix this but idk how??
@@ -59,16 +59,16 @@ float Field::distance(SpatialNode *space, const vec3 point) {
 	}
 }
 
-const vec3 Field::closestPoint(SpatialNode *space, const vec3 point) {
+const vec3 Field::closestPoint(Spatial *space, const vec3 point) {
 	vec3 localPoint = spaceToLocalPoint(space, point);
 	return localToSpaceDirection(space, localClosestPoint(localPoint));
 }
 
-const vec3 Field::normal(SpatialNode *space, const vec3 point) {
+const vec3 Field::normal(Spatial *space, const vec3 point) {
 	return normal(space, point, normalRadius);
 }
 
-const vec3 Field::normal(SpatialNode *space, const vec3 point, float radius) {
+const vec3 Field::normal(Spatial *space, const vec3 point, float radius) {
 	vec3 localPoint = spaceToLocalPoint(space, point);
 	return localToSpaceDirection(space, localNormal(localPoint, radius));
 }
@@ -87,7 +87,7 @@ std::vector<uint8_t> Field::distance(flexbuffers::Reference data, bool returnVal
 	};
 
 	//If the spacePath doesn't exist, it must be world space
-	float distance = this->distance(dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath)), point);
+	float distance = this->distance(dynamic_cast<Spatial *>(client->scenegraph.findNode(spacePath)), point);
 
 	return FLEX_SINGLE(
 		FLEX_FLOAT(distance)
@@ -108,7 +108,7 @@ std::vector<uint8_t> Field::normal(flexbuffers::Reference data, bool returnValue
 	};
 
 	//If the spacePath doesn't exist, it must be world space
-	vec3 normal = this->normal(dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath)), point);
+	vec3 normal = this->normal(dynamic_cast<Spatial *>(client->scenegraph.findNode(spacePath)), point);
 
 	return FLEX_SINGLE(
 		FLEX_VEC3(normal)
@@ -129,7 +129,7 @@ std::vector<uint8_t> Field::closestPoint(flexbuffers::Reference data, bool retur
 	};
 
 	//If the spacePath doesn't exist, it must be world space
-	vec3 closestPoint = this->normal(dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath)), point);
+	vec3 closestPoint = this->normal(dynamic_cast<Spatial *>(client->scenegraph.findNode(spacePath)), point);
 
 	return FLEX_SINGLE(
 		FLEX_VEC3(closestPoint)

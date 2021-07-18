@@ -7,7 +7,7 @@
 
 namespace StardustXRServer {
 
-InputHandler::InputHandler(Client *client) : SpatialNode(client) {
+InputHandler::InputHandler(Client *client) : Spatial(client) {
 	translatable = true;
 	rotatable = true;
 	scalable = false;

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../spatialnode.hpp"
+#include "../spatial.hpp"
 #include "../fields/field.hpp"
 #include "distancelink.hpp"
 #include <list>
 
 namespace StardustXRServer {
 
-class InputHandler : public SpatialNode {
+class InputHandler : public Spatial {
 public:
 	InputHandler(Client *client);
 	virtual ~InputHandler();

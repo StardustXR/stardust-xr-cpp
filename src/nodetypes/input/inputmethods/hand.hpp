@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../inputmethod.hpp"
-#include "../../spatialnode.hpp"
+#include "../../spatial.hpp"
 using namespace sk;
 
 namespace StardustXRServer {
@@ -17,13 +17,13 @@ public:
 	hand_joint_t wristJoint;
 	bool hasForearm = false;
 	hand_joint_t elbowJoint;
-	joint localSKToSpaceFlexJoint(SpatialNode *space, hand_joint_t joint);
-	void updateSpaceFlexJoint(SpatialNode *space, hand_joint_t joint, struct joint *updateJoint);
+	joint localSKToSpaceFlexJoint(Spatial *space, hand_joint_t joint);
+	void updateSpaceFlexJoint(Spatial *space, hand_joint_t joint, struct joint *updateJoint);
 
 	float distanceTo(InputHandler *handler);
 	InputDataRaw type();
 	flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler);
-	void updateInput(InputData *data, SpatialNode *space);
+	void updateInput(InputData *data, Spatial *space);
 protected:
 	sk::vec3 flexToSK(StardustXR::vec3 flex) {
 		return {

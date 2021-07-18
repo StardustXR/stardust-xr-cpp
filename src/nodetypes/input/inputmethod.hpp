@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../spatialnode.hpp"
+#include "../spatial.hpp"
 #include "inputhandler.hpp"
 #include <stereokit.h>
 #include <variant>
@@ -10,7 +10,7 @@ using namespace StardustXR;
 using namespace sk;
 namespace StardustXRServer {
 
-class InputMethod : public SpatialNode {
+class InputMethod : public Spatial {
 public:
 	InputMethod(Client *client);
 	virtual ~InputMethod();
@@ -20,7 +20,7 @@ public:
 	virtual float distanceTo(InputHandler *handler) = 0;
 	virtual InputDataRaw type() = 0;
 	virtual flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler) = 0;
-	virtual void	 updateInput(InputData *data, SpatialNode *space) = 0;
+	virtual void	 updateInput(InputData *data, Spatial *space) = 0;
 	virtual std::vector<uint8_t> serializeDatamap();
 
 protected:

@@ -8,7 +8,7 @@ lib_nodetypes = static_library(
 	'nodetypes',
 	files(
 		'node.cpp',
-		'spatialnode.cpp',
+		'spatial.cpp',
 	),
 	include_directories: [nodetypes_includes],
         dependencies: [fields_nodetypes, graphical_nodetypes, input_nodetypes, stereokit]

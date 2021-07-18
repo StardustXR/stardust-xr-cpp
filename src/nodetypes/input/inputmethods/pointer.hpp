@@ -15,7 +15,7 @@ public:
 	float distanceTo(InputHandler *handler);
 	InputDataRaw type();
 	flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler);
-	void updateInput(InputData *data, SpatialNode *space);
+	void updateInput(InputData *data, Spatial *space);
 };
 
 } // namespace StardustXRServer

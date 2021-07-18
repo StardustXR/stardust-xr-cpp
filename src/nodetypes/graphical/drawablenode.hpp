@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../spatialnode.hpp"
+#include "../spatial.hpp"
 #include <vector>
 
 namespace StardustXRServer {
 
-class DrawableNode : public SpatialNode {
+class DrawableNode : public Spatial {
 public:
-	DrawableNode(Client *client) : SpatialNode(client) {
+	DrawableNode(Client *client) : Spatial(client) {
 		STARDUSTXR_NODE_METHOD("setVisible", &DrawableNode::setVisible)
 	}
 	virtual ~DrawableNode() {}

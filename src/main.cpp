@@ -60,14 +60,14 @@ int main(int argc, char *argv[]) {
 	if(args.flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_right, false);
 		FlatscreenPointer *flatscreenPointer = new FlatscreenPointer(&serverInternalClient);
-		serverInternalClient.scenegraph.addNode("/test/flatscreenpointer", static_cast<SpatialNode *>(flatscreenPointer));
+		serverInternalClient.scenegraph.addNode("/test/flatscreenpointer", static_cast<Spatial *>(flatscreenPointer));
 		InputInterface::addInputMethod(flatscreenPointer);
 	} else { // Add the StereoKit hand representation if we're not in flatscreen
 		SKHandInput *stereokitHands[2];
 //		stereokitHands[0] = new SKHandInput(handed_left);
 		stereokitHands[1] = new SKHandInput(&serverInternalClient, handed_right);
 //		scenegraph.addNode("/test/skhandleft", static_cast<SpatialNode *>(stereokitHands[0]));
-		serverInternalClient.scenegraph.addNode("/test/skhandright", static_cast<SpatialNode *>(stereokitHands[1]));
+		serverInternalClient.scenegraph.addNode("/test/skhandright", static_cast<Spatial *>(stereokitHands[1]));
 //		input.inputMethods.pushBack(stereokitHands[0]);
 		InputInterface::addInputMethod(stereokitHands[1]);
 	}

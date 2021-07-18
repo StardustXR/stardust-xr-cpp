@@ -38,7 +38,7 @@ std::vector<uint8_t> SpatialFactory::create(flexbuffers::Reference data, bool) {
 		flexScale[2].AsFloat()
 	};
 
-	SpatialNode *spatial = new SpatialNode(client);
+	Spatial *spatial = new Spatial(client);
 	spatial->ready = false;
 	spatial->position = position;
 	spatial->rotation = rotation;

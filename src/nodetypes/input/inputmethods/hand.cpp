@@ -14,7 +14,7 @@ HandInput::HandInput(Client *client) : InputMethod(client) {
 }
 HandInput::~HandInput() {}
 
-joint HandInput::localSKToSpaceFlexJoint(SpatialNode *space, hand_joint_t joint) {
+joint HandInput::localSKToSpaceFlexJoint(Spatial *space, hand_joint_t joint) {
 	return {
 		skToFlex(localToSpacePoint(space, joint.position)),
 		skToFlex(localToSpaceRotation(space, joint.orientation)),
@@ -22,7 +22,7 @@ joint HandInput::localSKToSpaceFlexJoint(SpatialNode *space, hand_joint_t joint)
 	};
 }
 
-void HandInput::updateSpaceFlexJoint(SpatialNode *space, hand_joint_t joint, struct joint *updateJoint) {
+void HandInput::updateSpaceFlexJoint(Spatial *space, hand_joint_t joint, struct joint *updateJoint) {
 	struct joint localJoint = localSKToSpaceFlexJoint(space, joint);
 
 	updateJoint->mutable_position().mutate_x(localJoint.position().x());
@@ -68,7 +68,7 @@ flatbuffers::Offset<void> HandInput::generateInput(flatbuffers::FlatBufferBuilde
 	).Union();
 }
 
-void HandInput::updateInput(InputData *data, SpatialNode *space) {
+void HandInput::updateInput(InputData *data, Spatial *space) {
 	StardustXR::Hand *handInput = static_cast<StardustXR::Hand *>(data->mutable_input());
 	for(uint i=0; i<fingerJointCount; ++i) {
 		updateSpaceFlexJoint(space, fingerJoints[i], handInput->mutable_finger_joints()->GetMutableObject(i));

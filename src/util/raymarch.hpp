@@ -3,7 +3,7 @@
 #include <cmath>
 #include <limits>
 
-#include "../nodetypes/spatialnode.hpp"
+#include "../nodetypes/spatial.hpp"
 #include "../nodetypes/fields/field.hpp"
 #include <stereokit.h>
 using namespace sk;
@@ -23,7 +23,7 @@ namespace StardustXRServer {
 typedef struct {
 	sk::vec3 origin;
 	sk::vec3 direction;
-	SpatialNode *space;
+	Spatial *space;
 } Ray;
 
 typedef struct {

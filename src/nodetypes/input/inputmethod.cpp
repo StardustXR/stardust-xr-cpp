@@ -3,7 +3,7 @@
 
 namespace StardustXRServer {
 
-InputMethod::InputMethod(Client *client) : SpatialNode(client) {}
+InputMethod::InputMethod(Client *client) : Spatial(client) {}
 InputMethod::~InputMethod() {}
 
 std::vector<uint8_t> InputMethod::modifyDatamap(flexbuffers::Reference data, bool) {

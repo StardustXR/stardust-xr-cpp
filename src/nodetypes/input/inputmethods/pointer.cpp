@@ -39,7 +39,7 @@ flatbuffers::Offset<void> PointerInput::generateInput(flatbuffers::FlatBufferBui
 	return CreatePointer(fbb, &flatPos, &flatDir, tilt).Union();
 }
 
-void PointerInput::updateInput(InputData *data, SpatialNode *space) {
+void PointerInput::updateInput(InputData *data, Spatial *space) {
 	StardustXR::Pointer *pointerInput = static_cast<StardustXR::Pointer *>(data->mutable_input());
 	if(!pointerInput)
 		return;

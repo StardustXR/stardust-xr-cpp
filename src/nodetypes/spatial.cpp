@@ -1,4 +1,4 @@
-#include "spatialnode.hpp"
+#include "spatial.hpp"
 #include "../globals.h"
 
 #include "../core/client.hpp"
@@ -7,23 +7,23 @@
 using namespace StardustXR;
 namespace StardustXRServer {
 
-SpatialNode::SpatialNode(Client *client) : Node(client) {
-	STARDUSTXR_NODE_METHOD("move", &SpatialNode::move)
-	STARDUSTXR_NODE_METHOD("rotate", &SpatialNode::rotate)
-	STARDUSTXR_NODE_METHOD("rotateAround", &SpatialNode::rotateAround)
-	STARDUSTXR_NODE_METHOD("scale", &SpatialNode::scaleThis)
+Spatial::Spatial(Client *client) : Node(client) {
+	STARDUSTXR_NODE_METHOD("move", &Spatial::move)
+	STARDUSTXR_NODE_METHOD("rotate", &Spatial::rotate)
+	STARDUSTXR_NODE_METHOD("rotateAround", &Spatial::rotateAround)
+	STARDUSTXR_NODE_METHOD("scale", &Spatial::scaleThis)
 
-	STARDUSTXR_NODE_METHOD("setOrigin", &SpatialNode::setOrigin)
-	STARDUSTXR_NODE_METHOD("setOrientation", &SpatialNode::setOrientation)
-	STARDUSTXR_NODE_METHOD("setScale", &SpatialNode::setScale)
+	STARDUSTXR_NODE_METHOD("setOrigin", &Spatial::setOrigin)
+	STARDUSTXR_NODE_METHOD("setOrientation", &Spatial::setOrientation)
+	STARDUSTXR_NODE_METHOD("setScale", &Spatial::setScale)
 
-	STARDUSTXR_NODE_METHOD("setPose", &SpatialNode::setPose)
-	STARDUSTXR_NODE_METHOD("setTransform", &SpatialNode::setTransform)
+	STARDUSTXR_NODE_METHOD("setPose", &Spatial::setPose)
+	STARDUSTXR_NODE_METHOD("setTransform", &Spatial::setTransform)
 
-	STARDUSTXR_NODE_METHOD("setSpatialParent", &SpatialNode::setSpatialParentFlex)
+	STARDUSTXR_NODE_METHOD("setSpatialParent", &Spatial::setSpatialParentFlex)
 }
 
-std::vector<uint8_t> SpatialNode::move(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Spatial::move(flexbuffers::Reference data, bool returnValue) {
 	if(translatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		vec3 moveDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
@@ -34,7 +34,7 @@ std::vector<uint8_t> SpatialNode::move(flexbuffers::Reference data, bool returnV
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> SpatialNode::rotate(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Spatial::rotate(flexbuffers::Reference data, bool returnValue) {
 	if(rotatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		quat rotationDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
@@ -45,7 +45,7 @@ std::vector<uint8_t> SpatialNode::rotate(flexbuffers::Reference data, bool retur
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> SpatialNode::rotateAround(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Spatial::rotateAround(flexbuffers::Reference data, bool returnValue) {
 	if(rotatable) {
 		flexbuffers::Vector vec = data.AsVector();
 		flexbuffers::TypedVector flexPoint = vec[0].AsTypedVector();
@@ -64,7 +64,7 @@ std::vector<uint8_t> SpatialNode::rotateAround(flexbuffers::Reference data, bool
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> SpatialNode::scaleThis(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Spatial::scaleThis(flexbuffers::Reference data, bool returnValue) {
 	if(translatable) {
 		float scaleDelta = data.AsFloat();
 		scale = scale * scaleDelta;
@@ -74,7 +74,7 @@ std::vector<uint8_t> SpatialNode::scaleThis(flexbuffers::Reference data, bool re
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> SpatialNode::setOrigin(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setOrigin(flexbuffers::Reference data, bool) {
 	if(translatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		position = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
@@ -84,7 +84,7 @@ std::vector<uint8_t> SpatialNode::setOrigin(flexbuffers::Reference data, bool) {
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> SpatialNode::setOrientation(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setOrientation(flexbuffers::Reference data, bool) {
 	if(rotatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		rotation = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
@@ -94,7 +94,7 @@ std::vector<uint8_t> SpatialNode::setOrientation(flexbuffers::Reference data, bo
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> SpatialNode::setScale(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setScale(flexbuffers::Reference data, bool) {
 	if(scalable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		scale = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
@@ -104,7 +104,7 @@ std::vector<uint8_t> SpatialNode::setScale(flexbuffers::Reference data, bool) {
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> SpatialNode::setPose(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setPose(flexbuffers::Reference data, bool) {
 	if(translatable && rotatable) {
 		flexbuffers::Vector vector = data.AsVector();
 		setOrigin(vector[0], false);
@@ -115,7 +115,7 @@ std::vector<uint8_t> SpatialNode::setPose(flexbuffers::Reference data, bool) {
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> SpatialNode::setTransform(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setTransform(flexbuffers::Reference data, bool) {
 	if(translatable && rotatable && scalable) {
 		flexbuffers::Vector vector = data.AsVector();
 		setOrigin(vector[0], false);
@@ -126,13 +126,13 @@ std::vector<uint8_t> SpatialNode::setTransform(flexbuffers::Reference data, bool
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> SpatialNode::setSpatialParentFlex(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setSpatialParentFlex(flexbuffers::Reference data, bool) {
 	std::string spacePath = data.AsString().str();
 	setSpatialParent(spacePath);
 	return std::vector<uint8_t>();
 }
 
-matrix SpatialNode::localToSpaceMatrix(SpatialNode *space) {
+matrix Spatial::localToSpaceMatrix(Spatial *space) {
 	// TODO: Optimize this to check if space and this SpatialNode share a common ancestor
 	// and calculate the transform matrix between the two.
 
@@ -147,7 +147,7 @@ matrix SpatialNode::localToSpaceMatrix(SpatialNode *space) {
 	return localToWorldMatrix * worldToSpaceMatrix;
 }
 
-matrix SpatialNode::spaceToLocalMatrix(SpatialNode *space) {
+matrix Spatial::spaceToLocalMatrix(Spatial *space) {
 	// TODO: Optimize this to check if space and this SpatialNode share a common ancestor
 	// and calculate the transform matrix between the two.
 
@@ -162,12 +162,12 @@ matrix SpatialNode::spaceToLocalMatrix(SpatialNode *space) {
 	return spaceToWorldMatrix * worldToLocalMatrix;
 }
 
-bool SpatialNode::setSpatialParent(std::string spacePath) {
+bool Spatial::setSpatialParent(std::string spacePath) {
 	if(spacePath == "") {
 		spatialParent = nullptr;
 		return true;
 	}
-	SpatialNode *potentialParent = dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath));
+	Spatial *potentialParent = dynamic_cast<Spatial *>(client->scenegraph.findNode(spacePath));
 	if(potentialParent) {
 		spatialParent = potentialParent;
 		return true;
@@ -175,14 +175,14 @@ bool SpatialNode::setSpatialParent(std::string spacePath) {
 	return false;
 }
 
-matrix SpatialNode::localTransform() {
+matrix Spatial::localTransform() {
 	if(transformMatrixDirty)
 		transform = matrix_trs(position, rotation, scale);
 	transformMatrixDirty = false;
 	return transform;
 }
 
-matrix SpatialNode::worldTransform() {
+matrix Spatial::worldTransform() {
 	if(spatialParent)
 		return localTransform() * spatialParent->worldTransform();
 	else
