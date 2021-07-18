@@ -1,7 +1,9 @@
 #pragma once
 
 #include "../nodetypes/node.hpp"
-#include <stardustxr/util/threadsafelist.hpp>
+
+#include <mutex>
+#include <vector>
 
 namespace StardustXRServer {
 
@@ -23,7 +25,8 @@ public:
 
 protected:
 	static void logicStepSignal(uint32_t index, LifeCycleUpdateMethod &updateMethod);
-	static StardustXR::ThreadSafeList<LifeCycleUpdateMethod> lifeCycleUpdateMethodList;
+	static std::mutex updateMethodsMutex;
+	static std::vector<LifeCycleUpdateMethod> updateMethods;
 
 	static double prevFrameTime;
 	static double frameTime;
