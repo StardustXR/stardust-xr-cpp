@@ -89,9 +89,9 @@ std::vector<uint8_t> Field::distance(flexbuffers::Reference data, bool returnVal
 	//If the spacePath doesn't exist, it must be world space
 	float distance = this->distance(dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath)), point);
 
-	return StardustXR::FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
-		fbb.Float(distance);
-	});
+	return FLEX_SINGLE(
+		FLEX_FLOAT(distance)
+	);
 }
 
 std::vector<uint8_t> Field::normal(flexbuffers::Reference data, bool returnValue) {
@@ -110,13 +110,9 @@ std::vector<uint8_t> Field::normal(flexbuffers::Reference data, bool returnValue
 	//If the spacePath doesn't exist, it must be world space
 	vec3 normal = this->normal(dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath)), point);
 
-	return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
-		fbb.TypedVector([&]() {
-			fbb.Float(normal.x);
-			fbb.Float(normal.y);
-			fbb.Float(normal.z);
-		});
-	});
+	return FLEX_SINGLE(
+		FLEX_VEC3(normal)
+	);
 }
 
 std::vector<uint8_t> Field::closestPoint(flexbuffers::Reference data, bool returnValue) {
@@ -135,13 +131,9 @@ std::vector<uint8_t> Field::closestPoint(flexbuffers::Reference data, bool retur
 	//If the spacePath doesn't exist, it must be world space
 	vec3 closestPoint = this->normal(dynamic_cast<SpatialNode *>(client->scenegraph.findNode(spacePath)), point);
 
-	return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
-		fbb.TypedVector([&]() {
-			fbb.Float(closestPoint.x);
-			fbb.Float(closestPoint.y);
-			fbb.Float(closestPoint.z);
-		});
-	});
+	return FLEX_SINGLE(
+		FLEX_VEC3(closestPoint)
+	);
 }
 
 } // namespace StardustXRServer

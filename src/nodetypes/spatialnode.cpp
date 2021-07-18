@@ -3,6 +3,7 @@
 
 #include "../core/client.hpp"
 #include "../core/scenegraph.hpp"
+#include <vector>
 using namespace StardustXR;
 namespace StardustXRServer {
 
@@ -30,7 +31,7 @@ std::vector<uint8_t> SpatialNode::move(flexbuffers::Reference data, bool returnV
 		transformMatrixDirty = true;
 	}
 
-	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> SpatialNode::rotate(flexbuffers::Reference data, bool returnValue) {
@@ -41,7 +42,7 @@ std::vector<uint8_t> SpatialNode::rotate(flexbuffers::Reference data, bool retur
 		transformMatrixDirty = true;
 	}
 
-	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> SpatialNode::rotateAround(flexbuffers::Reference data, bool returnValue) {
@@ -60,7 +61,7 @@ std::vector<uint8_t> SpatialNode::rotateAround(flexbuffers::Reference data, bool
 		transformMatrixDirty = true;
 	}
 
-	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> SpatialNode::scaleThis(flexbuffers::Reference data, bool returnValue) {
@@ -70,7 +71,7 @@ std::vector<uint8_t> SpatialNode::scaleThis(flexbuffers::Reference data, bool re
 		transformMatrixDirty = true;
 	}
 
-	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> SpatialNode::setOrigin(flexbuffers::Reference data, bool) {
@@ -80,7 +81,7 @@ std::vector<uint8_t> SpatialNode::setOrigin(flexbuffers::Reference data, bool) {
 		transformMatrixDirty = true;
 	}
 
-	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> SpatialNode::setOrientation(flexbuffers::Reference data, bool) {
@@ -90,7 +91,7 @@ std::vector<uint8_t> SpatialNode::setOrientation(flexbuffers::Reference data, bo
 		transformMatrixDirty = true;
 	}
 
-	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> SpatialNode::setScale(flexbuffers::Reference data, bool) {
@@ -100,7 +101,7 @@ std::vector<uint8_t> SpatialNode::setScale(flexbuffers::Reference data, bool) {
 		transformMatrixDirty = true;
 	}
 
-	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> SpatialNode::setPose(flexbuffers::Reference data, bool) {
@@ -111,7 +112,7 @@ std::vector<uint8_t> SpatialNode::setPose(flexbuffers::Reference data, bool) {
 		setScale(vector[2], false);
 	}
 
-	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> SpatialNode::setTransform(flexbuffers::Reference data, bool) {
@@ -122,13 +123,13 @@ std::vector<uint8_t> SpatialNode::setTransform(flexbuffers::Reference data, bool
 		setScale(vector[2], false);
 	}
 
-	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> SpatialNode::setSpatialParentFlex(flexbuffers::Reference data, bool) {
 	std::string spacePath = data.AsString().str();
 	setSpatialParent(spacePath);
-	return FlexbufferFromArguments([](flexbuffers::Builder &fbb) { fbb.Null(); });
+	return std::vector<uint8_t>();
 }
 
 matrix SpatialNode::localToSpaceMatrix(SpatialNode *space) {

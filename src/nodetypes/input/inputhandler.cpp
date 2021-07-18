@@ -51,9 +51,9 @@ std::vector<uint8_t> InputHandler::setField(flexbuffers::Reference data, bool re
 	field = dynamic_cast<Field *>(client->scenegraph.findNode(fieldPath));
 
 	if(returnValue) {
-		return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
-			fbb.Bool(field == nullptr);
-		});
+		return FLEX_SINGLE(
+			FLEX_BOOL(field == nullptr)
+		);
 	} else
 		return std::vector<uint8_t>();
 }

@@ -73,13 +73,13 @@ void InputMethod::varToMapFlex(flexbuffers::Builder &fbb, std::string key, Input
 }
 
 std::vector<uint8_t> InputMethod::serializeDatamap() {
-	return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
+	return FLEX_SINGLE(
 		fbb.Map([&](){
 			for(auto const& [mapKey, mapItem] : datamap) {
 				varToMapFlex(fbb, mapKey, mapItem);
 			}
 		});
-	});
+	);
 }
 
 } // namespace StardustXRServer
