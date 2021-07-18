@@ -5,7 +5,7 @@
 
 namespace StardustXRServer {
 
-ThreadSafeList<LifeCycleUpdateMethod> LifeCycleInterface::lifeCycleUpdateMethodList;
+StardustXR::ThreadSafeList<LifeCycleUpdateMethod> LifeCycleInterface::lifeCycleUpdateMethodList;
 double LifeCycleInterface::prevFrameTime;
 double LifeCycleInterface::frameTime;
 double LifeCycleInterface::delta;
@@ -33,7 +33,6 @@ void LifeCycleInterface::sendLogicStepSignals() {
 			}
 		);
 	});
-	lifeCycleUpdateMethodList.done();
 
 	prevFrameTime = frameTime;
 }
@@ -44,7 +43,6 @@ void LifeCycleInterface::handleClientDisconnect(Client *client) {
 			lifeCycleUpdateMethodList.erase(index);
 		}
 	});
-	lifeCycleUpdateMethodList.done();
 }
 
 std::vector<uint8_t> LifeCycleInterface::subscribeLogicStep(flexbuffers::Reference data, bool) {
@@ -56,7 +54,6 @@ std::vector<uint8_t> LifeCycleInterface::subscribeLogicStep(flexbuffers::Referen
 	};
 
 	lifeCycleUpdateMethodList.pushBack(logicStepMethod);
-	lifeCycleUpdateMethodList.done();
 
 	return std::vector<uint8_t>();
 }

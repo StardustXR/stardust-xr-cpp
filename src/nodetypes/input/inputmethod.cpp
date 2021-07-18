@@ -6,7 +6,7 @@ namespace StardustXRServer {
 InputMethod::InputMethod(Client *client) : SpatialNode(client) {}
 InputMethod::~InputMethod() {}
 
-vector<uint8_t> InputMethod::modifyDatamap(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> InputMethod::modifyDatamap(flexbuffers::Reference data, bool) {
 	flexbuffers::Map map = data.AsMap();
 	flexbuffers::TypedVector keys = map.Keys();
 	flexbuffers::Vector values = map.Values();
@@ -17,7 +17,7 @@ vector<uint8_t> InputMethod::modifyDatamap(flexbuffers::Reference data, bool) {
 		datamap[key] = value;
 	}
 
-	return vector<uint8_t>();
+	return std::vector<uint8_t>();
 }
 
 InputMethod::DatamapVariant InputMethod::flexRefToVar(flexbuffers::Reference ref) {
@@ -72,7 +72,7 @@ void InputMethod::varToMapFlex(flexbuffers::Builder &fbb, std::string key, Input
 	}, value);
 }
 
-vector<uint8_t> InputMethod::serializeDatamap() {
+std::vector<uint8_t> InputMethod::serializeDatamap() {
 	return FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
 		fbb.Map([&](){
 			for(auto const& [mapKey, mapItem] : datamap) {

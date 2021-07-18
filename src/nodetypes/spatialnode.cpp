@@ -3,7 +3,7 @@
 
 #include "../core/client.hpp"
 #include "../core/scenegraph.hpp"
-
+using namespace StardustXR;
 namespace StardustXRServer {
 
 SpatialNode::SpatialNode(Client *client) : Node(client) {

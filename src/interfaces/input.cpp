@@ -37,8 +37,6 @@ void InputInterface::handleClientDisconnect(Client *client) {
 		else
 			handlersToKeep++;
 	});
-	inputMethods.done();
-	inputHandlers.done();
 }
 
 std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference data, bool) {
@@ -63,7 +61,6 @@ std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference
 	handler->ready                      = true;
 
 	inputHandlers.pushBack(handler);
-	inputHandlers.done();
 
 	return std::vector<uint8_t>();
 }
@@ -73,7 +70,7 @@ void InputInterface::processInput() {
 	const uint32_t inputHandlerCount = inputHandlers.length();
 
 	if(inputMethodCount == 0 || inputHandlerCount == 0)
-		goto RETURN;
+		return;
 
 	for(uint32_t i=0; i<inputMethodCount; ++i) {
 		std::list<DistanceLink> distanceLinks;
@@ -86,7 +83,7 @@ void InputInterface::processInput() {
 		}
 		distanceLinks.sort();
 
-		vector<uint8_t> inputData = CreateInputData(
+		std::vector<uint8_t> inputData = CreateInputData(
 			fbb,
 			distanceLinks.begin()->method,
 			distanceLinks.begin()->handler
@@ -97,17 +94,13 @@ void InputInterface::processInput() {
 			inputData
 		);
 	}
-
-	RETURN:
-	inputMethods.done();
-	inputHandlers.done();
 }
 
 std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod* inputMethod, InputHandler *inputHandler) {
 	float distance = inputMethod->distanceTo(inputHandler);
 	StardustXR::InputDataRaw inputMethodType = inputMethod->type();
 	flatbuffers::Offset<void> flatInputMethod = inputMethod->generateInput(fbb, inputHandler);
-	const vector<uint8_t> datamap = inputMethod->serializeDatamap();
+	const std::vector<uint8_t> datamap = inputMethod->serializeDatamap();
 
 	auto inputDataOffset = CreateInputDataDirect(fbb, inputMethodType, flatInputMethod, distance, &datamap);
 	fbb.Finish(inputDataOffset);

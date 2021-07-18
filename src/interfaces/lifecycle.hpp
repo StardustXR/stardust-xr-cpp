@@ -23,7 +23,7 @@ public:
 
 protected:
 	static void logicStepSignal(uint32_t index, LifeCycleUpdateMethod &updateMethod);
-	static ThreadSafeList<LifeCycleUpdateMethod> lifeCycleUpdateMethodList;
+	static StardustXR::ThreadSafeList<LifeCycleUpdateMethod> lifeCycleUpdateMethodList;
 
 	static double prevFrameTime;
 	static double frameTime;
