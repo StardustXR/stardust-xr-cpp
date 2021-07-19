@@ -57,7 +57,7 @@ std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference
 		flexRot[2].AsFloat(),
 		flexRot[3].AsFloat()
 	};
-	Field *field = dynamic_cast<Field *>(client->scenegraph.findNode(flexFieldPath));
+	Field *field = client->scenegraph.findNode<Field *>(flexFieldPath);
 
 	InputHandler *handler = new InputHandler(client, nullptr, pos, rot, field, callbackPath, callbackMethod);
 	children["handler"]->addChild(name, handler);
