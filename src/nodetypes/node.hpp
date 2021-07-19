@@ -20,6 +20,7 @@ public:
 	virtual ~Node();
 
 	virtual void update() {}
+	virtual void debug() {}
 	virtual void handleClientDisconnect(Client *client) {}
 	void propagate(std::string name, std::function<bool (std::string, Node *)> &function);
 

@@ -90,6 +90,12 @@ int main(int argc, char *argv[]) {
 		serverInternalClient.scenegraph.root.propagate("", ScenegraphDrawFunction);
 		clientManager.callClientsDraw();
 
+		// Propagate the debug draw methods if the appropriate attribute is set
+		if(args.fieldDebug) {
+			serverInternalClient.scenegraph.root.propagate("", ScenegraphDebugFunction);
+			clientManager.callClientsDebug();
+		}
+
 		// Process all the input and send it to the clients
 		InputInterface::processInput();
 	})) {}

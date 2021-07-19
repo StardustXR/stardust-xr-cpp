@@ -19,6 +19,7 @@ public:
 	void handleDisconnectedClients();
 
 	void callClientsUpdate();
+	void callClientsDebug();
 	void callClientsDraw();
 
 protected:

@@ -11,9 +11,11 @@ public:
 
 	vec3 size;
 
+	std::vector<uint8_t> setSize(flexbuffers::Reference data, bool);
+
 	virtual float localDistance(const vec3 point);
 
-	void update();
+	void debug();
 
 private:
 	mesh_t debugMesh = nullptr;

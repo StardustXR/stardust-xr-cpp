@@ -45,6 +45,12 @@ void ClientManager::callClientsUpdate() {
 	}
 }
 
+void ClientManager::callClientsDebug() {
+	for(auto &client : clients) {
+		client->scenegraphPropagate("", ScenegraphDebugFunction);
+	}
+}
+
 void ClientManager::callClientsDraw() {
 	for(auto &client : clients) {
 		client->scenegraphPropagate("", ScenegraphDrawFunction);

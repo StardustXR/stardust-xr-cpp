@@ -1,5 +1,6 @@
 #include "boxfield.hpp"
 #include <cmath>
+#include "stereokit.h"
 #include "../../globals.h"
 
 using namespace std;
@@ -8,13 +9,22 @@ namespace StardustXRServer {
 
 BoxField::BoxField(Client *client, vec3 size) : Field(client) {
 	this->size = size;
+	
+	STARDUSTXR_NODE_METHOD("setSize", &BoxField::setSize)
 }
 
 BoxField::~BoxField() {
-	if(args.fieldDebug) {
+	if(debugMesh)
 		mesh_release(debugMesh);
+	if(debugModel)
 		model_release(debugModel);
-	}
+}
+
+std::vector<uint8_t> BoxField::setSize(flexbuffers::Reference data, bool) {
+	flexbuffers::TypedVector vector = data.AsTypedVector();
+	size = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
+
+	return std::vector<uint8_t>();
 }
 
 float BoxField::localDistance(const vec3 point) {
@@ -32,14 +42,12 @@ float BoxField::localDistance(const vec3 point) {
 	return vec3_magnitude(v) + std::min(std::max(q.x, std::max(q.y, q.z)), 0.0f);
 }
 
-void BoxField::update() {
-	if(args.fieldDebug) {
-		if(!debugMesh)
-			debugMesh = mesh_gen_cube(size);
-		if(!debugModel)
-			debugModel = model_create_mesh(debugMesh, fieldDebugMat);
-		render_add_model(debugModel, worldTransform());
-	}
+void BoxField::debug() {
+	if(!debugMesh)
+		debugMesh = mesh_gen_cube(vec3_one);
+	if(!debugModel)
+		debugModel = model_create_mesh(debugMesh, fieldDebugMat);
+	render_add_model(debugModel, matrix_trs(vec3_zero, quat_identity, size) * worldTransform());
 }
 
 } // namespace StardustXRServer

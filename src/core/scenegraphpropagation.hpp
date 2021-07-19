@@ -16,6 +16,11 @@ static PropagateFunction ScenegraphUpdateFunction = [](std::string, Node *node) 
 		node->update();
 	return node;
 };
+static PropagateFunction ScenegraphDebugFunction = [](std::string, Node *node) {
+	if(node)
+		node->debug();
+	return node;
+};
 static PropagateFunction ScenegraphDrawFunction = [](std::string, Node *node) {
 	if(DrawableNode *drawNode = dynamic_cast<DrawableNode *>(node))
 		drawNode->draw();
