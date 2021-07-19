@@ -6,7 +6,7 @@ namespace StardustXRServer {
 
 class Field : public Spatial {
 public:
-	Field(Client *client);
+	Field(Client *client, Spatial *spatialParent, vec3 position, quat rotation, bool rotatable);
 	virtual ~Field() {}
 
 	float normalRadius = 0.0000001f;

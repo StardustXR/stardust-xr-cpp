@@ -2,7 +2,7 @@
 
 namespace StardustXRServer {
 
-SphereField::SphereField(Client *client, float radius) : Field(client) {
+SphereField::SphereField(Client *client, Spatial *spatialParent, sk::vec3 position, float radius) : Field(client, spatialParent, position, quat_identity, false) {
 	this->radius = radius;
 	rotatable = false; // Spheres can't be rotated :p
 }

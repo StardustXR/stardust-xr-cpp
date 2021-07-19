@@ -5,7 +5,7 @@ using namespace std;
 
 namespace StardustXRServer {
 
-RoundedBoxField::RoundedBoxField(Client *client, vec3 size, float radius) : BoxField::BoxField(client, size) {
+RoundedBoxField::RoundedBoxField(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 size, float radius) : BoxField::BoxField(client, spatialParent, position, rotation, size) {
 	this->radius = radius;
 }
 

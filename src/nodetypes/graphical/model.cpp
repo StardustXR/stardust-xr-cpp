@@ -3,7 +3,9 @@ using namespace sk;
 
 namespace StardustXRServer {
 
-Model::Model(Client *client) : DrawableNode(client) {}
+Model::Model(Client *client, std::string modelPath, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale) : DrawableNode(client, spatialParent, position, rotation, scale, true, true, true) {
+	this->modelPath = modelPath;
+}
 
 void Model::update() {
 	if(queued) {
@@ -14,7 +16,7 @@ void Model::update() {
 }
 
 void Model::draw() {
-	if(!ready || !visible)
+	if(!visible)
 		return;
 
 	if(model != nullptr)

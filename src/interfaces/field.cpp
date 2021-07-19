@@ -36,14 +36,8 @@ std::vector<uint8_t> FieldInterface::createBoxField(flexbuffers::Reference data,
 		flexSize[2].AsFloat()
 	};
 
-	BoxField *field = new BoxField(client, size);
-	field->ready = false;
-	field->parent = this;
-	field->position = position;
-	field->rotation = rotation;
-	field->transformDirty();
-	children.emplace(name, field);
-	field->ready = true;
+	BoxField *field = new BoxField(client, nullptr, position, rotation, size);
+	this->addChild(name, field);
 
 	return std::vector<uint8_t>();
 }
@@ -60,13 +54,8 @@ std::vector<uint8_t> FieldInterface::createSphereField(flexbuffers::Reference da
 	};
 	float radius = vector[2].AsFloat();
 
-	SphereField *field = new SphereField(client, radius);
-	field->ready = false;
-	field->parent = this;
-	field->position = origin;
-	field->transformDirty();
-	children.emplace(name, field);
-	field->ready = true;
+	SphereField *field = new SphereField(client, nullptr, origin, radius);
+	this->addChild(name, field);
 
 	return std::vector<uint8_t>();
 }

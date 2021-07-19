@@ -9,7 +9,7 @@ Node::Node(Client *client) : client(client) {}
 Node::~Node() {}
 
 void Node::propagate(std::string name, std::function<bool (std::string, Node *)> &function) {
-	if(ready && function(name, this)) {
+	if(function(name, this)) {
 		// Cache names of all children
 		for(const auto &child : children) {
 			if(child.second)
@@ -19,6 +19,11 @@ void Node::propagate(std::string name, std::function<bool (std::string, Node *)>
 				break;
 		}
 	}
+}
+
+void Node::addChild(std::string name, Node *child) {
+	child->parent = this;
+	children.emplace(name, child);
 }
 
 } // namespace StardustXRServer

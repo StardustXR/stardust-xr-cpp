@@ -7,11 +7,7 @@ using namespace std;
 
 namespace StardustXRServer {
 
-HandInput::HandInput(Client *client) : InputMethod(client) {
-	translatable = true;
-	rotatable = true;
-	scalable = false;
-}
+HandInput::HandInput(Client *client) : InputMethod(client, nullptr, vec3_zero, quat_identity, true) {}
 HandInput::~HandInput() {}
 
 joint HandInput::localSKToSpaceFlexJoint(Spatial *space, hand_joint_t joint) {

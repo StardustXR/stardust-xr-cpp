@@ -23,10 +23,11 @@ public:
 	virtual void debug() {}
 	virtual void handleClientDisconnect(Client *client) {}
 	void propagate(std::string name, std::function<bool (std::string, Node *)> &function);
-
-	bool ready = true;
+	
 	Client *client;
 	Node *parent = nullptr;
+
+	void addChild(std::string name, Node *child);
 
 	std::map<std::string, NodeMethod> methods;
 	std::map<std::string, std::unique_ptr<Node>> children;

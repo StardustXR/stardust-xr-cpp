@@ -7,7 +7,7 @@ namespace StardustXRServer {
 
 class Model : public DrawableNode {
 public:
-	Model(Client *client);
+	Model(Client *client, std::string modelPath, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, sk::vec3 scale);
 	virtual ~Model() {}
 
 	void update();

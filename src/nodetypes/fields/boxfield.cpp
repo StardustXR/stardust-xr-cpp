@@ -7,7 +7,7 @@ using namespace std;
 
 namespace StardustXRServer {
 
-BoxField::BoxField(Client *client, vec3 size) : Field(client) {
+BoxField::BoxField(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 size) : Field(client, spatialParent, position, rotation, true) {
 	this->size = size;
 	
 	STARDUSTXR_NODE_METHOD("setSize", &BoxField::setSize)

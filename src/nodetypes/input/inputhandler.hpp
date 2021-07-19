@@ -4,12 +4,13 @@
 #include "../fields/field.hpp"
 #include "distancelink.hpp"
 #include <list>
+#include <string>
 
 namespace StardustXRServer {
 
 class InputHandler : public Spatial {
 public:
-	InputHandler(Client *client);
+	InputHandler(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, Field *field, std::string callbackPath, std::string callbackMethod);
 	virtual ~InputHandler();
 
 	Field *field = nullptr;

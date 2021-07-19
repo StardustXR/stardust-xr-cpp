@@ -9,7 +9,7 @@ namespace StardustXRServer {
 
 class Spatial : public Node {
 public:
-	Spatial(Client *client);
+	Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable);
 	virtual ~Spatial() {}
 
 	// Client accessible functions

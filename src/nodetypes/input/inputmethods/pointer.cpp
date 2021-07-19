@@ -3,11 +3,7 @@
 
 namespace StardustXRServer {
 
-PointerInput::PointerInput(Client *client) : InputMethod(client) {
-	translatable = true;
-	rotatable = true;
-	scalable = false;
-}
+PointerInput::PointerInput(Client *client) : InputMethod(client, nullptr, vec3_zero, quat_identity, true) {}
 
 PointerInput::~PointerInput() {}
 

@@ -38,26 +38,29 @@ void InputInterface::handleClientDisconnect(Client *client) {
 std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference data, bool) {
 	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
 
-	flexbuffers::Vector vec      = data.AsVector();
-	std::string name             = vec[0].AsString().str();
-	std::string field            = vec[1].AsString().str();
-	flexbuffers::TypedVector pos = vec[2].AsTypedVector();
-	flexbuffers::TypedVector rot = vec[3].AsTypedVector();
-	std::string callbackPath     = vec[4].AsString().str();
-	std::string callbackMethod   = vec[5].AsString().str();
+	flexbuffers::Vector flexVec      = data.AsVector();
+	std::string name                 = flexVec[0].AsString().str();
+	std::string flexFieldPath        = flexVec[1].AsString().str();
+	flexbuffers::TypedVector flexPos = flexVec[2].AsTypedVector();
+	flexbuffers::TypedVector flexRot = flexVec[3].AsTypedVector();
+	std::string callbackPath         = flexVec[4].AsString().str();
+	std::string callbackMethod       = flexVec[5].AsString().str();
 
-	InputHandler *handler               = new InputHandler(client);
-	handler->ready                      = false;
-	handler->parent                     = children["handler"].get();
-	children["handler"]->children.emplace(name, handler);
-	handler->field                      = dynamic_cast<Field *>(client->scenegraph.findNode(field));
-	handler->position                   = { pos[0].AsFloat(), pos[1].AsFloat(), pos[2].AsFloat() };
-	handler->rotation                   = { rot[0].AsFloat(), rot[1].AsFloat(), rot[2].AsFloat(), rot[3].AsFloat() };
-	handler->callbackPath               = callbackPath;
-	handler->callbackMethod             = callbackMethod;
-	handler->transformDirty();
-	handler->ready                      = true;
+	sk::vec3 pos = {
+		flexPos[0].AsFloat(), 
+		flexPos[1].AsFloat(),
+		flexPos[2].AsFloat()
+	};
+	sk::quat rot = {
+		flexRot[0].AsFloat(), 
+		flexRot[1].AsFloat(),
+		flexRot[2].AsFloat(),
+		flexRot[3].AsFloat()
+	};
+	Field *field = dynamic_cast<Field *>(client->scenegraph.findNode(flexFieldPath));
 
+	InputHandler *handler = new InputHandler(client, nullptr, pos, rot, field, callbackPath, callbackMethod);
+	children["handler"]->addChild(name, handler);
 	inputHandlers.push_back(handler);
 
 	return std::vector<uint8_t>();

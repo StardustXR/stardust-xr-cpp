@@ -34,17 +34,8 @@ std::vector<uint8_t> ModelInterface::createFromFile(flexbuffers::Reference data,
 	};
 
 
-	Model *model = new Model(client);
-	model->ready = false;
-	model->parent = this;
-	model->modelPath = path;
-	model->position = position;
-	model->rotation = rotation;
-	model->scale = scale;
-	model->queued = true;
-	model->transformDirty();
-	children.emplace(name, model);
-	model->ready = true;
+	Model *model = new Model(client, path, nullptr, position, rotation, scale);
+	this->addChild(name, model);
 
 	return std::vector<uint8_t>();
 }

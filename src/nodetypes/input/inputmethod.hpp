@@ -12,7 +12,7 @@ namespace StardustXRServer {
 
 class InputMethod : public Spatial {
 public:
-	InputMethod(Client *client);
+	InputMethod(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, bool rotatable);
 	virtual ~InputMethod();
 
 	std::vector<uint8_t> modifyDatamap(flexbuffers::Reference data, bool returnValue);

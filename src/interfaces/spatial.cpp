@@ -38,17 +38,8 @@ std::vector<uint8_t> SpatialFactory::create(flexbuffers::Reference data, bool) {
 		flexScale[2].AsFloat()
 	};
 
-	Spatial *spatial = new Spatial(client);
-	spatial->ready = false;
-	spatial->position = position;
-	spatial->rotation = rotation;
-	spatial->scale = scale;
-	spatial->translatable = translatable;
-	spatial->rotatable = rotatable;
-	spatial->scalable = scalable;
-	spatial->transformDirty();
-	children.emplace(name, spatial);
-	spatial->ready = true;
+	Spatial *spatial = new Spatial(client, nullptr, position, rotation, scale, translatable, rotatable, scalable);
+	this->addChild(name, spatial);
 
 	return std::vector<uint8_t>();
 }
