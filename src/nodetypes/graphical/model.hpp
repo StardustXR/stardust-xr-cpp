@@ -13,6 +13,8 @@ public:
 	void update();
 	void draw();
 
+	std::vector<uint8_t> setMaterialProperty(flexbuffers::Reference data, bool returnValue);
+
 	bool queued = true;
 	std::string modelPath;
 	sk::model_t model = nullptr;
