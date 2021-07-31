@@ -7,7 +7,7 @@
 #include "interfaces/environment.hpp"
 #include "interfaces/lifecycle.hpp"
 #include "interfaces/input.hpp"
-#include "node.hpp"
+#include "nodetypes/node.hpp"
 #include "nodetypes/graphical/drawablenode.hpp"
 #include "tests/flatscreenpointer.hpp"
 #include "tests/skhand.hpp"

@@ -1,20 +1,8 @@
-nodetypes_includes = include_directories('.')
+src_files += files(
+	'node.cpp',
+	'spatial.cpp',
+)
 
 subdir('fields')
 subdir('graphical')
 subdir('input')
-
-lib_nodetypes = static_library(
-	'nodetypes',
-	files(
-		'node.cpp',
-		'spatial.cpp',
-	),
-	include_directories: [nodetypes_includes],
-        dependencies: [fields_nodetypes, graphical_nodetypes, input_nodetypes, stereokit]
-)
-
-nodetypes = declare_dependency(
-	include_directories: nodetypes_includes,
-	link_with: lib_nodetypes
-)

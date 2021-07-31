@@ -15,21 +15,18 @@ src_includes = include_directories('src')
 thirdparty_includes = include_directories('thirdparty')
 includes = [src_includes, thirdparty_includes]
 
+src_files = []
+
 subdir('src')
+src_files += files('src/main.cpp')
 
 executable(
 	'stardustxr',
-	'src/main.cpp',
+	src_files,
 	include_directories: includes,
 	link_args: '-lflatbuffers',
 	dependencies: [
 		libstardustxr,
 		stereokit,
-# After here are all the internal dependencies
-		core,
-		interfaces,
-		nodetypes,
-		tests,
-		util,
 	],
 )

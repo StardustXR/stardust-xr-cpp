@@ -1,18 +1,6 @@
-input_nodetypes_includes = include_directories('.')
+src_files += files(
+	'inputhandler.cpp',
+	'inputmethod.cpp'
+)
 
 subdir('inputmethods')
-
-lib_input_nodetypes = static_library(
-	'input_nodetypes',
-	files(
-		'inputhandler.cpp',
-		'inputmethod.cpp'
-	),
-	include_directories: [input_nodetypes_includes],
-        dependencies: [input_methods, stereokit]
-)
-
-input_nodetypes = declare_dependency(
-	include_directories: input_nodetypes_includes,
-	link_with: lib_input_nodetypes
-)
