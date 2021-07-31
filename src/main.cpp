@@ -2,9 +2,10 @@
 #include "globals.h"
 
 // Home directory getters
-#include <unistd.h>
-#include <sys/types.h>
 #include <pwd.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 std::string home;
 
@@ -93,6 +94,11 @@ int main(int argc, char *argv[]) {
 //		input.inputMethods.pushBack(stereokitHands[0]);
 		InputInterface::addInputMethod(stereokitHands[1]);
 	}
+
+	// Start the startup script
+	int pid = fork();
+	if(pid == 0)
+		execlp((home+"/.config/stardust/startup").c_str(), "", nullptr);
 
 	// Every stereokit step
 	while (sk_step([]() {
