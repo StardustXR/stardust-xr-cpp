@@ -51,7 +51,11 @@ int main(int argc, char *argv[]) {
 
 	if(!sk_init(settings))
 		perror("Stereokit initialization failed!");
-	render_enable_skytex(false);
+	gradient_t skycolor = gradient_create();
+	gradient_add(skycolor, {0, 0, 0, 1}, 0.0f);
+	gradient_add(skycolor, {0, 0, 0, 1}, 1.0f);
+	tex_t skytex = tex_gen_cubemap(skycolor, vec3_up, 2);
+	render_set_skytex(skytex);
 
 	// Set up debugging
 	if(args.fieldDebug)
