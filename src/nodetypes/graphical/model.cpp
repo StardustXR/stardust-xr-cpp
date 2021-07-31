@@ -58,15 +58,10 @@ void Model::draw() {
 }
 
 std::vector<uint8_t> Model::setMaterialProperty(flexbuffers::Reference data, bool returnValue) {
-	if(model == nullptr)
-		return std::vector<uint8_t>();
-
 	flexbuffers::Vector vec = data.AsVector();
 	uint32_t submeshIndex = vec[0].AsUInt32();
 	const char *propertyName = vec[1].AsString().c_str();
 	flexbuffers::Reference propertyValue = vec[2];
-
-	material_t mat = model_get_material(model, submeshIndex);
 
 	MaterialProperty prop = {};
 	prop.submeshIndex = submeshIndex;
