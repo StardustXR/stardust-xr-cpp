@@ -37,7 +37,9 @@ jobs:
       uses: BSFishy/meson-build@v1.0.3
       with:
         action: build
-        directory: libstardustxr build
+        directory: |
+          libstardustxr
+          build
         meson-version: 0.53.0
         options: -j2
     
