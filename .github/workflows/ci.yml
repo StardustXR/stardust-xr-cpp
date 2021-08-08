@@ -41,10 +41,10 @@ jobs:
       run: |
         git clone https://github.com/StardustXR/libstardustxr.git
         cd libstardustxr
-        meson build
+        /opt/hostedtoolcache/Python/3.9.6/x64/bin/meson build
         cd build
-        ninja -j2
-        sudo ninja -j2 install
+        /opt/hostedtoolcache/Python/3.9.6/x64/bin/ninja -j2
+        sudo /opt/hostedtoolcache/Python/3.9.6/x64/bin/ninja -j2 install
     
     - name: Build Server
       uses: BSFishy/meson-build@v1.0.3
