@@ -37,7 +37,7 @@ jobs:
     - name: Install Meson/Ninja
       run: |
         /opt/hostedtoolcache/Python/3.9.6/x64/python -m pip install ninja==1.9.0.post1
-        /opt/hostedtoolcache/Python/3.9.6/x64/python -m pip install meson==0.53.0
+        /opt/hostedtoolcache/Python/3.9.6/x64/python -m pip install meson==0.59.0
     
     - name: Install libstardustxr
       run: |
