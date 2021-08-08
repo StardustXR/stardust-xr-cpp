@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stardustxr/scenegraph.hpp>
+#include <stardustxr/common/scenegraph.hpp>
 #include "../nodetypes/node.hpp"
 
 namespace StardustXRServer {

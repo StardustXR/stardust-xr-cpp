@@ -1,5 +1,5 @@
 #include "field.hpp"
-#include <stardustxr/flex.hpp>
+#include <stardustxr/common/flex.hpp>
 #include "../../core/client.hpp"
 #include <stereokit.h>
 

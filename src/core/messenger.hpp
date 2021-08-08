@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stardustxr/messenger.hpp>
+#include <stardustxr/common/messenger.hpp>
 
 namespace StardustXRServer {
 

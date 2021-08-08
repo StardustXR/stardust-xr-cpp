@@ -1,5 +1,5 @@
 #include "inputmethod.hpp"
-#include <stardustxr/flex.hpp>
+#include <stardustxr/common/flex.hpp>
 
 namespace StardustXRServer {
 
