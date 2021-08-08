@@ -23,7 +23,6 @@ jobs:
     - name: Clone/Build Flatbuffers
       if: steps.caching-time.outputs.cache-hit != 'true'
       run: |
-        git clone https://github.com/StardustXR/libstardustxr.git
         git clone https://github.com/google/flatbuffers.git
         cd flatbuffers/
         cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF -DFLATBUFFERS_BUILD_SHAREDLIB=ON -DCMAKE_INSTALL_PREFIX=/usr
@@ -33,15 +32,19 @@ jobs:
         cd flatbuffers/
         sudo make install
     
-    - name: Build libstardustxr
-      uses: BSFishy/meson-build@v1.0.3
-      with:
-        action: build
-        directory: |
-          libstardustxr
-          build
-        meson-version: 0.53.0
-        options: -j2
+    - name: Install Meson/Ninja
+      run: |
+        /opt/hostedtoolcache/Python/3.9.6/x64/python -m pip install ninja==1.9.0.post1
+        /opt/hostedtoolcache/Python/3.9.6/x64/python -m pip install meson==0.53.0
+    
+    - name: Install libstardustxr
+      run: |
+        git clone https://github.com/StardustXR/libstardustxr.git
+        cd libstardustxr
+        meson build
+        cd build
+        ninja -j2
+        sudo ninja -j2 install
     
     - name: Build Server
       uses: BSFishy/meson-build@v1.0.3
