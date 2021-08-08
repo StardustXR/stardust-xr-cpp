@@ -29,4 +29,5 @@ executable(
 		libstardustxr,
 		stereokit,
 	],
+	install : true,
 )
