@@ -10,6 +10,8 @@ jobs:
       CPPFLAGS: -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wno-unused-function
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
     - uses: actions/setup-python@v1
     - name: Caching time
       uses: actions/cache@v2.1.6
