@@ -42,6 +42,8 @@ void Model::update() {
 			material_set_color(mat, prop.name.c_str(), prop.colorValue);
 		if(prop.isString) {
 			tex_t tex = tex_create_file(prop.stringValue.c_str());
+			if(!tex)
+				continue;
 			if(material_set_texture(mat, prop.name.c_str(), tex))
 				tex_release(tex);
 		}
