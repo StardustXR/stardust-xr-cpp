@@ -1,4 +1,4 @@
-project('stardustxr', 'cpp', default_options : ['cpp_std=c++17'])
+project('stardustxr', 'cpp', default_options: ['cpp_std=c++17'], version:'0.55.0')
 
 cmake = import('cmake')
 pkg = import('pkgconfig')
