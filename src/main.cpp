@@ -61,17 +61,19 @@ int main(int argc, char *argv[]) {
 		perror("Stereokit initialization failed!");
 
 	tex_t skytex;
-	spherical_harmonics_t skylight;
 	if ((home = getenv("HOME")) == "") {
 		home = getpwuid(getuid())->pw_dir;
 	}
-	skytex = tex_create_cubemap_file((home + "/.config/stardust/skytex.hdr").c_str(), true, &skylight);
-	if(skytex == nullptr) {
+	FILE *skyfile = fopen((home + "/.config/stardust/skytex.hdr").c_str(), "ro");
+	if(!skyfile) {
 		gradient_t skycolor = gradient_create();
 		gradient_add(skycolor, {0, 0, 0, 1}, 0.0f);
 		gradient_add(skycolor, {0, 0, 0, 1}, 1.0f);
 		skytex = tex_gen_cubemap(skycolor, vec3_up, 2);
 	} else {
+		fclose(skyfile);
+		spherical_harmonics_t skylight;
+		skytex = tex_create_cubemap_file((home + "/.config/stardust/skytex.hdr").c_str(), true, &skylight);
 		render_set_skylight(skylight);
 	}
 	render_set_skytex(skytex);
