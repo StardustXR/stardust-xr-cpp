@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stereokit.h>
+#include <cstdint>
 #include "core/clientmanager.hpp"
 
 extern StardustXRServer::ClientManager clientManager;
@@ -11,5 +12,7 @@ struct CLIArgs {
 	int parse(int argc, const char* const argv[]);
 };
 extern CLIArgs args;
+
+extern uint64_t frame;
 
 extern sk::material_t fieldDebugMat;

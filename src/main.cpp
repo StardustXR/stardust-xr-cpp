@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <cstdint>
 
 std::string home;
 
@@ -24,6 +25,7 @@ using namespace StardustXRServer;
 // StereoKit includes
 #include <stereokit.h>
 using namespace sk;
+uint64_t frame = 0;
 
 // Third party local includes
 #include "CLI11.hpp"
@@ -125,6 +127,9 @@ int main(int argc, char *argv[]) {
 			serverInternalClient.scenegraph.root.propagate("", ScenegraphDebugFunction);
 			clientManager.callClientsDebug();
 		}
+		
+		//Increment the frame count
+		frame++;
 
 		// Process all the input and send it to the clients
 		InputInterface::processInput();

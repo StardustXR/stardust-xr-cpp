@@ -16,7 +16,10 @@ InputHandler::InputHandler(Client *client, Spatial *spatialParent, sk::vec3 posi
 
 InputHandler::~InputHandler() {}
 
-void InputHandler::sendInput(std::list<DistanceLink> distanceLinks, std::vector<uint8_t> &inputData) {
+void InputHandler::sendInput(uint64_t oldFrame, std::list<DistanceLink> distanceLinks, std::vector<uint8_t> &inputData) {
+	if(oldFrame < frame)
+		return;
+
 	distanceLinks.pop_front();
 	client->messenger.executeRemoteMethod(
 		callbackPath.c_str(),
@@ -24,7 +27,7 @@ void InputHandler::sendInput(std::list<DistanceLink> distanceLinks, std::vector<
 		[&](flexbuffers::Builder &fbb) {
 			fbb.Blob(inputData);
 		},
-		[distanceLinks, inputData](flexbuffers::Reference returnData) {
+		[oldFrame, distanceLinks, inputData](flexbuffers::Reference returnData) {
 			if(distanceLinks.begin() != distanceLinks.end() && !returnData.AsBool()) { // If handlerList is not empty and not captured
 				std::vector<uint8_t> inputDataCopy = inputData;
 				InputData *parsedInputData = GetMutableInputData(inputDataCopy.data());
@@ -33,7 +36,7 @@ void InputHandler::sendInput(std::list<DistanceLink> distanceLinks, std::vector<
 				InputHandler *handler = distanceLinks.begin()->handler;
 				method->updateInput(parsedInputData, handler);
 
-				handler->sendInput(distanceLinks, inputDataCopy);
+				handler->sendInput(oldFrame, distanceLinks, inputDataCopy);
 			}
 		}
 	);

@@ -93,6 +93,7 @@ void InputInterface::processInput() {
 		);
 
 		distanceLinks.begin()->handler->sendInput(
+			frame,
 			distanceLinks,
 			inputData
 		);
