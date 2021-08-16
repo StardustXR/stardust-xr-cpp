@@ -2,9 +2,9 @@
 
 #include "../spatial.hpp"
 #include "inputhandler.hpp"
+#include <stardustxr/common/flatbuffers/Input.hpp>
 #include <stereokit.h>
 #include <variant>
-#include "inputmethods/flatbuffers/Input_generated.h"
 
 using namespace StardustXR;
 using namespace sk;

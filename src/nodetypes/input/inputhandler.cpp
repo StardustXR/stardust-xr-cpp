@@ -1,7 +1,7 @@
 #include "inputhandler.hpp"
 #include "inputmethod.hpp"
 #include "../../globals.h"
-#include "inputmethods/flatbuffers/Input_generated.h"
+#include <stardustxr/common/flatbuffers/Input.hpp>
 
 #include "../../core/client.hpp"
 #include <stereokit.h>

@@ -1,7 +1,7 @@
 #include "input.hpp"
 #include "../globals.h"
 #include "../nodetypes/input/inputmethods/pointer.hpp"
-#include "../nodetypes/input/inputmethods/flatbuffers/Input_generated.h"
+#include <stardustxr/common/flatbuffers/Input.hpp>
 #include "../core/client.hpp"
 #include <mutex>
 

@@ -1,5 +1,5 @@
 #include "pointer.hpp"
-#include "flatbuffers/PointerInput_generated.h"
+#include <stardustxr/common/flatbuffers/Input.hpp>
 
 namespace StardustXRServer {
 
