@@ -11,7 +11,7 @@ public:
 	HandInput(Client *client);
 	virtual ~HandInput();
 
-	static constexpr uint fingerJointCount = 21;
+	static constexpr uint fingerJointCount = 25;
 	hand_joint_t fingerJoints[fingerJointCount];
 	hand_joint_t palmJoint;
 	hand_joint_t wristJoint;

@@ -14,9 +14,8 @@ SKHandInput::~SKHandInput() {}
 void SKHandInput::update() {
 	// Transfer stereokit hand fingers to HandInput fingers
 	for(uint f=0; f<5; ++f) {
-		bool isThumb = f == 0;
-		for(uint b=isThumb; b<5; ++b) {
-			fingerJoints[(5*f)+b-1] = hand->fingers[f][b];
+		for(uint b=0; b<5; ++b) {
+			fingerJoints[(5*f)+b] = hand->fingers[f][b];
 		}
 	}
 	palmJoint = {
