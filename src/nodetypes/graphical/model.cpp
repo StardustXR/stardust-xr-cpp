@@ -26,7 +26,12 @@ void Model::update() {
 	}
 
 	for(MaterialProperty &prop : queuedProperties) {
+		if(prop.submeshIndex >= model_subset_count(model))
+			return;
 		material_t originalMat = model_get_material(model, prop.submeshIndex);
+		material_param_ paramType = (material_param_) (prop.isColor + (prop.isString * 4));
+		if(!material_has_param(originalMat, prop.name.c_str(), paramType))
+			return;
 		auto modifiedMat = std::find(modifiedMaterials.begin(), modifiedMaterials.end(), originalMat);
 		material_t mat;
 		if(modifiedMat != modifiedMaterials.end()) {
@@ -36,6 +41,7 @@ void Model::update() {
 			model_set_material(model, prop.submeshIndex, mat);
 		}
 
+		log_infof("Setting prop \"%s\" on submesh %d of type %s\n", prop.name.c_str(), prop.submeshIndex, prop.isFloat ? "float" : (prop.isColor ? "color" : "texture"));
 		if(prop.isFloat)
 			material_set_float(mat, prop.name.c_str(), prop.floatValue);
 		if(prop.isColor)
@@ -62,6 +68,8 @@ void Model::draw() {
 std::vector<uint8_t> Model::setMaterialProperty(flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector vec = data.AsVector();
 	uint32_t submeshIndex = vec[0].AsUInt32();
+	if(model && submeshIndex >= model_subset_count(model))
+		return std::vector<uint8_t>();
 	const char *propertyName = vec[1].AsString().c_str();
 	flexbuffers::Reference propertyValue = vec[2];
 
