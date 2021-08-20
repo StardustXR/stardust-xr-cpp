@@ -119,7 +119,6 @@ std::vector<uint8_t> Spatial::setPose(flexbuffers::Reference data, bool) {
 		flexbuffers::Vector vector = data.AsVector();
 		setOrigin(vector[0], false);
 		setOrientation(vector[1], false);
-		setScale(vector[2], false);
 	}
 
 	return std::vector<uint8_t>();
