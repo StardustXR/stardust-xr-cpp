@@ -44,13 +44,13 @@ public:
 	Spatial *spatialParent = nullptr;
 	bool setSpatialParent(std::string spacePath);
 
-	vec3 spaceToLocalPoint    (Spatial *space, vec3 point    ) { return matrix_mul_point    (spaceToLocalMatrix(space), point    ); }
-	vec3 spaceToLocalDirection(Spatial *space, vec3 direction) { return matrix_mul_direction(spaceToLocalMatrix(space), direction); }
-	quat spaceToLocalRotation (Spatial *space, quat rot      ) { return matrix_mul_rotation (spaceToLocalMatrix(space), rot      ); }
+	vec3 spaceToLocalPoint    (Spatial *space, vec3 point    ) { return matrix_transform_pt  (spaceToLocalMatrix(space), point    ); }
+	vec3 spaceToLocalDirection(Spatial *space, vec3 direction) { return matrix_transform_dir (spaceToLocalMatrix(space), direction); }
+	quat spaceToLocalRotation (Spatial *space, quat rot      ) { return matrix_transform_quat(spaceToLocalMatrix(space), rot      ); }
 
-	vec3 localToSpacePoint    (Spatial *space, vec3 point    ) { return matrix_mul_point    (localToSpaceMatrix(space), point    ); }
-	vec3 localToSpaceDirection(Spatial *space, vec3 direction) { return matrix_mul_direction(localToSpaceMatrix(space), direction); }
-	quat localToSpaceRotation (Spatial *space, quat rot      ) { return matrix_mul_rotation (localToSpaceMatrix(space), rot      ); }
+	vec3 localToSpacePoint    (Spatial *space, vec3 point    ) { return matrix_transform_pt  (localToSpaceMatrix(space), point    ); }
+	vec3 localToSpaceDirection(Spatial *space, vec3 direction) { return matrix_transform_dir (localToSpaceMatrix(space), direction); }
+	quat localToSpaceRotation (Spatial *space, quat rot      ) { return matrix_transform_quat(localToSpaceMatrix(space), rot      ); }
 
 	void transformDirty() { transformMatrixDirty = true; }
 protected:
