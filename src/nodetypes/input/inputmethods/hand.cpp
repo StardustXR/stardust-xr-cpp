@@ -25,10 +25,10 @@ void HandInput::updateSpaceFlexJoint(Spatial *space, hand_joint_t joint, struct 
 	updateJoint->mutable_position().mutate_y(localJoint.position().y());
 	updateJoint->mutable_position().mutate_z(localJoint.position().z());
 
-	updateJoint->mutable_rotation().mutate_w(localJoint.rotation().w());
 	updateJoint->mutable_rotation().mutate_x(localJoint.rotation().x());
 	updateJoint->mutable_rotation().mutate_y(localJoint.rotation().y());
 	updateJoint->mutable_rotation().mutate_z(localJoint.rotation().z());
+	updateJoint->mutable_rotation().mutate_w(localJoint.rotation().w());
 
 	updateJoint->mutate_radius(localJoint.radius());
 }

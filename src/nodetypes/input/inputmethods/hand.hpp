@@ -34,10 +34,10 @@ protected:
 	}
 	sk::quat flexToSK(StardustXR::quat flex) {
 		return {
-			flex.w(),
 			flex.x(),
 			flex.y(),
-			flex.z()
+			flex.z(),
+			flex.w()
 		};
 	}
 	hand_joint_t flexToSK(joint flex) {
@@ -49,19 +49,10 @@ protected:
 	}
 
 	StardustXR::vec3 skToFlex(sk::vec3 sk) {
-		return {
-			sk.x,
-			sk.y,
-			sk.z
-		};
+		return StardustXR::vec3(sk.x, sk.y, sk.z);
 	}
 	StardustXR::quat skToFlex(sk::quat sk) {
-		return {
-			sk.w,
-			sk.x,
-			sk.y,
-			sk.z
-		};
+		return StardustXR::quat(sk.x, sk.y, sk.z, sk.w);
 	}
 	joint skToFlex(hand_joint_t sk) {
 		return {
