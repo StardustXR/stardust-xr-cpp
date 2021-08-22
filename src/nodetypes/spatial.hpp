@@ -15,7 +15,6 @@ public:
 	// Client accessible functions
 	std::vector<uint8_t> move                 (flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> rotate               (flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> rotateAround         (flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> scaleThis            (flexbuffers::Reference data, bool returnValue);
 
 	std::vector<uint8_t> setOrigin            (flexbuffers::Reference data, bool returnValue);

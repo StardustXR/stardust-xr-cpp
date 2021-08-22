@@ -3,6 +3,7 @@
 
 #include "../core/client.hpp"
 #include "../core/scenegraph.hpp"
+#include "stereokit.h"
 #include <string>
 #include <vector>
 using namespace StardustXR;
@@ -20,7 +21,6 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rot
 
 	STARDUSTXR_NODE_METHOD("move", &Spatial::move)
 	STARDUSTXR_NODE_METHOD("rotate", &Spatial::rotate)
-	STARDUSTXR_NODE_METHOD("rotateAround", &Spatial::rotateAround)
 	STARDUSTXR_NODE_METHOD("scale", &Spatial::scaleThis)
 
 	STARDUSTXR_NODE_METHOD("setOrigin", &Spatial::setOrigin)
@@ -49,25 +49,6 @@ std::vector<uint8_t> Spatial::rotate(flexbuffers::Reference data, bool returnVal
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		quat rotationDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
 		rotation = rotation * rotationDelta;
-		transformMatrixDirty = true;
-	}
-
-	return std::vector<uint8_t>();
-}
-
-std::vector<uint8_t> Spatial::rotateAround(flexbuffers::Reference data, bool returnValue) {
-	if(rotatable) {
-		flexbuffers::Vector vec = data.AsVector();
-		flexbuffers::TypedVector flexPoint = vec[0].AsTypedVector();
-		flexbuffers::TypedVector flexRotation = vec[0].AsTypedVector();
-
-		vec3 point = { flexPoint[0].AsFloat(), flexPoint[1].AsFloat(), flexPoint[2].AsFloat() };
-		quat rotationDelta = { flexRotation[0].AsFloat(), flexRotation[1].AsFloat(), flexRotation[2].AsFloat(), flexRotation[3].AsFloat() };
-
-		position += rotation * point;
-		rotation = rotation * rotationDelta;
-		position -= rotation * point;
-
 		transformMatrixDirty = true;
 	}
 
@@ -160,8 +141,7 @@ matrix Spatial::spaceToLocalMatrix(Spatial *space) {
 	// TODO: Optimize this to check if space and this SpatialNode share a common ancestor
 	// and calculate the transform matrix between the two.
 
-	matrix worldToLocalMatrix;
-	matrix_inverse(worldTransform(), worldToLocalMatrix);
+	matrix worldToLocalMatrix = matrix_invert(worldTransform());
 
 	if(space == nullptr)
 		return worldToLocalMatrix;
