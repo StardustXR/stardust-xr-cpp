@@ -4,6 +4,7 @@
 using namespace sk;
 
 sk::material_t fieldDebugMat;
+sk::mesh_t sphereFieldMesh;
 sk::mesh_t boxFieldMesh;
 
 void debugSetup() {
@@ -13,4 +14,5 @@ void debugSetup() {
 	material_set_depth_write(fieldDebugMat, false);
 
 	boxFieldMesh = mesh_gen_cube(vec3_one);
+	sphereFieldMesh = mesh_gen_sphere(1, 4);
 }

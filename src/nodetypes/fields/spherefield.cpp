@@ -1,4 +1,6 @@
 #include "spherefield.hpp"
+#include "stereokit.h"
+#include "../../globals.h"
 
 namespace StardustXRServer {
 
@@ -17,6 +19,10 @@ const vec3 SphereField::localClosestPoint(const vec3 point) {
 
 const vec3 SphereField::localNormal(const vec3 point) {
 	return vec3_normalize(point);
+}
+
+void SphereField::debug() {
+	render_add_mesh(sphereFieldMesh, fieldDebugMat, matrix_trs(vec3_zero, quat_identity, vec3_one * radius * 2) * worldTransform());
 }
 
 } // namespace StardustXRServer
