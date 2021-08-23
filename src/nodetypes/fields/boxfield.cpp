@@ -13,13 +13,6 @@ BoxField::BoxField(Client *client, Spatial *spatialParent, vec3 position, quat r
 	STARDUSTXR_NODE_METHOD("setSize", &BoxField::setSize)
 }
 
-BoxField::~BoxField() {
-	if(debugMesh)
-		mesh_release(debugMesh);
-	if(debugModel)
-		model_release(debugModel);
-}
-
 std::vector<uint8_t> BoxField::setSize(flexbuffers::Reference data, bool) {
 	flexbuffers::TypedVector vector = data.AsTypedVector();
 	size = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
@@ -43,11 +36,7 @@ float BoxField::localDistance(const vec3 point) {
 }
 
 void BoxField::debug() {
-	if(!debugMesh)
-		debugMesh = mesh_gen_cube(vec3_one);
-	if(!debugModel)
-		debugModel = model_create_mesh(debugMesh, fieldDebugMat);
-	render_add_model(debugModel, matrix_trs(vec3_zero, quat_identity, size) * worldTransform());
+	render_add_mesh(boxFieldMesh, fieldDebugMat, matrix_trs(vec3_zero, quat_identity, size) * worldTransform());
 }
 
 } // namespace StardustXRServer

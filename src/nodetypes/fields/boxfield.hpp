@@ -7,7 +7,7 @@ namespace StardustXRServer {
 class BoxField : public Field {
 public:
 	BoxField(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 size);
-	virtual ~BoxField();
+	// virtual ~BoxField();
 
 	vec3 size;
 
@@ -16,10 +16,6 @@ public:
 	virtual float localDistance(const vec3 point);
 
 	void debug();
-
-private:
-	mesh_t debugMesh = nullptr;
-	model_t debugModel = nullptr;
 };
 
 } // namespace StardustXRServer
