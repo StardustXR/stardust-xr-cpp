@@ -25,6 +25,7 @@ void Model::update() {
 		visible = true;
 	}
 
+    const std::lock_guard<std::mutex> lock(queuedPropertiesMutex);
 	for(MaterialProperty &prop : queuedProperties) {
 		if(prop.submeshIndex >= model_subset_count(model))
 			return;
@@ -66,11 +67,12 @@ void Model::draw() {
 }
 
 std::vector<uint8_t> Model::setMaterialProperty(flexbuffers::Reference data, bool returnValue) {
+    const std::lock_guard<std::mutex> lock(queuedPropertiesMutex);
 	flexbuffers::Vector vec = data.AsVector();
 	uint32_t submeshIndex = vec[0].AsUInt32();
 	if(model && submeshIndex >= model_subset_count(model))
 		return std::vector<uint8_t>();
-	const char *propertyName = vec[1].AsString().c_str();
+    std::string propertyName = vec[1].AsString().str();
 	flexbuffers::Reference propertyValue = vec[2];
 
 	MaterialProperty prop = {};

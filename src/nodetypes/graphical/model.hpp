@@ -1,6 +1,7 @@
 #pragma once
 
 #include "drawablenode.hpp"
+#include <mutex>
 #include <string>
 #include <stereokit.h>
 #include <vector>
@@ -38,6 +39,8 @@ protected:
 
 	std::vector<MaterialProperty> queuedProperties;
 	std::vector<sk::material_t> modifiedMaterials;
+
+    std::mutex queuedPropertiesMutex;
 };
 
 }
