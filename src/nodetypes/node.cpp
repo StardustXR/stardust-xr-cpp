@@ -23,6 +23,7 @@ void Node::propagate(std::string name, std::function<bool (std::string, Node *)>
 
 void Node::addChild(std::string name, Node *child) {
 	child->parent = this;
+	child->name = name;
 	children.emplace(name, child);
 }
 

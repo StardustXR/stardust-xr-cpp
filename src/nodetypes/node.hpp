@@ -25,6 +25,7 @@ public:
 	
 	Client *client;
 	Node *parent = nullptr;
+	std::string name = "";
 
 	void addChild(std::string name, Node *child);
 
