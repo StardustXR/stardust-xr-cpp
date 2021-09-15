@@ -78,6 +78,8 @@ void InputInterface::processInput() {
 	for(auto &inputMethod : inputMethods) {
 		std::list<DistanceLink> distanceLinks;
 		for(auto &inputHandler : inputHandlers) {
+			if(inputHandler->field == nullptr)
+				continue;
 			distanceLinks.push_front(DistanceLink {
 				inputMethod,
 				inputMethod->distanceTo(inputHandler),
