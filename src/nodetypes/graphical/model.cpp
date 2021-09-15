@@ -42,7 +42,7 @@ void Model::update() {
 			model_set_material(model, prop.submeshIndex, mat);
 		}
 
-		log_infof("Setting prop \"%s\" on submesh %d of type %s\n", prop.name.c_str(), prop.submeshIndex, prop.isFloat ? "float" : (prop.isColor ? "color" : "texture"));
+		// log_infof("Setting prop \"%s\" on submesh %d of type %s\n", prop.name.c_str(), prop.submeshIndex, prop.isFloat ? "float" : (prop.isColor ? "color" : "texture"));
 		if(prop.isFloat)
 			material_set_float(mat, prop.name.c_str(), prop.floatValue);
 		if(prop.isColor)
