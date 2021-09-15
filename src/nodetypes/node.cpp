@@ -26,5 +26,8 @@ void Node::addChild(std::string name, Node *child) {
 	child->name = name;
 	children.emplace(name, child);
 }
+Node &Node::operator[](const std::string child) {
+	return *this->children[child];
+}
 
 } // namespace StardustXRServer

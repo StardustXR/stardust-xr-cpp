@@ -28,6 +28,7 @@ public:
 	std::string name = "";
 
 	void addChild(std::string name, Node *child);
+	Node &operator[](const std::string child);
 
 	std::map<std::string, NodeMethod> methods;
 	std::map<std::string, std::unique_ptr<Node>> children;
