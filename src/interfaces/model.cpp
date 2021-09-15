@@ -2,7 +2,7 @@
 
 namespace StardustXRServer {
 
-ModelInterface::ModelInterface(Client *client) : Node(client) {
+ModelInterface::ModelInterface(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("createFromFile", &ModelInterface::createFromFile)
 }
 

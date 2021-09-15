@@ -9,7 +9,7 @@ sk::tex_t EnvironmentInterface::skytex;
 std::string EnvironmentInterface::skylightQueuedPath;
 sk::spherical_harmonics_t EnvironmentInterface::skylight;
 
-EnvironmentInterface::EnvironmentInterface(Client *client) : Node(client) {
+EnvironmentInterface::EnvironmentInterface(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("visible", &EnvironmentInterface::visible)
 	STARDUSTXR_NODE_METHOD("setSkytex", &EnvironmentInterface::setSkytex)
 	STARDUSTXR_NODE_METHOD("setLighting", &EnvironmentInterface::setLighting)

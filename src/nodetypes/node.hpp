@@ -16,7 +16,7 @@ class Client;
 
 class Node {
 public:
-	Node(Client *client);
+	Node(Client *client, bool destroyable = true);
 	virtual ~Node();
 
 	virtual void update() {}
@@ -32,6 +32,8 @@ public:
 
 	std::map<std::string, NodeMethod> methods;
 	std::map<std::string, std::unique_ptr<Node>> children;
+protected:
+	bool destroyable = true;
 };
 
 } //namespace StardustXRServer

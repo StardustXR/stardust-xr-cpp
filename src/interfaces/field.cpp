@@ -7,7 +7,7 @@ using namespace std;
 
 namespace StardustXRServer {
 
-FieldInterface::FieldInterface(Client *client) : Node(client) {
+FieldInterface::FieldInterface(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("createBoxField", &FieldInterface::createBoxField)
 	STARDUSTXR_NODE_METHOD("createSphereField", &FieldInterface::createSphereField)
 }

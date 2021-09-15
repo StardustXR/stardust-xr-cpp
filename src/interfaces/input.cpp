@@ -13,12 +13,9 @@ std::vector<InputHandler *> InputInterface::inputHandlers;
 
 flatbuffers::FlatBufferBuilder InputInterface::fbb;
 
-InputInterface::InputInterface(Client *client) : Node(client) {
-	children.emplace("handler", new Node(client));
-	children["handler"]->parent = this;
-
-	children.emplace("method", new Node(client));
-	children["method"]->parent = this;
+InputInterface::InputInterface(Client *client) : Node(client, false) {
+	addChild("handler", new Node(client, false));
+	addChild("method", new Node(client, false));
 
 	STARDUSTXR_NODE_METHOD("registerInputHandler", &InputInterface::registerInputHandler)
 }

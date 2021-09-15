@@ -7,7 +7,7 @@ using namespace std;
 
 namespace StardustXRServer {
 
-SpatialFactory::SpatialFactory(Client *client) : Node(client) {
+SpatialFactory::SpatialFactory(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("create", &SpatialFactory::create)
 }
 

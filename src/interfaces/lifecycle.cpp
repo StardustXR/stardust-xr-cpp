@@ -12,7 +12,7 @@ double LifeCycleInterface::prevFrameTime;
 double LifeCycleInterface::frameTime;
 double LifeCycleInterface::delta;
 
-LifeCycleInterface::LifeCycleInterface(Client *client) : Node(client) {
+LifeCycleInterface::LifeCycleInterface(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("subscribeLogicStep", &LifeCycleInterface::subscribeLogicStep)
 
 	prevFrameTime = sk::time_get();

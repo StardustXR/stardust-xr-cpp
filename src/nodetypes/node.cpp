@@ -5,7 +5,8 @@ using namespace std;
 
 namespace StardustXRServer {
 
-Node::Node(Client *client) : client(client) {}
+Node::Node(Client *client, bool destroyable) : client(client) {
+	this->destroyable = destroyable;
 Node::~Node() {}
 
 void Node::propagate(std::string name, std::function<bool (std::string, Node *)> &function) {
