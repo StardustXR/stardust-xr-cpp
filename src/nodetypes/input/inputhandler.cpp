@@ -55,7 +55,7 @@ std::vector<uint8_t> InputHandler::setCallback(flexbuffers::Reference data, bool
 
 std::vector<uint8_t> InputHandler::setField(flexbuffers::Reference data, bool returnValue) {
 	std::string fieldPath = data.AsString().str();
-	field = client->scenegraph.findNode<Field *>(fieldPath);
+	field = client->scenegraph.findNode<Field>(fieldPath);
 
 	if(returnValue) {
 		return FLEX_SINGLE(

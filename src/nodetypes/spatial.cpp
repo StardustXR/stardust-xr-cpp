@@ -163,7 +163,7 @@ bool Spatial::setSpatialParent(std::string spacePath) {
 		spatialParent = nullptr;
 		return true;
 	}
-	Spatial *potentialParent = client->scenegraph.findNode<Spatial *>(spacePath);
+	Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
 	if(potentialParent != nullptr)
 		spatialParent = potentialParent;
 	return true;
@@ -174,7 +174,7 @@ bool Spatial::setSpatialParentInPlace(std::string spacePath) {
 		spatialParent = nullptr;
 		return true;
 	}
-	Spatial *potentialParent = client->scenegraph.findNode<Spatial *>(spacePath);
+	Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
 	if(potentialParent == nullptr)
 		return false;
 

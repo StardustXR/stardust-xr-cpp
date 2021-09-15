@@ -22,8 +22,8 @@ public:
 	void addNode(std::string path, Node *node);
 	Node *findNode(std::string path);
 	template<class T>
-	T findNode(std::string path) {
-		return dynamic_cast<T>(findNode(path));
+	T *findNode(std::string path) {
+		return dynamic_cast<T *>(findNode(path));
 	}
 
 	Node root;

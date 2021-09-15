@@ -86,7 +86,7 @@ std::vector<uint8_t> Field::distance(flexbuffers::Reference data, bool returnVal
 	};
 
 	//If the spacePath doesn't exist, it must be world space
-	float distance = this->distance(client->scenegraph.findNode<Spatial *>(spacePath), point);
+	float distance = this->distance(client->scenegraph.findNode<Spatial>(spacePath), point);
 
 	return FLEX_SINGLE(
 		FLEX_FLOAT(distance)
@@ -107,7 +107,7 @@ std::vector<uint8_t> Field::normal(flexbuffers::Reference data, bool returnValue
 	};
 
 	//If the spacePath doesn't exist, it must be world space
-	vec3 normal = this->normal(client->scenegraph.findNode<Spatial *>(spacePath), point);
+	vec3 normal = this->normal(client->scenegraph.findNode<Spatial>(spacePath), point);
 
 	return FLEX_SINGLE(
 		FLEX_VEC3(normal)
@@ -128,7 +128,7 @@ std::vector<uint8_t> Field::closestPoint(flexbuffers::Reference data, bool retur
 	};
 
 	//If the spacePath doesn't exist, it must be world space
-	vec3 closestPoint = this->normal(client->scenegraph.findNode<Spatial *>(spacePath), point);
+	vec3 closestPoint = this->normal(client->scenegraph.findNode<Spatial>(spacePath), point);
 
 	return FLEX_SINGLE(
 		FLEX_VEC3(closestPoint)
