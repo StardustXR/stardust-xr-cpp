@@ -4,6 +4,7 @@
 #include <stardustxr/common/flatbuffers/Input.hpp>
 
 #include "../../core/client.hpp"
+#include "nodetypes/node.hpp"
 #include <stereokit.h>
 
 namespace StardustXRServer {
@@ -12,6 +13,8 @@ InputHandler::InputHandler(Client *client, Spatial *spatialParent, sk::vec3 posi
 	this->field = field;
 	this->callbackPath = callbackPath;
 	this->callbackMethod = callbackMethod;
+
+	STARDUSTXR_NODE_METHOD("setField", &InputHandler::setField);
 }
 
 InputHandler::~InputHandler() {}
