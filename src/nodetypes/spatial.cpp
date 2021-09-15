@@ -31,6 +31,7 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rot
 	STARDUSTXR_NODE_METHOD("setTransform", &Spatial::setTransform)
 
 	STARDUSTXR_NODE_METHOD("setSpatialParent", &Spatial::setSpatialParentFlex)
+	STARDUSTXR_NODE_METHOD("setSpatialParentInPlace", &Spatial::setSpatialParentInPlaceFlex)
 }
 
 std::vector<uint8_t> Spatial::move(flexbuffers::Reference data, bool returnValue) {
@@ -122,6 +123,12 @@ std::vector<uint8_t> Spatial::setSpatialParentFlex(flexbuffers::Reference data, 
 	return std::vector<uint8_t>();
 }
 
+std::vector<uint8_t> Spatial::setSpatialParentInPlaceFlex(flexbuffers::Reference data, bool) {
+	std::string spacePath = data.AsString().str();
+	setSpatialParentInPlace(spacePath);
+	return std::vector<uint8_t>();
+}
+
 matrix Spatial::localToSpaceMatrix(Spatial *space) {
 	// TODO: Optimize this to check if space and this SpatialNode share a common ancestor
 	// and calculate the transform matrix between the two.
@@ -157,11 +164,29 @@ bool Spatial::setSpatialParent(std::string spacePath) {
 		return true;
 	}
 	Spatial *potentialParent = client->scenegraph.findNode<Spatial *>(spacePath);
-	if(potentialParent) {
+	if(potentialParent != nullptr)
 		spatialParent = potentialParent;
+	return true;
+}
+
+bool Spatial::setSpatialParentInPlace(std::string spacePath) {
+	if(spacePath == "") {
+		spatialParent = nullptr;
 		return true;
 	}
-	return false;
+	Spatial *potentialParent = client->scenegraph.findNode<Spatial *>(spacePath);
+	if(potentialParent == nullptr)
+		return false;
+
+	vec3 position = localToSpacePoint(potentialParent, this->position);
+	quat rotation = localToSpaceRotation(potentialParent, this->rotation);
+	vec3 scale = potentialParent->scale / (spatialParent == nullptr ? vec3_one : spatialParent->scale);
+
+	spatialParent = potentialParent;
+	this->position = position;
+	this->rotation = rotation;
+	this->scale = scale;
+	return true;
 }
 
 matrix Spatial::localTransform() {
