@@ -1,4 +1,5 @@
 #include "inputmethod.hpp"
+#include <flatbuffers/flatbuffers.h>
 #include <stardustxr/common/flex.hpp>
 
 namespace StardustXRServer {
@@ -41,6 +42,8 @@ InputMethod::DatamapVariant InputMethod::flexRefToVar(flexbuffers::Reference ref
 				vec[2].AsFloat()
 			};
 		}
+	} else if (ref.IsString()) {
+		return ref.AsString().str();
 	}
 
 	return false;
@@ -68,7 +71,8 @@ void InputMethod::varToMapFlex(flexbuffers::Builder &fbb, std::string key, Input
 				fbb.Float(vec.y);
 				fbb.Float(vec.z);
 			});
-		}
+		} else if constexpr (std::is_same_v<T, std::string>)
+			fbb.String(key.c_str(), arg);
 	}, value);
 }
 
