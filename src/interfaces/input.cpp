@@ -22,15 +22,13 @@ InputInterface::InputInterface(Client *client) : Node(client) {
 
 	STARDUSTXR_NODE_METHOD("registerInputHandler", &InputInterface::registerInputHandler)
 }
-InputInterface::~InputInterface() {}
-
-void InputInterface::handleClientDisconnect(Client *client) {
+InputInterface::~InputInterface() {
 	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
 	
-	inputMethods.erase(std::remove_if(inputMethods.begin(), inputMethods.end(), [&client](InputMethod *method) {
+	inputMethods.erase(std::remove_if(inputMethods.begin(), inputMethods.end(), [this](InputMethod *method) {
 		return method->client == client;
 	}), inputMethods.end());
-	inputHandlers.erase(std::remove_if(inputHandlers.begin(), inputHandlers.end(), [&client](InputHandler *handler) {
+	inputHandlers.erase(std::remove_if(inputHandlers.begin(), inputHandlers.end(), [this](InputHandler *handler) {
 		return handler->client == client;
 	}), inputHandlers.end());
 }

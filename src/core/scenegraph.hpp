@@ -19,8 +19,6 @@ public:
 
 	void executeRemoteMethod(std::string remotePath, std::string remoteMethod, std::vector<uint8_t> args, void *extraData, ServerCallback callback);
 
-	void handleClientDisconnect(Client *client);
-
 	void addNode(std::string path, Node *node);
 	Node *findNode(std::string path);
 	template<class T>

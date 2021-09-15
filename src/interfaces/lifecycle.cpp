@@ -19,6 +19,14 @@ LifeCycleInterface::LifeCycleInterface(Client *client) : Node(client) {
 	frameTime = sk::time_get();
 }
 
+LifeCycleInterface::~LifeCycleInterface() {
+	const std::lock_guard<std::mutex> lock(updateMethodsMutex);
+
+	updateMethods.erase(std::remove_if(updateMethods.begin(), updateMethods.end(), [&](LifeCycleUpdateMethod &updateMethod) {
+		return updateMethod.client == client;
+	}), updateMethods.end());
+}
+
 void LifeCycleInterface::sendLogicStepSignals() {
 	frameTime = sk::time_get();
 	double delta = frameTime - prevFrameTime;
@@ -39,14 +47,6 @@ void LifeCycleInterface::sendLogicStepSignals() {
 	}
 
 	prevFrameTime = frameTime;
-}
-
-void LifeCycleInterface::handleClientDisconnect(Client *client) {
-	const std::lock_guard<std::mutex> lock(updateMethodsMutex);
-
-	updateMethods.erase(std::remove_if(updateMethods.begin(), updateMethods.end(), [&client](LifeCycleUpdateMethod &updateMethod) {
-		return updateMethod.client == client;
-	}), updateMethods.end());
 }
 
 std::vector<uint8_t> LifeCycleInterface::subscribeLogicStep(flexbuffers::Reference data, bool) {

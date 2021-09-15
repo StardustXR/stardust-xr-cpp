@@ -31,14 +31,6 @@ void Scenegraph::executeRemoteMethod(std::string remotePath, std::string remoteM
 	});
 }
 
-void Scenegraph::handleClientDisconnect(Client *client) {
-	PropagateFunction messengerDeletionFunction = [&](std::string name, Node *node) {
-		node->handleClientDisconnect(client);
-		return true;
-	};
-	root.propagate("", messengerDeletionFunction);
-}
-
 std::vector<uint8_t> Scenegraph::executeMethod(std::string path, std::string method, flexbuffers::Reference args, bool returnValue) {
 	//Find the node referenced by the path string
 	Node *currentNode = &root;

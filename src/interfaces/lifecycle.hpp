@@ -16,10 +16,9 @@ typedef struct {
 class LifeCycleInterface : public Node {
 public:
 	LifeCycleInterface(Client *client);
-	virtual ~LifeCycleInterface() {}
+	~LifeCycleInterface();
 
 	static void sendLogicStepSignals();
-	void handleClientDisconnect(Client *client);
 
 	std::vector<uint8_t> subscribeLogicStep(flexbuffers::Reference data, bool returnValue);
 

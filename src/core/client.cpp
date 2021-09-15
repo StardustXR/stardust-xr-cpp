@@ -29,10 +29,7 @@ Client::Client(int inFD, int outFD, ClientManager *clientManager) : scenegraph(t
 	scenegraph.addNode("/model", model);
 	scenegraph.addNode("/spatial", spatial);
 }
-
-Client::~Client() {
-	scenegraph.handleClientDisconnect(this);
-}
+Client::~Client() {}
 
 void Client::scenegraphPropagate(std::string name, PropagateFunction &function) {
 	scenegraph.root.propagate(name, function);

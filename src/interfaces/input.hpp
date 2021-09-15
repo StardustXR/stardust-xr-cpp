@@ -11,7 +11,6 @@ class InputInterface : public Node {
 public:
 	InputInterface(Client *client);
 	~InputInterface();
-	void handleClientDisconnect(Client *client);
 
 	std::vector<uint8_t> registerInputHandler(flexbuffers::Reference data, bool returnValue);
 	static void processInput();
