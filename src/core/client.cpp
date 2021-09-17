@@ -4,6 +4,7 @@
 #include "scenegraph.hpp"
 #include "scenegraphpropagation.hpp"
 
+#include "../interfaces/client.hpp"
 #include "../interfaces/environment.hpp"
 #include "../interfaces/field.hpp"
 #include "../interfaces/input.hpp"
@@ -15,6 +16,7 @@ namespace StardustXRServer {
 
 Client::Client(int inFD, int outFD, ClientManager *clientManager) : scenegraph(this), messenger(this, inFD, outFD) {
 	this->manager = clientManager;
+	ClientInterface *client = new ClientInterface(this);
 	EnvironmentInterface *environment = new EnvironmentInterface(this);
 	FieldInterface *field = new FieldInterface(this);
 	InputInterface *input = new InputInterface(this);
@@ -22,6 +24,7 @@ Client::Client(int inFD, int outFD, ClientManager *clientManager) : scenegraph(t
 	ModelInterface *model = new ModelInterface(this);
 	SpatialFactory *spatial = new SpatialFactory(this);
 
+	scenegraph.addNode("/client", client);
 	scenegraph.addNode("/environment", environment);
 	scenegraph.addNode("/field", field);
 	scenegraph.addNode("/input", input);

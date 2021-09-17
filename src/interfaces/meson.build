@@ -1,4 +1,5 @@
 src_files += files(
+	'client.cpp',
 	'environment.cpp',
 	'field.cpp',
 	'input.cpp',
