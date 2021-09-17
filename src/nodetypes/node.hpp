@@ -3,6 +3,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <flatbuffers/flexbuffers.h>
 
@@ -29,10 +30,16 @@ public:
 
 	void addChild(std::string name, Node *child);
 	Node &operator[](const std::string child);
+    void queueDestroy(bool forceDestroy);
+    static void destroyNodes();
+
+	std::vector<uint8_t> destroyFlex(flexbuffers::Reference data, bool returnValue);
 
 	std::map<std::string, NodeMethod> methods;
 	std::map<std::string, std::unique_ptr<Node>> children;
 protected:
+    static std::vector<Node *> nodesToDestroy;
+    static std::mutex destroyMutex;
 	bool destroyable = true;
 };
 

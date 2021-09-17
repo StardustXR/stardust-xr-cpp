@@ -5,8 +5,13 @@ using namespace std;
 
 namespace StardustXRServer {
 
+std::vector<Node *> Node::nodesToDestroy;
+std::mutex Node::destroyMutex;
+
 Node::Node(Client *client, bool destroyable) : client(client) {
 	this->destroyable = destroyable;
+	STARDUSTXR_NODE_METHOD("destroy", &Node::destroyFlex)
+}
 Node::~Node() {}
 
 void Node::propagate(std::string name, std::function<bool (std::string, Node *)> &function) {
@@ -29,6 +34,28 @@ void Node::addChild(std::string name, Node *child) {
 }
 Node &Node::operator[](const std::string child) {
 	return *this->children[child];
+}
+void Node::queueDestroy(bool forceDestroy) {
+	if(!forceDestroy && !destroyable)
+		return;
+
+	const std::lock_guard<std::mutex> lock(destroyMutex);
+	nodesToDestroy.push_back(this);
+}
+
+std::vector<uint8_t> Node::destroyFlex(flexbuffers::Reference data, bool) {
+	queueDestroy(false);
+	return std::vector<uint8_t>();
+}
+
+void Node::destroyNodes() {
+	const std::lock_guard<std::mutex> lock(destroyMutex);
+	for(Node *node : nodesToDestroy) {
+//        (void) node->parent->children[node->name].release();
+		node->parent->children.erase(node->name);
+//        delete this;
+	}
+	nodesToDestroy.clear();
 }
 
 } // namespace StardustXRServer

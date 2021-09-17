@@ -110,6 +110,9 @@ int main(int argc, char *argv[]) {
 		clientManager.handleDisconnectedClients();
 		clientManager.handleNewlyConnectedClients();
 
+        // Delete any nodes that are queued up to delete
+        Node::destroyNodes();
+
 		// Update environment settings
 		EnvironmentInterface::updateEnvironment();
 
