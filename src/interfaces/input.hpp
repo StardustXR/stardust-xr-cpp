@@ -13,6 +13,7 @@ public:
 	~InputInterface();
 
 	std::vector<uint8_t> registerInputHandler(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> getInputHandlers(flexbuffers::Reference data, bool returnValue);
 	static void processInput();
 
 	static void addInputMethod(InputMethod *method);

@@ -1,9 +1,18 @@
 #include "input.hpp"
 #include "../globals.h"
+#include "../core/client.hpp"
 #include "../nodetypes/input/inputmethods/pointer.hpp"
 #include <stardustxr/common/flatbuffers/Input.hpp>
-#include "../core/client.hpp"
+#include "nodetypes/alias.hpp"
+#include "nodetypes/input/inputhandler.hpp"
+#include "stereokit.h"
+
+#include <cstddef>
+#include <cstdint>
+#include <functional>
 #include <mutex>
+#include <stardustxr/common/flex.hpp>
+#include <string>
 
 namespace StardustXRServer {
 
@@ -16,7 +25,9 @@ flatbuffers::FlatBufferBuilder InputInterface::fbb;
 InputInterface::InputInterface(Client *client) : Node(client, false) {
 	addChild("handler", new Node(client, false));
 	addChild("method", new Node(client, false));
+	addChild("global_handler", new Node(client, false));
 
+	STARDUSTXR_NODE_METHOD("getInputHandlers", &InputInterface::getInputHandlers)
 	STARDUSTXR_NODE_METHOD("registerInputHandler", &InputInterface::registerInputHandler)
 }
 InputInterface::~InputInterface() {
@@ -28,6 +39,35 @@ InputInterface::~InputInterface() {
 	inputHandlers.erase(std::remove_if(inputHandlers.begin(), inputHandlers.end(), [this](InputHandler *handler) {
 		return handler->client == client;
 	}), inputHandlers.end());
+}
+
+std::vector<uint8_t> InputInterface::getInputHandlers(flexbuffers::Reference data, bool returnValue) {
+	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
+
+	//If the spacePath doesn't exist, it must be world space
+	Spatial *space = client->scenegraph.findNode<Spatial>(data.AsString().str());
+
+	return StardustXR::FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
+		fbb.Vector([&]() {
+			children["global_handler"]->children.clear();
+			for(InputHandler *handler : inputHandlers) {
+				fbb.Vector([&] {
+					std::ostringstream stringStream;
+					std::size_t hash = std::hash<std::string>{}(handler->name);
+					stringStream << std::uintptr_t((std::uintptr_t) handler->client ^ (std::uintptr_t) hash);
+					children["global_handler"]->addChild(stringStream.str(), new Alias(client, handler, {}));
+					fbb.String(stringStream.str());
+
+					fbb.TypedVector([&] {
+						sk::vec3 position = handler->localToSpacePoint(space, vec3_zero);
+						fbb.Float(position.x);
+						fbb.Float(position.y);
+						fbb.Float(position.z);
+					});
+				});
+			}
+		});
+	});
 }
 
 std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference data, bool) {
