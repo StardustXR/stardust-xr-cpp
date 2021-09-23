@@ -55,7 +55,7 @@ std::vector<uint8_t> InputInterface::getInputHandlers(flexbuffers::Reference dat
 					std::ostringstream stringStream;
 					std::size_t hash = std::hash<std::string>{}(handler->name);
 					stringStream << std::uintptr_t((std::uintptr_t) handler->client ^ (std::uintptr_t) hash);
-					children["global_handler"]->addChild(stringStream.str(), new Alias(client, handler, {}));
+					children["global_handler"]->addChild(stringStream.str(), new Alias(client, handler, {"getActions", "runAction"}));
 					fbb.String(stringStream.str());
 
 					fbb.TypedVector([&] {

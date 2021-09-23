@@ -3,6 +3,8 @@
 #include "../spatial.hpp"
 #include "../fields/field.hpp"
 #include "distancelink.hpp"
+#include <flatbuffers/flatbuffers.h>
+#include <flatbuffers/flexbuffers.h>
 #include <list>
 #include <string>
 
@@ -21,6 +23,13 @@ public:
 
 	std::vector<uint8_t> setCallback(flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setField(flexbuffers::Reference data, bool returnValue);
+
+	std::vector<std::string> actions;
+	std::vector<uint8_t> setActions(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> getActions(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> runAction(flexbuffers::Reference data, bool returnValue);
+protected:
+	flatbuffers::FlatBufferBuilder flbb;
 };
 
 } // namespace StardustXRServer
