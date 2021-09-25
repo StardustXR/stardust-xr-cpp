@@ -29,7 +29,7 @@ public:
 	Node root;
 protected:
 	std::vector<uint8_t> executeMethod(std::string path, std::string method, flexbuffers::Reference args, bool returnValue);
-	void onPathStep(std::string path, std::function<void(std::string)> pathStepFunction);
+	void onPathStep(std::string path, std::function<void(std::string &, bool &)> pathStepFunction);
 };
 
 } // namespace StardustXR
