@@ -6,6 +6,7 @@
 #include "nodetypes/alias.hpp"
 #include "nodetypes/input/inputhandler.hpp"
 #include "stereokit.h"
+#include <flatbuffers/flexbuffers.h>
 
 #include <cstddef>
 #include <cstdint>
@@ -42,29 +43,33 @@ InputInterface::~InputInterface() {
 }
 
 std::vector<uint8_t> InputInterface::getInputHandlers(flexbuffers::Reference data, bool returnValue) {
-	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
+	flexbuffers::Vector flexVec = data.AsVector();
 
 	//If the spacePath doesn't exist, it must be world space
-	Spatial *space = client->scenegraph.findNode<Spatial>(data.AsString().str());
+	Spatial *space = client->scenegraph.findNode<Spatial>(flexVec[0].AsString().str());
+	bool excludeSelf = flexVec[1].AsBool();
 
+	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
 	return StardustXR::FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
 		fbb.Vector([&]() {
 			children["global_handler"]->children.clear();
 			for(InputHandler *handler : inputHandlers) {
-				fbb.Vector([&] {
-					std::ostringstream stringStream;
-					std::size_t hash = std::hash<std::string>{}(handler->name);
-					stringStream << std::uintptr_t((std::uintptr_t) handler->client ^ (std::uintptr_t) hash);
-					children["global_handler"]->addChild(stringStream.str(), new Alias(client, handler, {"getActions", "runAction"}));
-					fbb.String(stringStream.str());
+				if(excludeSelf == false || handler->client != this->client) {
+					fbb.Vector([&] {
+						std::ostringstream stringStream;
+						std::size_t hash = std::hash<std::string>{}(handler->name);
+						stringStream << std::uintptr_t((std::uintptr_t) handler->client ^ (std::uintptr_t) hash);
+						children["global_handler"]->addChild(stringStream.str(), new Alias(client, handler, {"getActions", "runAction"}));
+						fbb.String(stringStream.str());
 
-					fbb.TypedVector([&] {
-						sk::vec3 position = handler->localToSpacePoint(space, vec3_zero);
-						fbb.Float(position.x);
-						fbb.Float(position.y);
-						fbb.Float(position.z);
+						fbb.TypedVector([&] {
+							sk::vec3 position = handler->localToSpacePoint(space, vec3_zero);
+							fbb.Float(position.x);
+							fbb.Float(position.y);
+							fbb.Float(position.z);
+						});
 					});
-				});
+				}
 			}
 		});
 	});
