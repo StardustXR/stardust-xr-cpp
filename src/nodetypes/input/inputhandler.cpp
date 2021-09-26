@@ -97,7 +97,7 @@ std::vector<uint8_t> InputHandler::runAction(flexbuffers::Reference data, bool r
 		return std::vector<uint8_t>();
 	}
 
-	auto action = StardustXR::CreateActionDirect(flbb, "test").Union();
+	auto action = StardustXR::CreateActionDirect(flbb, actionString.c_str()).Union();
 	std::vector<uint8_t> flex = StardustXR::FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
 		fbb.Map([&]() {});
 	});
