@@ -84,7 +84,7 @@ std::vector<uint8_t> InputHandler::setActions(flexbuffers::Reference data, bool 
 }
 std::vector<uint8_t> InputHandler::getActions(flexbuffers::Reference data, bool returnValue) {
 	return StardustXR::FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
-		fbb.Vector([&](){
+		fbb.TypedVector([&](){
 			for(std::string &action : actions) {
 				fbb.String(action);
 			}
