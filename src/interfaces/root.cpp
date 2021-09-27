@@ -2,7 +2,6 @@
 #include "../core/client.hpp"
 
 #include "drawable.hpp"
-#include "environment.hpp"
 #include "field.hpp"
 #include "input.hpp"
 #include "spatial.hpp"
@@ -20,7 +19,6 @@ double RootInterface::delta;
 
 RootInterface::RootInterface(Client *client) : Node(client, false) {
 	this->addChild("drawable",    new DrawableInterface(client));
-	this->addChild("environment", new EnvironmentInterface(client));
 	this->addChild("field",       new FieldInterface(client));
 	this->addChild("input",       new InputInterface(client));
 	this->addChild("spatial",     new SpatialFactory(client));

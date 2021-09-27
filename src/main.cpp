@@ -14,8 +14,9 @@ std::string home;
 // Stardust XR Server includes
 #include "core/clientmanager.hpp"
 #include "core/scenegraphpropagation.hpp"
-#include "interfaces/environment.hpp"
+#include "interfaces/drawable.hpp"
 #include "interfaces/input.hpp"
+#include "interfaces/root.hpp"
 #include "nodetypes/node.hpp"
 #include "nodetypes/graphical/drawablenode.hpp"
 #include "tests/flatscreenpointer.hpp"
@@ -114,7 +115,7 @@ int main(int argc, char *argv[]) {
         Node::destroyNodes();
 
 		// Update environment settings
-		EnvironmentInterface::updateEnvironment();
+		DrawableInterface::updateEnvironment();
 
 		// Send logicStep signals to clients
 		RootInterface::sendLogicStepSignals();

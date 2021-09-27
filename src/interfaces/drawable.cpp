@@ -3,10 +3,43 @@
 
 namespace StardustXRServer {
 
+std::string DrawableInterface::skytexQueuedPath;
+sk::tex_t DrawableInterface::skytex;
+std::string DrawableInterface::skylightQueuedPath;
+sk::spherical_harmonics_t DrawableInterface::skylight;
+
 DrawableInterface::DrawableInterface(Client *client) : Node(client, false) {
 	addChild("model", new Node(client));
 
 	STARDUSTXR_NODE_METHOD("createModelFromFile", &DrawableInterface::createModelFromFile)
+	STARDUSTXR_NODE_METHOD("setSkytex", &DrawableInterface::setSkytex)
+	STARDUSTXR_NODE_METHOD("setLighting", &DrawableInterface::setSkylight)
+}
+
+void DrawableInterface::updateEnvironment() {
+	if(skylightQueuedPath != "") {
+		tex_create_cubemap_file(skylightQueuedPath.c_str(), true, &skylight);
+		render_set_skylight(skylight);
+		skylightQueuedPath = "";
+	}
+	if(skytexQueuedPath != "") {
+		skytex = tex_create_cubemap_file(skytexQueuedPath.c_str(), true);
+		render_set_skytex(skytex);
+		skytexQueuedPath = "";
+	}
+}
+
+std::vector<uint8_t> DrawableInterface::setSkytex(flexbuffers::Reference data, bool) {
+	std::string path = data.AsString().str();
+	render_enable_skytex(path != "");
+	skytexQueuedPath = path;
+	return std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> DrawableInterface::setSkylight(flexbuffers::Reference data, bool) {
+	std::string path = data.AsString().str();
+	skylightQueuedPath = path;
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> DrawableInterface::createModelFromFile(flexbuffers::Reference data, bool) {
