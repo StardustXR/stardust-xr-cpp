@@ -1,4 +1,4 @@
-#include "../globals.h"
+#include "client.hpp"
 
 #include "scenegraph.hpp"
 #include "scenegraphpropagation.hpp"
@@ -6,7 +6,6 @@
 namespace StardustXRServer {
 
 Scenegraph::Scenegraph(Client *client) : root(client) {}
-Scenegraph::~Scenegraph() {}
 
 void Scenegraph::onPathStep(std::string path, std::function<void(std::string &, bool &)> pathStepFunction) {
 	std::istringstream stream(path);

@@ -5,10 +5,9 @@
 
 namespace StardustXRServer {
 
-class ClientInterface : public Node {
+class RootInterface : public Node {
 public:
-	ClientInterface(Client *client);
-	virtual ~ClientInterface() {}
+	RootInterface(Client *client);
 
 	std::vector<uint8_t> disconnect(flexbuffers::Reference data, bool returnValue);
 };

@@ -2,9 +2,6 @@
 
 #include <stereokit.h>
 #include <cstdint>
-#include "core/clientmanager.hpp"
-
-extern StardustXRServer::ClientManager clientManager;
 
 struct CLIArgs {
 	bool flatscreen = false;

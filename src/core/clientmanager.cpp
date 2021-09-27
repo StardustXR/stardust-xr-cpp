@@ -8,7 +8,6 @@
 namespace StardustXRServer {
 
 ClientManager::ClientManager(const char *socketPath) : StardustXR::MessengerManager(socketPath) {}
-ClientManager::~ClientManager() {}
 
 void ClientManager::clientConnected(int inFD, int outFD) {
 	const std::lock_guard<std::mutex> lock(connectedClientsMutex);

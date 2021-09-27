@@ -2,6 +2,7 @@
 
 #include <stardustxr/common/scenegraph.hpp>
 #include "../nodetypes/node.hpp"
+#include "../interfaces/root.hpp"
 
 namespace StardustXRServer {
 
@@ -12,7 +13,6 @@ class Client;
 class Scenegraph : public StardustXR::Scenegraph {
 public:
 	explicit Scenegraph(Client *client);
-	~Scenegraph();
 
 	void sendSignal(std::string path, std::string method, flexbuffers::Reference data);
 	std::vector<uint8_t> executeMethod(std::string path, std::string method, flexbuffers::Reference args);
@@ -26,7 +26,7 @@ public:
 		return dynamic_cast<T *>(findNode(path));
 	}
 
-	Node root;
+	RootInterface root;
 protected:
 	std::vector<uint8_t> executeMethod(std::string path, std::string method, flexbuffers::Reference args, bool returnValue);
 	void onPathStep(std::string path, std::function<void(std::string &, bool &)> pathStepFunction);
