@@ -1,6 +1,7 @@
 #include "spatial.hpp"
 #include "../nodetypes/fields/boxfield.hpp"
 #include "../nodetypes/fields/spherefield.hpp"
+#include "../core/client.hpp"
 
 using namespace sk;
 using namespace std;
@@ -13,14 +14,15 @@ SpatialFactory::SpatialFactory(Client *client) : Node(client, false) {
 
 std::vector<uint8_t> SpatialFactory::create(flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector            = data.AsVector();
-	flexbuffers::TypedVector flexPosition = vector[1].AsTypedVector();
-	flexbuffers::TypedVector flexRotation = vector[2].AsTypedVector();
-	flexbuffers::TypedVector flexScale    = vector[3].AsTypedVector();
-	bool translatable                     = vector[4].AsBool();
-	bool rotatable                        = vector[5].AsBool();
-	bool scalable                         = vector[6].AsBool();
+	string name                           = vector[0].AsString().str();
+	Spatial *spatialParent                = this->client->scenegraph.findNode<Spatial>(vector[1].AsString().str());
+	flexbuffers::TypedVector flexPosition = vector[2].AsTypedVector();
+	flexbuffers::TypedVector flexRotation = vector[3].AsTypedVector();
+	flexbuffers::TypedVector flexScale    = vector[4].AsTypedVector();
+	bool translatable                     = vector[5].AsBool();
+	bool rotatable                        = vector[6].AsBool();
+	bool scalable                         = vector[7].AsBool();
 
-	string name = vector[0].AsString().str();
 	vec3 position = {
 		flexPosition[0].AsFloat(),
 		flexPosition[1].AsFloat(),
@@ -38,7 +40,7 @@ std::vector<uint8_t> SpatialFactory::create(flexbuffers::Reference data, bool) {
 		flexScale[2].AsFloat()
 	};
 
-	Spatial *spatial = new Spatial(client, nullptr, position, rotation, scale, translatable, rotatable, scalable);
+	Spatial *spatial = new Spatial(client, spatialParent, position, rotation, scale, translatable, rotatable, scalable);
 	this->addChild(name, spatial);
 
 	return std::vector<uint8_t>();

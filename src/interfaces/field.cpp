@@ -1,6 +1,7 @@
 #include "field.hpp"
 #include "../nodetypes/fields/boxfield.hpp"
 #include "../nodetypes/fields/spherefield.hpp"
+#include "../core/client.hpp"
 
 using namespace sk;
 using namespace std;
@@ -14,11 +15,12 @@ FieldInterface::FieldInterface(Client *client) : Node(client, false) {
 
 std::vector<uint8_t> FieldInterface::createBoxField(flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector            = data.AsVector();
-	flexbuffers::TypedVector flexPosition = vector[1].AsTypedVector();
-	flexbuffers::TypedVector flexRotation = vector[2].AsTypedVector();
-	flexbuffers::TypedVector flexSize     = vector[3].AsTypedVector();
 
-	string name = vector[0].AsString().str();
+	string name                           = vector[0].AsString().str();
+	Spatial *spatialParent                = this->client->scenegraph.findNode<Spatial>(vector[1].AsString().str());
+	flexbuffers::TypedVector flexPosition = vector[2].AsTypedVector();
+	flexbuffers::TypedVector flexRotation = vector[3].AsTypedVector();
+	flexbuffers::TypedVector flexSize     = vector[4].AsTypedVector();
 	vec3 position = {
 		flexPosition[0].AsFloat(),
 		flexPosition[1].AsFloat(),
@@ -36,7 +38,7 @@ std::vector<uint8_t> FieldInterface::createBoxField(flexbuffers::Reference data,
 		flexSize[2].AsFloat()
 	};
 
-	BoxField *field = new BoxField(client, nullptr, position, rotation, size);
+	BoxField *field = new BoxField(client, spatialParent, position, rotation, size);
 	this->addChild(name, field);
 
 	return std::vector<uint8_t>();
@@ -44,17 +46,19 @@ std::vector<uint8_t> FieldInterface::createBoxField(flexbuffers::Reference data,
 
 std::vector<uint8_t> FieldInterface::createSphereField(flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector          = data.AsVector();
-	flexbuffers::TypedVector flexOrigin = vector[1].AsTypedVector();
 
-	string name = vector[0].AsString().str();
+	string name                         = vector[0].AsString().str();
+	Spatial *spatialParent              = this->client->scenegraph.findNode<Spatial>(vector[1].AsString().str());
+	flexbuffers::TypedVector flexOrigin = vector[2].AsTypedVector();
+	float radius                        = vector[3].AsFloat();
+
 	vec3 origin = {
 		flexOrigin[0].AsFloat(),
 		flexOrigin[1].AsFloat(),
 		flexOrigin[2].AsFloat()
 	};
-	float radius = vector[2].AsFloat();
 
-	SphereField *field = new SphereField(client, nullptr, origin, radius);
+	SphereField *field = new SphereField(client, spatialParent, origin, radius);
 	this->addChild(name, field);
 
 	return std::vector<uint8_t>();

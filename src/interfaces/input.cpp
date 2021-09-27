@@ -81,10 +81,11 @@ std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference
 	flexbuffers::Vector flexVec      = data.AsVector();
 	std::string name                 = flexVec[0].AsString().str();
 	std::string flexFieldPath        = flexVec[1].AsString().str();
-	flexbuffers::TypedVector flexPos = flexVec[2].AsTypedVector();
-	flexbuffers::TypedVector flexRot = flexVec[3].AsTypedVector();
-	std::string callbackPath         = flexVec[4].AsString().str();
-	std::string callbackMethod       = flexVec[5].AsString().str();
+	Spatial *spatialParent           = this->client->scenegraph.findNode<Spatial>(flexVec[2].AsString().str());
+	flexbuffers::TypedVector flexPos = flexVec[3].AsTypedVector();
+	flexbuffers::TypedVector flexRot = flexVec[4].AsTypedVector();
+	std::string callbackPath         = flexVec[5].AsString().str();
+	std::string callbackMethod       = flexVec[6].AsString().str();
 
 	sk::vec3 pos = {
 		flexPos[0].AsFloat(), 
@@ -99,7 +100,7 @@ std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference
 	};
 	Field *field = client->scenegraph.findNode<Field>(flexFieldPath);
 
-	InputHandler *handler = new InputHandler(client, nullptr, pos, rot, field, callbackPath, callbackMethod);
+	InputHandler *handler = new InputHandler(client, spatialParent, pos, rot, field, callbackPath, callbackMethod);
 	children["handler"]->addChild(name, handler);
 	inputHandlers.push_back(handler);
 

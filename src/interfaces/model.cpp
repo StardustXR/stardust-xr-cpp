@@ -1,4 +1,5 @@
 #include "model.hpp"
+#include "../core/client.hpp"
 
 namespace StardustXRServer {
 
@@ -11,10 +12,11 @@ std::vector<uint8_t> ModelInterface::createFromFile(flexbuffers::Reference data,
 
 	std::string name = vector[0].AsString().str();
 	std::string path = vector[1].AsString().str();
+	Spatial *spatialParent = this->client->scenegraph.findNode<Spatial>(vector[2].AsString().str());
 
-	flexbuffers::TypedVector flexPosition = vector[2].AsTypedVector();
-	flexbuffers::TypedVector flexRotation = vector[3].AsTypedVector();
-	flexbuffers::TypedVector flexScale = vector[4].AsTypedVector();
+	flexbuffers::TypedVector flexPosition = vector[3].AsTypedVector();
+	flexbuffers::TypedVector flexRotation = vector[4].AsTypedVector();
+	flexbuffers::TypedVector flexScale = vector[5].AsTypedVector();
 
 	vec3 position {
 		flexPosition[0].AsFloat(),
@@ -33,8 +35,7 @@ std::vector<uint8_t> ModelInterface::createFromFile(flexbuffers::Reference data,
 		flexScale[2].AsFloat()
 	};
 
-
-	Model *model = new Model(client, path, nullptr, position, rotation, scale);
+	Model *model = new Model(client, path, spatialParent, position, rotation, scale);
 	this->addChild(name, model);
 
 	return std::vector<uint8_t>();
