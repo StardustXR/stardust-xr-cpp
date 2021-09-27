@@ -3,7 +3,6 @@ src_files += files(
     'environment.cpp',
     'field.cpp',
     'input.cpp',
-    'lifecycle.cpp',
     'root.cpp',
     'spatial.cpp',
 )

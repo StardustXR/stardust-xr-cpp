@@ -15,7 +15,6 @@ std::string home;
 #include "core/clientmanager.hpp"
 #include "core/scenegraphpropagation.hpp"
 #include "interfaces/environment.hpp"
-#include "interfaces/lifecycle.hpp"
 #include "interfaces/input.hpp"
 #include "nodetypes/node.hpp"
 #include "nodetypes/graphical/drawablenode.hpp"
@@ -118,7 +117,7 @@ int main(int argc, char *argv[]) {
 		EnvironmentInterface::updateEnvironment();
 
 		// Send logicStep signals to clients
-		LifeCycleInterface::sendLogicStepSignals();
+		RootInterface::sendLogicStepSignals();
 
 		//Propagate the update and draw methods on scenegraph nodes
 		serverInternalClient.scenegraph.root.propagate("", ScenegraphUpdateFunction);
