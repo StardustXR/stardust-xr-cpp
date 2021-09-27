@@ -1,9 +1,9 @@
 src_files += files(
-	'environment.cpp',
-	'field.cpp',
-	'input.cpp',
-	'lifecycle.cpp',
-	'model.cpp',
-        'root.cpp',
-	'spatial.cpp',
+    'drawable.cpp',
+    'environment.cpp',
+    'field.cpp',
+    'input.cpp',
+    'lifecycle.cpp',
+    'root.cpp',
+    'spatial.cpp',
 )

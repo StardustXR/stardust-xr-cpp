@@ -1,13 +1,15 @@
-#include "model.hpp"
+#include "drawable.hpp"
 #include "../core/client.hpp"
 
 namespace StardustXRServer {
 
-ModelInterface::ModelInterface(Client *client) : Node(client, false) {
-	STARDUSTXR_NODE_METHOD("createFromFile", &ModelInterface::createFromFile)
+DrawableInterface::DrawableInterface(Client *client) : Node(client, false) {
+	addChild("model", new Node(client));
+
+	STARDUSTXR_NODE_METHOD("createModelFromFile", &DrawableInterface::createModelFromFile)
 }
 
-std::vector<uint8_t> ModelInterface::createFromFile(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> DrawableInterface::createModelFromFile(flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector = data.AsVector();
 
 	std::string name = vector[0].AsString().str();
@@ -36,7 +38,7 @@ std::vector<uint8_t> ModelInterface::createFromFile(flexbuffers::Reference data,
 	};
 
 	Model *model = new Model(client, path, spatialParent, position, rotation, scale);
-	this->addChild(name, model);
+	children["model"]->addChild(name, model);
 
 	return std::vector<uint8_t>();
 }
