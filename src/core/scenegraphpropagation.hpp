@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <string>
-#include "../nodetypes/graphical/drawablenode.hpp"
+#include "../nodetypes/drawable/drawablenode.hpp"
 
 namespace StardustXRServer {
 

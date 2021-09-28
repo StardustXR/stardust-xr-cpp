@@ -3,7 +3,7 @@
 #include "../core/client.hpp"
 #include "../nodetypes/input/inputmethods/pointer.hpp"
 #include <stardustxr/common/flatbuffers/Input.hpp>
-#include "nodetypes/alias.hpp"
+#include "nodetypes/core/alias.hpp"
 #include "nodetypes/input/inputhandler.hpp"
 #include "stereokit.h"
 #include <flatbuffers/flexbuffers.h>

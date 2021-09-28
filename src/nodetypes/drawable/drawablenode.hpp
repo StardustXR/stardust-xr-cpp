@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../spatial.hpp"
+#include "../spatial/spatial.hpp"
 #include <vector>
 
 namespace StardustXRServer {

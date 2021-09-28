@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../nodetypes/node.hpp"
+#include "../nodetypes/core/node.hpp"
 
 namespace StardustXRServer {
 

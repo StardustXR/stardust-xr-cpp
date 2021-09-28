@@ -1,9 +1,5 @@
-src_files += files(
-	'alias.cpp',
-	'node.cpp',
-	'spatial.cpp',
-)
-
+subdir('core')
+subdir('drawable')
 subdir('fields')
-subdir('graphical')
 subdir('input')
+subdir('spatial')

@@ -3,7 +3,7 @@
 #include <cmath>
 #include <limits>
 
-#include "../nodetypes/spatial.hpp"
+#include "../nodetypes/spatial/spatial.hpp"
 #include "../nodetypes/fields/field.hpp"
 #include <stereokit.h>
 using namespace sk;

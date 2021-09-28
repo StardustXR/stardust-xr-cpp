@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../inputmethod.hpp"
-#include "../../spatial.hpp"
+#include "../../spatial/spatial.hpp"
 using namespace sk;
 
 namespace StardustXRServer {

@@ -1,8 +1,8 @@
 #include "spatial.hpp"
-#include "../globals.h"
+#include "../../globals.h"
 
-#include "../core/client.hpp"
-#include "../core/scenegraph.hpp"
+#include "../../core/client.hpp"
+#include "../../core/scenegraph.hpp"
 #include "stereokit.h"
 #include <string>
 #include <vector>

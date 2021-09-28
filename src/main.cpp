@@ -17,8 +17,8 @@ std::string home;
 #include "interfaces/drawable.hpp"
 #include "interfaces/input.hpp"
 #include "interfaces/root.hpp"
-#include "nodetypes/node.hpp"
-#include "nodetypes/graphical/drawablenode.hpp"
+#include "nodetypes/core/node.hpp"
+#include "nodetypes/drawable/drawablenode.hpp"
 #include "tests/flatscreenpointer.hpp"
 #include "tests/skhand.hpp"
 using namespace StardustXRServer;

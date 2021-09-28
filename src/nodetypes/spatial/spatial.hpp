@@ -1,6 +1,6 @@
 #pragma once
 
-#include "node.hpp"
+#include "../core/node.hpp"
 #include <stereokit.h>
 
 using namespace sk;

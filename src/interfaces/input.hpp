@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../nodetypes/node.hpp"
+#include "../nodetypes/core/node.hpp"
 #include "../nodetypes/input/inputhandler.hpp"
 #include "../nodetypes/input/inputmethod.hpp"
 #include <mutex>

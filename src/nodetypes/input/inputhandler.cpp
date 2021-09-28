@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "../../core/client.hpp"
-#include "nodetypes/node.hpp"
+#include "nodetypes/core/node.hpp"
 #include <flatbuffers/flexbuffers.h>
 #include <stereokit.h>
 

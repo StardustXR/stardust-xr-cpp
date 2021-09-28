@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../spatial.hpp"
+#include "../spatial/spatial.hpp"
 #include "inputhandler.hpp"
 #include <stardustxr/common/flatbuffers/Input.hpp>
 #include <stereokit.h>

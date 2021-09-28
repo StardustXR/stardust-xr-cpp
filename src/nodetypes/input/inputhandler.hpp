@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../spatial.hpp"
+#include "../spatial/spatial.hpp"
 #include "../fields/field.hpp"
 #include "distancelink.hpp"
 #include <flatbuffers/flatbuffers.h>
