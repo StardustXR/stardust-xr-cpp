@@ -13,19 +13,22 @@ DrawableInterface::DrawableInterface(Client *client) : Node(client, false) {
 
 	STARDUSTXR_NODE_METHOD("createModelFromFile", &DrawableInterface::createModelFromFile)
 	STARDUSTXR_NODE_METHOD("setSkytex", &DrawableInterface::setSkytex)
-	STARDUSTXR_NODE_METHOD("setLighting", &DrawableInterface::setSkylight)
+	STARDUSTXR_NODE_METHOD("setSkylight", &DrawableInterface::setSkylight)
 }
 
 void DrawableInterface::updateEnvironment() {
-	if(skylightQueuedPath != "") {
-		tex_create_cubemap_file(skylightQueuedPath.c_str(), true, &skylight);
-		render_set_skylight(skylight);
-		skylightQueuedPath = "";
-	}
 	if(skytexQueuedPath != "") {
-		skytex = tex_create_cubemap_file(skytexQueuedPath.c_str(), true);
+		spherical_harmonics_t harmonics;
+		tex_release(skytex);
+		skytex = tex_create_cubemap_file(skytexQueuedPath.c_str(), true, &harmonics);
 		render_set_skytex(skytex);
 		skytexQueuedPath = "";
+	}
+	if(skylightQueuedPath != "") {
+		tex_t skylighttex = tex_create_cubemap_file(skylightQueuedPath.c_str(), true, &skylight);
+		tex_release(skylighttex);
+		render_set_skylight(skylight);
+		skylightQueuedPath = "";
 	}
 }
 
