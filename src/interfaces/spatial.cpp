@@ -10,6 +10,7 @@ namespace StardustXRServer {
 
 SpatialFactory::SpatialFactory(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("createSpatial", &SpatialFactory::createSpatial)
+	addChild("spatial", new Node(client));
 }
 
 std::vector<uint8_t> SpatialFactory::createSpatial(flexbuffers::Reference data, bool) {
@@ -41,7 +42,7 @@ std::vector<uint8_t> SpatialFactory::createSpatial(flexbuffers::Reference data, 
 	};
 
 	Spatial *spatial = new Spatial(client, spatialParent, position, rotation, scale, translatable, rotatable, scalable);
-	this->addChild(name, spatial);
+	children["spatial"]->addChild(name, spatial);
 
 	return std::vector<uint8_t>();
 }
