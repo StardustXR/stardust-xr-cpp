@@ -8,12 +8,12 @@ using namespace std;
 
 namespace StardustXRServer {
 
-SpatialFactory::SpatialFactory(Client *client) : Node(client, false) {
-	STARDUSTXR_NODE_METHOD("createSpatial", &SpatialFactory::createSpatial)
+SpatialInterface::SpatialInterface(Client *client) : Node(client, false) {
+	STARDUSTXR_NODE_METHOD("createSpatial", &SpatialInterface::createSpatial)
 	addChild("spatial", new Node(client));
 }
 
-std::vector<uint8_t> SpatialFactory::createSpatial(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> SpatialInterface::createSpatial(flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector            = data.AsVector();
 	string name                           = vector[0].AsString().str();
 	Spatial *spatialParent                = this->client->scenegraph.findNode<Spatial>(vector[1].AsString().str());

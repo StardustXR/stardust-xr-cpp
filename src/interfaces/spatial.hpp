@@ -4,10 +4,9 @@
 
 namespace StardustXRServer {
 
-class SpatialFactory : public Node {
+class SpatialInterface : public Node {
 public:
-	SpatialFactory(Client *client);
-	virtual ~SpatialFactory() {}
+	SpatialInterface(Client *client);
 
 	std::vector<uint8_t> createSpatial(flexbuffers::Reference data, bool returnValue);
 //	std::vector<uint8_t> createZone(flexbuffers::Reference data, bool returnValue);

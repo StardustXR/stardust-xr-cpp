@@ -21,7 +21,7 @@ RootInterface::RootInterface(Client *client) : Node(client, false) {
 	this->addChild("drawable",    new DrawableInterface(client));
 	this->addChild("field",       new FieldInterface(client));
 	this->addChild("input",       new InputInterface(client));
-	this->addChild("spatial",     new SpatialFactory(client));
+	this->addChild("spatial",     new SpatialInterface(client));
 
 	STARDUSTXR_NODE_METHOD("disconnect", &RootInterface::disconnect)
 	STARDUSTXR_NODE_METHOD("subscribeLogicStep", &RootInterface::subscribeLogicStep)
