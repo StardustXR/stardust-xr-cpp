@@ -56,11 +56,9 @@ std::vector<uint8_t> InputInterface::getInputHandlers(flexbuffers::Reference dat
 			for(InputHandler *handler : inputHandlers) {
 				if(excludeSelf == false || handler->client != this->client) {
 					fbb.Vector([&] {
-						std::ostringstream stringStream;
-						std::size_t hash = std::hash<std::string>{}(handler->name);
-						stringStream << std::uintptr_t((std::uintptr_t) handler->client ^ (std::uintptr_t) hash);
-						children["global_handler"]->addChild(stringStream.str(), new Alias(client, handler, {"getActions", "runAction"}));
-						fbb.String(stringStream.str());
+						std::string uuid = handler->hashUUID();
+						children["global_handler"]->addChild(uuid, new Alias(client, handler, {"getActions", "runAction"}));
+						fbb.String(uuid);
 
 						fbb.TypedVector([&] {
 							sk::vec3 position = handler->localToSpacePoint(space, vec3_zero);

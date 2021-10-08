@@ -27,6 +27,13 @@ void Node::propagate(std::string name, std::function<bool (std::string, Node *)>
 	}
 }
 
+std::string Node::hashUUID() {
+	std::ostringstream stringStream;
+	std::size_t hash = std::hash<std::string>{}(name);
+	stringStream << std::uintptr_t((std::uintptr_t) client ^ (std::uintptr_t) hash);
+	return stringStream.str();
+}
+
 void Node::addChild(std::string name, Node *child) {
 	child->parent = this;
 	child->name = name;

@@ -27,6 +27,7 @@ public:
 	Client *client;
 	Node *parent = nullptr;
 	std::string name = "";
+	std::string hashUUID();
 
 	void addChild(std::string name, Node *child);
 	Node &operator[](const std::string child);
