@@ -11,4 +11,8 @@ Alias::Alias(Client *client, Node *original, std::vector<std::string> methods) :
 	}
 }
 
+Node *Alias::getOriginal() {
+	return original;
+}
+
 } // namespace StardustXRServer
