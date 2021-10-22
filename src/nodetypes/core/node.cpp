@@ -37,7 +37,7 @@ std::string Node::hashUUID() {
 void Node::addChild(std::string name, Node *child) {
 	child->parent = this;
 	child->name = name;
-	children.emplace(name, child);
+	children[name] = std::unique_ptr<Node>(child);
 }
 Node &Node::operator[](const std::string child) {
 	return *this->children[child];
