@@ -9,7 +9,7 @@
 using namespace StardustXR;
 namespace StardustXRServer {
 
-Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable) : Node(client) {
+Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable) : Node(client) {
 	this->spatialParent = spatialParent;
 	this->position = position;
 	this->rotation = rotation;
@@ -17,6 +17,7 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rot
 	this->translatable = translatable;
 	this->rotatable = rotatable;
 	this->scalable = scalable;
+	this->zoneable = zoneable;
 	this->transformDirty();
 
 	STARDUSTXR_NODE_METHOD("move", &Spatial::move)
@@ -34,6 +35,8 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rot
 
 	STARDUSTXR_NODE_METHOD("setSpatialParent", &Spatial::setSpatialParentFlex)
 	STARDUSTXR_NODE_METHOD("setSpatialParentInPlace", &Spatial::setSpatialParentInPlaceFlex)
+
+	STARDUSTXR_NODE_METHOD("setZoneable", &Spatial::setZoneable)
 }
 
 std::vector<uint8_t> Spatial::move(flexbuffers::Reference data, bool returnValue) {
@@ -88,7 +91,6 @@ std::vector<uint8_t> Spatial::setOrigin(flexbuffers::Reference data, bool) {
 
 	return std::vector<uint8_t>();
 }
-
 std::vector<uint8_t> Spatial::setOrientation(flexbuffers::Reference data, bool) {
 	if(rotatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
@@ -98,7 +100,6 @@ std::vector<uint8_t> Spatial::setOrientation(flexbuffers::Reference data, bool) 
 
 	return std::vector<uint8_t>();
 }
-
 std::vector<uint8_t> Spatial::setScale(flexbuffers::Reference data, bool) {
 	if(scalable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
@@ -108,7 +109,6 @@ std::vector<uint8_t> Spatial::setScale(flexbuffers::Reference data, bool) {
 
 	return std::vector<uint8_t>();
 }
-
 std::vector<uint8_t> Spatial::setPose(flexbuffers::Reference data, bool) {
 	if(translatable && rotatable) {
 		flexbuffers::Vector vector = data.AsVector();
@@ -118,7 +118,6 @@ std::vector<uint8_t> Spatial::setPose(flexbuffers::Reference data, bool) {
 
 	return std::vector<uint8_t>();
 }
-
 std::vector<uint8_t> Spatial::setTransform(flexbuffers::Reference data, bool) {
 	if(translatable && rotatable && scalable) {
 		flexbuffers::Vector vector = data.AsVector();
@@ -135,10 +134,16 @@ std::vector<uint8_t> Spatial::setSpatialParentFlex(flexbuffers::Reference data, 
 	setSpatialParent(spacePath);
 	return std::vector<uint8_t>();
 }
-
 std::vector<uint8_t> Spatial::setSpatialParentInPlaceFlex(flexbuffers::Reference data, bool) {
 	std::string spacePath = data.AsString().str();
 	setSpatialParentInPlace(spacePath);
+	return std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> Spatial::setZoneable(flexbuffers::Reference data, bool returnValue) {
+	zoneable = data.AsBool();
+	if(!zoneable && this->zone != nullptr)
+		this->zone->releaseSpatial(this);
 	return std::vector<uint8_t>();
 }
 

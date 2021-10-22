@@ -7,7 +7,7 @@ namespace StardustXRServer {
 
 class DrawableNode : public Spatial {
 public:
-	DrawableNode(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, sk::vec3 scale, bool translatable, bool rotatable, bool scalable) : Spatial(client, spatialParent, position, rotation, scale, translatable, rotatable, scalable) {
+	DrawableNode(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, sk::vec3 scale, bool translatable, bool rotatable, bool scalable) : Spatial(client, spatialParent, position, rotation, scale, translatable, rotatable, scalable, false) {
 		STARDUSTXR_NODE_METHOD("setVisible", &DrawableNode::setVisible)
 	}
 	virtual ~DrawableNode() {}

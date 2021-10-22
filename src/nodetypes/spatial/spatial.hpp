@@ -9,7 +9,7 @@ namespace StardustXRServer {
 
 class Spatial : public Node {
 public:
-	Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable);
+	Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable);
 
 	// Client accessible functions
 	std::vector<uint8_t> move                        (flexbuffers::Reference data, bool returnValue);
@@ -25,6 +25,7 @@ public:
 	std::vector<uint8_t> setTransform                (flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setSpatialParentFlex        (flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setSpatialParentInPlaceFlex (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setZoneable                 (flexbuffers::Reference data, bool returnValue);
 
 	// Surface level parameters
 	vec3 position = vec3_zero;
@@ -35,6 +36,7 @@ public:
 	bool translatable = true;
 	bool rotatable    = true;
 	bool scalable     = true;
+	bool zoneable     = false;
 
 	// Matrix get operations
 	matrix localTransform();
