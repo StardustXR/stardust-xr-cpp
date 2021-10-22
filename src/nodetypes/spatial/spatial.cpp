@@ -131,12 +131,22 @@ std::vector<uint8_t> Spatial::setTransform(flexbuffers::Reference data, bool) {
 
 std::vector<uint8_t> Spatial::setSpatialParentFlex(flexbuffers::Reference data, bool) {
 	std::string spacePath = data.AsString().str();
-	setSpatialParent(spacePath);
+	if(spacePath == "") {
+		spatialParent = nullptr;
+	} else {
+		Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
+		setSpatialParent(potentialParent);
+	}
 	return std::vector<uint8_t>();
 }
 std::vector<uint8_t> Spatial::setSpatialParentInPlaceFlex(flexbuffers::Reference data, bool) {
 	std::string spacePath = data.AsString().str();
-	setSpatialParentInPlace(spacePath);
+	if(spacePath == "") {
+		spatialParent = nullptr;
+	} else {
+		Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
+		setSpatialParentInPlace(potentialParent);
+	}
 	return std::vector<uint8_t>();
 }
 
@@ -176,34 +186,21 @@ matrix Spatial::spaceToLocalMatrix(Spatial *space) {
 	return spaceToWorldMatrix * worldToLocalMatrix;
 }
 
-bool Spatial::setSpatialParent(std::string spacePath) {
-	if(spacePath == "") {
-		spatialParent = nullptr;
-		return true;
-	}
-	Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
-	if(potentialParent != nullptr)
-		spatialParent = potentialParent;
-	return true;
-}
-
-bool Spatial::setSpatialParentInPlace(std::string spacePath) {
-	if(spacePath == "") {
-		spatialParent = nullptr;
-		return true;
-	}
-	Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
-	if(potentialParent == nullptr)
+bool Spatial::setSpatialParent(Spatial *spatial) {
+	if(spatial == spatialParent)
 		return false;
 
-	vec3 position = localToSpacePoint(potentialParent, this->position);
-	quat rotation = localToSpaceRotation(potentialParent, this->rotation);
-	vec3 scale = potentialParent->scale / (spatialParent == nullptr ? vec3_one : spatialParent->scale);
+	spatialParent = spatial;
+	return true;
+}
+bool Spatial::setSpatialParentInPlace(Spatial *spatial) {
+	if(spatial == spatialParent)
+		return false;
 
-	spatialParent = potentialParent;
-	this->position = position;
-	this->rotation = rotation;
-	this->scale = scale;
+	transform = localToSpaceMatrix(spatial);
+	matrix_decompose(transform, position, scale, rotation);
+
+	spatialParent = spatial;
 	return true;
 }
 

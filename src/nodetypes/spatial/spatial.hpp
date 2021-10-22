@@ -46,8 +46,9 @@ public:
 
 	// Spatial heirarchy relationships
 	Spatial *spatialParent = nullptr;
-	bool setSpatialParent(std::string spacePath);
-	bool setSpatialParentInPlace(std::string spacePath);
+	Spatial *originalSpatialParent = nullptr;
+	bool setSpatialParent(Spatial *spatial);
+	bool setSpatialParentInPlace(Spatial *spatial);
 
 	vec3 spaceToLocalPoint    (Spatial *space, vec3 point    ) { return matrix_transform_pt  (spaceToLocalMatrix(space), point    ); }
 	vec3 spaceToLocalDirection(Spatial *space, vec3 direction) { return matrix_transform_dir (spaceToLocalMatrix(space), direction); }
