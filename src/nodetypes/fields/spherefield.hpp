@@ -11,9 +11,9 @@ public:
 
 	float radius = 1.0f;
 
-		 float localDistance     (const vec3 point);
-	const vec3 localClosestPoint (const vec3 point);
-	const vec3 localNormal       (const vec3 point);
+		  float    localDistance     (const sk::vec3 point);
+	const sk::vec3 localClosestPoint (const sk::vec3 point);
+	const sk::vec3 localNormal       (const sk::vec3 point);
 
 	void debug();
 };

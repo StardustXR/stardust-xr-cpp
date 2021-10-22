@@ -14,5 +14,5 @@ void debugSetup() {
 	material_set_depth_write(fieldDebugMat, false);
 
 	boxFieldMesh = mesh_gen_cube(vec3_one);
-	sphereFieldMesh = mesh_gen_sphere(1, 4);
+	sphereFieldMesh = mesh_gen_sphere(2, 4);
 }

@@ -22,7 +22,7 @@ const vec3 SphereField::localNormal(const vec3 point) {
 }
 
 void SphereField::debug() {
-	render_add_mesh(sphereFieldMesh, fieldDebugMat, matrix_trs(vec3_zero, quat_identity, vec3_one * radius * 2) * worldTransform());
+	render_add_mesh(sphereFieldMesh, fieldDebugMat, matrix_trs(vec3_zero, quat_identity, vec3_one * radius) * worldTransform());
 }
 
 } // namespace StardustXRServer
