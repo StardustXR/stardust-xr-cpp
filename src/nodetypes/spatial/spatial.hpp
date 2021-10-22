@@ -16,6 +16,8 @@ public:
 	std::vector<uint8_t> rotate                      (flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> scaleThis                   (flexbuffers::Reference data, bool returnValue);
 
+	std::vector<uint8_t> getTransform                (flexbuffers::Reference data, bool returnValue);
+
 	std::vector<uint8_t> setOrigin                   (flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setOrientation              (flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setScale                    (flexbuffers::Reference data, bool returnValue);

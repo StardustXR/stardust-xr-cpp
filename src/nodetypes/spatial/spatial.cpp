@@ -23,6 +23,8 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rot
 	STARDUSTXR_NODE_METHOD("rotate", &Spatial::rotate)
 	STARDUSTXR_NODE_METHOD("scale", &Spatial::scaleThis)
 
+	STARDUSTXR_NODE_METHOD("getTransform", &Spatial::getTransform)
+
 	STARDUSTXR_NODE_METHOD("setOrigin", &Spatial::setOrigin)
 	STARDUSTXR_NODE_METHOD("setOrientation", &Spatial::setOrientation)
 	STARDUSTXR_NODE_METHOD("setScale", &Spatial::setScale)
@@ -64,6 +66,17 @@ std::vector<uint8_t> Spatial::scaleThis(flexbuffers::Reference data, bool return
 	}
 
 	return std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> Spatial::getTransform(flexbuffers::Reference data, bool) {
+	vec3 pos = vec3_zero;
+	return StardustXR::FlexbufferFromArguments(
+		FLEX_ARGS(
+			FLEX_VEC3(position)
+			FLEX_QUAT(rotation)
+			FLEX_VEC3(scale)
+		)
+	);
 }
 
 std::vector<uint8_t> Spatial::setOrigin(flexbuffers::Reference data, bool) {
