@@ -11,7 +11,9 @@ scenegraph(this),
 messenger(this, inFD, outFD) {
 	this->manager = clientManager;
 }
-Client::~Client() {}
+Client::~Client() {
+	printf("Disconnecting client %p\n", this);
+}
 
 void Client::scenegraphPropagate(std::string name, PropagateFunction &function) {
 	scenegraph.root.propagate(name, function);
