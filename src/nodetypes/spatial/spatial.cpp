@@ -166,8 +166,7 @@ matrix Spatial::localToSpaceMatrix(Spatial *space) {
 	if(space == nullptr)
 		return localToWorldMatrix;
 
-	matrix worldToSpaceMatrix;
-	matrix_inverse(space->worldTransform(), worldToSpaceMatrix);
+	matrix worldToSpaceMatrix = matrix_invert(space->worldTransform());
 
 	return localToWorldMatrix * worldToSpaceMatrix;
 }
