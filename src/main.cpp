@@ -17,6 +17,7 @@ std::string home;
 #include "interfaces/drawable.hpp"
 #include "interfaces/input.hpp"
 #include "interfaces/root.hpp"
+#include "interfaces/spatial.hpp"
 #include "nodetypes/core/node.hpp"
 #include "nodetypes/drawable/drawablenode.hpp"
 #include "tests/flatscreenpointer.hpp"
@@ -116,6 +117,9 @@ int main(int argc, char *argv[]) {
 
 		// Update environment settings
 		DrawableInterface::updateEnvironment();
+
+		// Process the zones
+		SpatialInterface::updateZones();
 
 		// Send logicStep signals to clients
 		RootInterface::sendLogicStepSignals();

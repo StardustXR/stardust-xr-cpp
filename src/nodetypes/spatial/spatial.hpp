@@ -7,9 +7,12 @@ using namespace sk;
 
 namespace StardustXRServer {
 
+class Zone;
+
 class Spatial : public Node {
 public:
 	Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable);
+	~Spatial();
 
 	// Client accessible functions
 	std::vector<uint8_t> move                        (flexbuffers::Reference data, bool returnValue);
@@ -45,6 +48,7 @@ public:
 	matrix spaceToLocalMatrix(Spatial *space);
 
 	// Spatial heirarchy relationships
+	Zone *zone = nullptr;
 	Spatial *spatialParent = nullptr;
 	Spatial *originalSpatialParent = nullptr;
 	bool setSpatialParent(Spatial *spatial);
