@@ -20,8 +20,8 @@ std::string home;
 #include "interfaces/spatial.hpp"
 #include "nodetypes/core/node.hpp"
 #include "nodetypes/drawable/drawablenode.hpp"
-#include "tests/flatscreenpointer.hpp"
-#include "tests/skhand.hpp"
+#include "objects/flatscreenpointer.hpp"
+#include "objects/skhand.hpp"
 using namespace StardustXRServer;
 
 // StereoKit includes

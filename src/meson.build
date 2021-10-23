@@ -1,5 +1,5 @@
 subdir('core')
 subdir('interfaces')
 subdir('nodetypes')
-subdir('tests')
+subdir('objects')
 subdir('util')
