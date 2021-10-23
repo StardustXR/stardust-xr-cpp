@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <mutex>
 #include <vector>
 
@@ -20,9 +21,11 @@ public:
 	void callClientsDebug();
 	void callClientsDraw();
 
+	std::mutex pidCacheMutex;
+	std::map<pid_t, matrix> pidCache;
+
 protected:
 	std::mutex connectedClientsMutex;
-
 	std::vector<std::pair<int, int>> newlyConnectedClients;
 
 	void clientConnected(int inFD, int outFD);

@@ -11,6 +11,8 @@ public:
 	explicit Messenger(Client *client, int readFD, int writeFD);
 	virtual ~Messenger();
 
+	pid_t clientPID = 0;
+
 	void onPipeBreak();
 private:
 	Client *client;

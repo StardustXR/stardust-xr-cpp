@@ -5,7 +5,7 @@
 
 namespace StardustXRServer {
 
-Scenegraph::Scenegraph(Client *client) : root(client) {}
+Scenegraph::Scenegraph(Client *client, matrix startLocation) : root(client, startLocation) {}
 
 void Scenegraph::onPathStep(std::string path, std::function<void(std::string &, bool &)> pathStepFunction) {
 	std::istringstream stream(path);

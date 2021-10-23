@@ -17,7 +17,7 @@ double RootInterface::prevFrameTime;
 double RootInterface::frameTime;
 double RootInterface::delta;
 
-RootInterface::RootInterface(Client *client) : Node(client, false) {
+RootInterface::RootInterface(Client *client, matrix startLocation) : Spatial(client, nullptr, vec3_zero, quat_identity, vec3_one, false, false, false, false) {
 	this->addChild("drawable",    new DrawableInterface(client));
 	this->addChild("field",       new FieldInterface(client));
 	this->addChild("input",       new InputInterface(client));

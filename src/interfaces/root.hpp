@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../nodetypes/core/node.hpp"
+#include "../nodetypes/spatial/spatial.hpp"
 
 #include <mutex>
 #include <vector>
@@ -13,9 +13,9 @@ typedef struct {
 	std::string methodName;
 } LifeCycleUpdateMethod;
 
-class RootInterface : public Node {
+class RootInterface : public Spatial {
 public:
-	RootInterface(Client *client);
+	RootInterface(Client *client, matrix startLocation);
 	~RootInterface();
 
 	static void sendLogicStepSignals();
