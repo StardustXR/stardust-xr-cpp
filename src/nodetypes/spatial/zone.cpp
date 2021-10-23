@@ -24,8 +24,10 @@ Zone::Zone(Client *client, Spatial *spatialParent, vec3 position, quat rotation,
 Zone::~Zone() {
 	for(auto &childSet : children) {
 		Alias *child = dynamic_cast<Alias *>(childSet.second.get());
-		Spatial *childSpatial = dynamic_cast<Spatial *>(child->getOriginal());
-		releaseSpatial(childSpatial);
+		if(child != nullptr) {
+			Spatial *childSpatial = dynamic_cast<Spatial *>(child->getOriginal());
+			releaseSpatial(childSpatial);
+		}
 	}
 	std::lock_guard<std::mutex> lock(SpatialInterface::spatialMutex);
 	SpatialInterface::zones.erase(std::remove(SpatialInterface::zones.begin(), SpatialInterface::zones.end(), this));
