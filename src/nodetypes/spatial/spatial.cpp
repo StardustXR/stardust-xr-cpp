@@ -10,6 +10,9 @@
 using namespace StardustXR;
 namespace StardustXRServer {
 
+Spatial::Spatial(Client *client, matrix transformMatrix) : Node(client, false) {
+	setTransformMatrix(transformMatrix);
+}
 Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable) : Node(client) {
 	this->spatialParent = spatialParent;
 	this->position = position;
