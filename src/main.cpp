@@ -31,6 +31,7 @@ uint64_t frame = 0;
 
 // Third party local includes
 #include "CLI11.hpp"
+#include "XdgUtils/BaseDir/BaseDir.h"
 
 // Global variables
 int CLIArgs::parse(int argc, const char* const argv[]) {
@@ -65,10 +66,7 @@ int main(int argc, char *argv[]) {
 		perror("Stereokit initialization failed!");
 
 	tex_t skytex;
-	if ((home = getenv("HOME")) == "") {
-		home = getpwuid(getuid())->pw_dir;
-	}
-	FILE *skyfile = fopen((home + "/.config/stardust/skytex.hdr").c_str(), "ro");
+	FILE *skyfile = fopen((XdgUtils::BaseDir::XdgConfigHome()+"/stardust/skytex.hdr").c_str(), "ro");
 	if(!skyfile) {
 		gradient_t skycolor = gradient_create();
 		gradient_add(skycolor, {0, 0, 0, 1}, 0.0f);
@@ -77,7 +75,7 @@ int main(int argc, char *argv[]) {
 	} else {
 		fclose(skyfile);
 		spherical_harmonics_t skylight;
-		skytex = tex_create_cubemap_file((home + "/.config/stardust/skytex.hdr").c_str(), true, &skylight);
+		skytex = tex_create_cubemap_file((XdgUtils::BaseDir::XdgConfigHome()+"/stardust/skytex.hdr").c_str(), true, &skylight);
 		render_set_skylight(skylight);
 	}
 	render_set_skytex(skytex);
@@ -104,7 +102,7 @@ int main(int argc, char *argv[]) {
 	// Start the startup script
 	int pid = fork();
 	if(pid == 0)
-		execlp((home+"/.config/stardust/startup").c_str(), "", nullptr);
+		execlp((XdgUtils::BaseDir::XdgConfigHome()+"/stardust/startup").c_str(), "", nullptr);
 
 	// Every stereokit step
 	while (sk_step([]() {

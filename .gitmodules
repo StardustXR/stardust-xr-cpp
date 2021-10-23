@@ -2,3 +2,6 @@
 	path = subprojects/StereoKit
 	url = https://github.com/technobaboo/StereoKit.git
 	branch = feature/system-removal
+[submodule "subprojects/xdg-utils"]
+	path = subprojects/xdg-utils
+	url = git@github.com:StardustXR/xdg-utils-cxx.git

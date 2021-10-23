@@ -13,6 +13,9 @@ stereokit_project = cmake.subproject('StereoKit', options: stereokit_options)
 stereokit = stereokit_project.dependency('StereoKitC')
 reactphysics = stereokit_project.dependency('reactphysics3d')
 
+xdg_utils_project = cmake.subproject('xdg-utils')
+xdg_utils_basedir = xdg_utils_project.dependency('BaseDir')
+
 src_includes = include_directories('src')
 thirdparty_includes = include_directories('thirdparty')
 includes = [src_includes, thirdparty_includes]
@@ -32,6 +35,7 @@ executable(
 		libstardustxr,
 		stereokit,
 		reactphysics,
+                xdg_utils_basedir,
 	],
 	install : true,
 )
