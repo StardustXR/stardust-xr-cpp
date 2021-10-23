@@ -53,6 +53,7 @@ public:
 	Spatial *originalSpatialParent = nullptr;
 	bool setSpatialParent(Spatial *spatial);
 	bool setSpatialParentInPlace(Spatial *spatial);
+	void setTransformMatrix(matrix mat);
 
 	vec3 spaceToLocalPoint    (Spatial *space, vec3 point    ) { return matrix_transform_pt  (spaceToLocalMatrix(space), point    ); }
 	vec3 spaceToLocalDirection(Spatial *space, vec3 direction) { return matrix_transform_dir (spaceToLocalMatrix(space), direction); }

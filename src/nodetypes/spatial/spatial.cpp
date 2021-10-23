@@ -203,12 +203,14 @@ bool Spatial::setSpatialParent(Spatial *spatial) {
 bool Spatial::setSpatialParentInPlace(Spatial *spatial) {
 	if(spatial == spatialParent)
 		return false;
-
-	transform = localToSpaceMatrix(spatial);
-	matrix_decompose(transform, position, scale, rotation);
-
+	setTransformMatrix(localToSpaceMatrix(spatial));
 	spatialParent = spatial;
 	return true;
+}
+void Spatial::setTransformMatrix(matrix mat) {
+	transform = mat;
+	matrix_decompose(transform, position, scale, rotation);
+	transformMatrixDirty = false;
 }
 
 matrix Spatial::localTransform() {
