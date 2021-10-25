@@ -4,4 +4,4 @@
 	branch = feature/system-removal
 [submodule "subprojects/xdg-utils"]
 	path = subprojects/xdg-utils
-	url = git@github.com:StardustXR/xdg-utils-cxx.git
+	url = https://github.com/StardustXR/xdg-utils-cxx.git
