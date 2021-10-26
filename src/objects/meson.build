@@ -1,4 +1,3 @@
-src_files += files(
-	'flatscreenpointer.cpp',
-	'skhand.cpp',
-)
+subdir('inputmethods')
+subdir('interaction')
+#subdir('items')

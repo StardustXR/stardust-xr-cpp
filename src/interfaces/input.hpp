@@ -19,12 +19,11 @@ public:
 	static void addInputMethod(InputMethod *method);
 	static void addInputHandler(InputHandler *handler);
 
-private:
 	static std::mutex inputVectorsMutex;
-
 	static std::vector<InputMethod *> inputMethods;
 	static std::vector<InputHandler *> inputHandlers;
-	
+
+private:
 	static std::vector<uint8_t> CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod *inputMethod, InputHandler *inputHandler);
 	static flatbuffers::FlatBufferBuilder fbb;
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../nodetypes/input/inputmethods/pointer.hpp"
+#include "../../nodetypes/input/inputmethods/pointer.hpp"
 
 namespace StardustXRServer {
 

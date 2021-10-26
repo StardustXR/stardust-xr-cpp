@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../nodetypes/input/inputmethods/hand.hpp"
+#include "../../nodetypes/input/inputmethods/hand.hpp"
 
 namespace StardustXRServer {
 
