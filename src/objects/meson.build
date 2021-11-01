@@ -1,3 +1,3 @@
 subdir('inputmethods')
 subdir('interaction')
-#subdir('items')
+subdir('items')
