@@ -13,5 +13,6 @@ extern CLIArgs args;
 extern uint64_t frame;
 
 extern sk::material_t fieldDebugMat;
-extern sk::mesh_t sphereFieldMesh;
 extern sk::mesh_t boxFieldMesh;
+extern sk::mesh_t cylinderFieldMesh;
+extern sk::mesh_t sphereFieldMesh;
