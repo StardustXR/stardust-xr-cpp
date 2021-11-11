@@ -59,7 +59,8 @@ void Node::destroyNodes() {
 	const std::lock_guard<std::mutex> lock(destroyMutex);
 	for(Node *node : nodesToDestroy) {
 //        (void) node->parent->children[node->name].release();
-		node->parent->children.erase(node->name);
+		if(node->parent)
+			node->parent->children.erase(node->name);
 //        delete this;
 	}
 	nodesToDestroy.clear();
