@@ -2,6 +2,10 @@
 #include "stereokit.h"
 #include "../../globals.h"
 
+#include <cmath>
+
+using namespace std;
+
 namespace StardustXRServer {
 
 CylinderField::CylinderField(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, float length, float radius) : Field(client, spatialParent, position, rotation, true) {
@@ -10,7 +14,11 @@ CylinderField::CylinderField(Client *client, Spatial *spatialParent, sk::vec3 po
 }
 
 float CylinderField::localDistance(const vec3 point) {
-	return vec3_magnitude(point) - radius;
+	vec2 d = vec2{
+		abs(vec2_magnitude(vec2{point.x,point.y})) - radius,
+		abs(point.z) - (length / 2)
+	};
+	return min(max(d.x,d.y),0.0f) + ((d.x >= 0 && d.y >= 0) ? vec2_magnitude(d) : 0);
 }
 
 void CylinderField::debug() {
