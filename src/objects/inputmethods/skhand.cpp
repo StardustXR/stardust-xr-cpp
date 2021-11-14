@@ -32,6 +32,7 @@ void SKHandInput::update() {
 	datamap["isLeft"] = handed == handed_left;
 	datamap["pinchDistance"] = vec3_magnitude(hand->fingers[0][4].position - hand->fingers[1][4].position);
 	datamap["pinchStrength"] = hand->pinch_state & button_state_active ? 1.0f : 0.0f;
+	datamap["grabStrength"] = hand->grip_state & button_state_active ? 1.0f : 0.0f;
 }
 
 } // namespace StardustXRServer
