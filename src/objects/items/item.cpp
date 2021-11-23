@@ -2,12 +2,12 @@
 
 namespace StardustXRServer {
 
-Item::Item(std::string type) {
-	this->type = type;
+Item::Item(Client *client, std::string type, vec3 pos) :
+	Spatial(client, nullptr, pos, quat_identity, vec3_one, true, false, false, false),
+	type(type) {
+
 }
 
-std::string Item::getType() {
-	return type;
-}
+Item::~Item() {}
 
 }

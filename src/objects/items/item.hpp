@@ -3,15 +3,17 @@
 #include <string>
 #include <vector>
 
+#include "../../nodetypes/spatial/spatial.hpp"
+
 namespace StardustXRServer {
 
-class Item {
+class Item : public Spatial {
 public:
-	Item(std::string type);
+	Item(Client *client, std::string type, sk::vec3 pos);
+	virtual ~Item();
 
-	std::string getType();
-private:
-	std::string type;
+//	virtual void accept();
+	const std::string type;
 };
 
 }
