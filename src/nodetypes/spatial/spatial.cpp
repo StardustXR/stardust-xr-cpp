@@ -4,6 +4,7 @@
 #include "../../core/client.hpp"
 #include "../../core/scenegraph.hpp"
 #include "../../interfaces/spatial.hpp"
+#include "../../nodetypes/core/alias.hpp"
 #include "stereokit.h"
 #include <string>
 #include <vector>
@@ -146,6 +147,11 @@ std::vector<uint8_t> Spatial::setSpatialParentFlex(flexbuffers::Reference data, 
 		spatialParent = nullptr;
 	} else {
 		Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
+		if(!potentialParent) {
+			Alias *potentialParentAlias = client->scenegraph.findNode<Alias>(spacePath);
+			if(potentialParentAlias)
+				potentialParent = dynamic_cast<Spatial *>(potentialParentAlias->getOriginal());
+		}
 		setSpatialParent(potentialParent);
 	}
 	return std::vector<uint8_t>();
@@ -156,6 +162,11 @@ std::vector<uint8_t> Spatial::setSpatialParentInPlaceFlex(flexbuffers::Reference
 		spatialParent = nullptr;
 	} else {
 		Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
+		if(!potentialParent) {
+			Alias *potentialParentAlias = client->scenegraph.findNode<Alias>(spacePath);
+			if(potentialParentAlias)
+				potentialParent = dynamic_cast<Spatial *>(potentialParentAlias->getOriginal());
+		}
 		setSpatialParentInPlace(potentialParent);
 	}
 	return std::vector<uint8_t>();
