@@ -9,6 +9,7 @@ namespace StardustXRServer {
 
 Model::Model(Client *client, std::string modelPath, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale) : DrawableNode(client, spatialParent, position, rotation, scale, true, true, true) {
 	this->modelPath = modelPath;
+	enabled = false;
 	STARDUSTXR_NODE_METHOD("setMaterialProperty", &Model::setMaterialProperty);
 }
 
@@ -22,7 +23,7 @@ void Model::update() {
 		model_t original = model_create_file(modelPath.c_str());
 		model = model_copy(original);
 		model_release(original);
-		visible = true;
+		enabled = true;
 	}
 
     const std::lock_guard<std::mutex> lock(queuedPropertiesMutex);
@@ -59,7 +60,7 @@ void Model::update() {
 }
 
 void Model::draw() {
-	if(!visible)
+	if(enabled != true)
 		return;
 
 	if(model != nullptr)
