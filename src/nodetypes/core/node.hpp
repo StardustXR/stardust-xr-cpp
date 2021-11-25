@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <functional>
 #include <map>
 #include <memory>
@@ -31,14 +32,18 @@ public:
 
 	void addChild(std::string name, Node *child);
 	Node &operator[](const std::string child);
+	void setEnabled(bool enabled);
     void queueDestroy(bool forceDestroy);
     static void destroyNodes();
 
+	std::vector<uint8_t> setEnabledFlex(flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> destroyFlex(flexbuffers::Reference data, bool returnValue);
 
 	std::map<std::string, NodeMethod> methods;
 	std::map<std::string, std::unique_ptr<Node>> children;
 protected:
+	std::atomic_bool enabled = {true};
+
     static std::vector<Node *> nodesToDestroy;
     static std::mutex destroyMutex;
 	bool destroyable = true;
