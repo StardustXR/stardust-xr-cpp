@@ -27,30 +27,39 @@ Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, 
 
 InputHandler::~InputHandler() {}
 
-void InputHandler::sendInput(uint64_t oldFrame, std::list<DistanceLink> distanceLinks, std::vector<uint8_t> &inputData) {
+void InputHandler::sendInput(uint64_t oldFrame, std::list<DistanceLink> distanceLinks, const std::vector<uint8_t> &inputData) {
 	if(oldFrame < frame)
 		return;
 
 	distanceLinks.pop_front();
+
+	if(!enabled) {
+		sendInputCallback(oldFrame, distanceLinks, inputData, false);
+		return;
+	}
 	client->messenger.executeRemoteMethod(
 		callbackPath.c_str(),
 		callbackMethod.c_str(),
 		[&](flexbuffers::Builder &fbb) {
 			fbb.Blob(inputData);
 		},
-		[oldFrame, distanceLinks, inputData](flexbuffers::Reference returnData) {
-			if(distanceLinks.begin() != distanceLinks.end() && !returnData.AsBool()) { // If handlerList is not empty and not captured
-				std::vector<uint8_t> inputDataCopy = inputData;
-				InputData *parsedInputData = GetMutableInputData(inputDataCopy.data());
-
-				InputMethod *method = distanceLinks.begin()->method;
-				InputHandler *handler = distanceLinks.begin()->handler;
-				method->updateInput(parsedInputData, handler);
-
-				handler->sendInput(oldFrame, distanceLinks, inputDataCopy);
-			}
+		[this, oldFrame, distanceLinks, inputData](flexbuffers::Reference returnData) {
+			sendInputCallback(oldFrame, distanceLinks, inputData, returnData.AsBool());
 		}
 	);
+}
+
+void InputHandler::sendInputCallback(uint64_t oldFrame, std::list<DistanceLink> distanceLinks, const std::vector<uint8_t> &inputData, bool capture) {
+	if(distanceLinks.begin() != distanceLinks.end() && !capture) { // If handlerList is not empty and not captured
+		std::vector<uint8_t> inputDataCopy = inputData;
+		InputData *parsedInputData = GetMutableInputData(inputDataCopy.data());
+
+		InputMethod *method = distanceLinks.begin()->method;
+		InputHandler *handler = distanceLinks.begin()->handler;
+		method->updateInput(parsedInputData, handler);
+
+		handler->sendInput(oldFrame, distanceLinks, inputDataCopy);
+	}
 }
 
 std::vector<uint8_t> InputHandler::setCallback(flexbuffers::Reference data, bool) {

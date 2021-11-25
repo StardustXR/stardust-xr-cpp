@@ -19,7 +19,8 @@ public:
 	std::string callbackPath;
 	std::string callbackMethod;
 
-	virtual void sendInput(uint64_t oldFrame, std::list<DistanceLink> distanceLinks, std::vector<uint8_t> &inputData);
+	void sendInput        (uint64_t oldFrame, std::list<DistanceLink> distanceLinks, std::vector<uint8_t> const &inputData);
+	void sendInputCallback(uint64_t oldFrame, std::list<DistanceLink> distanceLinks, std::vector<uint8_t> const &inputData, bool capture);
 
 	std::vector<uint8_t> setCallback(flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setField(flexbuffers::Reference data, bool returnValue);
