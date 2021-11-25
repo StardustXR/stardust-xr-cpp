@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "../../nodetypes/spatial/spatial.hpp"
+#include "../spatial/spatial.hpp"
 
 namespace StardustXRServer {
 

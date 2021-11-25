@@ -1,2 +1,1 @@
 subdir('inputmethods')
-subdir('items')
