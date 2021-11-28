@@ -89,7 +89,7 @@ void SpatialInterface::updateZones() {
 	const std::lock_guard<std::mutex> lock(spatialMutex);
 
 	for(Spatial *spatial : spatials) {
-		if(spatial->zoneable) {
+		if(spatial->zoneable && spatial->getEnabled()) {
 			float spatialDistance = spatial->zone ? spatial->zone->field->distance(spatial, vec3_zero) : 1.0f;
 			for(Zone *zone : zones) {
 				if(zone->field == nullptr || zone == spatial || spatial == zone->field)
