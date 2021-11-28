@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stardustxr/common/scenegraph.hpp>
+#include "../nodetypes/core/alias.hpp"
 #include "../nodetypes/core/node.hpp"
 #include "../interfaces/root.hpp"
 
@@ -23,7 +24,17 @@ public:
 	Node *findNode(std::string path);
 	template<class T>
 	T *findNode(std::string path) {
-		return dynamic_cast<T *>(findNode(path));
+		Node *rawNode = findNode(path);
+		T *node = dynamic_cast<T *>(rawNode);
+
+		if(node == nullptr) {
+			Alias *aliasNode = dynamic_cast<Alias *>(rawNode);
+			if(aliasNode != nullptr) {
+				node = dynamic_cast<T *>(aliasNode->original);
+			}
+		}
+
+		return node;
 	}
 
 	RootInterface root;
