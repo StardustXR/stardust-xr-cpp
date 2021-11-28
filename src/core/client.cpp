@@ -6,12 +6,17 @@
 
 namespace StardustXRServer {
 
+uint32_t Client::clientCount = 0;
+
 Client::Client(int inFD, int outFD, ClientManager *clientManager) :
 messenger(this, inFD, outFD),
 scenegraph(this, clientManager->pidCache.find(messenger.clientPID) == clientManager->pidCache.end() ? matrix_identity : clientManager->pidCache[messenger.clientPID]) {
 	this->manager = clientManager;
 	if(messenger.clientPID != 0)
 		clientManager->pidCache.erase(messenger.clientPID);
+
+	clientNumber = clientCount;
+	clientCount++;
 }
 Client::~Client() {
 	printf("Disconnecting client %p\n", this);

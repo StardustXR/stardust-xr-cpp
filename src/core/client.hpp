@@ -18,10 +18,13 @@ public:
 	void startHandler();
 	void scenegraphPropagate(std::string name, PropagateFunction &function);
 
+	uint32_t clientNumber;
 	std::atomic<bool> disconnected{false};
 	Messenger messenger;
 	Scenegraph scenegraph;
 	ClientManager *manager;
+
+	static uint32_t clientCount;
 };
 
 }
