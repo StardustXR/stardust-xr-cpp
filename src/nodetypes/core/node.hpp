@@ -14,6 +14,7 @@ namespace StardustXRServer {
 typedef std::function<std::vector<uint8_t>(flexbuffers::Reference, bool)> NodeMethod;
 
 class Node;
+class Alias;
 class Client;
 
 class Node {
@@ -42,6 +43,7 @@ public:
 
 	std::map<std::string, NodeMethod> methods;
 	std::map<std::string, std::unique_ptr<Node>> children;
+	std::vector<Alias *> aliases;
 protected:
 	std::atomic_bool enabled = {true};
 

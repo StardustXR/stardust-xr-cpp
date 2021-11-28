@@ -1,4 +1,5 @@
 #include "node.hpp"
+#include "alias.hpp"
 #include <vector>
 
 using namespace std;
@@ -13,7 +14,11 @@ Node::Node(Client *client, bool destroyable) : client(client) {
 	STARDUSTXR_NODE_METHOD("setEnabled", &Node::setEnabledFlex)
 	STARDUSTXR_NODE_METHOD("destroy", &Node::destroyFlex)
 }
-Node::~Node() {}
+Node::~Node() {
+	 for(Alias *alias : aliases) {
+		alias->queueDestroy(true);
+	 }
+}
 
 void Node::propagate(std::string name, std::function<bool (std::string, Node *)> &function) {
 	if(function(name, this)) {
