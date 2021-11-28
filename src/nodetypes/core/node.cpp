@@ -44,6 +44,10 @@ Node &Node::operator[](const std::string child) {
 	return *this->children[child];
 }
 
+bool Node::getEnabled() {
+	return this->enabled;
+}
+
 void Node::setEnabled(bool enabled) {
 	this->enabled = enabled;
 }
@@ -63,6 +67,7 @@ std::vector<uint8_t> Node::setEnabledFlex(flexbuffers::Reference data, bool retu
 
 std::vector<uint8_t> Node::destroyFlex(flexbuffers::Reference data, bool) {
 	queueDestroy(false);
+	this->enabled = false;
 	return std::vector<uint8_t>();
 }
 

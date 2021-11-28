@@ -32,6 +32,7 @@ public:
 
 	void addChild(std::string name, Node *child);
 	Node &operator[](const std::string child);
+	bool getEnabled();
 	void setEnabled(bool enabled);
     void queueDestroy(bool forceDestroy);
     static void destroyNodes();
