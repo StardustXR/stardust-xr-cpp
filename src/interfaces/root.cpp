@@ -4,6 +4,7 @@
 #include "drawable.hpp"
 #include "field.hpp"
 #include "input.hpp"
+#include "item.hpp"
 #include "spatial.hpp"
 
 using namespace sk;
@@ -21,6 +22,7 @@ RootInterface::RootInterface(Client *client, matrix startLocation) : Spatial(cli
 	this->addChild("drawable",    new DrawableInterface(client));
 	this->addChild("field",       new FieldInterface(client));
 	this->addChild("input",       new InputInterface(client));
+	this->addChild("item",        new ItemInterface(client));
 	this->addChild("spatial",     new SpatialInterface(client));
 
 	STARDUSTXR_NODE_METHOD("disconnect", &RootInterface::disconnect)

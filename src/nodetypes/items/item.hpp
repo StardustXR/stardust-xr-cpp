@@ -7,13 +7,26 @@
 
 namespace StardustXRServer {
 
+class ItemUI;
+
 class Item : public Spatial {
 public:
-	Item(Client *client, std::string type, sk::vec3 pos);
+	struct TypeInfo {
+		const std::string type;
+
+		ItemUI *UI;
+
+		std::vector<Item *> items;
+		std::mutex itemsMutex;
+	};
+
+	Item(Client *client, TypeInfo &itemTypeInfo, sk::pose_t pose);
 	virtual ~Item();
 
-//	virtual void accept();
-	const std::string type;
+	std::vector<uint8_t> getData(flexbuffers::Reference data, bool returnValue);
+	virtual void serializeData(flexbuffers::Builder &fbb) = 0;
+
+	TypeInfo *itemTypeInfo;
 };
 
 }

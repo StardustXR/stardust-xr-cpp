@@ -2,8 +2,10 @@
 
 namespace StardustXRServer {
 
-FileItem::FileItem(Client *client, std::string path, std::string filetype, vec3 pos) :
-	Item(client, "file", pos),
+Item::TypeInfo FileItem::itemTypeInfo = {"file"};
+
+FileItem::FileItem(Client *client, std::string path, std::string filetype, pose_t pose) :
+	Item(client, itemTypeInfo, pose),
 	filetype(filetype),
 	path(path) {}
 FileItem::~FileItem() {}

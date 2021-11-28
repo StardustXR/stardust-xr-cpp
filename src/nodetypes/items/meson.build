@@ -1,3 +1,5 @@
 src_files += files(
-        'item.cpp',
+    'item.cpp',
+    'itemui.cpp',
+    'environment.cpp',
 )
