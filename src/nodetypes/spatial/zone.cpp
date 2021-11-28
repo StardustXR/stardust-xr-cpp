@@ -25,7 +25,7 @@ Zone::~Zone() {
 	for(auto &childSet : children) {
 		Alias *child = dynamic_cast<Alias *>(childSet.second.get());
 		if(child != nullptr) {
-			Spatial *childSpatial = dynamic_cast<Spatial *>(child->getOriginal());
+			Spatial *childSpatial = dynamic_cast<Spatial *>(child->original);
 			releaseSpatial(childSpatial);
 		}
 	}
@@ -37,7 +37,7 @@ std::vector<uint8_t> Zone::isCaptured(flexbuffers::Reference data, bool returnVa
 	Alias *spatialAlias = dynamic_cast<Alias *>(this->children[data.AsString().str()].get());
 	if(spatialAlias == nullptr)
 		return StardustXR::FlexbufferFromArguments(FLEX_ARG(FLEX_NULL));
-	Spatial *spatialOriginal = dynamic_cast<Spatial *>(spatialAlias->getOriginal());
+	Spatial *spatialOriginal = dynamic_cast<Spatial *>(spatialAlias->original);
 	return StardustXR::FlexbufferFromArguments(FLEX_ARG(FLEX_BOOL(spatialOriginal->zone != nullptr)));
 }
 
@@ -47,7 +47,7 @@ std::vector<uint8_t> Zone::capture(flexbuffers::Reference data, bool returnValue
 	if(spatialAlias == nullptr)
 		return std::vector<uint8_t>();
 
-	Spatial *spatialOriginal = dynamic_cast<Spatial *>(spatialAlias->getOriginal());
+	Spatial *spatialOriginal = dynamic_cast<Spatial *>(spatialAlias->original);
 	spatialOriginal->zone = this;
 	spatialOriginal->originalSpatialParent = spatialOriginal->spatialParent;
 	spatialOriginal->setSpatialParentInPlace(this);
@@ -59,7 +59,7 @@ std::vector<uint8_t> Zone::release(flexbuffers::Reference data, bool returnValue
 	if(spatialAlias == nullptr)
 		return std::vector<uint8_t>();
 
-	Spatial *spatialOriginal = dynamic_cast<Spatial *>(spatialAlias->getOriginal());
+	Spatial *spatialOriginal = dynamic_cast<Spatial *>(spatialAlias->original);
 	releaseSpatial(spatialOriginal);
 	return std::vector<uint8_t>();
 }

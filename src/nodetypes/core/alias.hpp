@@ -9,10 +9,8 @@ class Alias : public Node {
 public:
 	Alias(Client *client, Node *original, std::vector<std::string> methods);
 	~Alias();
-	Node *getOriginal();
 
-protected:
-	Node *original;
+	Node *const original;
 };
 
 } // namespace StardustXRServer

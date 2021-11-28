@@ -2,8 +2,7 @@
 
 namespace StardustXRServer {
 
-Alias::Alias(Client *client, Node *original, std::vector<std::string> methods) : Node(client, false) {
-	this->original = original;
+Alias::Alias(Client *client, Node *original, std::vector<std::string> methods) : Node(client, false), original(original) {
 	original->aliases.push_back(this);
 
 	for(std::string &method : methods) {
@@ -13,10 +12,6 @@ Alias::Alias(Client *client, Node *original, std::vector<std::string> methods) :
 }
 Alias::~Alias() {
 	original->aliases.erase(std::remove(original->aliases.begin(), original->aliases.end(), this));
-}
-
-Node *Alias::getOriginal() {
-	return original;
 }
 
 } // namespace StardustXRServer
