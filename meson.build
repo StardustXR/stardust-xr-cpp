@@ -1,5 +1,10 @@
 project('stardustxr', 'cpp', default_options: ['cpp_std=c++17'], version:'0.55.0')
 
+add_project_arguments([
+        '-DWLR_USE_UNSTABLE',
+#	'-Dwlroots:gles2-renderer=enabled',
+], language: 'cpp')
+
 cmake = import('cmake')
 pkg = import('pkgconfig')
 libstardustxr = dependency('stardustxr-server', required: true)
@@ -30,6 +35,7 @@ includes = [src_includes, thirdparty_includes]
 src_files = []
 
 subdir('src')
+src_files += server_protocols
 src_files += files('src/main.cpp')
 
 executable(
@@ -41,7 +47,7 @@ executable(
 	dependencies: [
 		libstardustxr,
 		stereokit,
-		reactphysics,
+                reactphysics,
                 wlroots,
                 xdg_utils_basedir,
 	],

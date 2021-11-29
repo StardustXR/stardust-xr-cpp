@@ -1,4 +1,5 @@
 subdir('core')
+subdir('integrations')
 subdir('interfaces')
 subdir('nodetypes')
 subdir('objects')
