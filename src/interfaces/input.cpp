@@ -117,7 +117,7 @@ void InputInterface::processInput() {
 	for(auto &inputMethod : inputMethods) {
 		std::list<DistanceLink> distanceLinks;
 		for(auto &inputHandler : inputHandlers) {
-			if(inputHandler->field == nullptr)
+			if(!inputHandler->getEnabled() || inputHandler->field == nullptr)
 				continue;
 			distanceLinks.push_front(DistanceLink {
 				inputMethod,
@@ -125,6 +125,8 @@ void InputInterface::processInput() {
 				inputHandler
 			});
 		}
+		if(distanceLinks.size() == 0)
+			continue;
 		distanceLinks.sort();
 
 		std::vector<uint8_t> inputData = CreateInputData(
