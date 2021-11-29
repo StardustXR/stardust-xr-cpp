@@ -1,6 +1,6 @@
 #include "item.hpp"
 #include "../core/client.hpp"
-#include "../nodetypes/core/alias.hpp"
+#include "../nodetypes/spatial/alias.hpp"
 #include "../nodetypes/items/environment.hpp"
 #include "../nodetypes/items/itemui.hpp"
 #include "../globals.h"
@@ -49,7 +49,7 @@ std::vector<uint8_t> ItemInterface::createEnvironmentItem(flexbuffers::Reference
 	if(EnvironmentItem::itemTypeInfo.UI)
 		EnvironmentItem::itemTypeInfo.UI->handleItemCreate(item);
 
-	Alias *itemAlias = new Alias(client, item, {
+	SpatialAlias *itemAlias = new SpatialAlias(client, item, {
 		"move",
 		"rotate",
 		"setOrigin",
