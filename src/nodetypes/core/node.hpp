@@ -10,7 +10,7 @@
 
 namespace StardustXRServer {
 
-#define STARDUSTXR_NODE_METHOD(method_name, method_ref) methods[method_name] = std::bind(method_ref, this, std::placeholders::_1, std::placeholders::_2);
+#define STARDUSTXR_NODE_METHOD(method_name, method_ref) this->methods[method_name] = std::bind(method_ref, this, std::placeholders::_1, std::placeholders::_2);
 typedef std::function<std::vector<uint8_t>(flexbuffers::Reference, bool)> NodeMethod;
 
 class Node;
