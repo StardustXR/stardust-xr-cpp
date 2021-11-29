@@ -16,6 +16,13 @@ reactphysics = stereokit_project.dependency('reactphysics3d')
 xdg_utils_project = cmake.subproject('xdg-utils')
 xdg_utils_basedir = xdg_utils_project.dependency('BaseDir')
 
+wlroots_proj = subproject('wlroots', default_options: ['default_library=static', 'backends=[]', 'renderers=[\'gles2\']'])
+wlroots = wlroots_proj.get_variable('wlroots')
+wlroots_server_protocols = wlroots_proj.get_variable('protocols_server_header')
+server_protocols = [
+        wlroots_server_protocols['xdg-shell']
+]
+
 src_includes = include_directories('src')
 thirdparty_includes = include_directories('thirdparty')
 includes = [src_includes, thirdparty_includes]
@@ -35,6 +42,7 @@ executable(
 		libstardustxr,
 		stereokit,
 		reactphysics,
+                wlroots,
                 xdg_utils_basedir,
 	],
 	install : true,
