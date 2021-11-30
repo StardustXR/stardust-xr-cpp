@@ -15,7 +15,9 @@ XWaylandSurface::XWaylandSurface(wlr_renderer *renderer, wlr_xwayland_surface *x
 	wlr_xwayland_surface_set_maximized(xwayland_surface, true);
 }
 
-XWaylandSurface::~XWaylandSurface() {}
+XWaylandSurface::~XWaylandSurface() {
+	wlr_xwayland_surface_close(xwayland_surface);
+}
 
 bool XWaylandSurface::isMapped() const {
 	return xwayland_surface && xwayland_surface->mapped;

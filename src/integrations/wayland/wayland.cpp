@@ -1,5 +1,7 @@
 #include "assert.h"
 #include <algorithm>
+#include <EGL/egl.h>
+#include <string>
 #include <stereokit.h>
 
 #include "callbacks.h"
@@ -25,26 +27,37 @@ extern "C" {
 }
 
 static void wlr_log_handler(wlr_log_importance level, const char *fmt, va_list args) {
+	std::string format = "[WLR]";
+
 	switch (level) {
 		case WLR_ERROR:
-			sk::log_errf(fmt, args);
+//			sk::log_errf(fmt, args);
+			format += "[ERROR]";
 		break;
 
 		case WLR_INFO:
-			sk::log_infof(fmt, args);
+//			sk::log_infof(fmt, args);
+			format += "[INFO]";
 		break;
 
 		case WLR_DEBUG:
-			sk::log_diagf(fmt, args);
+//			sk::log_diagf(fmt, args);
+			format += "[DEBUG]";
 		break;
 
 		default:
 	return;
 	}
+
+	format += fmt;
+	format += "\n";
+
+	vprintf(format.c_str(), args);
 }
 
 Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 	wlr_log_init(WLR_DEBUG, wlr_log_handler);
+//	wlr_log_
 
 	wayland_display = wl_display_create();
 	assert(wayland_display);
@@ -63,6 +76,7 @@ Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 
 	renderer = wlr_gles2_renderer_create(egl);
 	assert(renderer);
+	eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, context);
 	wlr_renderer_init_wl_display(renderer, wayland_display);
 
 	compositor = wlr_compositor_create(wayland_display, renderer);

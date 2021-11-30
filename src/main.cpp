@@ -23,6 +23,12 @@ std::string home;
 #include "objects/inputmethods/flatscreenpointer.hpp"
 #include "objects/inputmethods/skhand.hpp"
 using namespace StardustXRServer;
+
+//Stardust XR Integrations includes
+#include "integrations/sk_internal_defs.hpp"
+#include "integrations/wayland/wayland.hpp"
+#include <EGL/eglext.h>
+
 // StereoKit includes
 #include <stereokit.h>
 using namespace sk;
@@ -51,6 +57,9 @@ extern void debugSetup();
 ClientManager clientManager;
 Client serverInternalClient(0, 0, &clientManager);
 
+// Wayland global variables
+Wayland *wayland;
+
 int main(int argc, char *argv[]) {
 	int parse_result = args.parse(argc, argv);
 	if (parse_result != -1) return parse_result;
@@ -78,6 +87,9 @@ int main(int argc, char *argv[]) {
 		render_set_skylight(skylight);
 	}
 	render_set_skytex(skytex);
+
+	struct skg_platform_data_t stereokitPlatformData = skg_get_platform_data();
+	wayland = new Wayland(stereokitPlatformData._egl_display, stereokitPlatformData._egl_context, EGL_PLATFORM_GBM_MESA);
 
 	// Set up debugging
 	if(args.fieldDebug)
@@ -118,6 +130,9 @@ int main(int argc, char *argv[]) {
 
 		// Process the zones
 		SpatialInterface::updateZones();
+
+		// Update wayland
+		wayland->update();
 
 		// Send logicStep signals to clients
 		RootInterface::sendLogicStepSignals();

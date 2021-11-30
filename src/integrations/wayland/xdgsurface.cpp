@@ -15,7 +15,9 @@ XDGSurface::XDGSurface(wlr_renderer *renderer, wlr_xdg_surface *xdg_surface) : S
 	wlr_xdg_toplevel_set_maximized(xdg_surface, true);
 }
 
-XDGSurface::~XDGSurface() {}
+XDGSurface::~XDGSurface() {
+	wlr_xdg_toplevel_send_close(xdg_surface);
+}
 
 bool XDGSurface::isMapped() const {
 	return xdg_surface && xdg_surface->mapped;
