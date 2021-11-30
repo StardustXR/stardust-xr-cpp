@@ -4,6 +4,8 @@
 #include "../sk_internal_defs.hpp"
 
 #include "surface.hpp"
+#include "../../nodetypes/items/panel.hpp"
+#include "../../globals.h"
 
 extern "C" {
 #include "render/egl.h"
@@ -42,6 +44,9 @@ Surface::Surface(wlr_renderer *renderer, wlr_surface *surface) {
 
 	surfaceCommitCallback.callback = std::bind(&Surface::onCommit, this);
 	wl_signal_add(&surface->events.commit, &surfaceCommitCallback.listener);
+
+	StardustXRServer::PanelItem *panelItem = new StardustXRServer::PanelItem(&serverInternalClient, this, sk::pose_identity);
+	serverInternalClient.scenegraph.findNode("/item/panel")->addChild(panelItem->hashUUID(), panelItem);
 }
 
 Surface::~Surface() {

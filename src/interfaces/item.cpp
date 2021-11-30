@@ -2,6 +2,7 @@
 #include "../core/client.hpp"
 #include "../nodetypes/spatial/alias.hpp"
 #include "../nodetypes/items/environment.hpp"
+#include "../nodetypes/items/panel.hpp"
 #include "../nodetypes/items/itemui.hpp"
 #include "../globals.h"
 
@@ -17,7 +18,9 @@ namespace StardustXRServer {
 ItemInterface::ItemInterface(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("createEnvironmentItem", &ItemInterface::createEnvironmentItem)
 	STARDUSTXR_NODE_METHOD("registerEnvironmentItemUI", &ItemInterface::registerEnvironmentItemUI)
+	STARDUSTXR_NODE_METHOD("registerPanelItemUI", &ItemInterface::registerPanelItemUI)
 	addChild("environment", new Node(client));
+	addChild("panel", new Node(client));
 }
 
 std::vector<uint8_t> ItemInterface::createEnvironmentItem(flexbuffers::Reference data, bool returnValue) {
@@ -73,8 +76,24 @@ std::vector<uint8_t> ItemInterface::registerEnvironmentItemUI(flexbuffers::Refer
 
 	return std::vector<uint8_t>();
 }
+std::vector<uint8_t> ItemInterface::registerPanelItemUI(flexbuffers::Reference data, bool returnValue) {
+	flexbuffers::Vector flexVec = data.AsVector();
+	std::string callbackPath    = flexVec[0].AsString().str();
+	std::string callbackMethod  = flexVec[1].AsString().str();
+
+	if(PanelItem::itemTypeInfo.UI == nullptr) {
+		ItemUI *ui = new ItemUI(client, &PanelItem::itemTypeInfo, callbackPath, callbackMethod);
+		addChild("panel", ui);
+	}
+
+	return std::vector<uint8_t>();
+}
 
 std::vector<uint8_t> ItemInterface::createEnvironmentItemAcceptor(flexbuffers::Reference data, bool returnValue) {
+
+	return std::vector<uint8_t>();
+}
+std::vector<uint8_t> ItemInterface::createPanelItemAcceptor(flexbuffers::Reference data, bool returnValue) {
 
 	return std::vector<uint8_t>();
 }

@@ -5,9 +5,15 @@
 struct wlr_renderer;
 struct wlr_surface;
 
+namespace StardustXRServer {
+class PanelItem;
+}
+
+class Wayland;
+
 class Surface {
 public:
-    explicit Surface(wlr_renderer *renderer, wlr_surface *surface);
+	explicit Surface(wlr_renderer *renderer, wlr_surface *surface);
 	virtual ~Surface();
 
 	void onCommit();
@@ -21,7 +27,6 @@ public:
 	wlr_surface *surface;
 
 protected:
-
 	WaylandCallback surfaceCommitCallback;
 
     wlr_renderer *renderer;
