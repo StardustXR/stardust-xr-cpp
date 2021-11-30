@@ -18,6 +18,8 @@ public:
 
 	std::vector<uint8_t> setMaterialProperty(flexbuffers::Reference data, bool returnValue);
 
+	void replaceMaterial(uint32_t submeshIndex, sk::material_t mat);
+
 protected:
 	std::string modelPath;
 	sk::model_t model = nullptr;
@@ -37,6 +39,12 @@ protected:
 		std::string stringValue = "";
 	};
 
+	struct MaterialReplacement {
+		uint32_t submeshIndex = 0;
+		sk::material_t mat;
+	};
+
+	std::vector<MaterialReplacement> queuedMaterialReplacements;
 	std::vector<MaterialProperty> queuedProperties;
 	std::vector<sk::material_t> modifiedMaterials;
 

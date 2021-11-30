@@ -57,6 +57,11 @@ void Model::update() {
 		}
 	}
 	queuedProperties.clear();
+
+	for(MaterialReplacement &replacement : queuedMaterialReplacements) {
+		model_set_material(model, replacement.submeshIndex, replacement.mat);
+	}
+	queuedMaterialReplacements.clear();
 }
 
 void Model::draw() {
@@ -105,6 +110,11 @@ std::vector<uint8_t> Model::setMaterialProperty(flexbuffers::Reference data, boo
 	queuedProperties.push_back(prop);
 
 	return std::vector<uint8_t>();
+}
+
+void Model::replaceMaterial(uint32_t submeshIndex, sk::material_t mat) {
+	const std::lock_guard<std::mutex> lock(queuedPropertiesMutex);
+	queuedMaterialReplacements.push_back({submeshIndex, mat});
 };
 
 }
