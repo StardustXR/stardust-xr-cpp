@@ -118,11 +118,14 @@ void Wayland::update() {
 	wl_event_loop_dispatch(event_loop, 1);
 }
 
-void Wayland::destroyXWaylandSurface(wlr_surface *surface) {
+void Wayland::onNewSurface(Surface *surface) {
+	surfaces.emplace_back(surface);
+}
+void Wayland::onDestroySurface(wlr_surface *surface) {
 	surfaces.erase(std::remove_if(
 		surfaces.begin(),
 		surfaces.end(),
-		[surface](Surface *listSurface) {
+		[surface](std::unique_ptr<Surface> &listSurface) {
 			return listSurface->surface == surface;
 		}),
 		surfaces.end()
@@ -135,22 +138,12 @@ void Wayland::onNewXDGSurface(void *data) {
 
 	XDGSurface *newSurface = new XDGSurface(renderer, surface);
 
-    xdgSurfaces.push_back(newSurface);
-	surfaces.push_back(newSurface);
+	onNewSurface(newSurface);
 }
-
 void Wayland::onDestroyXDGSurface(void *data) {
 	wlr_xdg_surface *xdg_surface = (wlr_xdg_surface *) data;
 
-	xdgSurfaces.erase(std::remove_if(
-		xdgSurfaces.begin(),
-		xdgSurfaces.end(),
-		[xdg_surface](XDGSurface *surface) {
-			return surface->xdg_surface == xdg_surface;
-		}),
-		xdgSurfaces.end()
-	);
-	destroyXWaylandSurface(xdg_surface->surface);
+	onDestroySurface(xdg_surface->surface);
 }
 
 void Wayland::onNewXWaylandSurface(void *data) {
@@ -158,25 +151,14 @@ void Wayland::onNewXWaylandSurface(void *data) {
 	wl_signal_add(&surface->events.map, &mapSurfaceCallbackXWayland.listener);
 	wl_signal_add(&surface->events.destroy, &destroySurfaceCallbackXWayland.listener);
 }
-
 void Wayland::onMapXWaylandSurface(void *data) {
 	wlr_xwayland_surface *surface = (wlr_xwayland_surface *) data;
 	XWaylandSurface *newSurface = new XWaylandSurface(renderer, surface);
 
-	xWaylandSurfaces.push_back(newSurface);
-	surfaces.push_back(newSurface);
+	onNewSurface(newSurface);
 }
-
 void Wayland::onDestroyXWaylandSurface(void *data) {
 	wlr_xwayland_surface *xwayland_surface = (wlr_xwayland_surface *) data;
 
-	xWaylandSurfaces.erase(std::remove_if(
-		xWaylandSurfaces.begin(),
-		xWaylandSurfaces.end(),
-		[xwayland_surface](XWaylandSurface *surface) {
-			return surface->xwayland_surface == xwayland_surface;
-		}),
-		xWaylandSurfaces.end()
-	);
-	destroyXWaylandSurface(xwayland_surface->surface);
+	onDestroySurface(xwayland_surface->surface);
 }

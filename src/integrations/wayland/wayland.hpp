@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <EGL/egl.h>
@@ -24,17 +25,16 @@ public:
 
 	void update();
 
+	void onNewSurface(Surface *surface);
+	void onDestroySurface(wlr_surface *surface);
+	std::vector<std::unique_ptr<Surface>> surfaces;
+
 	void onNewXDGSurface(void *data);
 	void onDestroyXDGSurface(void *data);
-	std::vector<XDGSurface *> xdgSurfaces;
 
 	void onNewXWaylandSurface(void *data);
 	void onMapXWaylandSurface(void *data);
 	void onDestroyXWaylandSurface(void *data);
-	std::vector<XWaylandSurface *> xWaylandSurfaces;
-
-	void destroyXWaylandSurface(wlr_surface *surface);
-	std::vector<Surface *> surfaces;
 
 protected:
 	wl_display *wayland_display;
