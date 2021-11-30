@@ -13,6 +13,7 @@ class Item : public Spatial {
 public:
 	struct TypeInfo {
 		const std::string type;
+		const std::vector<std::string> aliasedMethods;
 
 		ItemUI *UI;
 

@@ -22,7 +22,7 @@ ItemUI::~ItemUI() {
 }
 
 void ItemUI::handleItemCreate(Item *item) {
-	addChild(item->name, new SpatialAlias(client, item, {}));
+	addChild(item->name, new SpatialAlias(client, item, item->itemTypeInfo->aliasedMethods));
 
 	client->messenger.sendSignal(
 		callbackPath.c_str(),
