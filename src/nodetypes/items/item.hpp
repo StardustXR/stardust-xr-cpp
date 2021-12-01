@@ -26,6 +26,7 @@ public:
 
 	std::vector<uint8_t> getData(flexbuffers::Reference data, bool returnValue);
 	virtual void serializeData(flexbuffers::Builder &fbb) = 0;
+	virtual Alias *makeAlias(Client *client);
 
 	TypeInfo *itemTypeInfo;
 };

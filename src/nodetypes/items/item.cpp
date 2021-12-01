@@ -1,9 +1,8 @@
 #include "item.hpp"
 #include "../../core/client.hpp"
 #include "../../core/clientmanager.hpp"
-#include "../core/alias.hpp"
 #include "../../globals.h"
-#include "itemui.hpp"
+#include "../spatial/alias.hpp"
 
 namespace StardustXRServer {
 
@@ -27,6 +26,10 @@ std::vector<uint8_t> Item::getData(flexbuffers::Reference data, bool returnValue
 	return FLEX(
 		serializeData(fbb);
 	);
+}
+
+Alias *Item::makeAlias(Client *client) {
+	return new SpatialAlias(client, this, itemTypeInfo->aliasedMethods);
 }
 
 }
