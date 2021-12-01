@@ -15,6 +15,7 @@ public:
 	~PanelItem();
 
 	void serializeData(flexbuffers::Builder &fbb);
+	Alias *makeAlias(Client *client);
 	std::vector<uint8_t> applySurfaceMaterial(flexbuffers::Reference data, bool returnValue);
 
 	static TypeInfo itemTypeInfo;

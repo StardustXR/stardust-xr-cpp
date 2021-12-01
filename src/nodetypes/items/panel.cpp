@@ -2,6 +2,7 @@
 #include "../../core/client.hpp"
 #include "../drawable/model.hpp"
 #include "../../integrations/wayland/surface.hpp"
+#include "alias.hpp"
 
 namespace StardustXRServer {
 
@@ -25,6 +26,10 @@ void PanelItem::serializeData(flexbuffers::Builder &fbb) {
 		fbb.UInt(surface->height);
 		fbb.UInt(surface->density);
 	});
+}
+
+Alias *PanelItem::makeAlias(Client *client) {
+	return new PanelAlias(client, this, itemTypeInfo.aliasedMethods);
 }
 
 std::vector<uint8_t> PanelItem::applySurfaceMaterial(flexbuffers::Reference data, bool returnValue) {
