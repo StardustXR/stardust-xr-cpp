@@ -1,4 +1,5 @@
 #include "item.hpp"
+#include "itemui.hpp"
 #include "../../core/client.hpp"
 #include "../../core/clientmanager.hpp"
 #include "../../globals.h"
@@ -11,6 +12,9 @@ Item::Item(Client *client, TypeInfo &itemTypeInfo, pose_t pose) :
 	itemTypeInfo(&itemTypeInfo) {
 
 	STARDUSTXR_NODE_METHOD("getData", &Item::getData)
+
+	if(itemTypeInfo.UI)
+		itemTypeInfo.UI->handleItemCreate(this);
 	std::lock_guard<std::mutex> lock(itemTypeInfo.itemsMutex);
 	itemTypeInfo.items.push_back(this);
 }
