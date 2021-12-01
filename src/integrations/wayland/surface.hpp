@@ -33,4 +33,6 @@ protected:
 
 	bool updateSurface();
 	sk::shader_t surfaceShader;
+
+	StardustXRServer::PanelItem *panel;
 };
