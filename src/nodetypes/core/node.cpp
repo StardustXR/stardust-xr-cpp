@@ -14,11 +14,7 @@ Node::Node(Client *client, bool destroyable) : client(client) {
 	STARDUSTXR_NODE_METHOD("setEnabled", &Node::setEnabledFlex)
 	STARDUSTXR_NODE_METHOD("destroy", &Node::destroyFlex)
 }
-Node::~Node() {
-	 for(Alias *alias : aliases) {
-		alias->queueDestroy(true);
-	 }
-}
+Node::~Node() {}
 
 void Node::propagate(std::string name, std::function<bool (std::string, Node *)> &function) {
 	if(function(name, this)) {
@@ -61,6 +57,9 @@ void Node::queueDestroy(bool forceDestroy) {
 	if(!forceDestroy && !destroyable)
 		return;
 
+	for(Alias *alias : aliases) {
+	   alias->queueDestroy(true);
+	}
 	const std::lock_guard<std::mutex> lock(destroyMutex);
 	nodesToDestroy.push_back(this);
 }
