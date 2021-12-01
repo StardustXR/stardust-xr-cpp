@@ -10,6 +10,7 @@ pkg = import('pkgconfig')
 libstardustxr = dependency('stardustxr-server', required: true)
 
 stereokit_options = cmake.subproject_options()
+stereokit_options.add_cmake_defines({'CMAKE_BUILD_TYPE': get_option('buildtype')})
 stereokit_options.add_cmake_defines({'SK_LINUX_EGL': true, 'SK_BUILD_TESTS': false, 'SK_BUILD_SHARED_LIBS': false})
 # stereokit_options.add_cmake_defines({'SK_BUILD_TESTS': false, 'SK_BUILD_SHARED_LIBS': false})
 stereokit_options.add_cmake_defines({'CMAKE_CXX_FLAGS': '-Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-pragmas -Wno-sign-compare -Wno-switch -Wno-parentheses -Wno-sizeof-pointer-memaccess'})
