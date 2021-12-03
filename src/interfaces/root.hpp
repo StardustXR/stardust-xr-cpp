@@ -15,7 +15,7 @@ typedef struct {
 
 class RootInterface : public Spatial {
 public:
-	RootInterface(Client *client, matrix startLocation);
+	RootInterface(Client *client);
 	~RootInterface();
 
 	static void sendLogicStepSignals();

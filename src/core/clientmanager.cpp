@@ -9,9 +9,9 @@ namespace StardustXRServer {
 
 ClientManager::ClientManager() : StardustXR::MessengerManager() {}
 
-void ClientManager::clientConnected(int inFD, int outFD) {
+void ClientManager::clientConnected(int fd) {
 	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
-	newlyConnectedClients.emplace_back(inFD, outFD);
+	newlyConnectedClients.emplace_back(fd);
 }
 
 void ClientManager::handleNewlyConnectedClients() {
@@ -20,8 +20,8 @@ void ClientManager::handleNewlyConnectedClients() {
 	if(newlyConnectedClients.size() == 0)
 		return;
 	
-	for(auto newlyConnectedClient : newlyConnectedClients) {
-		Client *client = new Client(newlyConnectedClient.first, newlyConnectedClient.second, this);
+	for(int newlyConnectedClient : newlyConnectedClients) {
+		Client *client = new Client(newlyConnectedClient, this);
 		clients.emplace_back(client);
 		client->startHandler();
 	}

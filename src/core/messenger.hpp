@@ -8,10 +8,8 @@ class Client;
 
 class Messenger : public StardustXR::Messenger {
 public:
-	explicit Messenger(Client *client, int readFD, int writeFD);
+	explicit Messenger(Client *client, int fd);
 	virtual ~Messenger();
-
-	pid_t clientPID = 0;
 
 	void onPipeBreak();
 private:

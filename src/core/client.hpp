@@ -12,11 +12,13 @@ class ClientManager;
 
 class Client {
 public:
-	explicit Client(int inFD, int outFD, ClientManager *messengerManager);
+	explicit Client(int fd, ClientManager *messengerManager);
 	~Client();
 
 	void startHandler();
 	void scenegraphPropagate(std::string name, PropagateFunction &function);
+
+	pid_t pid;
 
 	uint32_t clientNumber;
 	std::atomic<bool> disconnected{false};

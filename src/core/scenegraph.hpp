@@ -13,7 +13,7 @@ class Client;
 
 class Scenegraph : public StardustXR::Scenegraph {
 public:
-	explicit Scenegraph(Client *client, matrix startLocation);
+	explicit Scenegraph(Client *client);
 
 	void sendSignal(std::string path, std::string method, flexbuffers::Reference data);
 	std::vector<uint8_t> executeMethod(std::string path, std::string method, flexbuffers::Reference args);

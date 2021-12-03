@@ -26,9 +26,9 @@ public:
 
 protected:
 	std::mutex connectedClientsMutex;
-	std::vector<std::pair<int, int>> newlyConnectedClients;
+	std::vector<int> newlyConnectedClients;
 
-	void clientConnected(int inFD, int outFD);
+	void clientConnected(int fd);
 };
 
 }

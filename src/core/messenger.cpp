@@ -5,14 +5,11 @@
 
 namespace StardustXRServer {
 
-Messenger::Messenger(Client *client, int readFD, int writeFD) : StardustXR::Messenger(readFD, writeFD, &client->scenegraph) {
+Messenger::Messenger(Client *client, int fd) : StardustXR::Messenger(fd, &client->scenegraph) {
 	this->client = client;
-	if(readFD != 0)
-		read(readFD, &clientPID, sizeof(pid_t));
 }
 Messenger::~Messenger() {
-	close(messageReadFD);
-	close(messageWriteFD);
+	close(fd);
 }
 
 void Messenger::onPipeBreak() {
