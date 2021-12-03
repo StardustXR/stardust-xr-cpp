@@ -11,7 +11,7 @@ namespace StardustXRServer {
 
 class ClientManager : public StardustXR::MessengerManager {
 public:
-	explicit ClientManager(const char *socketPath = "/tmp/stardust.sock");
+	explicit ClientManager();
 
 	std::vector<std::unique_ptr<Client>> clients;
 	void handleNewlyConnectedClients();
