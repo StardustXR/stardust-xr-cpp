@@ -9,7 +9,8 @@ namespace StardustXRServer {
 Item::TypeInfo PanelItem::itemTypeInfo = {
 	"panel",
 	{
-		"applySurfaceMaterial"
+		"applySurfaceMaterial",
+		"getData"
 	}
 };
 
