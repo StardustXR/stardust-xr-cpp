@@ -13,8 +13,6 @@ Item::Item(Client *client, TypeInfo &itemTypeInfo, pose_t pose) :
 
 	STARDUSTXR_NODE_METHOD("getData", &Item::getData)
 
-	if(itemTypeInfo.UI)
-		itemTypeInfo.UI->handleItemCreate(this);
 	std::lock_guard<std::mutex> lock(itemTypeInfo.itemsMutex);
 	itemTypeInfo.items.push_back(this);
 }
@@ -27,7 +25,7 @@ Item::~Item() {
 }
 
 std::vector<uint8_t> Item::getData(flexbuffers::Reference data, bool returnValue) {
-	return FLEX(
+	return FLEX_SINGLE(
 		serializeData(fbb);
 	);
 }

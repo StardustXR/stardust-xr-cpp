@@ -6,6 +6,7 @@
 
 #include "surface.hpp"
 #include "../../nodetypes/items/panel.hpp"
+#include "../../nodetypes/items/itemui.hpp"
 #include "../../globals.h"
 
 extern "C" {
@@ -47,7 +48,11 @@ Surface::Surface(wlr_renderer *renderer, wlr_surface *surface) {
 	wl_signal_add(&surface->events.commit, &surfaceCommitCallback.listener);
 
 	panel = new StardustXRServer::PanelItem(&serverInternalClient, this, sk::pose_identity);
-	serverInternalClient.scenegraph.findNode("/item/panel")->addChild(panel->hashUUID(), panel);
+	StardustXRServer::Node *internalPanelNode = serverInternalClient.scenegraph.findNode("/item/panel");
+	if(internalPanelNode)
+		internalPanelNode->addChild(panel->hashUUID(), panel);
+	if(StardustXRServer::PanelItem::itemTypeInfo.UI)
+		StardustXRServer::PanelItem::itemTypeInfo.UI->handleItemCreate(panel);
 }
 
 Surface::~Surface() {

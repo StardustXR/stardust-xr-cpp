@@ -2,7 +2,13 @@
 
 namespace StardustXRServer {
 
-Item::TypeInfo EnvironmentItem::itemTypeInfo = {"environment"};
+Item::TypeInfo EnvironmentItem::itemTypeInfo = {
+	"environment",
+	{
+		"applySurfaceMaterial",
+		"getData"
+	}
+};
 
 EnvironmentItem::EnvironmentItem(Client *client, std::string path, pose_t pose) :
 	Item(client, itemTypeInfo, pose),

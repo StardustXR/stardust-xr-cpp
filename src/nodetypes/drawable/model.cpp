@@ -65,10 +65,7 @@ void Model::update() {
 }
 
 void Model::draw() {
-	if(enabled != true)
-		return;
-
-	if(model != nullptr)
+	if(model && enabled)
 		render_add_model(model, worldTransform());
 }
 
