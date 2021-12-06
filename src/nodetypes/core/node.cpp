@@ -15,7 +15,9 @@ Node::Node(Client *client, bool destroyable) : client(client), id(NodeRef::regis
 	STARDUSTXR_NODE_METHOD("setEnabled", &Node::setEnabledFlex)
 	STARDUSTXR_NODE_METHOD("destroy", &Node::destroyFlex)
 }
-Node::~Node() {}
+Node::~Node() {
+	NodeRef::deregisterNode(this);
+}
 
 void Node::propagate(std::string name, std::function<bool (std::string, Node *)> &function) {
 	if(function(name, this)) {

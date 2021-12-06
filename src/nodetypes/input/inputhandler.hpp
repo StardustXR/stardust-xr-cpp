@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../spatial/spatial.hpp"
+#include "../core/noderef.hpp"
 #include "../fields/field.hpp"
+#include "../spatial/spatial.hpp"
 #include "distancelink.hpp"
 #include <flatbuffers/flatbuffers.h>
 #include <flatbuffers/flexbuffers.h>
@@ -15,7 +16,7 @@ public:
 	InputHandler(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, Field *field, std::string callbackPath, std::string callbackMethod);
 	virtual ~InputHandler();
 
-	Field *field = nullptr;
+	NodeRef field;
 	std::string callbackPath;
 	std::string callbackMethod;
 

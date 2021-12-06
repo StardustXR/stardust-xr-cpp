@@ -14,8 +14,8 @@
 namespace StardustXRServer {
 
 InputHandler::InputHandler(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, Field *field, std::string callbackPath, std::string callbackMethod) :
-Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false) {
-	this->field = field;
+Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
+field(field) {
 	this->callbackPath = callbackPath;
 	this->callbackMethod = callbackMethod;
 
@@ -72,11 +72,11 @@ std::vector<uint8_t> InputHandler::setCallback(flexbuffers::Reference data, bool
 
 std::vector<uint8_t> InputHandler::setField(flexbuffers::Reference data, bool returnValue) {
 	std::string fieldPath = data.AsString().str();
-	field = client->scenegraph.findNode<Field>(fieldPath);
+	field = NodeRef(client->scenegraph.findNode<Field>(fieldPath));
 
 	if(returnValue) {
 		return FLEX_SINGLE(
-			FLEX_BOOL(field == nullptr)
+			FLEX_BOOL(field)
 		);
 	} else
 		return std::vector<uint8_t>();

@@ -36,7 +36,9 @@ void HandInput::updateSpaceFlexJoint(Spatial *space, hand_joint_t joint, struct 
 float HandInput::distanceTo(InputHandler *handler) {
 	float minDistance = numeric_limits<float>::max();
 	for(uint i=0; i<fingerJointCount; ++i) {
-		float distance = handler->field->distance(this, fingerJoints[i].position);
+		if(!handler->field)
+			break;
+		float distance = handler->field.ptr<Field>()->distance(this, fingerJoints[i].position);
 		minDistance = min(minDistance, distance);
 	}
 	return minDistance;

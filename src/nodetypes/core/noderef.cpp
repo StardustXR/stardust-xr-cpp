@@ -12,6 +12,13 @@ NodeRef::NodeRef(NodeRef &original):
 	id(original.id) {}
 NodeRef::NodeRef(uint32_t id) :
 	id(id) {}
+NodeRef::NodeRef(Node *node) :
+	id(node == nullptr ? 0 : node->id) {}
+
+NodeRef &NodeRef::operator=(NodeRef other) {
+	this->id = other.id;
+	return *this;
+}
 
 NodeRef::operator bool() const {
 	std::lock_guard<std::mutex> lock(registryMutex);
@@ -35,6 +42,11 @@ uint32_t NodeRef::registerNode(Node *node) {
 	std::lock_guard<std::mutex> lock(registryMutex);
 	registry[uuid] = node;
 	return uuid;
+}
+
+void NodeRef::deregisterNode(Node *node) {
+	std::lock_guard<std::mutex> lock(registryMutex);
+	registry.erase(registry.find(node->id));
 }
 
 uint32_t NodeRef::generateUUID() {

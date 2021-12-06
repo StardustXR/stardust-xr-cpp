@@ -13,7 +13,9 @@ float PointerInput::distanceTo(InputHandler *handler) {
 		vec3_forward,
 		this
 	};
-	RayMarchResult rayInfo = RayMarch(ray, handler->field);
+	if(!handler->field)
+		return std::numeric_limits<float>::max();
+	RayMarchResult rayInfo = RayMarch(ray, handler->field.ptr<Field>());
 
 	datamap["deepestPointDistance"] = rayInfo.deepestDistance;
 

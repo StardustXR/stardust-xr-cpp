@@ -14,17 +14,28 @@ public:
 	NodeRef();
 	NodeRef(NodeRef &);
 	NodeRef(uint32_t id);
-	~NodeRef();
+	NodeRef(Node *node);
 
+	NodeRef &operator=(NodeRef other);
 	operator bool() const;
 	Node *operator ->() const;
 	operator Node*() const;
 
 	Node *ptr() const;
+	template<class T>
+	T *ptr() const {
+		Node *node = ptr();
+		if(node)
+			return dynamic_cast<T *>(node);
+		else
+			return nullptr;
+	}
+
 	static uint32_t registerNode(Node *node);
+	static void deregisterNode(Node *node);
 
 protected:
-	const uint32_t id;
+	uint32_t id;
 
 	static uint32_t generateUUID();
 	static std::mutex registryMutex;
