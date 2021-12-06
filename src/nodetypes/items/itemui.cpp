@@ -47,7 +47,7 @@ void ItemUI::handleItemDestroy(std::string itemName) {
 		callbackMethod.c_str(),
 		[&](flexbuffers::Builder &fbb) {
 			fbb.Vector([&]() {
-				fbb.Bool(true);
+				fbb.Bool(false);
 				fbb.String(itemName);
 			});
 		}
