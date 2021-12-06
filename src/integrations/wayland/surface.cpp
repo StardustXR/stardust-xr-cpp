@@ -50,7 +50,7 @@ Surface::Surface(wlr_renderer *renderer, wlr_surface *surface) {
 	panel = new StardustXRServer::PanelItem(&serverInternalClient, this, sk::pose_identity);
 	StardustXRServer::Node *internalPanelNode = serverInternalClient.scenegraph.findNode("/item/panel");
 	if(internalPanelNode)
-		internalPanelNode->addChild(panel->hashUUID(), panel);
+		internalPanelNode->addChild(std::to_string(panel->id), panel);
 	if(StardustXRServer::PanelItem::itemTypeInfo.UI)
 		StardustXRServer::PanelItem::itemTypeInfo.UI->handleItemCreate(panel);
 }

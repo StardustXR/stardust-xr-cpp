@@ -47,7 +47,7 @@ std::vector<uint8_t> ItemInterface::createEnvironmentItem(flexbuffers::Reference
 	EnvironmentItem *item = new EnvironmentItem(&serverInternalClient, path, space ? matrix_transform_pose(space->worldTransform(), pose) : pose);
 
 	Node *internalParent = serverInternalClient.scenegraph.findNode("/item/environment/");
-	internalParent->addChild(item->hashUUID(), item);
+	internalParent->addChild(std::to_string(item->id), item);
 
 	if(EnvironmentItem::itemTypeInfo.UI)
 		EnvironmentItem::itemTypeInfo.UI->handleItemCreate(item);

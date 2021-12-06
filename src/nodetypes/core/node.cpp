@@ -1,5 +1,6 @@
 #include "node.hpp"
 #include "alias.hpp"
+#include "noderef.hpp"
 #include <vector>
 
 using namespace std;
@@ -9,7 +10,7 @@ namespace StardustXRServer {
 std::vector<Node *> Node::nodesToDestroy;
 std::mutex Node::destroyMutex;
 
-Node::Node(Client *client, bool destroyable) : client(client) {
+Node::Node(Client *client, bool destroyable) : client(client), id(NodeRef::registerNode(this)) {
 	this->destroyable = destroyable;
 	STARDUSTXR_NODE_METHOD("setEnabled", &Node::setEnabledFlex)
 	STARDUSTXR_NODE_METHOD("destroy", &Node::destroyFlex)
@@ -27,13 +28,6 @@ void Node::propagate(std::string name, std::function<bool (std::string, Node *)>
 				break;
 		}
 	}
-}
-
-std::string Node::hashUUID() {
-	std::ostringstream stringStream;
-	std::size_t hash = std::hash<std::string>{}(name);
-	stringStream << std::uintptr_t((std::uintptr_t) client ^ (std::uintptr_t) hash);
-	return stringStream.str();
 }
 
 void Node::addChild(std::string name, Node *child) {

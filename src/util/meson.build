@@ -1,3 +1,4 @@
 src_files += files(
-	'debug.cpp',
+    'debug.cpp',
+    'random.cpp',
 )

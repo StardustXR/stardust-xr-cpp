@@ -95,7 +95,7 @@ void Zone::sendZoneSignals() {
 			fbb.Vector([&] {
 				fbb.TypedVector([&] {
 					for(Spatial *enterNode : enter) {
-						std::string uuid = enterNode->hashUUID();
+						std::string uuid = std::to_string(enterNode->id);
 						addChild(uuid, new Alias(client, enterNode, {
 							"move",
 							"rotate",
@@ -112,7 +112,7 @@ void Zone::sendZoneSignals() {
 				fbb.TypedVector([&] {
 					for(Spatial *leaveNode : leave) {
 						releaseSpatial(leaveNode);
-						std::string uuid = leaveNode->hashUUID();
+						std::string uuid = std::to_string(leaveNode->id);
 						if(children[uuid] != nullptr)
 							children.erase(uuid);
 						fbb.String(uuid);

@@ -56,7 +56,7 @@ std::vector<uint8_t> InputInterface::getInputHandlers(flexbuffers::Reference dat
 			for(InputHandler *handler : inputHandlers) {
 				if(excludeSelf == false || handler->client != this->client) {
 					fbb.Vector([&] {
-						std::string uuid = handler->hashUUID();
+						std::string uuid = std::to_string(handler->id);
 						children["global_handler"]->addChild(uuid, new Alias(client, handler, {"getActions", "runAction"}));
 						fbb.String(uuid);
 
