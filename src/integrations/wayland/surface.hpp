@@ -20,7 +20,9 @@ public:
 
 	virtual bool isMapped() const = 0;
 	sk::tex_t surfaceTex;
-	sk::material_t surfaceMat;
+	sk::material_t surfaceMatAlphaClip;
+	sk::material_t surfaceMatAlphaAdd;
+	sk::material_t surfaceMatAlphaBlend;
 	uint width;
 	uint height;
 	uint density;

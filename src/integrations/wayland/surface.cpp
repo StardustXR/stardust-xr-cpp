@@ -18,9 +18,8 @@ extern "C" {
 #include "types/wlr_xdg_shell.h"
 }
 
-//#include "shaders/shader_unlit_gamma.sks.h"
-//#include "shaders/shader_unlit_simula.sks.h"
-#include "shaders/sshader_builtin_unlit.hlsl.h"
+#include "shaders/sshader_unlit_gamma.hlsl.h"
+#include "shaders/sshader_unlit_simula.hlsl.h"
 
 using namespace sk;
 
@@ -36,13 +35,20 @@ Surface::Surface(wlr_renderer *renderer, wlr_surface *surface) {
 	this->surfaceTex->tex.format      = skg_tex_fmt_rgba32;
 	this->surfaceTex->tex.array_count = 1;
 
-//	 this->surfaceShader = shader_create_mem((void *) shader_unlit_gamma_sks, shader_unlit_gamma_sks_size);
-//	this->surfaceShader = shader_create_mem((void *) shader_unlit_simula_sks, shader_unlit_simula_sks_size);
-	this->surfaceShader = shader_create_mem((void *) sks_sshader_builtin_unlit_hlsl, 3971);
+	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_gamma_hlsl, 4032);
+	// this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_simula_hlsl, 6182);
 
-	this->surfaceMat = material_create(this->surfaceShader);
-	material_set_transparency(this->surfaceMat, transparency_blend);
-	material_set_texture(this->surfaceMat, "diffuse", this->surfaceTex);
+	this->surfaceMatAlphaAdd   = material_create(this->surfaceShader);
+	this->surfaceMatAlphaBlend = material_create(this->surfaceShader);
+	this->surfaceMatAlphaClip  = material_create(this->surfaceShader);
+
+	material_set_transparency(this->surfaceMatAlphaAdd,   transparency_add);
+	material_set_transparency(this->surfaceMatAlphaBlend, transparency_blend);
+	material_set_transparency(this->surfaceMatAlphaClip,  transparency_none);
+
+	material_set_texture(this->surfaceMatAlphaAdd,   "diffuse", this->surfaceTex);
+	material_set_texture(this->surfaceMatAlphaBlend, "diffuse", this->surfaceTex);
+	material_set_texture(this->surfaceMatAlphaClip,  "diffuse", this->surfaceTex);
 
 	surfaceCommitCallback.callback = std::bind(&Surface::onCommit, this);
 	wl_signal_add(&surface->events.commit, &surfaceCommitCallback.listener);
@@ -58,7 +64,9 @@ Surface::Surface(wlr_renderer *renderer, wlr_surface *surface) {
 Surface::~Surface() {
 	tex_release(surfaceTex);
 	shader_release(surfaceShader);
-	material_release(surfaceMat);
+	material_release(surfaceMatAlphaAdd);
+	material_release(surfaceMatAlphaBlend);
+	material_release(surfaceMatAlphaClip);
 
 	panel->queueDestroy(true);
 }
@@ -78,7 +86,7 @@ void Surface::onCommit() {
 	this->surfaceTex->tex._texture    = eglTexture->tex;
 	this->surfaceTex->tex._target     = eglTexture->target;
 
-	tex_set_options(surfaceTex, sk::tex_sample_linear, tex_address_clamp, 1);
+	tex_set_options(surfaceTex, sk::tex_sample_point, tex_address_clamp, 1);
 //	tex_set_surface(
 //		this->surfaceTex,
 //		(void *)(uintptr_t) eglTexture->tex,

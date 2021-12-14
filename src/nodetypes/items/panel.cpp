@@ -39,7 +39,7 @@ std::vector<uint8_t> PanelItem::applySurfaceMaterial(flexbuffers::Reference data
 	uint32_t submeshIndex            = flexVec[0].AsUInt32();
 
 	if(model != nullptr)
-		model->replaceMaterial(submeshIndex, surface->surfaceMat);
+		model->replaceMaterial(submeshIndex, surface->surfaceMatAlphaClip);
 	return std::vector<uint8_t>();
 }
 
