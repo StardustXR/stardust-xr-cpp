@@ -31,16 +31,6 @@ InputInterface::InputInterface(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("getInputHandlers", &InputInterface::getInputHandlers)
 	STARDUSTXR_NODE_METHOD("registerInputHandler", &InputInterface::registerInputHandler)
 }
-InputInterface::~InputInterface() {
-	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
-	
-	inputMethods.erase(std::remove_if(inputMethods.begin(), inputMethods.end(), [this](InputMethod *method) {
-		return method->client == client;
-	}), inputMethods.end());
-	inputHandlers.erase(std::remove_if(inputHandlers.begin(), inputHandlers.end(), [this](InputHandler *handler) {
-		return handler->client == client;
-	}), inputHandlers.end());
-}
 
 std::vector<uint8_t> InputInterface::getInputHandlers(flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector flexVec = data.AsVector();
@@ -74,8 +64,6 @@ std::vector<uint8_t> InputInterface::getInputHandlers(flexbuffers::Reference dat
 }
 
 std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference data, bool) {
-	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
-
 	flexbuffers::Vector flexVec      = data.AsVector();
 	std::string name                 = flexVec[0].AsString().str();
 	std::string flexFieldPath        = flexVec[1].AsString().str();
@@ -100,7 +88,6 @@ std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference
 
 	InputHandler *handler = new InputHandler(client, spatialParent, pos, rot, field, callbackPath, callbackMethod);
 	children["handler"]->addChild(name, handler);
-	inputHandlers.push_back(handler);
 
 	return std::vector<uint8_t>();
 }
@@ -141,18 +128,6 @@ void InputInterface::processInput() {
 			inputData
 		);
 	}
-}
-
-void InputInterface::addInputMethod(InputMethod *method) {
-	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
-
-	inputMethods.push_back(method);
-}
-
-void InputInterface::addInputHandler(InputHandler *handler) {
-	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
-
-	inputHandlers.push_back(handler);
 }
 
 std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod* inputMethod, InputHandler *inputHandler) {

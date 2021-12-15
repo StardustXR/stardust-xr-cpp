@@ -2,10 +2,18 @@
 #include <flatbuffers/flatbuffers.h>
 #include <stardustxr/common/flex.hpp>
 
+#include "../../interfaces/input.hpp"
+
 namespace StardustXRServer {
 
-InputMethod::InputMethod(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, bool rotatable) : Spatial(client, spatialParent, position, rotation, vec3_one, true, rotatable, false, false) {}
-InputMethod::~InputMethod() {}
+InputMethod::InputMethod(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, bool rotatable) : Spatial(client, spatialParent, position, rotation, vec3_one, true, rotatable, false, false) {
+	const std::lock_guard<std::mutex> lock(InputInterface::inputVectorsMutex);
+	InputInterface::inputMethods.push_back(this);
+}
+InputMethod::~InputMethod() {
+	const std::lock_guard<std::mutex> lock(InputInterface::inputVectorsMutex);
+	InputInterface::inputMethods.erase(std::remove(InputInterface::inputMethods.begin(), InputInterface::inputMethods.end(), this));
+}
 
 std::vector<uint8_t> InputMethod::modifyDatamap(flexbuffers::Reference data, bool) {
 	flexbuffers::Map map = data.AsMap();

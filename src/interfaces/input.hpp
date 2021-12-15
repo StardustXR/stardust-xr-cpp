@@ -10,14 +10,10 @@ namespace StardustXRServer {
 class InputInterface : public Node {
 public:
 	InputInterface(Client *client);
-	~InputInterface();
 
 	std::vector<uint8_t> registerInputHandler(flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> getInputHandlers(flexbuffers::Reference data, bool returnValue);
 	static void processInput();
-
-	static void addInputMethod(InputMethod *method);
-	static void addInputHandler(InputHandler *handler);
 
 	static std::mutex inputVectorsMutex;
 	static std::vector<InputMethod *> inputMethods;

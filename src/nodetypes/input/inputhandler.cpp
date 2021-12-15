@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "../../core/client.hpp"
+#include "../../interfaces/input.hpp"
 #include "nodetypes/core/node.hpp"
 #include <flatbuffers/flexbuffers.h>
 #include <stereokit.h>
@@ -23,9 +24,15 @@ field(field) {
 	STARDUSTXR_NODE_METHOD("setActions", &InputHandler::setActions);
 	STARDUSTXR_NODE_METHOD("getActions", &InputHandler::getActions);
 	STARDUSTXR_NODE_METHOD("runAction", &InputHandler::runAction);
+
+	const std::lock_guard<std::mutex> lock(InputInterface::inputVectorsMutex);
+	InputInterface::inputHandlers.push_back(this);
 }
 
-InputHandler::~InputHandler() {}
+InputHandler::~InputHandler() {
+	const std::lock_guard<std::mutex> lock(InputInterface::inputVectorsMutex);
+	InputInterface::inputHandlers.erase(std::remove(InputInterface::inputHandlers.begin(), InputInterface::inputHandlers.end(), this));
+}
 
 void InputHandler::sendInput(uint64_t oldFrame, std::list<DistanceLink> distanceLinks, const std::vector<uint8_t> &inputData) {
 	if(oldFrame < frame)

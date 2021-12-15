@@ -14,7 +14,7 @@ namespace StardustXRServer {
 class InputHandler : public Spatial {
 public:
 	InputHandler(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, Field *field, std::string callbackPath, std::string callbackMethod);
-	virtual ~InputHandler();
+	~InputHandler();
 
 	NodeRef field;
 	std::string callbackPath;
