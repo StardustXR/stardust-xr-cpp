@@ -35,8 +35,8 @@ Surface::Surface(wlr_renderer *renderer, wlr_surface *surface) {
 	this->surfaceTex->tex.format      = skg_tex_fmt_rgba32;
 	this->surfaceTex->tex.array_count = 1;
 
-	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_gamma_hlsl, 4032);
-	// this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_simula_hlsl, 6182);
+//	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_gamma_hlsl, 4032);
+	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_simula_hlsl, 6106);
 
 	this->surfaceMatAlphaAdd   = material_create(this->surfaceShader);
 	this->surfaceMatAlphaBlend = material_create(this->surfaceShader);
@@ -45,6 +45,10 @@ Surface::Surface(wlr_renderer *renderer, wlr_surface *surface) {
 	material_set_transparency(this->surfaceMatAlphaAdd,   transparency_add);
 	material_set_transparency(this->surfaceMatAlphaBlend, transparency_blend);
 	material_set_transparency(this->surfaceMatAlphaClip,  transparency_none);
+
+	material_set_float(this->surfaceMatAlphaAdd,   "fcFactor", 0.5f);
+	material_set_float(this->surfaceMatAlphaBlend, "fcFactor", 0.5f);
+	material_set_float(this->surfaceMatAlphaClip,  "fcFactor", 0.5f);
 
 	material_set_texture(this->surfaceMatAlphaAdd,   "diffuse", this->surfaceTex);
 	material_set_texture(this->surfaceMatAlphaBlend, "diffuse", this->surfaceTex);
@@ -87,6 +91,12 @@ void Surface::onCommit() {
 	this->surfaceTex->tex._target     = eglTexture->target;
 
 	tex_set_options(surfaceTex, sk::tex_sample_point, tex_address_clamp, 1);
+
+	int pixels[2] = {(int) width, (int) height};
+	material_set_param(this->surfaceMatAlphaAdd,   "size", material_param_float, (void *) pixels);
+	material_set_param(this->surfaceMatAlphaBlend, "size", material_param_float, (void *) pixels);
+	material_set_param(this->surfaceMatAlphaClip,  "size", material_param_float, (void *) pixels);
+
 //	tex_set_surface(
 //		this->surfaceTex,
 //		(void *)(uintptr_t) eglTexture->tex,

@@ -1,12 +1,15 @@
 #include "stereokit.hlsli"
 
-//--name = sk/unlit
+// Port of https://github.com/SimulaVR/Simula/blob/master/addons/godot-haskell-plugin/TextShader.tres to StereoKit and HLSL.
+
+//--name = stardust/text_shader
 //--diffuse     = white
 //--fcFactor    = 1.0
 //--ripple      = 4.0
+//--size        = 256, 256
 Texture2D    diffuse   : register(t0);
 SamplerState diffuse_s : register(s0);
-float4       diffuse_i;
+int2         size;
 float        fcFactor;
 float        ripple;
 
@@ -49,7 +52,7 @@ float kaiser(float x, float alpha) {
 	return besselI0(alpha * sqrt(1.0-x*x));
 }
 
-float4 lowpassFilter(Texture2D tex, sampler2D texSampler, int2 size, float2 uv, float alpha) {
+float4 lowpassFilter(Texture2D tex, sampler2D texSampler, float2 uv, float alpha) {
 	float PI = 3.14159265358;
 	
 	float4 q = float4(0.0);
@@ -62,12 +65,11 @@ float4 lowpassFilter(Texture2D tex, sampler2D texSampler, int2 size, float2 uv, 
 	float2 pixelWidth = floor(width * float2(size));
 	float2 aspectRatio = normalize(pixelWidth);
 	
-	int2 xy = int2(uv * float2(size));
 	float2 xyf = uv * float2(size);
+	int2 xy = int2(xyf);
 	
 	pixelWidth = clamp(pixelWidth, float2(1.0), float2(2.0));
 
-	
 	int2 start = xy - int2(pixelWidth);
 	int2 end = xy + int2(pixelWidth);
 	
@@ -83,7 +85,7 @@ float4 lowpassFilter(Texture2D tex, sampler2D texSampler, int2 size, float2 uv, 
 			//float lanczosValue = gaussian(kx, fcx);
 			float lanczosValue = kaiser(sqrt(kx*kx + ky*ky), alpha);
 			
-			q += tex.Sample(texSampler, float2(u, v)/pixelWidth) * lanczosValue;
+			q += tex.Sample(texSampler, (float2(u, v)+float2(0.5))/float2(size)) * lanczosValue;
 			// q += tex.Load(int3(u, v, 0)) * lanczosValue;
 			qSum += lanczosValue;
 		}
@@ -96,7 +98,9 @@ float4 ps(psIn input) : SV_TARGET {
 	float gamma = 2.2;
 	// float4 col = diffuse.Sample(diffuse_s, input.uv);
 
-	float4 col = lowpassFilter(diffuse, diffuse_s, diffuse_i.xy, float2(1.0 - input.uv.x, input.uv.y), ripple);
+	// float4 col = lowpassFilter(diffuse, diffuse_s, diffuse_i.xy, float2(1.0 - input.uv.x, input.uv.y), ripple);
+	float4 col = lowpassFilter(diffuse, diffuse_s, input.uv, ripple);
+	// float4 col = diffuse.Sample(diffuse_s, input.uv);
 	col.rgb = pow(col.rgb, float3(gamma));
 
 	return col; 
