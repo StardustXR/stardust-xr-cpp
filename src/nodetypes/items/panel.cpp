@@ -10,7 +10,8 @@ Item::TypeInfo PanelItem::itemTypeInfo = {
 	"panel",
 	{
 		"applySurfaceMaterial",
-		"getData"
+		"getData",
+		"close",
 	}
 };
 
@@ -18,6 +19,7 @@ PanelItem::PanelItem(Client *client, Surface *surface, pose_t pose) :
 	Item(client, itemTypeInfo, pose),
 	surface(surface) {
 	STARDUSTXR_NODE_METHOD("applySurfaceMaterial", &PanelItem::applySurfaceMaterial)
+	STARDUSTXR_NODE_METHOD("close", &PanelItem::close)
 }
 PanelItem::~PanelItem() {}
 
@@ -40,6 +42,11 @@ std::vector<uint8_t> PanelItem::applySurfaceMaterial(flexbuffers::Reference data
 
 	if(model != nullptr)
 		model->replaceMaterial(submeshIndex, surface->surfaceMatAlphaClip);
+	return std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> PanelItem::close(flexbuffers::Reference data, bool returnValue) {
+	surface->close();
 	return std::vector<uint8_t>();
 }
 

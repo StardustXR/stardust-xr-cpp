@@ -17,6 +17,7 @@ public:
 	virtual ~Surface();
 
 	void onCommit();
+	virtual void close() const = 0;
 
 	virtual bool isMapped() const = 0;
 	sk::tex_t surfaceTex;

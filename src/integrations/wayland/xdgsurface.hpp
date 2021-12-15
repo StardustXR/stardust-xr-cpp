@@ -5,8 +5,8 @@
 class XDGSurface : public Surface {
 public:
     explicit XDGSurface(struct wlr_renderer *renderer, struct wlr_xdg_surface *surface);
-	~XDGSurface();
 
 	struct wlr_xdg_surface *xdg_surface;
+	void close() const override;
 	bool isMapped() const override;
 };

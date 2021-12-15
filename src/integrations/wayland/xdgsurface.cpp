@@ -2,6 +2,7 @@
 
 extern "C" {
 #include "types/wlr_xdg_shell.h"
+#include "wlr/util/edges.h"
 }
 
 XDGSurface::XDGSurface(wlr_renderer *renderer, wlr_xdg_surface *xdg_surface) : Surface(renderer, xdg_surface->surface) {
@@ -12,10 +13,11 @@ XDGSurface::XDGSurface(wlr_renderer *renderer, wlr_xdg_surface *xdg_surface) : S
 
 	wlr_xdg_toplevel_set_activated(xdg_surface, true);
 	// wlr_xdg_toplevel_set_fullscreen(xdg_surface, true);
-	wlr_xdg_toplevel_set_maximized(xdg_surface, true);
+//	wlr_xdg_toplevel_set_maximized(xdg_surface, true);
+	wlr_xdg_toplevel_set_tiled(xdg_surface, WLR_EDGE_TOP | WLR_EDGE_BOTTOM | WLR_EDGE_RIGHT | WLR_EDGE_LEFT);
 }
 
-XDGSurface::~XDGSurface() {
+void XDGSurface::close() const {
 	wlr_xdg_toplevel_send_close(xdg_surface);
 }
 
