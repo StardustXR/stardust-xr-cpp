@@ -8,22 +8,17 @@ namespace StardustXRServer {
 
 uint32_t Client::clientCount = 0;
 
-Client::Client(int fd, ClientManager *clientManager) :
+Client::Client(int fd) :
+fd(fd),
+pid(getPID(fd)),
 messenger(this, fd),
 scenegraph(this) {
-	this->manager = clientManager;
 
-	if(fd > 0) {
-		struct ucred ucred;
-		uint len = sizeof(struct ucred);
-		getsockopt(fd, SOL_SOCKET, SO_PEERCRED, &ucred, &len);
+	if(pid > 0) {
+		if(ClientManager::pidCache.find(pid) != ClientManager::pidCache.end())
+			scenegraph.root.setTransformMatrix(ClientManager::pidCache[pid]);
 
-		pid = ucred.pid;
-
-		if(clientManager->pidCache.find(pid) != clientManager->pidCache.end())
-			scenegraph.root.setTransformMatrix(clientManager->pidCache[pid]);
-
-		clientManager->pidCache.erase(pid);
+		ClientManager::pidCache.erase(pid);
 	}
 
 	clientNumber = clientCount;
@@ -35,6 +30,18 @@ Client::~Client() {
 
 void Client::scenegraphPropagate(std::string name, PropagateFunction &function) {
 	scenegraph.root.propagate(name, function);
+}
+
+pid_t Client::getPID(int fd) {
+	if(fd > 0) {
+		struct ucred ucred;
+		uint len = sizeof(struct ucred);
+		getsockopt(fd, SOL_SOCKET, SO_PEERCRED, &ucred, &len);
+
+		return ucred.pid;
+	} else {
+		return 0;
+	}
 }
 
 void Client::startHandler() {

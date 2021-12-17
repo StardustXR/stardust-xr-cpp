@@ -55,7 +55,7 @@ extern void debugSetup();
 
 // Initialize scenegraph and client manager
 ClientManager clientManager;
-Client serverInternalClient(0, &clientManager);
+Client serverInternalClient(0);
 
 // Wayland global variables
 Wayland *wayland;
@@ -116,8 +116,8 @@ int main(int argc, char *argv[]) {
 	// Every stereokit step
 	while (sk_step([]() {
 		// Handle disconnected clients before anything else to ensure scenegraph is clean
-		clientManager.handleDisconnectedClients();
-		clientManager.handleNewlyConnectedClients();
+		ClientManager::handleDisconnectedClients();
+		ClientManager::handleNewlyConnectedClients();
 
         // Delete any nodes that are queued up to delete
         Node::destroyNodes();
@@ -135,15 +135,15 @@ int main(int argc, char *argv[]) {
 		RootInterface::sendLogicStepSignals();
 
 		//Propagate the update and draw methods on scenegraph nodes
-		serverInternalClient.scenegraph.root.propagate("", ScenegraphUpdateFunction);
-		clientManager.callClientsUpdate();
-		serverInternalClient.scenegraph.root.propagate("", ScenegraphDrawFunction);
-		clientManager.callClientsDraw();
+//		serverInternalClient.scenegraph.root.propagate("", ScenegraphUpdateFunction);
+		ClientManager::callClientsUpdate();
+//		serverInternalClient.scenegraph.root.propagate("", ScenegraphDrawFunction);
+		ClientManager::callClientsDraw();
 
 		// Propagate the debug draw methods if the appropriate attribute is set
 		if(args.fieldDebug) {
-			serverInternalClient.scenegraph.root.propagate("", ScenegraphDebugFunction);
-			clientManager.callClientsDebug();
+//			serverInternalClient.scenegraph.root.propagate("", ScenegraphDebugFunction);
+			ClientManager::callClientsDebug();
 		}
 		
 		//Increment the frame count

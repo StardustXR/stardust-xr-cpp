@@ -11,7 +11,9 @@ public:
 	explicit Messenger(Client *client, int fd);
 	virtual ~Messenger();
 
-	void onPipeBreak();
+protected:
+	void onDisconnect() override;
+
 private:
 	Client *client;
 };

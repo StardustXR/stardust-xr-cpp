@@ -7,21 +7,35 @@
 
 namespace StardustXRServer {
 
-ClientManager::ClientManager() : StardustXR::MessengerManager() {}
+std::vector<std::unique_ptr<Client>> ClientManager::clients;
+
+std::mutex ClientManager::pidCacheMutex;
+std::map<pid_t, matrix> ClientManager::pidCache;
+
+std::mutex ClientManager::connectedClientsMutex;
+std::vector<int> ClientManager::newlyConnectedClients;
+
+ClientManager::ClientManager() : StardustXR::MessengerManager() {
+	signal(SIGPIPE, &ClientManager::clientDisconnected);
+}
 
 void ClientManager::clientConnected(int fd) {
 	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
 	newlyConnectedClients.emplace_back(fd);
 }
 
+void ClientManager::clientDisconnected(int fd) {
+	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
+	clients.erase(std::remove_if(clients.begin(), clients.end(), [fd](std::unique_ptr<Client> &client) {
+		return client->fd == fd;
+	}), clients.end());
+}
+
 void ClientManager::handleNewlyConnectedClients() {
 	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
 	
-	if(newlyConnectedClients.size() == 0)
-		return;
-	
 	for(int newlyConnectedClient : newlyConnectedClients) {
-		Client *client = new Client(newlyConnectedClient, this);
+		Client *client = new Client(newlyConnectedClient);
 		clients.emplace_back(client);
 		client->startHandler();
 	}
@@ -29,9 +43,7 @@ void ClientManager::handleNewlyConnectedClients() {
 }
 
 void ClientManager::handleDisconnectedClients() {
-	if(clients.size() == 0)
-		return;
-
+	const std::lock_guard<std::mutex> lock(connectedClientsMutex);
 	clients.erase(std::remove_if(clients.begin(), clients.end(), [](std::unique_ptr<Client> &client) {
 		bool disconnected = !!client->disconnected; // !! inverts the atomic bool twice, gently converting it to a regular bool
 		return disconnected;

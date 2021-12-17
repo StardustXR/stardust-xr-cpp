@@ -13,22 +13,23 @@ class ClientManager : public StardustXR::MessengerManager {
 public:
 	explicit ClientManager();
 
-	std::vector<std::unique_ptr<Client>> clients;
-	void handleNewlyConnectedClients();
-	void handleDisconnectedClients();
+	static std::vector<std::unique_ptr<Client>> clients;
+	static void handleNewlyConnectedClients();
+	static void handleDisconnectedClients();
 
-	void callClientsUpdate();
-	void callClientsDebug();
-	void callClientsDraw();
+	static void callClientsUpdate();
+	static void callClientsDebug();
+	static void callClientsDraw();
 
-	std::mutex pidCacheMutex;
-	std::map<pid_t, matrix> pidCache;
+	static std::mutex pidCacheMutex;
+	static std::map<pid_t, matrix> pidCache;
 
 protected:
-	std::mutex connectedClientsMutex;
-	std::vector<int> newlyConnectedClients;
+	static std::mutex connectedClientsMutex;
+	static std::vector<int> newlyConnectedClients;
 
 	void clientConnected(int fd);
+	static void clientDisconnected(int fd);
 };
 
 }

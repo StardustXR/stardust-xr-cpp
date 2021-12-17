@@ -12,9 +12,8 @@ Messenger::~Messenger() {
 	close(fd);
 }
 
-void Messenger::onPipeBreak() {
+void Messenger::onDisconnect() {
 	client->disconnected = true;
-	pipeBroke = true;
 }
 
 }
