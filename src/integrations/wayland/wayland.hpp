@@ -15,6 +15,7 @@ struct wlr_compositor;
 struct wlr_backend;
 struct wlr_output;
 struct wlr_output_layout;
+struct wlr_xdg_decoration_manager_v1;
 struct wlr_xdg_shell;
 struct wlr_xwayland;
 
@@ -31,6 +32,8 @@ public:
 
 	void onNewXDGSurface(void *data);
 	void onDestroyXDGSurface(void *data);
+
+	void onNewToplevelDecorationXDG(void *data);
 
 	void onNewXWaylandSurface(void *data);
 	void onMapXWaylandSurface(void *data);
@@ -49,6 +52,9 @@ protected:
 	wlr_xdg_shell *xdg_shell;
 	WaylandCallback newSurfaceCallbackXDG;
 	WaylandCallback destroySurfaceCallbackXDG;
+
+	wlr_xdg_decoration_manager_v1 *xdg_decoration_manager;
+	WaylandCallback newToplevelDecorationXDG;
 
 	wlr_xwayland *xwayland;
 	WaylandCallback newSurfaceCallbackXWayland;

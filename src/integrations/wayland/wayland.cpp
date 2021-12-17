@@ -16,6 +16,7 @@ extern "C" {
 #include "wlr/backend/headless.h"
 #undef static
 
+#include "wlr/types/wlr_xdg_decoration_v1.h"
 #include "wlr/types/wlr_data_device.h"
 #include "wlr/types/wlr_output.h"
 #include "wlr/types/wlr_output_layout.h"
@@ -103,6 +104,11 @@ Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 	wl_signal_add(&xdg_shell->events.new_surface, &newSurfaceCallbackXDG.listener);
 	destroySurfaceCallbackXDG.callback = std::bind(&Wayland::onDestroyXDGSurface, this, std::placeholders::_1);
 
+	xdg_decoration_manager = wlr_xdg_decoration_manager_v1_create(wayland_display);
+	assert(xdg_decoration_manager);
+	wl_signal_add(&xdg_decoration_manager->events.new_toplevel_decoration, &newToplevelDecorationXDG.listener);
+	newToplevelDecorationXDG.callback = std::bind(&Wayland::onNewToplevelDecorationXDG, this, std::placeholders::_1);
+
 	xwayland = wlr_xwayland_create(wayland_display, compositor, false);
 	assert(xwayland);
 	newSurfaceCallbackXWayland.callback = std::bind(&Wayland::onNewXWaylandSurface, this, std::placeholders::_1);
@@ -144,6 +150,11 @@ void Wayland::onDestroyXDGSurface(void *data) {
 	wlr_xdg_surface *xdg_surface = (wlr_xdg_surface *) data;
 
 	onDestroySurface(xdg_surface->surface);
+}
+
+void Wayland::onNewToplevelDecorationXDG(void *data) {
+	wlr_xdg_toplevel_decoration_v1 *decoration = (wlr_xdg_toplevel_decoration_v1 *) data;
+	wlr_xdg_toplevel_decoration_v1_set_mode(decoration, WLR_XDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE);
 }
 
 void Wayland::onNewXWaylandSurface(void *data) {
