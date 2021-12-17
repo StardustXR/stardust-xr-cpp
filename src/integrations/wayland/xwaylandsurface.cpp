@@ -15,6 +15,10 @@ XWaylandSurface::XWaylandSurface(wlr_renderer *renderer, wlr_xwayland_surface *x
 	wlr_xwayland_surface_set_maximized(xwayland_surface, true);
 }
 
+void XWaylandSurface::resize(uint32_t width, uint32_t height) const {
+	wlr_xwayland_surface_configure(xwayland_surface, 0, 0, width, height);
+}
+
 void XWaylandSurface::close() const {
 	wlr_xwayland_surface_close(xwayland_surface);
 }

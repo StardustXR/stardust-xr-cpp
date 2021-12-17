@@ -17,6 +17,7 @@ public:
 	void serializeData(flexbuffers::Builder &fbb);
 	Alias *makeAlias(Client *client);
 	std::vector<uint8_t> applySurfaceMaterial(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> resize(flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> close(flexbuffers::Reference data, bool returnValue);
 
 	static TypeInfo itemTypeInfo;

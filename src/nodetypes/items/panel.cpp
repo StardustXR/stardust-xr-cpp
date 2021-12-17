@@ -11,6 +11,7 @@ Item::TypeInfo PanelItem::itemTypeInfo = {
 	{
 		"applySurfaceMaterial",
 		"getData",
+		"resize",
 		"close",
 	}
 };
@@ -19,6 +20,7 @@ PanelItem::PanelItem(Client *client, Surface *surface, pose_t pose) :
 	Item(client, itemTypeInfo, pose),
 	surface(surface) {
 	STARDUSTXR_NODE_METHOD("applySurfaceMaterial", &PanelItem::applySurfaceMaterial)
+	STARDUSTXR_NODE_METHOD("resize", &PanelItem::resize)
 	STARDUSTXR_NODE_METHOD("close", &PanelItem::close)
 }
 PanelItem::~PanelItem() {}
@@ -38,10 +40,20 @@ Alias *PanelItem::makeAlias(Client *client) {
 std::vector<uint8_t> PanelItem::applySurfaceMaterial(flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector flexVec      = data.AsVector();
 	Model *model				     = this->client->scenegraph.findNode<Model>(flexVec[0].AsString().str());
-	uint32_t submeshIndex            = flexVec[0].AsUInt32();
+	uint32_t submeshIndex            = flexVec[1].AsUInt32();
 
 	if(model != nullptr)
 		model->replaceMaterial(submeshIndex, surface->surfaceMatAlphaClip);
+	return std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> PanelItem::resize(flexbuffers::Reference data, bool returnValue) {
+	flexbuffers::Vector flexVec = data.AsVector();
+	uint32_t width              = flexVec[0].AsUInt32();
+	uint32_t height             = flexVec[1].AsUInt32();
+
+	surface->resize(width, height);
+
 	return std::vector<uint8_t>();
 }
 

@@ -17,6 +17,7 @@ extern "C" {
 #undef static
 
 #include "wlr/types/wlr_xdg_decoration_v1.h"
+#include "wlr/types/wlr_xdg_decoration_v1.h"
 #include "wlr/types/wlr_data_device.h"
 #include "wlr/types/wlr_output.h"
 #include "wlr/types/wlr_output_layout.h"

@@ -17,6 +17,7 @@ public:
 	virtual ~Surface();
 
 	void onCommit();
+	virtual void resize(uint32_t width, uint32_t height) const = 0;
 	virtual void close() const = 0;
 
 	virtual bool isMapped() const = 0;
