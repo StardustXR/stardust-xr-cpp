@@ -135,14 +135,14 @@ int main(int argc, char *argv[]) {
 		RootInterface::sendLogicStepSignals();
 
 		//Propagate the update and draw methods on scenegraph nodes
-//		serverInternalClient.scenegraph.root.propagate("", ScenegraphUpdateFunction);
+		serverInternalClient.scenegraph.root.propagate("", ScenegraphUpdateFunction);
 		ClientManager::callClientsUpdate();
-//		serverInternalClient.scenegraph.root.propagate("", ScenegraphDrawFunction);
+		serverInternalClient.scenegraph.root.propagate("", ScenegraphDrawFunction);
 		ClientManager::callClientsDraw();
 
 		// Propagate the debug draw methods if the appropriate attribute is set
 		if(args.fieldDebug) {
-//			serverInternalClient.scenegraph.root.propagate("", ScenegraphDebugFunction);
+			serverInternalClient.scenegraph.root.propagate("", ScenegraphDebugFunction);
 			ClientManager::callClientsDebug();
 		}
 		
