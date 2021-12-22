@@ -91,7 +91,10 @@ void Surface::onCommit() {
 
 	tex_set_options(surfaceTex, sk::tex_sample_point, tex_address_clamp, 1);
 
-	int pixels[2] = {(int) width, (int) height};
+	int pixels[2] = {
+		(int) surfaceTexture->width,
+		(int) surfaceTexture->height
+	};
 	material_set_param(this->surfaceMatAlphaAdd,   "size", material_param_float, (void *) pixels);
 	material_set_param(this->surfaceMatAlphaBlend, "size", material_param_float, (void *) pixels);
 	material_set_param(this->surfaceMatAlphaClip,  "size", material_param_float, (void *) pixels);
