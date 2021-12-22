@@ -27,7 +27,6 @@ public:
 	sk::material_t surfaceMatAlphaBlend;
 	uint width;
 	uint height;
-	uint density;
 	wlr_surface *surface;
 
 protected:

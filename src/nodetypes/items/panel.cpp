@@ -29,7 +29,6 @@ void PanelItem::serializeData(flexbuffers::Builder &fbb) {
 	fbb.Vector([&]() {
 		fbb.UInt(surface->width);
 		fbb.UInt(surface->height);
-		fbb.UInt(surface->density);
 	});
 }
 

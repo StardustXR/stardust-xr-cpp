@@ -81,9 +81,8 @@ void Surface::onCommit() {
 		return;
 	wlr_gles2_texture *eglTexture = (wlr_gles2_texture *) surfaceTexture;
 
-	this->width          = surfaceTexture->width;
-	this->height         = surfaceTexture->height;
-	this->density        = surface->current.scale;
+	this->width  = surface->current.width;
+	this->height = surface->current.height;
 
 	this->surfaceTex->tex.width       = surfaceTexture->width;
 	this->surfaceTex->tex.height      = surfaceTexture->height;
