@@ -1,1 +1,2 @@
+subdir('openxr')
 subdir('wayland')
