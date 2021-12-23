@@ -11,6 +11,11 @@ Item::TypeInfo PanelItem::itemTypeInfo = {
 	{
 		"applySurfaceMaterial",
 		"getData",
+
+		"setPointerActive",
+		"setPointerPosition",
+		"setPointerButtonPressed",
+
 		"resize",
 		"close",
 	}
@@ -20,10 +25,19 @@ PanelItem::PanelItem(Client *client, Surface *surface, pose_t pose) :
 	Item(client, itemTypeInfo, pose),
 	surface(surface) {
 	STARDUSTXR_NODE_METHOD("applySurfaceMaterial", &PanelItem::applySurfaceMaterial)
+
+	STARDUSTXR_NODE_METHOD("setPointerActive",        &PanelItem::setPointerActive)
+	STARDUSTXR_NODE_METHOD("setPointerPosition",      &PanelItem::setPointerPosition)
+	STARDUSTXR_NODE_METHOD("setPointerButtonPressed", &PanelItem::setPointerButtonPressed)
+
 	STARDUSTXR_NODE_METHOD("resize", &PanelItem::resize)
 	STARDUSTXR_NODE_METHOD("close", &PanelItem::close)
 }
 PanelItem::~PanelItem() {}
+
+void PanelItem::update() {
+	surface->frameEnd();
+}
 
 void PanelItem::serializeData(flexbuffers::Builder &fbb) {
 	fbb.Vector([&]() {
@@ -43,6 +57,30 @@ std::vector<uint8_t> PanelItem::applySurfaceMaterial(flexbuffers::Reference data
 
 	if(model != nullptr)
 		model->replaceMaterial(submeshIndex, surface->surfaceMatAlphaClip);
+	return std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> PanelItem::setPointerActive(flexbuffers::Reference data, bool returnValue) {
+	surface->setPointerActive(data.AsBool());
+
+	return std::vector<uint8_t>();
+}
+std::vector<uint8_t> PanelItem::setPointerPosition(flexbuffers::Reference data, bool returnValue) {
+	flexbuffers::Vector flexVec = data.AsVector();
+	uint32_t x                  = flexVec[0].AsDouble();
+	uint32_t y                  = flexVec[1].AsDouble();
+
+	surface->setPointerPosition(x, y);
+
+	return std::vector<uint8_t>();
+}
+std::vector<uint8_t> PanelItem::setPointerButtonPressed(flexbuffers::Reference data, bool returnValue) {
+	flexbuffers::Vector flexVec = data.AsVector();
+	uint32_t button             = flexVec[0].AsUInt32();
+	bool pressed                = flexVec[1].AsBool();
+
+	surface->setPointerButtonPressed(button, pressed);
+
 	return std::vector<uint8_t>();
 }
 

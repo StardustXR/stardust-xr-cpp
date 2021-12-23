@@ -8,6 +8,7 @@
 #include "../../nodetypes/items/panel.hpp"
 #include "../../nodetypes/items/itemui.hpp"
 #include "../../globals.h"
+#include "../../util/time.hpp"
 
 extern "C" {
 #include "render/egl.h"
@@ -16,6 +17,8 @@ extern "C" {
 #undef static
 #include "wlr/types/wlr_surface.h"
 #include "types/wlr_xdg_shell.h"
+
+#include <xkbcommon/xkbcommon.h>
 }
 
 #include "shaders/sshader_unlit_gamma.hlsl.h"
@@ -23,7 +26,7 @@ extern "C" {
 
 using namespace sk;
 
-Surface::Surface(wlr_renderer *renderer, wlr_surface *surface) {
+Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surface) {
 	this->renderer = renderer;
 	this->surface = surface;
 
@@ -59,13 +62,19 @@ Surface::Surface(wlr_renderer *renderer, wlr_surface *surface) {
 
 	panel = new StardustXRServer::PanelItem(&serverInternalClient, this, sk::pose_identity);
 	StardustXRServer::Node *internalPanelNode = serverInternalClient.scenegraph.findNode("/item/panel");
+	std::string panelName = std::to_string(panel->id);
+
+	seat = wlr_seat_create(display, panelName.c_str());
+
 	if(internalPanelNode)
-		internalPanelNode->addChild(std::to_string(panel->id), panel);
+		internalPanelNode->addChild(panelName, panel);
 	if(StardustXRServer::PanelItem::itemTypeInfo.UI)
 		StardustXRServer::PanelItem::itemTypeInfo.UI->handleItemCreate(panel);
 }
 
 Surface::~Surface() {
+	wlr_seat_destroy(seat);
+
 	tex_release(surfaceTex);
 	shader_release(surfaceShader);
 	material_release(surfaceMatAlphaAdd);
@@ -73,6 +82,11 @@ Surface::~Surface() {
 	material_release(surfaceMatAlphaClip);
 
 	panel->queueDestroy(true);
+}
+
+void Surface::frameEnd() {
+	wlr_seat_pointer_send_frame(seat);
+	wlr_seat_touch_send_frame(seat);
 }
 
 void Surface::onCommit() {
@@ -112,4 +126,26 @@ void Surface::onCommit() {
 	timespec now;
 	clock_gettime(CLOCK_MONOTONIC, &now);
 	wlr_surface_send_frame_done(surface, &now);
+}
+
+void Surface::setPointerActive(bool active) {
+	if(active)
+		wlr_seat_pointer_enter(seat, surface, seat->pointer_state.sx, seat->pointer_state.sy);
+	else
+		wlr_seat_pointer_clear_focus(seat);
+}
+void Surface::setPointerPosition(double x, double y) {
+	wlr_seat_pointer_send_motion(seat, StardustXRServer::Time::timestampMS(), x, y);
+}
+void Surface::setPointerButtonPressed(uint32_t button, bool pressed) {
+	wlr_seat_pointer_send_button(seat, StardustXRServer::Time::timestampMS(), button, pressed ? WLR_BUTTON_PRESSED : WLR_BUTTON_RELEASED);
+}
+
+void Surface::setKeyboardActive(bool active) {
+	if(active) {
+		wlr_keyboard *keyboard = wlr_seat_get_keyboard(seat);
+		wlr_seat_keyboard_enter(seat, surface, keyboard->keycodes, keyboard->num_keycodes, &keyboard->modifiers);
+	} else {
+		wlr_seat_keyboard_clear_focus(seat);
+	}
 }

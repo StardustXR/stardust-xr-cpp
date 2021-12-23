@@ -5,7 +5,7 @@ extern "C" {
 #include "wlr/util/edges.h"
 }
 
-XDGSurface::XDGSurface(wlr_renderer *renderer, wlr_xdg_surface *xdg_surface) : Surface(renderer, xdg_surface->surface) {
+XDGSurface::XDGSurface(wl_display *display, wlr_renderer *renderer, wlr_xdg_surface *xdg_surface) : Surface(display, renderer, xdg_surface->surface) {
 	this->xdg_surface = xdg_surface;
 
 	if(wlr_surface_is_xdg_surface(surface))

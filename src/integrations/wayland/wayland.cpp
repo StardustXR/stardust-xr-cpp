@@ -95,6 +95,7 @@ Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 	output = wlr_headless_add_output(backend, 0, 0);
 	assert(output);
 	wlr_output_set_scale(output, 2.0f);
+	wlr_output_set_subpixel(output, WL_OUTPUT_SUBPIXEL_NONE);
 	wlr_output_commit(output);
 	wlr_output_create_global(output);
 
@@ -143,7 +144,7 @@ void Wayland::onNewXDGSurface(void *data) {
 	wlr_xdg_surface *surface = (wlr_xdg_surface *) data;
 	wl_signal_add(&surface->events.destroy, &destroySurfaceCallbackXDG.listener);
 
-	XDGSurface *newSurface = new XDGSurface(renderer, surface);
+	XDGSurface *newSurface = new XDGSurface(wayland_display, renderer, surface);
 
 	onNewSurface(newSurface);
 }
@@ -165,7 +166,7 @@ void Wayland::onNewXWaylandSurface(void *data) {
 }
 void Wayland::onMapXWaylandSurface(void *data) {
 	wlr_xwayland_surface *surface = (wlr_xwayland_surface *) data;
-	XWaylandSurface *newSurface = new XWaylandSurface(renderer, surface);
+	XWaylandSurface *newSurface = new XWaylandSurface(wayland_display, renderer, surface);
 
 	onNewSurface(newSurface);
 }
