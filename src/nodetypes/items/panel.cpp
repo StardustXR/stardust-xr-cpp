@@ -51,6 +51,9 @@ Alias *PanelItem::makeAlias(Client *client) {
 }
 
 std::vector<uint8_t> PanelItem::applySurfaceMaterial(flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
 	flexbuffers::Vector flexVec      = data.AsVector();
 	Model *model				     = this->client->scenegraph.findNode<Model>(flexVec[0].AsString().str());
 	uint32_t submeshIndex            = flexVec[1].AsUInt32();
@@ -61,11 +64,17 @@ std::vector<uint8_t> PanelItem::applySurfaceMaterial(flexbuffers::Reference data
 }
 
 std::vector<uint8_t> PanelItem::setPointerActive(flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
 	surface->setPointerActive(data.AsBool());
 
 	return std::vector<uint8_t>();
 }
 std::vector<uint8_t> PanelItem::setPointerPosition(flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
 	flexbuffers::Vector flexVec = data.AsVector();
 	uint32_t x                  = flexVec[0].AsDouble();
 	uint32_t y                  = flexVec[1].AsDouble();
@@ -75,6 +84,9 @@ std::vector<uint8_t> PanelItem::setPointerPosition(flexbuffers::Reference data, 
 	return std::vector<uint8_t>();
 }
 std::vector<uint8_t> PanelItem::setPointerButtonPressed(flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
 	flexbuffers::Vector flexVec = data.AsVector();
 	uint32_t button             = flexVec[0].AsUInt32();
 	bool pressed                = flexVec[1].AsBool();
@@ -85,6 +97,9 @@ std::vector<uint8_t> PanelItem::setPointerButtonPressed(flexbuffers::Reference d
 }
 
 std::vector<uint8_t> PanelItem::resize(flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
 	flexbuffers::Vector flexVec = data.AsVector();
 	uint32_t width              = flexVec[0].AsUInt32();
 	uint32_t height             = flexVec[1].AsUInt32();
@@ -95,6 +110,9 @@ std::vector<uint8_t> PanelItem::resize(flexbuffers::Reference data, bool returnV
 }
 
 std::vector<uint8_t> PanelItem::close(flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
 	surface->close();
 	return std::vector<uint8_t>();
 }
