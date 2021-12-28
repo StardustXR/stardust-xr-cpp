@@ -148,6 +148,9 @@ void Wayland::onDestroySurface(wlr_surface *surface) {
 
 void Wayland::onNewXDGSurface(void *data) {
 	wlr_xdg_surface *surface = (wlr_xdg_surface *) data;
+	if(surface->role != WLR_XDG_SURFACE_ROLE_TOPLEVEL)
+		return;
+
 	wl_signal_add(&surface->events.destroy, &destroySurfaceCallbackXDG.listener);
 
 	XDGSurface *newSurface = new XDGSurface(wayland_display, renderer, surface, queueSeat);
