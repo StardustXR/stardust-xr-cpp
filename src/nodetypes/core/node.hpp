@@ -50,6 +50,7 @@ protected:
     static std::vector<Node *> nodesToDestroy;
     static std::mutex destroyMutex;
 	bool destroyable = true;
+	bool destroyQueued = false;
 };
 
 } //namespace StardustXRServer

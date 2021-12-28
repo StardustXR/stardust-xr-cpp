@@ -42,7 +42,7 @@ Node &Node::operator[](const std::string child) {
 }
 
 bool Node::getEnabled() {
-	return this->enabled;
+	return this->enabled && !destroyQueued;
 }
 
 void Node::setEnabled(bool enabled) {
@@ -53,6 +53,7 @@ void Node::queueDestroy(bool forceDestroy) {
 	if(!forceDestroy && !destroyable)
 		return;
 
+	destroyQueued = true;
 	for(Alias *alias : aliases) {
 	   alias->queueDestroy(true);
 	}
