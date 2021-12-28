@@ -26,7 +26,7 @@ extern "C" {
 
 using namespace sk;
 
-Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surface) {
+Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surface, wlr_seat *seat) {
 	this->renderer = renderer;
 	this->surface = surface;
 
@@ -64,7 +64,9 @@ Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surfa
 	StardustXRServer::Node *internalPanelNode = serverInternalClient.scenegraph.findNode("/item/panel");
 	std::string panelName = std::to_string(panel->id);
 
-	seat = wlr_seat_create(display, panelName.c_str());
+	this->seat = seat;
+	wlr_seat_set_capabilities(seat, WL_SEAT_CAPABILITY_POINTER);
+//	wlr_seat_set_capabilities(seat, WL_SEAT_CAPABILITY_POINTER | WL_SEAT_CAPABILITY_KEYBOARD | WL_SEAT_CAPABILITY_TOUCH);
 
 	if(internalPanelNode)
 		internalPanelNode->addChild(panelName, panel);
@@ -86,7 +88,7 @@ Surface::~Surface() {
 
 void Surface::frameEnd() {
 	wlr_seat_pointer_send_frame(seat);
-	wlr_seat_touch_send_frame(seat);
+//	wlr_seat_touch_send_frame(seat);
 }
 
 void Surface::onCommit() {

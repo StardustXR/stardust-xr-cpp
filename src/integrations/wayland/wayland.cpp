@@ -99,7 +99,11 @@ Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 	wlr_output_commit(output);
 	wlr_output_create_global(output);
 
-	// wlr_data_device_manager_create(display);
+	data_device = wlr_data_device_manager_create(wayland_display);
+
+	queueSeat = wlr_seat_create(wayland_display, "0");
+	seatID++;
+
 	xdg_shell = wlr_xdg_shell_create(wayland_display);
 	assert(xdg_shell);
 	newSurfaceCallbackXDG.callback = std::bind(&Wayland::onNewXDGSurface, this, std::placeholders::_1);
@@ -128,6 +132,8 @@ void Wayland::update() {
 
 void Wayland::onNewSurface(Surface *surface) {
 	surfaces.emplace_back(surface);
+	queueSeat = wlr_seat_create(wayland_display, std::to_string(seatID).c_str());
+	seatID++;
 }
 void Wayland::onDestroySurface(wlr_surface *surface) {
 	surfaces.erase(std::remove_if(

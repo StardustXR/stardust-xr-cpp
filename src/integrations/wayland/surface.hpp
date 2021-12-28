@@ -16,7 +16,7 @@ class Wayland;
 
 class Surface {
 public:
-	explicit Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surface);
+	explicit Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surface, wlr_seat *seat);
 	virtual ~Surface();
 
 	void frameEnd();

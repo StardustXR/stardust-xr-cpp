@@ -12,6 +12,7 @@
 
 struct wlr_egl;
 struct wlr_compositor;
+struct wlr_data_device_manager;
 struct wlr_backend;
 struct wlr_output;
 struct wlr_output_layout;
@@ -48,6 +49,10 @@ protected:
 	wlr_compositor *compositor;
 	wlr_backend *backend;
 	wlr_output *output;
+
+	wlr_data_device_manager *data_device;
+	wlr_seat *queueSeat;
+	uint32_t seatID = 0;
 
 	wlr_xdg_shell *xdg_shell;
 	WaylandCallback newSurfaceCallbackXDG;

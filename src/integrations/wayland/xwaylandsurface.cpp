@@ -4,7 +4,7 @@ extern "C" {
 #include "xwaylandinclude.h"
 }
 
-XWaylandSurface::XWaylandSurface(wl_display *display, wlr_renderer *renderer, wlr_xwayland_surface *xwayland_surface) : Surface(display, renderer, xwayland_surface->surface) {
+XWaylandSurface::XWaylandSurface(wl_display *display, wlr_renderer *renderer, wlr_xwayland_surface *xwayland_surface, wlr_seat *seat) : Surface(display, renderer, xwayland_surface->surface, seat) {
 	this->xwayland_surface = xwayland_surface;
 
 	if(wlr_surface_is_xwayland_surface(surface))
