@@ -150,7 +150,7 @@ void Wayland::onNewXDGSurface(void *data) {
 	wlr_xdg_surface *surface = (wlr_xdg_surface *) data;
 	wl_signal_add(&surface->events.destroy, &destroySurfaceCallbackXDG.listener);
 
-	XDGSurface *newSurface = new XDGSurface(wayland_display, renderer, surface);
+	XDGSurface *newSurface = new XDGSurface(wayland_display, renderer, surface, queueSeat);
 
 	onNewSurface(newSurface);
 }
@@ -172,7 +172,7 @@ void Wayland::onNewXWaylandSurface(void *data) {
 }
 void Wayland::onMapXWaylandSurface(void *data) {
 	wlr_xwayland_surface *surface = (wlr_xwayland_surface *) data;
-	XWaylandSurface *newSurface = new XWaylandSurface(wayland_display, renderer, surface);
+	XWaylandSurface *newSurface = new XWaylandSurface(wayland_display, renderer, surface, queueSeat);
 
 	onNewSurface(newSurface);
 }
