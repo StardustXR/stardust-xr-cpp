@@ -27,6 +27,7 @@ public:
 	void setPointerActive(bool active);
 	void setPointerPosition(double x, double y);
 	void setPointerButtonPressed(uint32_t button, bool pressed);
+	void scrollPointerAxis(uint32_t source, double x, double y, int32_t dx, int32_t dy);
 
 	void setKeyboardActive(bool active);
 	void setKeyState(uint32_t key, uint32_t state);
@@ -43,9 +44,12 @@ public:
 protected:
 	WaylandCallback surfaceCommitCallback;
 
+	bool pointerActive = false;
+
     wlr_renderer *renderer;
 	wlr_seat *seat;
 	wlr_keyboard *keyboard;
+	std::unordered_map<uint32_t, bool> buttonStates;
 
 	bool updateSurface();
 	sk::shader_t surfaceShader;

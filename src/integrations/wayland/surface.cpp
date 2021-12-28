@@ -140,7 +140,16 @@ void Surface::setPointerPosition(double x, double y) {
 	wlr_seat_pointer_send_motion(seat, StardustXRServer::Time::timestampMS(), x, y);
 }
 void Surface::setPointerButtonPressed(uint32_t button, bool pressed) {
-	wlr_seat_pointer_send_button(seat, StardustXRServer::Time::timestampMS(), button, pressed ? WLR_BUTTON_PRESSED : WLR_BUTTON_RELEASED);
+	if(buttonStates.find(button) != buttonStates.end() && buttonStates[button] == pressed)
+		return;
+	wlr_seat_pointer_notify_button(seat, StardustXRServer::Time::timestampMS(), button, pressed ? WLR_BUTTON_PRESSED : WLR_BUTTON_RELEASED);
+	buttonStates[button] = pressed;
+}
+void Surface::scrollPointerAxis(uint32_t source, double x, double y, int32_t dx, int32_t dy) {
+	if(x != 0 || dx != 0)
+		wlr_seat_pointer_send_axis(seat, StardustXRServer::Time::timestampMS(), WLR_AXIS_ORIENTATION_HORIZONTAL,  x,  dx, (wlr_axis_source) source);
+	if(y != 0 || dy != 0)
+		wlr_seat_pointer_send_axis(seat, StardustXRServer::Time::timestampMS(), WLR_AXIS_ORIENTATION_VERTICAL  , -y, -dy, (wlr_axis_source) source);
 }
 
 void Surface::setKeyboardActive(bool active) {

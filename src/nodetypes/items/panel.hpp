@@ -23,6 +23,7 @@ public:
 	std::vector<uint8_t> setPointerActive(flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setPointerPosition(flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setPointerButtonPressed(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> scrollPointerAxis(flexbuffers::Reference data, bool returnValue);
 
 	std::vector<uint8_t> resize(flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> close(flexbuffers::Reference data, bool returnValue);

@@ -15,6 +15,7 @@ Item::TypeInfo PanelItem::itemTypeInfo = {
 		"setPointerActive",
 		"setPointerPosition",
 		"setPointerButtonPressed",
+		"scrollPointerAxis",
 
 		"resize",
 		"close",
@@ -29,6 +30,7 @@ PanelItem::PanelItem(Client *client, Surface *surface, pose_t pose) :
 	STARDUSTXR_NODE_METHOD("setPointerActive",        &PanelItem::setPointerActive)
 	STARDUSTXR_NODE_METHOD("setPointerPosition",      &PanelItem::setPointerPosition)
 	STARDUSTXR_NODE_METHOD("setPointerButtonPressed", &PanelItem::setPointerButtonPressed)
+	STARDUSTXR_NODE_METHOD("scrollPointerAxis",       &PanelItem::scrollPointerAxis)
 
 	STARDUSTXR_NODE_METHOD("resize", &PanelItem::resize)
 	STARDUSTXR_NODE_METHOD("close", &PanelItem::close)
@@ -41,8 +43,8 @@ void PanelItem::update() {
 
 void PanelItem::serializeData(flexbuffers::Builder &fbb) {
 	fbb.Vector([&]() {
-		fbb.UInt(surface->width);
-		fbb.UInt(surface->height);
+		fbb.UInt(getEnabled() ? surface->width  : 0);
+		fbb.UInt(getEnabled() ? surface->height : 0);
 	});
 }
 
@@ -92,6 +94,21 @@ std::vector<uint8_t> PanelItem::setPointerButtonPressed(flexbuffers::Reference d
 	bool pressed                = flexVec[1].AsBool();
 
 	surface->setPointerButtonPressed(button, pressed);
+
+	return std::vector<uint8_t>();
+}
+std::vector<uint8_t> PanelItem::scrollPointerAxis(flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
+	flexbuffers::Vector flexVec = data.AsVector();
+	uint32_t source             = flexVec[0].AsUInt32();
+	  double x                  = flexVec[1].AsDouble();
+	  double y                  = flexVec[2].AsDouble();
+	 int32_t dx                 = flexVec[3].AsInt32();
+	 int32_t dy                 = flexVec[4].AsInt32();
+
+	surface->scrollPointerAxis(source, x, y, dx, dy);
 
 	return std::vector<uint8_t>();
 }
