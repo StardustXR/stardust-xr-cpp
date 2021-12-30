@@ -17,6 +17,10 @@ Item::TypeInfo PanelItem::itemTypeInfo = {
 		"setPointerButtonPressed",
 		"scrollPointerAxis",
 
+		"touchDown",
+		"touchMove",
+		"touchUp",
+
 		"resize",
 		"close",
 	}
@@ -31,6 +35,10 @@ PanelItem::PanelItem(Client *client, Surface *surface, pose_t pose) :
 	STARDUSTXR_NODE_METHOD("setPointerPosition",      &PanelItem::setPointerPosition)
 	STARDUSTXR_NODE_METHOD("setPointerButtonPressed", &PanelItem::setPointerButtonPressed)
 	STARDUSTXR_NODE_METHOD("scrollPointerAxis",       &PanelItem::scrollPointerAxis)
+
+	STARDUSTXR_NODE_METHOD("touchDown", &PanelItem::touchDown)
+	STARDUSTXR_NODE_METHOD("touchMove", &PanelItem::touchMove)
+	STARDUSTXR_NODE_METHOD("touchUp",   &PanelItem::touchUp)
 
 	STARDUSTXR_NODE_METHOD("resize", &PanelItem::resize)
 	STARDUSTXR_NODE_METHOD("close", &PanelItem::close)
@@ -109,6 +117,43 @@ std::vector<uint8_t> PanelItem::scrollPointerAxis(flexbuffers::Reference data, b
 	 int32_t dy                 = flexVec[4].AsInt32();
 
 	surface->scrollPointerAxis(source, x, y, dx, dy);
+
+	return std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> PanelItem::touchDown(flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
+	flexbuffers::Vector flexVec = data.AsVector();
+	uint32_t id                 = flexVec[0].AsUInt32();
+	  double x                  = flexVec[1].AsDouble();
+	  double y                  = flexVec[2].AsDouble();
+
+	surface->touchDown(id, x, y);
+
+	return std::vector<uint8_t>();
+}
+std::vector<uint8_t> PanelItem::touchMove(flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
+	flexbuffers::Vector flexVec = data.AsVector();
+	uint32_t id                 = flexVec[0].AsUInt32();
+	  double x                  = flexVec[1].AsDouble();
+	  double y                  = flexVec[2].AsDouble();
+
+	surface->touchMove(id, x, y);
+
+	return std::vector<uint8_t>();
+}
+std::vector<uint8_t> PanelItem::touchUp(flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
+	uint32_t id = data.AsUInt32();
+
+	surface->touchUp(id);
 
 	return std::vector<uint8_t>();
 }

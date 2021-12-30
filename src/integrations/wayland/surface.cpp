@@ -65,7 +65,7 @@ Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surfa
 	std::string panelName = std::to_string(panel->id);
 
 	this->seat = seat;
-	wlr_seat_set_capabilities(seat, WL_SEAT_CAPABILITY_POINTER);
+	wlr_seat_set_capabilities(seat, WL_SEAT_CAPABILITY_POINTER | WL_SEAT_CAPABILITY_TOUCH);
 //	wlr_seat_set_capabilities(seat, WL_SEAT_CAPABILITY_POINTER | WL_SEAT_CAPABILITY_KEYBOARD | WL_SEAT_CAPABILITY_TOUCH);
 
 	if(internalPanelNode)
@@ -88,7 +88,7 @@ Surface::~Surface() {
 
 void Surface::frameEnd() {
 	wlr_seat_pointer_send_frame(seat);
-//	wlr_seat_touch_send_frame(seat);
+	wlr_seat_touch_send_frame(seat);
 }
 
 void Surface::onCommit() {
@@ -150,6 +150,16 @@ void Surface::scrollPointerAxis(uint32_t source, double x, double y, int32_t dx,
 		wlr_seat_pointer_send_axis(seat, StardustXRServer::Time::timestampMS(), WLR_AXIS_ORIENTATION_HORIZONTAL,  x,  dx, (wlr_axis_source) source);
 	if(y != 0 || dy != 0)
 		wlr_seat_pointer_send_axis(seat, StardustXRServer::Time::timestampMS(), WLR_AXIS_ORIENTATION_VERTICAL  , -y, -dy, (wlr_axis_source) source);
+}
+
+void Surface::touchDown(uint32_t id, double x, double y) {
+	wlr_seat_touch_notify_down(seat, surface, StardustXRServer::Time::timestampMS(), id, x, y);
+}
+void Surface::touchMove(uint32_t id, double x, double y) {
+	wlr_seat_touch_notify_motion(seat, StardustXRServer::Time::timestampMS(), id, x, y);
+}
+void Surface::touchUp(uint32_t id) {
+	wlr_seat_touch_notify_up(seat, StardustXRServer::Time::timestampMS(), id);
 }
 
 void Surface::setKeyboardActive(bool active) {
