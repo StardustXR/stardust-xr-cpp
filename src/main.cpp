@@ -16,6 +16,7 @@ std::string home;
 #include "core/scenegraphpropagation.hpp"
 #include "interfaces/drawable.hpp"
 #include "interfaces/input.hpp"
+#include "interfaces/item.hpp"
 #include "interfaces/root.hpp"
 #include "interfaces/spatial.hpp"
 #include "nodetypes/core/node.hpp"
@@ -127,6 +128,9 @@ int main(int argc, char *argv[]) {
 
 		// Process the zones
 		SpatialInterface::updateZones();
+
+		// Accept items
+		ItemInterface::updateItems();
 
 		// Update wayland
 		wayland->update();

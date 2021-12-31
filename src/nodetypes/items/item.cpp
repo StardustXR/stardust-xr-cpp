@@ -1,4 +1,5 @@
 #include "item.hpp"
+#include "acceptor.hpp"
 #include "itemui.hpp"
 #include "../../core/client.hpp"
 #include "../../core/clientmanager.hpp"
@@ -12,6 +13,8 @@ Item::Item(Client *client, TypeInfo &itemTypeInfo, pose_t pose) :
 	itemTypeInfo(&itemTypeInfo) {
 
 	STARDUSTXR_NODE_METHOD("getData", &Item::getData)
+	STARDUSTXR_NODE_METHOD("triggerAccept", &Item::triggerAccept)
+	STARDUSTXR_NODE_METHOD("release", &Item::release)
 
 	std::lock_guard<std::mutex> lock(itemTypeInfo.itemsMutex);
 	itemTypeInfo.items.push_back(this);
@@ -32,6 +35,40 @@ std::vector<uint8_t> Item::getData(flexbuffers::Reference data, bool returnValue
 
 Alias *Item::makeAlias(Client *client) {
 	return new SpatialAlias(client, this, itemTypeInfo->aliasedMethods);
+}
+
+std::vector<uint8_t> Item::triggerAccept(flexbuffers::Reference data, bool returnValue) {
+	acceptable = true;
+	return std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> Item::release(flexbuffers::Reference data, bool returnValue) {
+	if(capturedAcceptor)
+		capturedAcceptor.ptr<ItemAcceptor>()->releaseItem(name);
+	return std::vector<uint8_t>();
+}
+
+void Item::updateItems(TypeInfo *info) {
+	std::lock_guard<std::mutex> lock(info->itemsMutex);
+	for(Item *item : info->items) {
+		if(item->capturedAcceptor || !item->acceptable)
+			continue;
+		item->acceptable = false;
+		ItemAcceptor *closestAcceptor = nullptr;
+		float closestAcceptorDistance = 0;
+		for(ItemAcceptor *acceptor : info->acceptors) {
+			if(!acceptor->field)
+				continue;
+			Field *acceptorField = acceptor->field.ptr<Field>();
+			float acceptorDistance = acceptorField->distance(item, vec3_zero);
+			if(acceptorDistance < closestAcceptorDistance) {
+				closestAcceptorDistance = acceptorDistance;
+				closestAcceptor = acceptor;
+			}
+		}
+		if(closestAcceptor)
+			closestAcceptor->captureItem(*item);
+	}
 }
 
 }

@@ -3,11 +3,13 @@
 #include <string>
 #include <vector>
 
+#include "../core/noderef.hpp"
 #include "../spatial/spatial.hpp"
 
 namespace StardustXRServer {
 
 class ItemUI;
+class ItemAcceptor;
 
 class Item : public Spatial {
 public:
@@ -18,6 +20,7 @@ public:
 		ItemUI *UI;
 
 		std::vector<Item *> items;
+		std::vector<ItemAcceptor *> acceptors;
 		std::mutex itemsMutex;
 	};
 
@@ -28,6 +31,14 @@ public:
 	virtual void serializeData(flexbuffers::Builder &fbb) = 0;
 	virtual Alias *makeAlias(Client *client);
 
+	std::vector<uint8_t> triggerAccept(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> release(flexbuffers::Reference data, bool returnValue);
+
+	static void updateItems(TypeInfo *info);
+
+	bool acceptable = false;
+	NodeRef capturedAcceptor;
+protected:
 	TypeInfo *itemTypeInfo;
 };
 
