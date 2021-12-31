@@ -1,8 +1,8 @@
 #include "item.hpp"
 #include "../core/client.hpp"
 #include "../nodetypes/spatial/alias.hpp"
-#include "../nodetypes/items/environment.hpp"
-#include "../nodetypes/items/panel.hpp"
+#include "../nodetypes/items/types/environment.hpp"
+#include "../nodetypes/items/types/panel.hpp"
 #include "../nodetypes/items/itemui.hpp"
 #include "../globals.h"
 

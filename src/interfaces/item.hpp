@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../nodetypes/spatial/spatial.hpp"
-#include "../nodetypes/items/environment.hpp"
+#include "../nodetypes/items/types/environment.hpp"
 
 namespace StardustXRServer {
 

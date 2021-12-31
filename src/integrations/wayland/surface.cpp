@@ -5,7 +5,7 @@
 #include "asset_types/texture.h"
 
 #include "surface.hpp"
-#include "../../nodetypes/items/panel.hpp"
+#include "../../nodetypes/items/types/panel.hpp"
 #include "../../nodetypes/items/itemui.hpp"
 #include "../../globals.h"
 #include "../../util/time.hpp"

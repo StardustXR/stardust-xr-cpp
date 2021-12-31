@@ -1,8 +1,8 @@
 #include "panel.hpp"
-#include "../../core/client.hpp"
-#include "../drawable/model.hpp"
-#include "../../integrations/wayland/surface.hpp"
-#include "alias.hpp"
+#include "../../../core/client.hpp"
+#include "../../drawable/model.hpp"
+#include "../../../integrations/wayland/surface.hpp"
+#include "../alias.hpp"
 
 namespace StardustXRServer {
 

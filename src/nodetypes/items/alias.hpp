@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../spatial/alias.hpp"
-#include "panel.hpp"
+#include "types/panel.hpp"
 
 namespace StardustXRServer {
 
