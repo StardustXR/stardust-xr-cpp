@@ -8,7 +8,7 @@ std::unordered_map<uint32_t, Node *> NodeRef::registry;
 
 NodeRef::NodeRef() :
 	id(0) {}
-NodeRef::NodeRef(NodeRef &original):
+NodeRef::NodeRef(const NodeRef &original):
 	id(original.id) {}
 NodeRef::NodeRef(uint32_t id) :
 	id(id) {}
