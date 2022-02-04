@@ -7,9 +7,6 @@ Alias::Alias(Client *client, Node *original, std::vector<std::string> methods) :
 
 	addMethods(methods);
 }
-Alias::~Alias() {
-	original->aliases.erase(std::remove(original->aliases.begin(), original->aliases.end(), this));
-}
 
 void Alias::addMethods(std::vector<std::string> methods) {
 	for(std::string &method : methods) {

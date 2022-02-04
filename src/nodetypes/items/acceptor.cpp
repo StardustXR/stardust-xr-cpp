@@ -41,7 +41,7 @@ void ItemAcceptor::captureItem(Item &item) {
 void ItemAcceptor::releaseItem(std::string itemName) {
 	Alias *alias = dynamic_cast<Alias *>(children[itemName].get());
 	if(alias) {
-		Item *item = dynamic_cast<Item *>(alias->original);
+		Item *item = alias->original.ptr<Item>();
 		if(item) {
 			item->capturedAcceptor = NodeRef();
 		}

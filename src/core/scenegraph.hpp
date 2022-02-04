@@ -30,7 +30,7 @@ public:
 		if(node == nullptr) {
 			Alias *aliasNode = dynamic_cast<Alias *>(rawNode);
 			if(aliasNode != nullptr) {
-				node = dynamic_cast<T *>(aliasNode->original);
+				node = aliasNode->original.ptr<T>();
 			}
 		}
 

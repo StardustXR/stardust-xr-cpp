@@ -7,6 +7,7 @@
 #include <mutex>
 #include <string>
 #include <flatbuffers/flexbuffers.h>
+#include "noderef.hpp"
 
 namespace StardustXRServer {
 
@@ -43,7 +44,7 @@ public:
 
 	std::map<std::string, NodeMethod> methods;
 	std::map<std::string, std::unique_ptr<Node>> children;
-	std::vector<Alias *> aliases;
+	std::vector<NodeRef> aliases;
 protected:
 	std::atomic_bool enabled = {true};
 

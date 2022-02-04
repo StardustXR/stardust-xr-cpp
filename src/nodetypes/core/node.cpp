@@ -54,8 +54,9 @@ void Node::queueDestroy(bool forceDestroy) {
 		return;
 
 	destroyQueued = true;
-	for(Alias *alias : aliases) {
-	   alias->queueDestroy(true);
+	for(NodeRef alias : aliases) {
+		if(alias)
+			alias.ptr()->queueDestroy(true);
 	}
 	const std::lock_guard<std::mutex> lock(destroyMutex);
 	nodesToDestroy.push_back(this);

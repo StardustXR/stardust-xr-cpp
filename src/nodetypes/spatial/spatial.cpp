@@ -149,8 +149,8 @@ std::vector<uint8_t> Spatial::setSpatialParentFlex(flexbuffers::Reference data, 
 		Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
 		if(!potentialParent) {
 			Alias *potentialParentAlias = client->scenegraph.findNode<Alias>(spacePath);
-			if(potentialParentAlias)
-				potentialParent = dynamic_cast<Spatial *>(potentialParentAlias->original);
+			if(potentialParentAlias && potentialParentAlias->original)
+				potentialParent = potentialParentAlias->original.ptr<Spatial>();
 		}
 		setSpatialParent(potentialParent);
 	}
@@ -165,7 +165,7 @@ std::vector<uint8_t> Spatial::setSpatialParentInPlaceFlex(flexbuffers::Reference
 		if(!potentialParent) {
 			Alias *potentialParentAlias = client->scenegraph.findNode<Alias>(spacePath);
 			if(potentialParentAlias)
-				potentialParent = dynamic_cast<Spatial *>(potentialParentAlias->original);
+				potentialParent = potentialParentAlias->original.ptr<Spatial>();
 		}
 		setSpatialParentInPlace(potentialParent);
 	}

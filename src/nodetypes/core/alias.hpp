@@ -8,11 +8,10 @@ namespace StardustXRServer {
 class Alias : public Node {
 public:
 	Alias(Client *client, Node *original, std::vector<std::string> methods);
-	~Alias();
 
 	void addMethods(std::vector<std::string> methods);
 
-	Node *const original;
+	NodeRef original;
 };
 
 } // namespace StardustXRServer
