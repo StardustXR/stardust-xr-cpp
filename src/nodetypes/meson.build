@@ -1,4 +1,5 @@
 subdir('core')
+subdir('data')
 subdir('drawable')
 subdir('fields')
 subdir('input')
