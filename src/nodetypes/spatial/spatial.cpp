@@ -84,12 +84,20 @@ std::vector<uint8_t> Spatial::scaleThis(Client *callingClient, flexbuffers::Refe
 }
 
 std::vector<uint8_t> Spatial::getTransform(Client *callingClient, flexbuffers::Reference data, bool) {
-	vec3 pos = vec3_zero;
+	Spatial *space = callingClient->scenegraph.findNode<Spatial>(data.AsString().str());
+	if(!space) {
+		Alias *spaceAlias = callingClient->scenegraph.findNode<Alias>(data.AsString().str());
+		space = spaceAlias ? spaceAlias->original.ptr<Spatial>() : nullptr;
+	}
+	vec3 pos, scl;
+	quat rot;
+	matrix_decompose(localToSpaceMatrix(space), pos, scl, rot);
+
 	return StardustXR::FlexbufferFromArguments(
 		FLEX_ARGS(
-			FLEX_VEC3(position)
-			FLEX_QUAT(rotation)
-			FLEX_VEC3(scale)
+			FLEX_VEC3(pos)
+			FLEX_QUAT(rot)
+			FLEX_VEC3(scl)
 		)
 	);
 }
