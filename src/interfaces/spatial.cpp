@@ -22,7 +22,7 @@ SpatialInterface::SpatialInterface(Client *client) : Node(client, false) {
 	addChild("zone", new Node(client));
 }
 
-std::vector<uint8_t> SpatialInterface::createSpatial(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> SpatialInterface::createSpatial(Client *callingClient, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector            = data.AsVector();
 	string name                           = vector[0].AsString().str();
 	Spatial *spatialParent                = this->client->scenegraph.findNode<Spatial>(vector[1].AsString().str());
@@ -57,11 +57,11 @@ std::vector<uint8_t> SpatialInterface::createSpatial(flexbuffers::Reference data
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> SpatialInterface::createZone(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> SpatialInterface::createZone(Client *callingClient, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector            = data.AsVector();
 	string name                           = vector[0].AsString().str();
-	Field *field                          = this->client->scenegraph.findNode<Field>(vector[1].AsString().str());
-	Spatial *spatialParent                = this->client->scenegraph.findNode<Spatial>(vector[2].AsString().str());
+	Field *field                          = callingClient->scenegraph.findNode<Field>(vector[1].AsString().str());
+	Spatial *spatialParent                = callingClient->scenegraph.findNode<Spatial>(vector[2].AsString().str());
 	flexbuffers::TypedVector flexPosition = vector[3].AsTypedVector();
 	flexbuffers::TypedVector flexRotation = vector[4].AsTypedVector();
 	std::string callbackPath              = vector[5].AsString().str();

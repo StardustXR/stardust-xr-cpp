@@ -11,8 +11,8 @@ class InputInterface : public Node {
 public:
 	InputInterface(Client *client);
 
-	std::vector<uint8_t> registerInputHandler(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> getInputHandlers(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> registerInputHandler(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> getInputHandlers(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	static void processInput();
 
 	static std::mutex inputVectorsMutex;

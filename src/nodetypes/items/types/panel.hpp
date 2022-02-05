@@ -18,19 +18,19 @@ public:
 
 	void serializeData(flexbuffers::Builder &fbb);
 	Alias *makeAlias(Client *client);
-	std::vector<uint8_t> applySurfaceMaterial(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> applySurfaceMaterial(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
-	std::vector<uint8_t> setPointerActive(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setPointerPosition(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setPointerButtonPressed(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> scrollPointerAxis(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setPointerActive(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setPointerPosition(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setPointerButtonPressed(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> scrollPointerAxis(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
-	std::vector<uint8_t> touchDown(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> touchMove(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> touchUp(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> touchDown(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> touchMove(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> touchUp(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
-	std::vector<uint8_t> resize(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> close(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> resize(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> close(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 	static TypeInfo itemTypeInfo;
 	Surface *surface;

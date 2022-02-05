@@ -69,7 +69,7 @@ void InputHandler::sendInputCallback(uint64_t oldFrame, std::list<DistanceLink> 
 	}
 }
 
-std::vector<uint8_t> InputHandler::setCallback(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> InputHandler::setCallback(Client *callingClient, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector = data.AsVector();
 	callbackPath = vector[0].AsString().str();
 	callbackMethod = vector[1].AsString().str();
@@ -77,7 +77,7 @@ std::vector<uint8_t> InputHandler::setCallback(flexbuffers::Reference data, bool
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> InputHandler::setField(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> InputHandler::setField(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	std::string fieldPath = data.AsString().str();
 	field = NodeRef(client->scenegraph.findNode<Field>(fieldPath));
 
@@ -90,7 +90,7 @@ std::vector<uint8_t> InputHandler::setField(flexbuffers::Reference data, bool re
 }
 
 
-std::vector<uint8_t> InputHandler::setActions(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> InputHandler::setActions(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::TypedVector flexVec = data.AsTypedVector();
 	actions.clear();
 	for(uint i=0; i<flexVec.size(); ++i) {
@@ -98,7 +98,7 @@ std::vector<uint8_t> InputHandler::setActions(flexbuffers::Reference data, bool 
 	}
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> InputHandler::getActions(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> InputHandler::getActions(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	return StardustXR::FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
 		fbb.TypedVector([&](){
 			for(std::string &action : actions) {
@@ -107,7 +107,7 @@ std::vector<uint8_t> InputHandler::getActions(flexbuffers::Reference data, bool 
 		});
 	});
 }
-std::vector<uint8_t> InputHandler::runAction(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> InputHandler::runAction(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	std::string actionString = data.AsString().str();
 	if(std::find(actions.begin(), actions.end(), actionString) == actions.end()) {
 		return std::vector<uint8_t>();

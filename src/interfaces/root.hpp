@@ -19,8 +19,8 @@ public:
 	~RootInterface();
 
 	static void sendLogicStepSignals();
-	std::vector<uint8_t> subscribeLogicStep(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> disconnect(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> subscribeLogicStep(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> disconnect(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 protected:
 	static void logicStepSignal(uint32_t index, LifeCycleUpdateMethod &updateMethod);

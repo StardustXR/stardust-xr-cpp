@@ -15,7 +15,7 @@ FieldInterface::FieldInterface(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("createSphereField", &FieldInterface::createSphereField)
 }
 
-std::vector<uint8_t> FieldInterface::createBoxField(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> FieldInterface::createBoxField(Client *, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector            = data.AsVector();
 
 	string name                           = vector[0].AsString().str();
@@ -46,7 +46,7 @@ std::vector<uint8_t> FieldInterface::createBoxField(flexbuffers::Reference data,
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> FieldInterface::createCylinderField(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> FieldInterface::createCylinderField(Client *, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector vector          = data.AsVector();
 
 	string name                         = vector[0].AsString().str();
@@ -74,7 +74,7 @@ std::vector<uint8_t> FieldInterface::createCylinderField(flexbuffers::Reference 
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> FieldInterface::createSphereField(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> FieldInterface::createSphereField(Client *, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector          = data.AsVector();
 
 	string name                         = vector[0].AsString().str();

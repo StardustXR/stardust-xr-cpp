@@ -53,7 +53,7 @@ std::vector<uint8_t> Scenegraph::executeMethod(std::string path, std::string met
 		printf("Method %s on node %s not found\n", method.c_str(), path.c_str());
 		return std::vector<uint8_t>();
 	}
-	return (currentNode->methods[method])(args, returnValue);
+	return (currentNode->methods[method])(root.client, args, returnValue);
 }
 
 void Scenegraph::addNode(std::string path, Node *node) {

@@ -62,12 +62,12 @@ void Node::queueDestroy(bool forceDestroy) {
 	nodesToDestroy.push_back(this);
 }
 
-std::vector<uint8_t> Node::setEnabledFlex(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Node::setEnabledFlex(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	setEnabled(data.AsBool());
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> Node::destroyFlex(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Node::destroyFlex(Client *callingClient, flexbuffers::Reference data, bool) {
 	queueDestroy(false);
 	this->enabled = false;
 	return std::vector<uint8_t>();

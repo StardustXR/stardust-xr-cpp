@@ -32,20 +32,20 @@ void DrawableInterface::updateEnvironment() {
 	}
 }
 
-std::vector<uint8_t> DrawableInterface::setSkytex(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> DrawableInterface::setSkytex(Client *, flexbuffers::Reference data, bool) {
 	std::string path = data.AsString().str();
 	render_enable_skytex(path != "");
 	skytexQueuedPath = path;
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> DrawableInterface::setSkylight(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> DrawableInterface::setSkylight(Client *, flexbuffers::Reference data, bool) {
 	std::string path = data.AsString().str();
 	skylightQueuedPath = path;
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> DrawableInterface::createModelFromFile(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> DrawableInterface::createModelFromFile(Client *, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector vector = data.AsVector();
 
 	std::string name = vector[0].AsString().str();

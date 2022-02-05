@@ -17,7 +17,7 @@ DataInterface::DataInterface(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("createNonSpatialReceiver", &DataInterface::createNonSpatialReceiver)
 }
 
-std::vector<uint8_t> DataInterface::createNonSpatialSender(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> DataInterface::createNonSpatialSender(Client *, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector flexVec      = data.AsVector();
 	std::string name                 = flexVec[0].AsString().str();
 	Spatial *space                   = this->client->scenegraph.findNode<Spatial>(flexVec[1].AsString().str());
@@ -42,7 +42,7 @@ std::vector<uint8_t> DataInterface::createNonSpatialSender(flexbuffers::Referenc
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> DataInterface::createNonSpatialReceiver(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> DataInterface::createNonSpatialReceiver(Client *, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector vector            = data.AsVector();
 	std::string name                      = vector[0].AsString().str();
 	Field *field                          = this->client->scenegraph.findNode<Field>(vector[1].AsString().str());

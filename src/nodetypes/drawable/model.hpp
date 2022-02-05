@@ -16,7 +16,7 @@ public:
 	void update();
 	void draw();
 
-	std::vector<uint8_t> setMaterialProperty(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setMaterialProperty(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 	void replaceMaterial(uint32_t submeshIndex, sk::material_t mat);
 

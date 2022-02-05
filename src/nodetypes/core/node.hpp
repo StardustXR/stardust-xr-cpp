@@ -11,12 +11,13 @@
 
 namespace StardustXRServer {
 
-#define STARDUSTXR_NODE_METHOD(method_name, method_ref) this->methods[method_name] = std::bind(method_ref, this, std::placeholders::_1, std::placeholders::_2);
-typedef std::function<std::vector<uint8_t>(flexbuffers::Reference, bool)> NodeMethod;
+class Client;
+
+#define STARDUSTXR_NODE_METHOD(method_name, method_ref) this->methods[method_name] = std::bind(method_ref, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+typedef std::function<std::vector<uint8_t>(Client *, flexbuffers::Reference, bool)> NodeMethod;
 
 class Node;
 class Alias;
-class Client;
 
 class Node {
 public:
@@ -39,8 +40,8 @@ public:
     void queueDestroy(bool forceDestroy);
     static void destroyNodes();
 
-	std::vector<uint8_t> setEnabledFlex(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> destroyFlex(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setEnabledFlex(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> destroyFlex(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 	std::map<std::string, NodeMethod> methods;
 	std::map<std::string, std::unique_ptr<Node>> children;

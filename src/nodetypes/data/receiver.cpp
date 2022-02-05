@@ -67,10 +67,10 @@ void NonSpatialReceiver::sendData(NonSpatialSender *sender, const uint8_t *data,
 	);
 }
 
-std::vector<uint8_t> NonSpatialReceiver::getMask(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> NonSpatialReceiver::getMask(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	return maskBinary;
 }
-std::vector<uint8_t> NonSpatialReceiver::setMask(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> NonSpatialReceiver::setMask(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Blob maskBlob = data.AsBlob();
 	this->maskBinary = std::vector<uint8_t>(maskBlob.data(), maskBlob.data() + maskBlob.size());
 	this->maskMap = flexbuffers::GetRoot(this->maskBinary).AsMap();

@@ -15,7 +15,7 @@ public:
 	InputMethod(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, bool rotatable);
 	virtual ~InputMethod();
 
-	std::vector<uint8_t> modifyDatamap(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> modifyDatamap(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 	virtual float distanceTo(InputHandler *handler) = 0;
 	virtual InputDataRaw type() = 0;

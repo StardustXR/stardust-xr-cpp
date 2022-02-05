@@ -33,7 +33,7 @@ void ItemInterface::updateItems() {
 	Item::updateItems(&PanelItem::itemTypeInfo);
 }
 
-std::vector<uint8_t> ItemInterface::createEnvironmentItem(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> ItemInterface::createEnvironmentItem(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector flexVec      = data.AsVector();
 	std::string name                 = flexVec[0].AsString().str();
 	Spatial *space                   = this->client->scenegraph.findNode<Spatial>(flexVec[1].AsString().str());
@@ -74,7 +74,7 @@ std::vector<uint8_t> ItemInterface::createEnvironmentItem(flexbuffers::Reference
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> ItemInterface::registerEnvironmentItemUI(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> ItemInterface::registerEnvironmentItemUI(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector flexVec = data.AsVector();
 	std::string callbackPath    = flexVec[0].AsString().str();
 	std::string callbackMethod  = flexVec[1].AsString().str();
@@ -86,7 +86,7 @@ std::vector<uint8_t> ItemInterface::registerEnvironmentItemUI(flexbuffers::Refer
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> ItemInterface::registerPanelItemUI(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> ItemInterface::registerPanelItemUI(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector flexVec = data.AsVector();
 	std::string callbackPath    = flexVec[0].AsString().str();
 	std::string callbackMethod  = flexVec[1].AsString().str();
@@ -99,7 +99,7 @@ std::vector<uint8_t> ItemInterface::registerPanelItemUI(flexbuffers::Reference d
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> ItemInterface::createItemAcceptor(flexbuffers::Reference data, bool returnValue, Item::TypeInfo *info) {
+std::vector<uint8_t> ItemInterface::createItemAcceptor(Client *callingClient, flexbuffers::Reference data, bool returnValue, Item::TypeInfo *info) {
 	flexbuffers::Vector flexVec      = data.AsVector();
 	std::string name                 = flexVec[0].AsString().str();
 	Spatial *space                   = this->client->scenegraph.findNode<Spatial>(flexVec[1].AsString().str());
@@ -127,11 +127,11 @@ std::vector<uint8_t> ItemInterface::createItemAcceptor(flexbuffers::Reference da
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> ItemInterface::createEnvironmentItemAcceptor(flexbuffers::Reference data, bool returnValue) {
-	return createItemAcceptor(data, returnValue, &EnvironmentItem::itemTypeInfo);
+std::vector<uint8_t> ItemInterface::createEnvironmentItemAcceptor(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	return createItemAcceptor(callingClient, data, returnValue, &EnvironmentItem::itemTypeInfo);
 }
-std::vector<uint8_t> ItemInterface::createPanelItemAcceptor(flexbuffers::Reference data, bool returnValue) {
-	return createItemAcceptor(data, returnValue, &PanelItem::itemTypeInfo);
+std::vector<uint8_t> ItemInterface::createPanelItemAcceptor(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	return createItemAcceptor(callingClient, data, returnValue, &PanelItem::itemTypeInfo);
 }
 
 } // namespace StardustXRServer

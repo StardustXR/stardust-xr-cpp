@@ -24,7 +24,7 @@ SpatialAlias::SpatialAlias(Client *client, Spatial *original, std::vector<std::s
 	STARDUSTXR_NODE_METHOD("setSpatialParentInPlace", &SpatialAlias::setSpatialParentInPlaceFlex)
 }
 
-std::vector<uint8_t> SpatialAlias::setSpatialParentFlex(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> SpatialAlias::setSpatialParentFlex(Client *callingClient, flexbuffers::Reference data, bool) {
 	std::string spacePath = data.AsString().str();
 	if(spacePath == "") {
 		spatialOriginal->setSpatialParent(nullptr);
@@ -39,7 +39,7 @@ std::vector<uint8_t> SpatialAlias::setSpatialParentFlex(flexbuffers::Reference d
 	}
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> SpatialAlias::setSpatialParentInPlaceFlex(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> SpatialAlias::setSpatialParentInPlaceFlex(Client *callingClient, flexbuffers::Reference data, bool) {
 	std::string spacePath = data.AsString().str();
 	if(spacePath == "") {
 		spatialOriginal->setSpatialParentInPlace(nullptr);

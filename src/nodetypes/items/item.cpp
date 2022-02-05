@@ -27,7 +27,7 @@ Item::~Item() {
 	itemTypeInfo->items.erase(std::remove(itemTypeInfo->items.begin(), itemTypeInfo->items.end(), this));
 }
 
-std::vector<uint8_t> Item::getData(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Item::getData(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	return FLEX_SINGLE(
 		serializeData(fbb);
 	);
@@ -37,12 +37,12 @@ Alias *Item::makeAlias(Client *client) {
 	return new SpatialAlias(client, this, itemTypeInfo->aliasedMethods);
 }
 
-std::vector<uint8_t> Item::triggerAccept(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Item::triggerAccept(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	acceptable = true;
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> Item::release(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Item::release(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(capturedAcceptor)
 		capturedAcceptor.ptr<ItemAcceptor>()->releaseItem(name);
 	return std::vector<uint8_t>();

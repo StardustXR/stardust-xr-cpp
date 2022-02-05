@@ -16,20 +16,20 @@ public:
 	~Spatial();
 
 	// Client accessible functions
-	std::vector<uint8_t> move                        (flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> rotate                      (flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> scaleThis                   (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> move                        (Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> rotate                      (Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> scaleThis                   (Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
-	std::vector<uint8_t> getTransform                (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> getTransform                (Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
-	std::vector<uint8_t> setOrigin                   (flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setOrientation              (flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setScale                    (flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setPose                     (flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setTransform                (flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setSpatialParentFlex        (flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setSpatialParentInPlaceFlex (flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setZoneable                 (flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setOrigin                   (Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setOrientation              (Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setScale                    (Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setPose                     (Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setTransform                (Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setSpatialParentFlex        (Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setSpatialParentInPlaceFlex (Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setZoneable                 (Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 	// Surface level parameters
 	vec3 position = vec3_zero;

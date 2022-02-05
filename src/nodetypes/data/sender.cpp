@@ -24,7 +24,7 @@ NonSpatialSender::~NonSpatialSender() {
 	senders.erase(std::remove(senders.begin(), senders.end(), this));
 }
 
-std::vector<uint8_t> NonSpatialSender::getReceivers(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> NonSpatialSender::getReceivers(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	children.clear();
 	std::vector<std::string> names = NonSpatialReceiver::makeAliases(this);
 
@@ -35,7 +35,7 @@ std::vector<uint8_t> NonSpatialSender::getReceivers(flexbuffers::Reference data,
 	);
 }
 
-std::vector<uint8_t> NonSpatialSender::sendData(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> NonSpatialSender::sendData(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector flexVec = data.AsVector();
 	std::string receiverName = flexVec[0].AsString().str();
 	if(children.find(receiverName) != children.end()) {

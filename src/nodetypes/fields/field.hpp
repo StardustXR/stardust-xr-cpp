@@ -24,9 +24,9 @@ public:
 	virtual const vec3  localNormal       (const vec3 point, const float radius);
 
 	// Client-facing methods
-	std::vector<uint8_t> distance(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> normal(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> closestPoint(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> distance(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> normal(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> closestPoint(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 };
 
 } // namespace StardustXRServer

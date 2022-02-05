@@ -27,12 +27,12 @@ public:
 	Item(Client *client, TypeInfo &itemTypeInfo, sk::pose_t pose);
 	virtual ~Item();
 
-	std::vector<uint8_t> getData(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> getData(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	virtual void serializeData(flexbuffers::Builder &fbb) = 0;
 	virtual Alias *makeAlias(Client *client);
 
-	std::vector<uint8_t> triggerAccept(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> release(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> triggerAccept(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> release(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 	static void updateItems(TypeInfo *info);
 

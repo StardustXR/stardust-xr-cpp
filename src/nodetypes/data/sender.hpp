@@ -13,8 +13,8 @@ public:
 	static std::mutex sendersMutex;
 	static std::vector<NonSpatialSender *> senders;
 
-	std::vector<uint8_t> getReceivers(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> sendData(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> getReceivers(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> sendData(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 };
 
 }

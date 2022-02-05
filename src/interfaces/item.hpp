@@ -11,15 +11,15 @@ public:
 
 	static void updateItems();
 
-	std::vector<uint8_t> createEnvironmentItem(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> createEnvironmentItem(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
-	std::vector<uint8_t> registerEnvironmentItemUI(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> registerPanelItemUI(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> registerEnvironmentItemUI(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> registerPanelItemUI(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
-	std::vector<uint8_t> createItemAcceptor(flexbuffers::Reference data, bool returnValue, Item::TypeInfo *info);
+	std::vector<uint8_t> createItemAcceptor(Client *callingClient, flexbuffers::Reference data, bool returnValue, Item::TypeInfo *info);
 
-	std::vector<uint8_t> createEnvironmentItemAcceptor(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> createPanelItemAcceptor(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> createEnvironmentItemAcceptor(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> createPanelItemAcceptor(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 };
 
 } // namespace StardustXRServer

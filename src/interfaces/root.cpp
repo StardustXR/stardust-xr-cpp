@@ -63,20 +63,20 @@ void RootInterface::sendLogicStepSignals() {
 	prevFrameTime = frameTime;
 }
 
-std::vector<uint8_t> RootInterface::subscribeLogicStep(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> RootInterface::subscribeLogicStep(Client *callingClient, flexbuffers::Reference data, bool) {
 	const std::lock_guard<std::mutex> lock(updateMethodsMutex);
 
 	flexbuffers::Vector vector = data.AsVector();
 	updateMethods.push_back(LifeCycleUpdateMethod {
-		client,
+		callingClient,
 		vector[0].AsString().str(),
 		vector[1].AsString().str()
 	});
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> RootInterface::disconnect(flexbuffers::Reference data, bool) {
-	this->client->disconnected = true;
+std::vector<uint8_t> RootInterface::disconnect(Client *callingClient, flexbuffers::Reference data, bool) {
+	callingClient->disconnected = true;
 	return std::vector<uint8_t>();
 }
 

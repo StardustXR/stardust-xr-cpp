@@ -60,7 +60,7 @@ Alias *PanelItem::makeAlias(Client *client) {
 	return new PanelAlias(client, this, itemTypeInfo.aliasedMethods);
 }
 
-std::vector<uint8_t> PanelItem::applySurfaceMaterial(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PanelItem::applySurfaceMaterial(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
@@ -73,7 +73,7 @@ std::vector<uint8_t> PanelItem::applySurfaceMaterial(flexbuffers::Reference data
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> PanelItem::setPointerActive(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PanelItem::setPointerActive(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
@@ -81,7 +81,7 @@ std::vector<uint8_t> PanelItem::setPointerActive(flexbuffers::Reference data, bo
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> PanelItem::setPointerPosition(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PanelItem::setPointerPosition(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
@@ -93,7 +93,7 @@ std::vector<uint8_t> PanelItem::setPointerPosition(flexbuffers::Reference data, 
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> PanelItem::setPointerButtonPressed(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PanelItem::setPointerButtonPressed(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
@@ -105,7 +105,7 @@ std::vector<uint8_t> PanelItem::setPointerButtonPressed(flexbuffers::Reference d
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> PanelItem::scrollPointerAxis(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PanelItem::scrollPointerAxis(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
@@ -121,7 +121,7 @@ std::vector<uint8_t> PanelItem::scrollPointerAxis(flexbuffers::Reference data, b
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> PanelItem::touchDown(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PanelItem::touchDown(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
@@ -134,7 +134,7 @@ std::vector<uint8_t> PanelItem::touchDown(flexbuffers::Reference data, bool retu
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> PanelItem::touchMove(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PanelItem::touchMove(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
@@ -147,7 +147,7 @@ std::vector<uint8_t> PanelItem::touchMove(flexbuffers::Reference data, bool retu
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> PanelItem::touchUp(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PanelItem::touchUp(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
@@ -158,7 +158,7 @@ std::vector<uint8_t> PanelItem::touchUp(flexbuffers::Reference data, bool return
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> PanelItem::resize(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PanelItem::resize(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
@@ -171,7 +171,7 @@ std::vector<uint8_t> PanelItem::resize(flexbuffers::Reference data, bool returnV
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> PanelItem::close(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PanelItem::close(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
