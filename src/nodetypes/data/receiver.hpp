@@ -22,6 +22,13 @@ public:
 	static std::vector<std::string> makeAliases(Node *parent);
 
 	void sendData(NonSpatialSender *sender, const uint8_t *data, size_t dataSize);
+
+	std::vector<uint8_t> getMask(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setMask(flexbuffers::Reference data, bool returnValue);
+
+private:
+	std::vector<uint8_t> maskBinary;
+	flexbuffers::Map maskMap = flexbuffers::Reference().AsMap();
 };
 
 }
