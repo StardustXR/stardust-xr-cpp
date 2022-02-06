@@ -1,6 +1,5 @@
 #include "itemui.hpp"
 #include "../../core/client.hpp"
-#include "../spatial/alias.hpp"
 
 namespace StardustXRServer {
 

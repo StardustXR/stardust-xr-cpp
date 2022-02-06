@@ -4,7 +4,7 @@
 #include "../../core/client.hpp"
 #include "../../core/clientmanager.hpp"
 #include "../../globals.h"
-#include "../spatial/alias.hpp"
+#include "../core/alias.hpp"
 
 namespace StardustXRServer {
 
