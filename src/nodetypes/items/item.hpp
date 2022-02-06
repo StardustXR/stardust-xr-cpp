@@ -29,7 +29,7 @@ public:
 
 	std::vector<uint8_t> getData(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	virtual void serializeData(flexbuffers::Builder &fbb) = 0;
-	virtual Alias *makeAlias(Client *client);
+	Alias *makeAlias(Client *client);
 
 	std::vector<uint8_t> triggerAccept(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> release(Client *callingClient, flexbuffers::Reference data, bool returnValue);

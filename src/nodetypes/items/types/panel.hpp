@@ -17,7 +17,6 @@ public:
 	void update();
 
 	void serializeData(flexbuffers::Builder &fbb);
-	Alias *makeAlias(Client *client);
 	std::vector<uint8_t> applySurfaceMaterial(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 	std::vector<uint8_t> setPointerActive(Client *callingClient, flexbuffers::Reference data, bool returnValue);

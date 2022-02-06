@@ -2,7 +2,7 @@
 #include "../../../core/client.hpp"
 #include "../../drawable/model.hpp"
 #include "../../../integrations/wayland/surface.hpp"
-#include "../alias.hpp"
+#include "../../core/alias.hpp"
 
 namespace StardustXRServer {
 
@@ -56,16 +56,12 @@ void PanelItem::serializeData(flexbuffers::Builder &fbb) {
 	});
 }
 
-Alias *PanelItem::makeAlias(Client *client) {
-	return new PanelAlias(client, this, itemTypeInfo.aliasedMethods);
-}
-
 std::vector<uint8_t> PanelItem::applySurfaceMaterial(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(!getEnabled())
 		return std::vector<uint8_t>();
 
 	flexbuffers::Vector flexVec      = data.AsVector();
-	Model *model				     = this->client->scenegraph.findNode<Model>(flexVec[0].AsString().str());
+	Model *model				     = callingClient->scenegraph.findNode<Model>(flexVec[0].AsString().str());
 	uint32_t submeshIndex            = flexVec[1].AsUInt32();
 
 	if(model != nullptr)

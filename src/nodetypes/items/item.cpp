@@ -34,7 +34,23 @@ std::vector<uint8_t> Item::getData(Client *callingClient, flexbuffers::Reference
 }
 
 Alias *Item::makeAlias(Client *client) {
-	return new SpatialAlias(client, this, itemTypeInfo->aliasedMethods);
+	Alias *alias = new Alias(client, this, itemTypeInfo->aliasedMethods);
+
+	alias->addMethods({
+	   "move",
+	   "rotate",
+	   "scale",
+	   "getTransform",
+	   "setOrigin",
+	   "setOrientation",
+	   "setScale",
+	   "setPose",
+	   "setTransform",
+	   "setSpatialParent",
+	   "setSpatialParentInPlace",
+	});
+
+	return alias;
 }
 
 std::vector<uint8_t> Item::triggerAccept(Client *callingClient, flexbuffers::Reference data, bool returnValue) {

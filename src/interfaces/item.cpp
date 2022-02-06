@@ -1,7 +1,7 @@
 #include "item.hpp"
 #include "../core/client.hpp"
+#include "../nodetypes/core/alias.hpp"
 #include "../nodetypes/fields/field.hpp"
-#include "../nodetypes/spatial/alias.hpp"
 #include "../nodetypes/items/types/environment.hpp"
 #include "../nodetypes/items/types/panel.hpp"
 #include "../nodetypes/items/itemui.hpp"
@@ -62,14 +62,7 @@ std::vector<uint8_t> ItemInterface::createEnvironmentItem(Client *callingClient,
 	if(EnvironmentItem::itemTypeInfo.UI)
 		EnvironmentItem::itemTypeInfo.UI->handleItemCreate(item);
 
-	SpatialAlias *itemAlias = new SpatialAlias(client, item, {
-		"move",
-		"rotate",
-		"setOrigin",
-		"setOrientation",
-		"setPose"
-	});
-	children["environment"]->addChild(name, itemAlias);
+	children["environment"]->addChild(name, item->makeAlias(client));
 
 	return std::vector<uint8_t>();
 }
