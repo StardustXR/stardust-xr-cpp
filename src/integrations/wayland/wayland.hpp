@@ -38,7 +38,6 @@ public:
 
 	void onNewXWaylandSurface(void *data);
 	void onMapXWaylandSurface(void *data);
-	void onDestroyXWaylandSurface(void *data);
 
 protected:
 	wl_display *wayland_display;
@@ -56,7 +55,6 @@ protected:
 
 	wlr_xdg_shell *xdg_shell;
 	WaylandCallback newSurfaceCallbackXDG;
-	WaylandCallback destroySurfaceCallbackXDG;
 
 	wlr_xdg_decoration_manager_v1 *xdg_decoration_manager;
 	WaylandCallback newToplevelDecorationXDG;
@@ -64,5 +62,4 @@ protected:
 	wlr_xwayland *xwayland;
 	WaylandCallback newSurfaceCallbackXWayland;
 	WaylandCallback mapSurfaceCallbackXWayland;
-	WaylandCallback destroySurfaceCallbackXWayland;
 };

@@ -44,6 +44,7 @@ public:
 	uint width;
 	uint height;
 	wlr_surface *surface;
+	WaylandCallback destroyCallback;
 
 protected:
 	WaylandCallback surfaceCommitCallback;

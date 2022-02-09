@@ -108,7 +108,6 @@ Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 	assert(xdg_shell);
 	newSurfaceCallbackXDG.callback = std::bind(&Wayland::onNewXDGSurface, this, std::placeholders::_1);
 	wl_signal_add(&xdg_shell->events.new_surface, &newSurfaceCallbackXDG.listener);
-	destroySurfaceCallbackXDG.callback = std::bind(&Wayland::onDestroyXDGSurface, this, std::placeholders::_1);
 
 	xdg_decoration_manager = wlr_xdg_decoration_manager_v1_create(wayland_display);
 	assert(xdg_decoration_manager);
@@ -120,7 +119,6 @@ Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 	newSurfaceCallbackXWayland.callback = std::bind(&Wayland::onNewXWaylandSurface, this, std::placeholders::_1);
 	wl_signal_add(&xwayland->events.new_surface, &newSurfaceCallbackXWayland.listener);
 	mapSurfaceCallbackXWayland.callback = std::bind(&Wayland::onMapXWaylandSurface, this, std::placeholders::_1);
-	destroySurfaceCallbackXWayland.callback = std::bind(&Wayland::onDestroyXWaylandSurface, this, std::placeholders::_1);
 }
 
 Wayland::~Wayland() {}
@@ -151,16 +149,10 @@ void Wayland::onNewXDGSurface(void *data) {
 	if(surface->role != WLR_XDG_SURFACE_ROLE_TOPLEVEL)
 		return;
 
-	wl_signal_add(&surface->events.destroy, &destroySurfaceCallbackXDG.listener);
-
 	XDGSurface *newSurface = new XDGSurface(wayland_display, renderer, surface, queueSeat);
-
-	onNewSurface(newSurface);
-}
-void Wayland::onDestroyXDGSurface(void *data) {
-	wlr_xdg_surface *xdg_surface = (wlr_xdg_surface *) data;
-
-	onDestroySurface(xdg_surface->surface);
+	newSurface->destroyCallback.callback = [this, newSurface](void *data) {
+		onDestroySurface(newSurface->surface);
+	};
 }
 
 void Wayland::onNewToplevelDecorationXDG(void *data) {
@@ -171,16 +163,13 @@ void Wayland::onNewToplevelDecorationXDG(void *data) {
 void Wayland::onNewXWaylandSurface(void *data) {
 	wlr_xwayland_surface *surface = (wlr_xwayland_surface *) data;
 	wl_signal_add(&surface->events.map, &mapSurfaceCallbackXWayland.listener);
-	wl_signal_add(&surface->events.destroy, &destroySurfaceCallbackXWayland.listener);
 }
 void Wayland::onMapXWaylandSurface(void *data) {
 	wlr_xwayland_surface *surface = (wlr_xwayland_surface *) data;
 	XWaylandSurface *newSurface = new XWaylandSurface(wayland_display, renderer, surface, queueSeat);
+	newSurface->destroyCallback.callback = [this, newSurface](void *data) {
+		onDestroySurface(newSurface->surface);
+	};
 
 	onNewSurface(newSurface);
-}
-void Wayland::onDestroyXWaylandSurface(void *data) {
-	wlr_xwayland_surface *xwayland_surface = (wlr_xwayland_surface *) data;
-
-	onDestroySurface(xwayland_surface->surface);
 }
