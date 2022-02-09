@@ -21,6 +21,12 @@ Item::TypeInfo PanelItem::itemTypeInfo = {
 		"touchMove",
 		"touchUp",
 
+		"setKeyboardActive",
+		"setKeymap",
+		"setKeyState",
+		"setKeyModStates",
+		"setKeyRepeat",
+
 		"resize",
 		"close",
 	}
@@ -39,6 +45,12 @@ PanelItem::PanelItem(Client *client, Surface *surface, pose_t pose) :
 	STARDUSTXR_NODE_METHOD("touchDown", &PanelItem::touchDown)
 	STARDUSTXR_NODE_METHOD("touchMove", &PanelItem::touchMove)
 	STARDUSTXR_NODE_METHOD("touchUp",   &PanelItem::touchUp)
+
+	STARDUSTXR_NODE_METHOD("setKeyboardActive", &PanelItem::setKeyboardActive)
+	STARDUSTXR_NODE_METHOD("setKeymap",         &PanelItem::setKeymap)
+	STARDUSTXR_NODE_METHOD("setKeyState",       &PanelItem::setKeyState)
+	STARDUSTXR_NODE_METHOD("setKeyModStates",   &PanelItem::setKeyModStates)
+	STARDUSTXR_NODE_METHOD("setKeyRepeat",      &PanelItem::setKeyRepeat)
 
 	STARDUSTXR_NODE_METHOD("resize", &PanelItem::resize)
 	STARDUSTXR_NODE_METHOD("close", &PanelItem::close)
@@ -150,6 +162,55 @@ std::vector<uint8_t> PanelItem::touchUp(Client *callingClient, flexbuffers::Refe
 	uint32_t id = data.AsUInt32();
 
 	surface->touchUp(id);
+
+	return std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> PanelItem::setKeyboardActive(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
+	surface->setKeyboardActive(data.AsBool());
+
+	return std::vector<uint8_t>();
+}
+std::vector<uint8_t> PanelItem::setKeymap(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
+	surface->setKeymap(data.AsString().str());
+
+	return std::vector<uint8_t>();
+}
+std::vector<uint8_t> PanelItem::setKeyState(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
+	flexbuffers::Vector flexVec = data.AsVector();
+	surface->setKeyState(flexVec[0].AsUInt32(), flexVec[1].AsUInt32());
+
+	return std::vector<uint8_t>();
+}
+std::vector<uint8_t> PanelItem::setKeyModStates(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
+	flexbuffers::Vector flexVec = data.AsVector();
+	surface->setKeyModStates(
+		flexVec[0].AsUInt32(),
+		flexVec[1].AsUInt32(),
+		flexVec[2].AsUInt32(),
+		flexVec[3].AsUInt32()
+	);
+
+	return std::vector<uint8_t>();
+}
+std::vector<uint8_t> PanelItem::setKeyRepeat(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	if(!getEnabled())
+		return std::vector<uint8_t>();
+
+	flexbuffers::Vector flexVec = data.AsVector();
+	surface->setKeyRepeat(flexVec[0].AsInt32(), flexVec[1].AsInt32());
 
 	return std::vector<uint8_t>();
 }

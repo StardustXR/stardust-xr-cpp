@@ -16,7 +16,9 @@ extern "C" {
 #include "render/gles2.h"
 #undef static
 #include "wlr/types/wlr_surface.h"
-#include "types/wlr_xdg_shell.h"
+#include "wlr/types/wlr_seat.h"
+#include "wlr/interfaces/wlr_keyboard.h"
+#include "wlr/types/wlr_xdg_shell.h"
 
 #include <xkbcommon/xkbcommon.h>
 }
@@ -65,8 +67,12 @@ Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surfa
 	std::string panelName = std::to_string(panel->id);
 
 	this->seat = seat;
-	wlr_seat_set_capabilities(seat, WL_SEAT_CAPABILITY_POINTER | WL_SEAT_CAPABILITY_TOUCH);
-//	wlr_seat_set_capabilities(seat, WL_SEAT_CAPABILITY_POINTER | WL_SEAT_CAPABILITY_KEYBOARD | WL_SEAT_CAPABILITY_TOUCH);
+	wlr_seat_set_capabilities(seat, WL_SEAT_CAPABILITY_POINTER | WL_SEAT_CAPABILITY_KEYBOARD | WL_SEAT_CAPABILITY_TOUCH);
+
+	kb_context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+	keyboard = wlr_seat_get_keyboard(seat);
+
+	wl_signal_add(&surface->events.destroy, &destroyCallback.listener);
 
 	if(internalPanelNode)
 		internalPanelNode->addChild(panelName, panel);
@@ -131,7 +137,7 @@ void Surface::onCommit() {
 }
 
 void Surface::setPointerActive(bool active) {
-	if(active)
+	if(active && isMapped())
 		wlr_seat_pointer_enter(seat, surface, seat->pointer_state.sx, seat->pointer_state.sy);
 	else
 		wlr_seat_pointer_clear_focus(seat);
@@ -164,9 +170,23 @@ void Surface::touchUp(uint32_t id) {
 
 void Surface::setKeyboardActive(bool active) {
 	if(active) {
-		wlr_keyboard *keyboard = wlr_seat_get_keyboard(seat);
 		wlr_seat_keyboard_enter(seat, surface, keyboard->keycodes, keyboard->num_keycodes, &keyboard->modifiers);
 	} else {
 		wlr_seat_keyboard_clear_focus(seat);
 	}
+}
+void Surface::setKeymap(std::string keymapString) {
+	xkb_keymap *keymap = xkb_keymap_new_from_string(kb_context, keymapString.c_str(), XKB_KEYMAP_FORMAT_TEXT_V1, XKB_KEYMAP_COMPILE_NO_FLAGS);
+	wlr_keyboard_set_keymap(keyboard, keymap);
+	xkb_keymap_unref(keymap);
+}
+void Surface::setKeyState(uint32_t key, uint32_t state) {
+	wlr_seat_keyboard_send_key(seat, StardustXRServer::Time::timestampMS(), key-8, state);
+}
+void Surface::setKeyModStates(uint32_t depressed, uint32_t latched, uint32_t locked, uint32_t group) {
+	struct wlr_keyboard_modifiers mods{depressed, latched, locked, group};
+	wlr_seat_keyboard_send_modifiers(seat, &mods);
+}
+void Surface::setKeyRepeat(int32_t rate, int32_t delay) {
+	wlr_keyboard_set_repeat_info(keyboard, rate, delay);
 }

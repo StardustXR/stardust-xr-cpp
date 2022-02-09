@@ -27,6 +27,8 @@ public:
 
 	void update();
 
+	wlr_seat *createSeat();
+
 	void onNewSurface(Surface *surface);
 	void onDestroySurface(wlr_surface *surface);
 	std::vector<std::unique_ptr<Surface>> surfaces;
@@ -50,6 +52,7 @@ protected:
 	wlr_output *output;
 
 	wlr_data_device_manager *data_device;
+	xkb_keymap *keymap;
 	wlr_seat *queueSeat;
 	uint32_t seatID = 0;
 

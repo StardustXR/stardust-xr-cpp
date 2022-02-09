@@ -100,9 +100,13 @@ Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 	wlr_output_create_global(output);
 
 	data_device = wlr_data_device_manager_create(wayland_display);
-
-	queueSeat = wlr_seat_create(wayland_display, "0");
-	seatID++;
+	{
+		xkb_context *kb_ctx = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+		xkb_rule_names rule_names = {0};
+		keymap = xkb_keymap_new_from_names(kb_ctx, &rule_names, XKB_KEYMAP_COMPILE_NO_FLAGS);
+		xkb_context_unref(kb_ctx);
+	}
+	queueSeat = createSeat();
 
 	xdg_shell = wlr_xdg_shell_create(wayland_display);
 	assert(xdg_shell);
@@ -128,9 +132,24 @@ void Wayland::update() {
 	wl_event_loop_dispatch(event_loop, 1);
 }
 
+wlr_seat *Wayland::createSeat() {
+	wlr_seat *seat = wlr_seat_create(wayland_display, std::to_string(seatID).c_str());
+	wlr_input_device *keyboard_device = (wlr_input_device *)calloc (1, sizeof (wlr_input_device));
+	wlr_input_device_init(keyboard_device, WLR_INPUT_DEVICE_KEYBOARD, nullptr, seat->name, 0, 0);
+
+	wlr_keyboard *keyboard = (wlr_keyboard *)calloc (1, sizeof (wlr_keyboard));
+	wlr_keyboard_init(keyboard, nullptr);
+	keyboard_device->keyboard = keyboard;
+	wlr_keyboard_set_keymap(keyboard, keymap);
+	wlr_keyboard_set_repeat_info(keyboard, 25, 600);
+	wlr_seat_set_keyboard(seat, keyboard_device);
+	seatID++;
+	return seat;
+}
+
 void Wayland::onNewSurface(Surface *surface) {
 	surfaces.emplace_back(surface);
-	queueSeat = wlr_seat_create(wayland_display, std::to_string(seatID).c_str());
+	queueSeat = createSeat();
 	seatID++;
 }
 void Wayland::onDestroySurface(wlr_surface *surface) {
