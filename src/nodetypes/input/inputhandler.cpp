@@ -117,7 +117,7 @@ std::vector<uint8_t> InputHandler::runAction(Client *callingClient, flexbuffers:
 	std::vector<uint8_t> flex = StardustXR::FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
 		fbb.Map([&]() {});
 	});
-	auto input = StardustXR::CreateInputDataDirect(flbb, StardustXR::InputDataRaw_Action, action, 0.0f, &flex);
+	auto input = StardustXR::CreateInputDataDirect(flbb, std::to_string(this->id).c_str(), StardustXR::InputDataRaw_Action, action, 0.0f, &flex);
 	flbb.Finish(input);
 	std::vector<uint8_t> actionData;
 	actionData.resize(flbb.GetSize());

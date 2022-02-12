@@ -136,7 +136,7 @@ std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuil
 	flatbuffers::Offset<void> flatInputMethod = inputMethod->generateInput(fbb, inputHandler);
 	const std::vector<uint8_t> datamap = inputMethod->serializeDatamap();
 
-	auto inputDataOffset = CreateInputDataDirect(fbb, inputMethodType, flatInputMethod, distance, &datamap);
+	auto inputDataOffset = CreateInputDataDirect(fbb, std::to_string(inputMethod->id).c_str(), inputMethodType, flatInputMethod, distance, &datamap);
 	fbb.Finish(inputDataOffset);
 
 	std::vector<uint8_t> data;
