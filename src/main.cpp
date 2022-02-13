@@ -33,7 +33,7 @@ using namespace StardustXRServer;
 // StereoKit includes
 #include <stereokit.h>
 using namespace sk;
-uint64_t frame = 0;
+std::atomic<uint64_t> frame = {0};
 
 // Third party local includes
 #include "CLI11.hpp"
@@ -135,9 +135,6 @@ int main(int argc, char *argv[]) {
 		// Update wayland
 		wayland->update();
 
-		// Send logicStep signals to clients
-		RootInterface::sendLogicStepSignals();
-
 		//Propagate the update and draw methods on scenegraph nodes
 		serverInternalClient.scenegraph.root.propagate("", ScenegraphUpdateFunction);
 		ClientManager::callClientsUpdate();
@@ -152,6 +149,9 @@ int main(int argc, char *argv[]) {
 		
 		//Increment the frame count
 		frame++;
+
+		// Send logicStep signals to clients
+		RootInterface::sendLogicStepSignals();
 
 		// Process all the input and send it to the clients
 		InputInterface::processInput();
