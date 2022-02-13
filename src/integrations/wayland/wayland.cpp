@@ -33,19 +33,16 @@ static void wlr_log_handler(wlr_log_importance level, const char *fmt, va_list a
 
 	switch (level) {
 		case WLR_ERROR:
-//			sk::log_errf(fmt, args);
 			format += "[ERROR]";
 		break;
 
-		case WLR_INFO:
-//			sk::log_infof(fmt, args);
-			format += "[INFO]";
-		break;
+//		case WLR_INFO:
+//			format += "[INFO]";
+//		break;
 
-		case WLR_DEBUG:
-//			sk::log_diagf(fmt, args);
-			format += "[DEBUG]";
-		break;
+//		case WLR_DEBUG:
+//			format += "[DEBUG]";
+//		break;
 
 		default:
 	return;
