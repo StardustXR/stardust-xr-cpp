@@ -23,7 +23,7 @@ void Node::propagate(std::string name, std::function<bool (std::string, Node *)>
 	if(function(name, this)) {
 		// Cache names of all children
 		for(const auto &child : children) {
-			if(child.second)
+			if(child.second && !child.second->destroyQueued)
 				child.second->propagate(child.first, function);
 
 			if(children.size() == 0)
