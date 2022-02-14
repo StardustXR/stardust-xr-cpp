@@ -23,7 +23,7 @@ public:
 	float distanceTo(InputHandler *handler);
 	InputDataRaw type();
 	flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler);
-	void updateInput(InputData *data, Spatial *space);
+	void updateInput(InputData *data, InputHandler *handler);
 protected:
 	sk::vec3 flexToSK(StardustXR::vec3 flex) {
 		return {

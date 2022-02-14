@@ -66,15 +66,15 @@ flatbuffers::Offset<void> HandInput::generateInput(flatbuffers::FlatBufferBuilde
 	).Union();
 }
 
-void HandInput::updateInput(InputData *data, Spatial *space) {
+void HandInput::updateInput(InputData *data, InputHandler *handler) {
 	StardustXR::Hand *handInput = static_cast<StardustXR::Hand *>(data->mutable_input());
 	for(uint i=0; i<fingerJointCount; ++i) {
-		updateSpaceFlexJoint(space, fingerJoints[i], handInput->mutable_finger_joints()->GetMutableObject(i));
+		updateSpaceFlexJoint(handler, fingerJoints[i], handInput->mutable_finger_joints()->GetMutableObject(i));
 	}
-	updateSpaceFlexJoint(space, palmJoint, handInput->mutable_palm());
-	updateSpaceFlexJoint(space, wristJoint, handInput->mutable_wrist());
+	updateSpaceFlexJoint(handler, palmJoint, handInput->mutable_palm());
+	updateSpaceFlexJoint(handler, wristJoint, handInput->mutable_wrist());
 	if(hasForearm)
-		updateSpaceFlexJoint(space, elbowJoint, handInput->mutable_elbow());
+		updateSpaceFlexJoint(handler, elbowJoint, handInput->mutable_elbow());
 }
 
 

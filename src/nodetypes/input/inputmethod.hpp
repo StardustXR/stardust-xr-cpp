@@ -20,7 +20,7 @@ public:
 	virtual float distanceTo(InputHandler *handler) = 0;
 	virtual InputDataRaw type() = 0;
 	virtual flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler) = 0;
-	virtual void	 updateInput(InputData *data, Spatial *space) = 0;
+	virtual void	 updateInput(InputData *data, InputHandler *handler) = 0;
 	virtual std::vector<uint8_t> serializeDatamap();
 
 	typedef std::variant<bool, int32_t, float, sk::vec2, sk::vec3, std::string> DatamapVariant;
