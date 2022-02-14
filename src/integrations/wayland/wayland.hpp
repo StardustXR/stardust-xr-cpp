@@ -30,12 +30,8 @@ public:
 	wlr_seat *createSeat();
 
 	void onNewSurface(Surface *surface);
-	void onDestroySurface(wlr_surface *surface);
-	std::vector<std::unique_ptr<Surface>> surfaces;
 
 	void onNewXDGSurface(void *data);
-	void onDestroyXDGSurface(void *data);
-
 	void onNewToplevelDecorationXDG(void *data);
 
 	void onNewXWaylandSurface(void *data);

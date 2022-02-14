@@ -145,19 +145,8 @@ wlr_seat *Wayland::createSeat() {
 }
 
 void Wayland::onNewSurface(Surface *surface) {
-	surfaces.emplace_back(surface);
 	queueSeat = createSeat();
 	seatID++;
-}
-void Wayland::onDestroySurface(wlr_surface *surface) {
-	surfaces.erase(std::remove_if(
-		surfaces.begin(),
-		surfaces.end(),
-		[surface](std::unique_ptr<Surface> &listSurface) {
-			return listSurface->surface == surface;
-		}),
-		surfaces.end()
-	);
 }
 
 void Wayland::onNewXDGSurface(void *data) {
@@ -166,8 +155,8 @@ void Wayland::onNewXDGSurface(void *data) {
 		return;
 
 	XDGSurface *newSurface = new XDGSurface(wayland_display, renderer, surface, queueSeat);
-	newSurface->destroyCallback.callback = [this, newSurface](void *data) {
-		onDestroySurface(newSurface->surface);
+	newSurface->destroyCallback.callback = [newSurface](void *data) {
+		delete newSurface;
 	};
 }
 
@@ -183,8 +172,8 @@ void Wayland::onNewXWaylandSurface(void *data) {
 void Wayland::onMapXWaylandSurface(void *data) {
 	wlr_xwayland_surface *surface = (wlr_xwayland_surface *) data;
 	XWaylandSurface *newSurface = new XWaylandSurface(wayland_display, renderer, surface, queueSeat);
-	newSurface->destroyCallback.callback = [this, newSurface](void *data) {
-		onDestroySurface(newSurface->surface);
+	newSurface->destroyCallback.callback = [newSurface](void *data) {
+		delete newSurface;
 	};
 
 	onNewSurface(newSurface);
