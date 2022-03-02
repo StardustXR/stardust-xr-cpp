@@ -6,6 +6,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <flatbuffers/flatbuffers.h>
 #include <flatbuffers/flexbuffers.h>
 #include "noderef.hpp"
 
