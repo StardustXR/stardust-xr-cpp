@@ -32,6 +32,7 @@ using namespace StardustXRServer;
 
 // StereoKit includes
 #include <stereokit.h>
+#include <stereokit_ui.h>
 using namespace sk;
 std::atomic<uint64_t> frame = {0};
 
@@ -96,6 +97,7 @@ int main(int argc, char *argv[]) {
 	if(args.fieldDebug)
 		debugSetup();
 
+	ui_enable_far_interact(false);
 	if(args.flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_left, false);
 		input_hand_visible(handed_right, false);
