@@ -39,6 +39,7 @@ Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surfa
 	this->surfaceTex->tex.mips        = skg_mip_none;
 	this->surfaceTex->tex.format      = skg_tex_fmt_rgba32;
 	this->surfaceTex->tex.array_count = 1;
+	this->surfaceTex->header.state    = asset_state_loading;
 
 //	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_gamma_hlsl, 4032);
 	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_simula_hlsl, 6106);
@@ -110,6 +111,8 @@ void Surface::onCommit() {
 	this->surfaceTex->tex.height      = surfaceTexture->height;
 	this->surfaceTex->tex._texture    = eglTexture->tex;
 	this->surfaceTex->tex._target     = eglTexture->target;
+	this->surfaceTex->header.state    = asset_state_loaded_meta;
+	this->surfaceTex->fallback        = nullptr;
 
 	tex_set_options(surfaceTex, sk::tex_sample_point, tex_address_clamp, 1);
 
