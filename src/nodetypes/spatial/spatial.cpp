@@ -22,17 +22,17 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, matrix transformMatrix,
 	this->scalable = scalable;
 	this->zoneable = zoneable;
 
-	STARDUSTXR_NODE_METHOD("move", &Spatial::move)
-	STARDUSTXR_NODE_METHOD("rotate", &Spatial::rotate)
-	STARDUSTXR_NODE_METHOD("scale", &Spatial::scaleThis)
+//	STARDUSTXR_NODE_METHOD("move", &Spatial::move)
+//	STARDUSTXR_NODE_METHOD("rotate", &Spatial::rotate)
+//	STARDUSTXR_NODE_METHOD("scale", &Spatial::scaleThis)
 
 	STARDUSTXR_NODE_METHOD("getTransform", &Spatial::getTransform)
 
-	STARDUSTXR_NODE_METHOD("setOrigin", &Spatial::setOrigin)
-	STARDUSTXR_NODE_METHOD("setOrientation", &Spatial::setOrientation)
-	STARDUSTXR_NODE_METHOD("setScale", &Spatial::setScale)
+//	STARDUSTXR_NODE_METHOD("setOrigin", &Spatial::setOrigin)
+//	STARDUSTXR_NODE_METHOD("setOrientation", &Spatial::setOrientation)
+//	STARDUSTXR_NODE_METHOD("setScale", &Spatial::setScale)
 
-	STARDUSTXR_NODE_METHOD("setPose", &Spatial::setPose)
+//	STARDUSTXR_NODE_METHOD("setPose", &Spatial::setPose)
 	STARDUSTXR_NODE_METHOD("setTransform", &Spatial::setTransform)
 
 	STARDUSTXR_NODE_METHOD("setSpatialParent", &Spatial::setSpatialParentFlex)
@@ -50,35 +50,6 @@ Spatial::~Spatial() {
 	SpatialInterface::spatials.erase(std::remove(SpatialInterface::spatials.begin(), SpatialInterface::spatials.end(), this));
 }
 
-std::vector<uint8_t> Spatial::move(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	if(translatable) {
-		flexbuffers::TypedVector vector = data.AsTypedVector();
-		vec3 moveDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
-		transform = transform * matrix_t(matrix_transform_pt(transform, moveDelta));
-	}
-
-	return std::vector<uint8_t>();
-}
-
-std::vector<uint8_t> Spatial::rotate(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	if(rotatable) {
-		flexbuffers::TypedVector vector = data.AsTypedVector();
-		quat rotationDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
-		transform = transform * matrix_r(matrix_transform_quat(transform, rotationDelta));
-	}
-
-	return std::vector<uint8_t>();
-}
-
-std::vector<uint8_t> Spatial::scaleThis(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	if(scalable) {
-		float scaleDelta = data.AsFloat();
-		transform = transform * matrix_s(matrix_extract_scale(transform) * scaleDelta);
-	}
-
-	return std::vector<uint8_t>();
-}
-
 std::vector<uint8_t> Spatial::getTransform(Client *callingClient, flexbuffers::Reference data, bool) {
 	Spatial *space = callingClient->scenegraph.findNode<Spatial>(data.AsString().str());
 	if(!space) {
@@ -91,68 +62,43 @@ std::vector<uint8_t> Spatial::getTransform(Client *callingClient, flexbuffers::R
 
 	return StardustXR::FlexbufferFromArguments(
 		FLEX_ARGS(
-			FLEX_VEC3(pos)
-			FLEX_QUAT(rot)
-			FLEX_VEC3(scl)
+			if(translatable)
+				FLEX_VEC3(pos)
+			if(rotatable)
+				FLEX_QUAT(rot)
+			if(scalable)
+				FLEX_VEC3(scl)
 		)
 	);
 }
-
-std::vector<uint8_t> Spatial::setOrigin(Client *callingClient, flexbuffers::Reference data, bool) {
-	if(translatable) {
-		flexbuffers::TypedVector vector = data.AsTypedVector();
-
-		vec3 pos, scl;
-		quat rot;
-		matrix_decompose(transform, pos, scl, rot);
-		pos = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
-		transform = matrix_trs(pos, rot, scl);
-	}
-
-	return std::vector<uint8_t>();
-}
-std::vector<uint8_t> Spatial::setOrientation(Client *callingClient, flexbuffers::Reference data, bool) {
-	if(rotatable) {
-		flexbuffers::TypedVector vector = data.AsTypedVector();
-
-		vec3 pos, scl;
-		quat rot;
-		matrix_decompose(transform, pos, scl, rot);
-		rot = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
-		transform = matrix_trs(pos, rot, scl);
-	}
-
-	return std::vector<uint8_t>();
-}
-std::vector<uint8_t> Spatial::setScale(Client *callingClient, flexbuffers::Reference data, bool) {
-	if(scalable) {
-		flexbuffers::TypedVector vector = data.AsTypedVector();
-
-		vec3 pos, scl;
-		quat rot;
-		matrix_decompose(transform, pos, scl, rot);
-		scl = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
-		transform = matrix_trs(pos, rot, scl);
-	}
-
-	return std::vector<uint8_t>();
-}
-std::vector<uint8_t> Spatial::setPose(Client *callingClient, flexbuffers::Reference data, bool) {
-	if(translatable && rotatable) {
-		flexbuffers::Vector vector = data.AsVector();
-		setOrigin(callingClient, vector[0], false);
-		setOrientation(callingClient, vector[1], false);
-	}
-
-	return std::vector<uint8_t>();
-}
 std::vector<uint8_t> Spatial::setTransform(Client *callingClient, flexbuffers::Reference data, bool) {
-	if(translatable && rotatable && scalable) {
-		flexbuffers::Vector vector = data.AsVector();
-		setOrigin(callingClient, vector[0], false);
-		setOrientation(callingClient, vector[1], false);
-		setScale(callingClient, vector[2], false);
+	flexbuffers::Vector flexVec = data.AsVector();
+
+	vec3 pos, scl;
+	quat rot;
+	matrix_decompose(transform, pos, scl, rot);
+
+	if(translatable && flexVec[0].IsTypedVector() && flexVec[0].AsTypedVector().size() == 3) {
+		flexbuffers::TypedVector posFlex = flexVec[0].AsTypedVector();
+		pos.x = posFlex[0].AsFloat();
+		pos.y = posFlex[1].AsFloat();
+		pos.z = posFlex[2].AsFloat();
 	}
+	if(rotatable && flexVec[1].IsTypedVector() && flexVec[1].AsTypedVector().size() == 4) {
+		flexbuffers::TypedVector rotFlex = flexVec[1].AsTypedVector();
+		rot.x = rotFlex[0].AsFloat();
+		rot.y = rotFlex[1].AsFloat();
+		rot.z = rotFlex[2].AsFloat();
+		rot.w = rotFlex[3].AsFloat();
+	}
+	if(scalable && flexVec[2].IsTypedVector() && flexVec[2].AsTypedVector().size() == 3) {
+		flexbuffers::TypedVector sclFlex = flexVec[2].AsTypedVector();
+		scl.x = sclFlex[0].AsFloat();
+		scl.y = sclFlex[1].AsFloat();
+		scl.z = sclFlex[2].AsFloat();
+	}
+
+	transform = matrix_trs(pos, rot, scl);
 
 	return std::vector<uint8_t>();
 }
