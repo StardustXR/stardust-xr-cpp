@@ -227,12 +227,29 @@ bool Spatial::setSpatialParent(Spatial *spatial) {
 	if(spatial == spatialParent)
 		return false;
 
+	//Spatial parent loop protection
+	Spatial *currentParent = spatial;
+	while(currentParent->spatialParent && currentParent->spatialParent != nullptr) {
+		if(currentParent->spatialParent->id == this->id)
+			return false;
+		currentParent = currentParent->spatialParent;
+	}
+
 	spatialParent = spatial;
 	return true;
 }
 bool Spatial::setSpatialParentInPlace(Spatial *spatial) {
 	if(spatial == spatialParent)
 		return false;
+
+	//Spatial parent loop protection
+	Spatial *currentParent = spatial;
+	while(currentParent->spatialParent && currentParent->spatialParent != nullptr) {
+		if(currentParent->spatialParent->id == this->id)
+			return false;
+		currentParent = currentParent->spatialParent;
+	}
+
 	setTransformMatrix(localToSpaceMatrix(spatial));
 	spatialParent = spatial;
 	return true;
@@ -251,6 +268,5 @@ matrix Spatial::worldTransform() {
 	else
 		return localTransform();
 }
-
 
 } // namespace StardustXRServer
