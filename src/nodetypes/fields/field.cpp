@@ -40,6 +40,8 @@ const vec3 Field::localNormal(const vec3 point, float radius) {
 float Field::distance(Spatial *space, const vec3 point) {
 	vec3 localPoint = spaceToLocalPoint(space, point);
 
+	vec3 scale = matrix_extract_scale(worldTransform());
+
 	if(scale.x == 1.0f && scale.x == scale.y && scale.y == scale.z) { // We should really fix this but idk how??
 		//If the field is not scaled
 		return localDistance(localPoint);

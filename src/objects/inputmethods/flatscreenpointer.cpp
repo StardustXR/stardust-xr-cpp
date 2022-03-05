@@ -15,7 +15,7 @@ void FlatscreenPointer::update() {
 	ray_t mouseRay;
 	if(ray_from_mouse(input_mouse()->pos, mouseRay)) {
 		transform = matrix_trs(mouseRay.pos, quat_lookat(vec3_zero, mouseRay.dir));
-//		transformDirty();
+
 		datamap["left"]   = (input_key(sk::key_mouse_left)   & button_state_active) ? 1.0f : 0.0f;
 		datamap["middle"] = (input_key(sk::key_mouse_center) & button_state_active) ? 1.0f : 0.0f;
 		datamap["right"]  = (input_key(sk::key_mouse_right)  & button_state_active) ? 1.0f : 0.0f;

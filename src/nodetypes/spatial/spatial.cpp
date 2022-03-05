@@ -14,9 +14,9 @@ namespace StardustXRServer {
 Spatial::Spatial(Client *client, matrix transformMatrix) : Node(client, false) {
 	setTransformMatrix(transformMatrix);
 }
-Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable) : Node(client) {
+Spatial::Spatial(Client *client, Spatial *spatialParent, matrix transformMatrix, bool translatable, bool rotatable, bool scalable, bool zoneable) :
+		Spatial(client, transformMatrix) {
 	this->spatialParent = spatialParent;
-	this->transform = matrix_trs(position, rotation, scale);
 	this->translatable = translatable;
 	this->rotatable = rotatable;
 	this->scalable = scalable;
@@ -43,6 +43,8 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rot
 	std::lock_guard<std::mutex> lock(SpatialInterface::spatialMutex);
 	SpatialInterface::spatials.push_back(this);
 }
+Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable) :
+	Spatial(client, spatialParent, matrix_trs(position, rotation, scale), translatable, rotatable, scalable, zoneable) {}
 Spatial::~Spatial() {
 	std::lock_guard<std::mutex> lock(SpatialInterface::spatialMutex);
 	SpatialInterface::spatials.erase(std::remove(SpatialInterface::spatials.begin(), SpatialInterface::spatials.end(), this));

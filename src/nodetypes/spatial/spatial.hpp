@@ -11,8 +11,9 @@ class Zone;
 
 class Spatial : public Node {
 public:
-	Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable);
 	Spatial(Client *client, matrix transformMatrix);
+	Spatial(Client *client, Spatial *spatialParent, matrix transformMatrix, bool translatable, bool rotatable, bool scalable, bool zoneable);
+	Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable);
 	~Spatial();
 
 	// Client accessible functions
@@ -30,11 +31,6 @@ public:
 	std::vector<uint8_t> setSpatialParentFlex        (Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setSpatialParentInPlaceFlex (Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setZoneable                 (Client *callingClient, flexbuffers::Reference data, bool returnValue);
-
-	// Surface level parameters
-	vec3 position = vec3_zero;
-	quat rotation = quat_identity;
-	vec3 scale    = vec3_one;
 
 	// Disable parts of this spatialnode (e.g. fields should not be scalable)
 	bool translatable = true;
@@ -63,7 +59,6 @@ public:
 	vec3 localToSpacePoint    (Spatial *space, vec3 point    ) { return matrix_transform_pt  (localToSpaceMatrix(space), point    ); }
 	vec3 localToSpaceDirection(Spatial *space, vec3 direction) { return matrix_transform_dir (localToSpaceMatrix(space), direction); }
 	quat localToSpaceRotation (Spatial *space, quat rot      ) { return matrix_transform_quat(localToSpaceMatrix(space), rot      ); }
-
 protected:
 	matrix transform = matrix_identity;
 };
