@@ -16,14 +16,11 @@ Spatial::Spatial(Client *client, matrix transformMatrix) : Node(client, false) {
 }
 Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable) : Node(client) {
 	this->spatialParent = spatialParent;
-	this->position = position;
-	this->rotation = rotation;
-	this->scale = scale;
+	this->transform = matrix_trs(position, rotation, scale);
 	this->translatable = translatable;
 	this->rotatable = rotatable;
 	this->scalable = scalable;
 	this->zoneable = zoneable;
-	this->transformDirty();
 
 	STARDUSTXR_NODE_METHOD("move", &Spatial::move)
 	STARDUSTXR_NODE_METHOD("rotate", &Spatial::rotate)
@@ -55,8 +52,7 @@ std::vector<uint8_t> Spatial::move(Client *callingClient, flexbuffers::Reference
 	if(translatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		vec3 moveDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
-		position += rotation * moveDelta;
-		transformMatrixDirty = true;
+		transform = transform * matrix_t(matrix_transform_pt(transform, moveDelta));
 	}
 
 	return std::vector<uint8_t>();
@@ -66,8 +62,7 @@ std::vector<uint8_t> Spatial::rotate(Client *callingClient, flexbuffers::Referen
 	if(rotatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		quat rotationDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
-		rotation = rotation * rotationDelta;
-		transformMatrixDirty = true;
+		transform = transform * matrix_r(matrix_transform_quat(transform, rotationDelta));
 	}
 
 	return std::vector<uint8_t>();
@@ -76,8 +71,7 @@ std::vector<uint8_t> Spatial::rotate(Client *callingClient, flexbuffers::Referen
 std::vector<uint8_t> Spatial::scaleThis(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(translatable) {
 		float scaleDelta = data.AsFloat();
-		scale = scale * scaleDelta;
-		transformMatrixDirty = true;
+		transform = transform * matrix_s(matrix_extract_scale(transform) * scaleDelta);
 	}
 
 	return std::vector<uint8_t>();
@@ -105,8 +99,12 @@ std::vector<uint8_t> Spatial::getTransform(Client *callingClient, flexbuffers::R
 std::vector<uint8_t> Spatial::setOrigin(Client *callingClient, flexbuffers::Reference data, bool) {
 	if(translatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
-		position = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
-		transformMatrixDirty = true;
+
+		vec3 pos, scl;
+		quat rot;
+		matrix_decompose(transform, pos, scl, rot);
+		pos = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
+		transform = matrix_trs(pos, rot, scl);
 	}
 
 	return std::vector<uint8_t>();
@@ -114,8 +112,12 @@ std::vector<uint8_t> Spatial::setOrigin(Client *callingClient, flexbuffers::Refe
 std::vector<uint8_t> Spatial::setOrientation(Client *callingClient, flexbuffers::Reference data, bool) {
 	if(rotatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
-		rotation = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
-		transformMatrixDirty = true;
+
+		vec3 pos, scl;
+		quat rot;
+		matrix_decompose(transform, pos, scl, rot);
+		rot = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
+		transform = matrix_trs(pos, rot, scl);
 	}
 
 	return std::vector<uint8_t>();
@@ -123,8 +125,12 @@ std::vector<uint8_t> Spatial::setOrientation(Client *callingClient, flexbuffers:
 std::vector<uint8_t> Spatial::setScale(Client *callingClient, flexbuffers::Reference data, bool) {
 	if(scalable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
-		scale = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
-		transformMatrixDirty = true;
+
+		vec3 pos, scl;
+		quat rot;
+		matrix_decompose(transform, pos, scl, rot);
+		scl = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
+		transform = matrix_trs(pos, rot, scl);
 	}
 
 	return std::vector<uint8_t>();
@@ -231,14 +237,9 @@ bool Spatial::setSpatialParentInPlace(Spatial *spatial) {
 }
 void Spatial::setTransformMatrix(matrix mat) {
 	transform = mat;
-	matrix_decompose(transform, position, scale, rotation);
-	transformMatrixDirty = false;
 }
 
 matrix Spatial::localTransform() {
-	if(transformMatrixDirty)
-		transform = matrix_trs(position, rotation, scale);
-	transformMatrixDirty = false;
 	return transform;
 }
 

@@ -64,9 +64,7 @@ public:
 	vec3 localToSpaceDirection(Spatial *space, vec3 direction) { return matrix_transform_dir (localToSpaceMatrix(space), direction); }
 	quat localToSpaceRotation (Spatial *space, quat rot      ) { return matrix_transform_quat(localToSpaceMatrix(space), rot      ); }
 
-	void transformDirty() { transformMatrixDirty = true; }
 protected:
-	bool transformMatrixDirty = false;
 	matrix transform = matrix_identity;
 };
 

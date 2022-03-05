@@ -14,9 +14,8 @@ FlatscreenPointer::FlatscreenPointer(Client *client) : PointerInput(client) {
 void FlatscreenPointer::update() {
 	ray_t mouseRay;
 	if(ray_from_mouse(input_mouse()->pos, mouseRay)) {
-		position = mouseRay.pos;
-		rotation = quat_lookat(vec3_zero, mouseRay.dir);
-		transformDirty();
+		transform = matrix_trs(mouseRay.pos, quat_lookat(vec3_zero, mouseRay.dir));
+//		transformDirty();
 		datamap["left"]   = (input_key(sk::key_mouse_left)   & button_state_active) ? 1.0f : 0.0f;
 		datamap["middle"] = (input_key(sk::key_mouse_center) & button_state_active) ? 1.0f : 0.0f;
 		datamap["right"]  = (input_key(sk::key_mouse_right)  & button_state_active) ? 1.0f : 0.0f;
