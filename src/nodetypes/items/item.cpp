@@ -59,8 +59,10 @@ std::vector<uint8_t> Item::triggerAccept(Client *callingClient, flexbuffers::Ref
 }
 
 std::vector<uint8_t> Item::release(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	if(capturedAcceptor)
+	if(capturedAcceptor) {
+		itemTypeInfo->UI->handleItemRelease(this);
 		capturedAcceptor.ptr<ItemAcceptor>()->releaseItem(name);
+	}
 	return std::vector<uint8_t>();
 }
 
@@ -82,8 +84,10 @@ void Item::updateItems(TypeInfo *info) {
 				closestAcceptor = acceptor;
 			}
 		}
-		if(closestAcceptor)
+		if(closestAcceptor) {
+			item->itemTypeInfo->UI->handleItemCapture(item);
 			closestAcceptor->captureItem(*item);
+		}
 	}
 }
 

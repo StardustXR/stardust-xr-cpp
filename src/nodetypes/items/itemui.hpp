@@ -11,6 +11,8 @@ public:
 	~ItemUI();
 
 	void handleItemCreate(Item *item);
+	void handleItemCapture(Item *item);
+	void handleItemRelease(Item *item);
 	void handleItemDestroy(std::string itemName);
 
 private:

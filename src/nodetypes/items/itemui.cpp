@@ -30,7 +30,34 @@ void ItemUI::handleItemCreate(Item *item) {
 		callbackMethod.c_str(),
 		[&](flexbuffers::Builder &fbb) {
 			fbb.Vector([&]() {
-				fbb.Bool(true);
+				fbb.UInt(0);
+				fbb.String(item->name);
+				item->serializeData(fbb);
+			});
+		}
+	);
+}
+
+void ItemUI::handleItemCapture(Item *item) {
+	client->messenger.sendSignal(
+		callbackPath.c_str(),
+		callbackMethod.c_str(),
+		[&](flexbuffers::Builder &fbb) {
+			fbb.Vector([&]() {
+				fbb.UInt(1);
+				fbb.String(item->name);
+			});
+		}
+	);
+}
+
+void ItemUI::handleItemRelease(Item *item) {
+	client->messenger.sendSignal(
+		callbackPath.c_str(),
+		callbackMethod.c_str(),
+		[&](flexbuffers::Builder &fbb) {
+			fbb.Vector([&]() {
+				fbb.UInt(2);
 				fbb.String(item->name);
 				item->serializeData(fbb);
 			});
@@ -48,7 +75,7 @@ void ItemUI::handleItemDestroy(std::string itemName) {
 		callbackMethod.c_str(),
 		[&](flexbuffers::Builder &fbb) {
 			fbb.Vector([&]() {
-				fbb.Bool(false);
+				fbb.UInt(3);
 				fbb.String(itemName);
 			});
 		}
