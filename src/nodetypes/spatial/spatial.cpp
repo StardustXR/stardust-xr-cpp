@@ -69,7 +69,7 @@ std::vector<uint8_t> Spatial::rotate(Client *callingClient, flexbuffers::Referen
 }
 
 std::vector<uint8_t> Spatial::scaleThis(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	if(translatable) {
+	if(scalable) {
 		float scaleDelta = data.AsFloat();
 		transform = transform * matrix_s(matrix_extract_scale(transform) * scaleDelta);
 	}
