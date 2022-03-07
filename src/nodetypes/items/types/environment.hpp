@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "item.hpp"
+#include "../item.hpp"
 
 namespace StardustXRServer {
 

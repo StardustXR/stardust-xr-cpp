@@ -12,7 +12,7 @@ class Node;
 class NodeRef {
 public:
 	NodeRef();
-	NodeRef(NodeRef &);
+	NodeRef(const NodeRef &);
 	NodeRef(uint32_t id);
 	NodeRef(Node *node);
 

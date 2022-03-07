@@ -11,7 +11,7 @@ public:
 
 	sk::vec3 size;
 
-	std::vector<uint8_t> setSize(flexbuffers::Reference data, bool);
+	std::vector<uint8_t> setSize(Client *callingClient, flexbuffers::Reference data, bool);
 
 	virtual float localDistance(const sk::vec3 point);
 

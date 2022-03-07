@@ -44,7 +44,7 @@ pid_t Client::getPID(int fd) {
 	}
 }
 
-void Client::startHandler() {
+void Client::startMessenger() {
 	messenger.startHandler();
 }
 

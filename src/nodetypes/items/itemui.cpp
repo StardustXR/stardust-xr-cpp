@@ -1,6 +1,5 @@
 #include "itemui.hpp"
 #include "../../core/client.hpp"
-#include "../spatial/alias.hpp"
 
 namespace StardustXRServer {
 
@@ -22,7 +21,9 @@ ItemUI::~ItemUI() {
 }
 
 void ItemUI::handleItemCreate(Item *item) {
-	addChild(item->name, item->makeAlias(client));
+	Alias *alias = item->makeAlias(client);
+	addChild(item->name, alias);
+	alias->addMethods({"triggerAccept", "release"});
 
 	client->messenger.sendSignal(
 		callbackPath.c_str(),

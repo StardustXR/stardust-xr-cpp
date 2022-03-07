@@ -1,7 +1,7 @@
 src_files += files(
-    'alias.cpp',
+    'acceptor.cpp',
     'item.cpp',
     'itemui.cpp',
-    'environment.cpp',
-    'panel.cpp',
 )
+
+subdir('types')

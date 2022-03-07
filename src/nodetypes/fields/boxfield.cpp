@@ -13,7 +13,7 @@ BoxField::BoxField(Client *client, Spatial *spatialParent, vec3 position, quat r
 	STARDUSTXR_NODE_METHOD("setSize", &BoxField::setSize)
 }
 
-std::vector<uint8_t> BoxField::setSize(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> BoxField::setSize(Client *callingClient, flexbuffers::Reference data, bool) {
 	flexbuffers::TypedVector vector = data.AsTypedVector();
 	size = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
 

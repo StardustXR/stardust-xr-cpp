@@ -11,9 +11,9 @@ public:
 	~Zone();
 	Field *field;
 
-	std::vector<uint8_t> isCaptured(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> capture(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> release(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> isCaptured(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> capture(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> release(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 	void releaseSpatial(Spatial *spatial);
 

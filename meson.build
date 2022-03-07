@@ -22,7 +22,7 @@ reactphysics = stereokit_project.dependency('reactphysics3d')
 xdg_utils_project = cmake.subproject('xdg-utils')
 xdg_utils_basedir = xdg_utils_project.dependency('BaseDir')
 
-wlroots_proj = subproject('wlroots', default_options: ['default_library=static', 'backends=[]', 'renderers=[\'gles2\']', 'examples=false'])
+wlroots_proj = subproject('wlroots', default_options: ['default_library=static', 'backends=[]', 'renderers=[\'gles2\']', 'examples=false', 'xcb-errors=disabled'])
 wlroots = wlroots_proj.get_variable('wlroots')
 wlroots_server_protocols = wlroots_proj.get_variable('protocols_server_header')
 server_protocols = [

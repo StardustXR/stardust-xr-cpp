@@ -37,7 +37,7 @@ void ClientManager::handleNewlyConnectedClients() {
 	for(int newlyConnectedClient : newlyConnectedClients) {
 		Client *client = new Client(newlyConnectedClient);
 		clients.emplace_back(client);
-		client->startHandler();
+		client->startMessenger();
 	}
 	newlyConnectedClients.clear();
 }

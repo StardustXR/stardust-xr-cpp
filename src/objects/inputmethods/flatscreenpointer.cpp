@@ -25,7 +25,7 @@ void FlatscreenPointer::update() {
 		datamap["rotate"] = datamap["middle"];
 		datamap["context"] = datamap["right"];
 
-		datamap["scroll"] = vec2{0, input_mouse()->scroll_change};
+		datamap["scroll"] = vec2{0, input_mouse()->scroll_change / 120.0f};
 	}
 }
 

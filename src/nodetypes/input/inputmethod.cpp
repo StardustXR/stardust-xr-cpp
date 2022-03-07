@@ -15,7 +15,7 @@ InputMethod::~InputMethod() {
 	InputInterface::inputMethods.erase(std::remove(InputInterface::inputMethods.begin(), InputInterface::inputMethods.end(), this));
 }
 
-std::vector<uint8_t> InputMethod::modifyDatamap(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> InputMethod::modifyDatamap(Client *callingClient, flexbuffers::Reference data, bool) {
 	flexbuffers::Map map = data.AsMap();
 	flexbuffers::TypedVector keys = map.Keys();
 	flexbuffers::Vector values = map.Values();

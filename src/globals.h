@@ -3,6 +3,7 @@
 #include "core/client.hpp"
 #include <stereokit.h>
 #include <cstdint>
+#include <atomic>
 
 struct CLIArgs {
 	bool flatscreen = false;
@@ -11,7 +12,7 @@ struct CLIArgs {
 };
 extern CLIArgs args;
 
-extern uint64_t frame;
+extern std::atomic<uint64_t> frame;
 
 extern sk::material_t fieldDebugMat;
 extern sk::mesh_t boxFieldMesh;

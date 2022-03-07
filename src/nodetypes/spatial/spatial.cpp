@@ -51,7 +51,7 @@ Spatial::~Spatial() {
 	SpatialInterface::spatials.erase(std::remove(SpatialInterface::spatials.begin(), SpatialInterface::spatials.end(), this));
 }
 
-std::vector<uint8_t> Spatial::move(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Spatial::move(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(translatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		vec3 moveDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
@@ -62,7 +62,7 @@ std::vector<uint8_t> Spatial::move(flexbuffers::Reference data, bool returnValue
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> Spatial::rotate(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Spatial::rotate(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(rotatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		quat rotationDelta = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
@@ -73,7 +73,7 @@ std::vector<uint8_t> Spatial::rotate(flexbuffers::Reference data, bool returnVal
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> Spatial::scaleThis(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Spatial::scaleThis(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(translatable) {
 		float scaleDelta = data.AsFloat();
 		scale = scale * scaleDelta;
@@ -83,18 +83,26 @@ std::vector<uint8_t> Spatial::scaleThis(flexbuffers::Reference data, bool return
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> Spatial::getTransform(flexbuffers::Reference data, bool) {
-	vec3 pos = vec3_zero;
+std::vector<uint8_t> Spatial::getTransform(Client *callingClient, flexbuffers::Reference data, bool) {
+	Spatial *space = callingClient->scenegraph.findNode<Spatial>(data.AsString().str());
+	if(!space) {
+		Alias *spaceAlias = callingClient->scenegraph.findNode<Alias>(data.AsString().str());
+		space = spaceAlias ? spaceAlias->original.ptr<Spatial>() : nullptr;
+	}
+	vec3 pos, scl;
+	quat rot;
+	matrix_decompose(localToSpaceMatrix(space), pos, scl, rot);
+
 	return StardustXR::FlexbufferFromArguments(
 		FLEX_ARGS(
-			FLEX_VEC3(position)
-			FLEX_QUAT(rotation)
-			FLEX_VEC3(scale)
+			FLEX_VEC3(pos)
+			FLEX_QUAT(rot)
+			FLEX_VEC3(scl)
 		)
 	);
 }
 
-std::vector<uint8_t> Spatial::setOrigin(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setOrigin(Client *callingClient, flexbuffers::Reference data, bool) {
 	if(translatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		position = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
@@ -103,7 +111,7 @@ std::vector<uint8_t> Spatial::setOrigin(flexbuffers::Reference data, bool) {
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> Spatial::setOrientation(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setOrientation(Client *callingClient, flexbuffers::Reference data, bool) {
 	if(rotatable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		rotation = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat(), vector[3].AsFloat() };
@@ -112,7 +120,7 @@ std::vector<uint8_t> Spatial::setOrientation(flexbuffers::Reference data, bool) 
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> Spatial::setScale(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setScale(Client *callingClient, flexbuffers::Reference data, bool) {
 	if(scalable) {
 		flexbuffers::TypedVector vector = data.AsTypedVector();
 		scale = { vector[0].AsFloat(), vector[1].AsFloat(), vector[2].AsFloat() };
@@ -121,58 +129,58 @@ std::vector<uint8_t> Spatial::setScale(flexbuffers::Reference data, bool) {
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> Spatial::setPose(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setPose(Client *callingClient, flexbuffers::Reference data, bool) {
 	if(translatable && rotatable) {
 		flexbuffers::Vector vector = data.AsVector();
-		setOrigin(vector[0], false);
-		setOrientation(vector[1], false);
+		setOrigin(callingClient, vector[0], false);
+		setOrientation(callingClient, vector[1], false);
 	}
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> Spatial::setTransform(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setTransform(Client *callingClient, flexbuffers::Reference data, bool) {
 	if(translatable && rotatable && scalable) {
 		flexbuffers::Vector vector = data.AsVector();
-		setOrigin(vector[0], false);
-		setOrientation(vector[1], false);
-		setScale(vector[2], false);
+		setOrigin(callingClient, vector[0], false);
+		setOrientation(callingClient, vector[1], false);
+		setScale(callingClient, vector[2], false);
 	}
 
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> Spatial::setSpatialParentFlex(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setSpatialParentFlex(Client *callingClient, flexbuffers::Reference data, bool) {
 	std::string spacePath = data.AsString().str();
 	if(spacePath == "") {
 		spatialParent = nullptr;
 	} else {
-		Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
+		Spatial *potentialParent = callingClient->scenegraph.findNode<Spatial>(spacePath);
 		if(!potentialParent) {
-			Alias *potentialParentAlias = client->scenegraph.findNode<Alias>(spacePath);
-			if(potentialParentAlias)
-				potentialParent = dynamic_cast<Spatial *>(potentialParentAlias->original);
+			Alias *potentialParentAlias = callingClient->scenegraph.findNode<Alias>(spacePath);
+			if(potentialParentAlias && potentialParentAlias->original)
+				potentialParent = potentialParentAlias->original.ptr<Spatial>();
 		}
 		setSpatialParent(potentialParent);
 	}
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> Spatial::setSpatialParentInPlaceFlex(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Spatial::setSpatialParentInPlaceFlex(Client *callingClient, flexbuffers::Reference data, bool) {
 	std::string spacePath = data.AsString().str();
 	if(spacePath == "") {
 		spatialParent = nullptr;
 	} else {
-		Spatial *potentialParent = client->scenegraph.findNode<Spatial>(spacePath);
+		Spatial *potentialParent = callingClient->scenegraph.findNode<Spatial>(spacePath);
 		if(!potentialParent) {
-			Alias *potentialParentAlias = client->scenegraph.findNode<Alias>(spacePath);
+			Alias *potentialParentAlias = callingClient->scenegraph.findNode<Alias>(spacePath);
 			if(potentialParentAlias)
-				potentialParent = dynamic_cast<Spatial *>(potentialParentAlias->original);
+				potentialParent = potentialParentAlias->original.ptr<Spatial>();
 		}
 		setSpatialParentInPlace(potentialParent);
 	}
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> Spatial::setZoneable(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Spatial::setZoneable(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	zoneable = data.AsBool();
 	if(!zoneable && this->zone != nullptr)
 		this->zone->releaseSpatial(this);

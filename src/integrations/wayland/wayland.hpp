@@ -12,6 +12,7 @@
 
 struct wlr_egl;
 struct wlr_compositor;
+struct wlr_data_device_manager;
 struct wlr_backend;
 struct wlr_output;
 struct wlr_output_layout;
@@ -26,18 +27,15 @@ public:
 
 	void update();
 
+	wlr_seat *createSeat();
+
 	void onNewSurface(Surface *surface);
-	void onDestroySurface(wlr_surface *surface);
-	std::vector<std::unique_ptr<Surface>> surfaces;
 
 	void onNewXDGSurface(void *data);
-	void onDestroyXDGSurface(void *data);
-
 	void onNewToplevelDecorationXDG(void *data);
 
 	void onNewXWaylandSurface(void *data);
 	void onMapXWaylandSurface(void *data);
-	void onDestroyXWaylandSurface(void *data);
 
 protected:
 	wl_display *wayland_display;
@@ -49,9 +47,13 @@ protected:
 	wlr_backend *backend;
 	wlr_output *output;
 
+	wlr_data_device_manager *data_device;
+	xkb_keymap *keymap;
+	wlr_seat *queueSeat;
+	uint32_t seatID = 0;
+
 	wlr_xdg_shell *xdg_shell;
 	WaylandCallback newSurfaceCallbackXDG;
-	WaylandCallback destroySurfaceCallbackXDG;
 
 	wlr_xdg_decoration_manager_v1 *xdg_decoration_manager;
 	WaylandCallback newToplevelDecorationXDG;
@@ -59,5 +61,4 @@ protected:
 	wlr_xwayland *xwayland;
 	WaylandCallback newSurfaceCallbackXWayland;
 	WaylandCallback mapSurfaceCallbackXWayland;
-	WaylandCallback destroySurfaceCallbackXWayland;
 };

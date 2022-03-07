@@ -1,6 +1,7 @@
 #include "root.hpp"
 #include "../core/client.hpp"
 
+#include "data.hpp"
 #include "drawable.hpp"
 #include "field.hpp"
 #include "input.hpp"
@@ -19,6 +20,7 @@ double RootInterface::frameTime;
 double RootInterface::delta;
 
 RootInterface::RootInterface(Client *client) : Spatial(client, nullptr, vec3_zero, quat_identity, vec3_one, false, false, false, false) {
+	this->addChild("data",        new DataInterface(client));
 	this->addChild("drawable",    new DrawableInterface(client));
 	this->addChild("field",       new FieldInterface(client));
 	this->addChild("input",       new InputInterface(client));
@@ -61,20 +63,20 @@ void RootInterface::sendLogicStepSignals() {
 	prevFrameTime = frameTime;
 }
 
-std::vector<uint8_t> RootInterface::subscribeLogicStep(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> RootInterface::subscribeLogicStep(Client *callingClient, flexbuffers::Reference data, bool) {
 	const std::lock_guard<std::mutex> lock(updateMethodsMutex);
 
 	flexbuffers::Vector vector = data.AsVector();
 	updateMethods.push_back(LifeCycleUpdateMethod {
-		client,
+		callingClient,
 		vector[0].AsString().str(),
 		vector[1].AsString().str()
 	});
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> RootInterface::disconnect(flexbuffers::Reference data, bool) {
-	this->client->disconnected = true;
+std::vector<uint8_t> RootInterface::disconnect(Client *callingClient, flexbuffers::Reference data, bool) {
+	callingClient->disconnected = true;
 	return std::vector<uint8_t>();
 }
 

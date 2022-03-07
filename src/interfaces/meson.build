@@ -1,4 +1,5 @@
 src_files += files(
+    'data.cpp',
     'drawable.cpp',
     'field.cpp',
     'input.cpp',

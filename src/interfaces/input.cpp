@@ -32,11 +32,11 @@ InputInterface::InputInterface(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("registerInputHandler", &InputInterface::registerInputHandler)
 }
 
-std::vector<uint8_t> InputInterface::getInputHandlers(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> InputInterface::getInputHandlers(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector flexVec = data.AsVector();
 
 	//If the spacePath doesn't exist, it must be world space
-	Spatial *space = client->scenegraph.findNode<Spatial>(flexVec[0].AsString().str());
+	Spatial *space = callingClient->scenegraph.findNode<Spatial>(flexVec[0].AsString().str());
 	bool excludeSelf = flexVec[1].AsBool();
 
 	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
@@ -63,11 +63,11 @@ std::vector<uint8_t> InputInterface::getInputHandlers(flexbuffers::Reference dat
 	});
 }
 
-std::vector<uint8_t> InputInterface::registerInputHandler(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> InputInterface::registerInputHandler(Client *callingClient, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector flexVec      = data.AsVector();
 	std::string name                 = flexVec[0].AsString().str();
 	std::string flexFieldPath        = flexVec[1].AsString().str();
-	Spatial *spatialParent           = this->client->scenegraph.findNode<Spatial>(flexVec[2].AsString().str());
+	Spatial *spatialParent           = callingClient->scenegraph.findNode<Spatial>(flexVec[2].AsString().str());
 	flexbuffers::TypedVector flexPos = flexVec[3].AsTypedVector();
 	flexbuffers::TypedVector flexRot = flexVec[4].AsTypedVector();
 	std::string callbackPath         = flexVec[5].AsString().str();
@@ -136,7 +136,7 @@ std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuil
 	flatbuffers::Offset<void> flatInputMethod = inputMethod->generateInput(fbb, inputHandler);
 	const std::vector<uint8_t> datamap = inputMethod->serializeDatamap();
 
-	auto inputDataOffset = CreateInputDataDirect(fbb, inputMethodType, flatInputMethod, distance, &datamap);
+	auto inputDataOffset = CreateInputDataDirect(fbb, std::to_string(inputMethod->id).c_str(), inputMethodType, flatInputMethod, distance, &datamap);
 	fbb.Finish(inputDataOffset);
 
 	std::vector<uint8_t> data;

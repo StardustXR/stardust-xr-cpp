@@ -11,9 +11,9 @@ public:
 
 	static void updateEnvironment();
 
-	std::vector<uint8_t> createModelFromFile(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setSkytex(flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setSkylight(flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> createModelFromFile(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setSkytex(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setSkylight(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 private:
 	static std::string skytexQueuedPath;

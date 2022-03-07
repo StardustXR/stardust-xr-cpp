@@ -15,7 +15,7 @@ public:
 	explicit Client(int fd);
 	~Client();
 
-	void startHandler();
+	void startMessenger();
 	void scenegraphPropagate(std::string name, PropagateFunction &function);
 
 	const int fd;

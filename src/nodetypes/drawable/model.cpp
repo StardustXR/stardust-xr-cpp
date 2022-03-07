@@ -69,7 +69,7 @@ void Model::draw() {
 		render_add_model(model, worldTransform());
 }
 
-std::vector<uint8_t> Model::setMaterialProperty(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Model::setMaterialProperty(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
     const std::lock_guard<std::mutex> lock(queuedPropertiesMutex);
 	flexbuffers::Vector vec = data.AsVector();
 	uint32_t submeshIndex = vec[0].AsUInt32();

@@ -23,7 +23,7 @@ void Node::propagate(std::string name, std::function<bool (std::string, Node *)>
 	if(function(name, this)) {
 		// Cache names of all children
 		for(const auto &child : children) {
-			if(child.second)
+			if(child.second && !child.second->destroyQueued)
 				child.second->propagate(child.first, function);
 
 			if(children.size() == 0)
@@ -42,7 +42,7 @@ Node &Node::operator[](const std::string child) {
 }
 
 bool Node::getEnabled() {
-	return this->enabled;
+	return this->enabled && !destroyQueued;
 }
 
 void Node::setEnabled(bool enabled) {
@@ -53,19 +53,21 @@ void Node::queueDestroy(bool forceDestroy) {
 	if(!forceDestroy && !destroyable)
 		return;
 
-	for(Alias *alias : aliases) {
-	   alias->queueDestroy(true);
+	destroyQueued = true;
+	for(NodeRef alias : aliases) {
+		if(alias)
+			alias.ptr()->queueDestroy(true);
 	}
 	const std::lock_guard<std::mutex> lock(destroyMutex);
 	nodesToDestroy.push_back(this);
 }
 
-std::vector<uint8_t> Node::setEnabledFlex(flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> Node::setEnabledFlex(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	setEnabled(data.AsBool());
 	return std::vector<uint8_t>();
 }
 
-std::vector<uint8_t> Node::destroyFlex(flexbuffers::Reference data, bool) {
+std::vector<uint8_t> Node::destroyFlex(Client *callingClient, flexbuffers::Reference data, bool) {
 	queueDestroy(false);
 	this->enabled = false;
 	return std::vector<uint8_t>();

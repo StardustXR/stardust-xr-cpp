@@ -16,6 +16,7 @@ std::string home;
 #include "core/scenegraphpropagation.hpp"
 #include "interfaces/drawable.hpp"
 #include "interfaces/input.hpp"
+#include "interfaces/item.hpp"
 #include "interfaces/root.hpp"
 #include "interfaces/spatial.hpp"
 #include "nodetypes/core/node.hpp"
@@ -31,8 +32,9 @@ using namespace StardustXRServer;
 
 // StereoKit includes
 #include <stereokit.h>
+#include <stereokit_ui.h>
 using namespace sk;
-uint64_t frame = 0;
+std::atomic<uint64_t> frame = {0};
 
 // Third party local includes
 #include "CLI11.hpp"
@@ -95,6 +97,7 @@ int main(int argc, char *argv[]) {
 	if(args.fieldDebug)
 		debugSetup();
 
+	ui_enable_far_interact(false);
 	if(args.flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_left, false);
 		input_hand_visible(handed_right, false);
@@ -128,11 +131,11 @@ int main(int argc, char *argv[]) {
 		// Process the zones
 		SpatialInterface::updateZones();
 
+		// Accept items
+		ItemInterface::updateItems();
+
 		// Update wayland
 		wayland->update();
-
-		// Send logicStep signals to clients
-		RootInterface::sendLogicStepSignals();
 
 		//Propagate the update and draw methods on scenegraph nodes
 		serverInternalClient.scenegraph.root.propagate("", ScenegraphUpdateFunction);
@@ -148,6 +151,9 @@ int main(int argc, char *argv[]) {
 		
 		//Increment the frame count
 		frame++;
+
+		// Send logicStep signals to clients
+		RootInterface::sendLogicStepSignals();
 
 		// Process all the input and send it to the clients
 		InputInterface::processInput();
