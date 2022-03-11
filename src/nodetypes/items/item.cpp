@@ -37,17 +37,11 @@ Alias *Item::makeAlias(Client *client) {
 	Alias *alias = new Alias(client, this, itemTypeInfo->aliasedMethods);
 
 	alias->addMethods({
-	   "move",
-	   "rotate",
-	   "scale",
-	   "getTransform",
-	   "setOrigin",
-	   "setOrientation",
-	   "setScale",
-	   "setPose",
-	   "setTransform",
-	   "setSpatialParent",
-	   "setSpatialParentInPlace",
+		"getTransform",
+		"setTransform",
+		"setSpatialParent",
+		"setSpatialParentInPlace",
+		"setZoneable",
 	});
 
 	return alias;

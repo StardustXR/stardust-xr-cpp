@@ -30,6 +30,7 @@ public:
 	bool zoneable     = false;
 
 	// Matrix get operations
+	static matrix spaceToSpaceMatrix(Spatial *from, Spatial *to);
 	matrix localTransform();
 	matrix worldTransform();
 	matrix localToSpaceMatrix(Spatial *space);

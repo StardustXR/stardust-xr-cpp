@@ -74,25 +74,35 @@ std::vector<uint8_t> Spatial::getTransform(Client *callingClient, flexbuffers::R
 std::vector<uint8_t> Spatial::setTransform(Client *callingClient, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector flexVec = data.AsVector();
 
+	Spatial *space = callingClient->scenegraph.findNode<Spatial>(flexVec[0].AsString().str());
+	if(!space) {
+		Alias *spaceAlias = callingClient->scenegraph.findNode<Alias>(flexVec[0].AsString().str());
+		space = spaceAlias ? spaceAlias->original.ptr<Spatial>() : nullptr;
+	}
+	if(!space)
+		space = this->spatialParent;
+
 	vec3 pos, scl;
 	quat rot;
 	matrix_decompose(transform, pos, scl, rot);
 
-	if(translatable && flexVec[0].IsTypedVector() && flexVec[0].AsTypedVector().size() == 3) {
-		flexbuffers::TypedVector posFlex = flexVec[0].AsTypedVector();
+	if(translatable && flexVec[1].IsTypedVector() && flexVec[1].AsTypedVector().size() == 3) {
+		flexbuffers::TypedVector posFlex = flexVec[1].AsTypedVector();
 		pos.x = posFlex[0].AsFloat();
 		pos.y = posFlex[1].AsFloat();
 		pos.z = posFlex[2].AsFloat();
+		pos = matrix_transform_pt(spaceToSpaceMatrix(space, this->spatialParent), pos);
 	}
-	if(rotatable && flexVec[1].IsTypedVector() && flexVec[1].AsTypedVector().size() == 4) {
-		flexbuffers::TypedVector rotFlex = flexVec[1].AsTypedVector();
+	if(rotatable && flexVec[2].IsTypedVector() && flexVec[2].AsTypedVector().size() == 4) {
+		flexbuffers::TypedVector rotFlex = flexVec[2].AsTypedVector();
 		rot.x = rotFlex[0].AsFloat();
 		rot.y = rotFlex[1].AsFloat();
 		rot.z = rotFlex[2].AsFloat();
 		rot.w = rotFlex[3].AsFloat();
+		rot = matrix_transform_quat(spaceToSpaceMatrix(space, this->spatialParent), rot);
 	}
-	if(scalable && flexVec[2].IsTypedVector() && flexVec[2].AsTypedVector().size() == 3) {
-		flexbuffers::TypedVector sclFlex = flexVec[2].AsTypedVector();
+	if(scalable && flexVec[3].IsTypedVector() && flexVec[3].AsTypedVector().size() == 3) {
+		flexbuffers::TypedVector sclFlex = flexVec[3].AsTypedVector();
 		scl.x = sclFlex[0].AsFloat();
 		scl.y = sclFlex[1].AsFloat();
 		scl.z = sclFlex[2].AsFloat();
@@ -139,6 +149,24 @@ std::vector<uint8_t> Spatial::setZoneable(Client *callingClient, flexbuffers::Re
 	if(!zoneable && this->zone != nullptr)
 		this->zone->releaseSpatial(this);
 	return std::vector<uint8_t>();
+}
+
+matrix Spatial::spaceToSpaceMatrix(Spatial *from, Spatial *to) {
+	// TODO: Optimize this to check if from and to share a common ancestor
+	// and calculate the transform matrix between the two.
+
+	if(from == to)
+		return matrix_identity;
+
+	matrix spaceToWorldMatrix = matrix_identity;
+	if(from)
+		spaceToWorldMatrix = from->worldTransform();
+
+	matrix worldToSpaceMatrix = matrix_identity;
+	if(to)
+		worldToSpaceMatrix = matrix_invert(to->worldTransform());
+
+	return spaceToWorldMatrix * worldToSpaceMatrix;
 }
 
 matrix Spatial::localToSpaceMatrix(Spatial *space) {
