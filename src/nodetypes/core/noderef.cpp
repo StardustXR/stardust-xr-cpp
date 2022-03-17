@@ -25,6 +25,20 @@ NodeRef::operator bool() const {
 	return registry.find(id) != registry.end();
 }
 
+
+bool NodeRef::operator==(const Node *other) const {
+	return other && this->id == other->id;
+}
+bool NodeRef::operator!=(const Node *other) const {
+	return !other || this->id != other->id;
+}
+bool NodeRef::operator==(const NodeRef &other) const {
+	return this->id == other.id;
+}
+bool NodeRef::operator!=(const NodeRef &other) const {
+	return this->id != other.id;
+}
+
 Node *NodeRef::operator ->() const {
 	return ptr();
 }
@@ -46,7 +60,8 @@ uint32_t NodeRef::registerNode(Node *node) {
 
 void NodeRef::deregisterNode(Node *node) {
 	std::lock_guard<std::mutex> lock(registryMutex);
-	registry.erase(registry.find(node->id));
+	if(registry.size() > 0)
+		registry.erase(registry.find(node->id));
 }
 
 uint32_t NodeRef::generateUUID() {

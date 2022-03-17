@@ -20,6 +20,10 @@ public:
 	operator bool() const;
 	Node *operator ->() const;
 	operator Node*() const;
+	bool operator==(const Node *other) const;
+	bool operator!=(const Node *other) const;
+	bool operator==(const NodeRef &other) const;
+	bool operator!=(const NodeRef &other) const;
 
 	Node *ptr() const;
 	template<class T>
