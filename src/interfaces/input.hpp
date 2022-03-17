@@ -15,10 +15,6 @@ public:
 	std::vector<uint8_t> getInputHandlers(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	static void processInput();
 
-	static std::mutex inputVectorsMutex;
-	static std::vector<InputMethod *> inputMethods;
-	static std::vector<InputHandler *> inputHandlers;
-
 private:
 	static std::vector<uint8_t> CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod *inputMethod, InputHandler *inputHandler);
 	static flatbuffers::FlatBufferBuilder fbb;

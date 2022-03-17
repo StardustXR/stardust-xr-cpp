@@ -19,9 +19,8 @@ public:
 
 		ItemUI *UI;
 
-		std::vector<Item *> items;
-		std::vector<ItemAcceptor *> acceptors;
-		std::mutex itemsMutex;
+		Registry<Item> items;
+		Registry<ItemAcceptor> acceptors;
 	};
 
 	Item(Client *client, TypeInfo &itemTypeInfo, sk::pose_t pose);

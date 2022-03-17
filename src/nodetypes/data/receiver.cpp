@@ -6,8 +6,7 @@
 
 namespace StardustXRServer {
 
-std::mutex NonSpatialReceiver::receiversMutex;
-std::vector<NonSpatialReceiver *> NonSpatialReceiver::receivers;
+Registry<NonSpatialReceiver> NonSpatialReceiver::receivers;
 
 NonSpatialReceiver::NonSpatialReceiver(Client *client, Spatial *spatialParent, vec3 position, quat rotation, Field *field, std::string callbackPath, std::string callbackMethod) :
 	Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
@@ -19,19 +18,16 @@ NonSpatialReceiver::NonSpatialReceiver(Client *client, Spatial *spatialParent, v
 	STARDUSTXR_NODE_METHOD("getMask", &NonSpatialReceiver::getMask)
 	STARDUSTXR_NODE_METHOD("setMask", &NonSpatialReceiver::setMask)
 
-	const std::lock_guard<std::mutex> lock(receiversMutex);
-	receivers.push_back(this);
+	receivers.add(this);
 }
 
 NonSpatialReceiver::~NonSpatialReceiver() {
-	const std::lock_guard<std::mutex> lock(receiversMutex);
-	receivers.erase(std::remove(receivers.begin(), receivers.end(), this));
+	receivers.remove(this);
 }
 
 std::vector<std::string> NonSpatialReceiver::makeAliases(Node *parent) {
-	const std::lock_guard lock(receiversMutex);
 	std::vector<std::string> aliasNames;
-	for(auto const receiver : receivers) {
+	for(auto const receiver : receivers.list()) {
 		std::string id = std::to_string(receiver->id);
 		Alias *alias = new Alias(parent->client, receiver, {"getTransform", "getMask"});
 		Alias *field = new Alias(parent->client, receiver->field, {"distance", "normal", "closestPoint"});

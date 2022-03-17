@@ -16,15 +16,13 @@ Item::Item(Client *client, TypeInfo &itemTypeInfo, pose_t pose) :
 	STARDUSTXR_NODE_METHOD("triggerAccept", &Item::triggerAccept)
 	STARDUSTXR_NODE_METHOD("release", &Item::release)
 
-	std::lock_guard<std::mutex> lock(itemTypeInfo.itemsMutex);
-	itemTypeInfo.items.push_back(this);
+	itemTypeInfo.items.add(this);
 }
 Item::~Item() {
 	if(itemTypeInfo->UI)
 		itemTypeInfo->UI->handleItemDestroy(name);
 
-	std::lock_guard<std::mutex> lock(itemTypeInfo->itemsMutex);
-	itemTypeInfo->items.erase(std::remove(itemTypeInfo->items.begin(), itemTypeInfo->items.end(), this));
+	itemTypeInfo->items.remove(this);
 }
 
 std::vector<uint8_t> Item::getData(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
@@ -61,14 +59,13 @@ std::vector<uint8_t> Item::release(Client *callingClient, flexbuffers::Reference
 }
 
 void Item::updateItems(TypeInfo *info) {
-	std::lock_guard<std::mutex> lock(info->itemsMutex);
-	for(Item *item : info->items) {
+	for(Item *item : info->items.list()) {
 		if(item->capturedAcceptor || !item->acceptable)
 			continue;
 		item->acceptable = false;
 		ItemAcceptor *closestAcceptor = nullptr;
 		float closestAcceptorDistance = 0;
-		for(ItemAcceptor *acceptor : info->acceptors) {
+		for(ItemAcceptor *acceptor : info->acceptors.list()) {
 			if(!acceptor->field)
 				continue;
 			Field *acceptorField = acceptor->field.ptr<Field>();

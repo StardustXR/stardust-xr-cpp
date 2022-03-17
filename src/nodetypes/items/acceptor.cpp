@@ -8,23 +8,21 @@ namespace StardustXRServer {
 
 ItemAcceptor::ItemAcceptor(Client *client, Spatial *spatialParent, vec3 position, quat rotation, Item::TypeInfo *typeInfo, Field *field, std::string callbackPath, std::string callbackMethod) :
 	Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
-	typeInfo(typeInfo),
 	field(field),
+	typeInfo(typeInfo),
 	callbackPath(callbackPath),
 	callbackMethod(callbackMethod) {
 
-	std::lock_guard<std::mutex> lock(typeInfo->itemsMutex);
-	typeInfo->acceptors.push_back(this);
+	typeInfo->acceptors.add(this);
 }
 ItemAcceptor::~ItemAcceptor() {
-	std::lock_guard<std::mutex> lock(typeInfo->itemsMutex);
-	for(Item *item : typeInfo->items) {
+	for(Item *item : typeInfo->items.list()) {
 		if(item->capturedAcceptor.ptr() == this) {
 			typeInfo->UI->handleItemRelease(item);
 			releaseItem(item->name);
 		}
 	}
-	typeInfo->acceptors.erase(std::remove(typeInfo->acceptors.begin(), typeInfo->acceptors.end(), this));
+	typeInfo->acceptors.remove(this);
 }
 
 void ItemAcceptor::captureItem(Item &item) {

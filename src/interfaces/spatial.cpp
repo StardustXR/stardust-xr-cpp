@@ -11,10 +11,6 @@ using namespace std;
 
 namespace StardustXRServer {
 
-std::mutex SpatialInterface::spatialMutex;
-std::vector<Spatial *> SpatialInterface::spatials;
-std::vector<Zone *> SpatialInterface::zones;
-
 SpatialInterface::SpatialInterface(Client *client) : Node(client, false) {
 	STARDUSTXR_NODE_METHOD("createSpatial", &SpatialInterface::createSpatial)
 	STARDUSTXR_NODE_METHOD("createZone", &SpatialInterface::createZone)
@@ -86,12 +82,10 @@ std::vector<uint8_t> SpatialInterface::createZone(Client *callingClient, flexbuf
 }
 
 void SpatialInterface::updateZones() {
-	const std::lock_guard<std::mutex> lock(spatialMutex);
-
-	for(Spatial *spatial : spatials) {
+	for(Spatial *spatial : Spatial::spatials.list()) {
 		if(spatial->zoneable && spatial->getEnabled()) {
 			float spatialDistance = spatial->zone ? spatial->zone->field->distance(spatial, vec3_zero) : 1.0f;
-			for(Zone *zone : zones) {
+			for(Zone *zone : Zone::zones.list()) {
 				if(zone->field == nullptr || zone == spatial || spatial == zone->field)
 					continue;
 				float distance = zone->field->distance(spatial, vec3_zero);
@@ -101,7 +95,7 @@ void SpatialInterface::updateZones() {
 			}
 		}
 	}
-	for(Zone *zone : zones) {
+	for(Zone *zone : Zone::zones.list()) {
 		zone->sendZoneSignals();
 	}
 }

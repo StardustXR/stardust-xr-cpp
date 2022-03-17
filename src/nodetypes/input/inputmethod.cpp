@@ -6,13 +6,13 @@
 
 namespace StardustXRServer {
 
+Registry<InputMethod> InputMethod::inputMethods;
+
 InputMethod::InputMethod(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, bool rotatable) : Spatial(client, spatialParent, position, rotation, vec3_one, true, rotatable, false, false) {
-	const std::lock_guard<std::mutex> lock(InputInterface::inputVectorsMutex);
-	InputInterface::inputMethods.push_back(this);
+	inputMethods.add(this);
 }
 InputMethod::~InputMethod() {
-	const std::lock_guard<std::mutex> lock(InputInterface::inputVectorsMutex);
-	InputInterface::inputMethods.erase(std::remove(InputInterface::inputMethods.begin(), InputInterface::inputMethods.end(), this));
+	inputMethods.remove(this);
 }
 
 std::vector<uint8_t> InputMethod::modifyDatamap(Client *callingClient, flexbuffers::Reference data, bool) {

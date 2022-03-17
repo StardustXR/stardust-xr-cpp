@@ -17,8 +17,7 @@ public:
 	std::string callbackPath;
 	std::string callbackMethod;
 
-	static std::mutex receiversMutex;
-	static std::vector<NonSpatialReceiver *> receivers;
+	static Registry<NonSpatialReceiver> receivers;
 	static std::vector<std::string> makeAliases(Node *parent);
 
 	void sendData(NonSpatialSender *sender, const uint8_t *data, size_t dataSize);

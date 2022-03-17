@@ -14,6 +14,7 @@ public:
 	Spatial(Client *client, matrix transformMatrix);
 	Spatial(Client *client, Spatial *spatialParent, matrix transformMatrix, bool translatable, bool rotatable, bool scalable, bool zoneable);
 	Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable);
+	static Registry<Spatial> spatials;
 	~Spatial();
 
 	std::vector<uint8_t> getTransform                (Client *callingClient, flexbuffers::Reference data, bool returnValue);

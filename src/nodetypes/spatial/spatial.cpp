@@ -11,6 +11,8 @@
 using namespace StardustXR;
 namespace StardustXRServer {
 
+Registry<Spatial> Spatial::spatials;
+
 Spatial::Spatial(Client *client, matrix transformMatrix) : Node(client, false) {
 	setTransformMatrix(transformMatrix);
 }
@@ -40,14 +42,12 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, matrix transformMatrix,
 
 	STARDUSTXR_NODE_METHOD("setZoneable", &Spatial::setZoneable)
 
-	std::lock_guard<std::mutex> lock(SpatialInterface::spatialMutex);
-	SpatialInterface::spatials.push_back(this);
+	spatials.add(this);
 }
 Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable) :
 	Spatial(client, spatialParent, matrix_trs(position, rotation, scale), translatable, rotatable, scalable, zoneable) {}
 Spatial::~Spatial() {
-	std::lock_guard<std::mutex> lock(SpatialInterface::spatialMutex);
-	SpatialInterface::spatials.erase(std::remove(SpatialInterface::spatials.begin(), SpatialInterface::spatials.end(), this));
+	spatials.remove(this);
 }
 
 std::vector<uint8_t> Spatial::getTransform(Client *callingClient, flexbuffers::Reference data, bool) {

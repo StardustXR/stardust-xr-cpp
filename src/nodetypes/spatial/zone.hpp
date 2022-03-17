@@ -9,6 +9,7 @@ class Zone : public Spatial {
 public:
 	Zone(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, Field *field, std::string callbackPath, std::string callbackMethod);
 	~Zone();
+	static Registry<Zone> zones;
 	Field *field;
 
 	std::vector<uint8_t> isCaptured(Client *callingClient, flexbuffers::Reference data, bool returnValue);

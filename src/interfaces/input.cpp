@@ -17,10 +17,6 @@
 
 namespace StardustXRServer {
 
-std::mutex InputInterface::inputVectorsMutex;
-std::vector<InputMethod *> InputInterface::inputMethods;
-std::vector<InputHandler *> InputInterface::inputHandlers;
-
 flatbuffers::FlatBufferBuilder InputInterface::fbb;
 
 InputInterface::InputInterface(Client *client) : Node(client, false) {
@@ -39,11 +35,10 @@ std::vector<uint8_t> InputInterface::getInputHandlers(Client *callingClient, fle
 	Spatial *space = callingClient->scenegraph.findNode<Spatial>(flexVec[0].AsString().str());
 	bool excludeSelf = flexVec[1].AsBool();
 
-	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
 	return StardustXR::FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
 		fbb.Vector([&]() {
 			children["global_handler"]->children.clear();
-			for(InputHandler *handler : inputHandlers) {
+			for(InputHandler *handler : InputHandler::inputHandlers.list()) {
 				if(excludeSelf == false || handler->client != this->client) {
 					fbb.Vector([&] {
 						std::string uuid = std::to_string(handler->id);
@@ -93,8 +88,8 @@ std::vector<uint8_t> InputInterface::registerInputHandler(Client *callingClient,
 }
 
 void InputInterface::processInput() {
-	const std::lock_guard<std::mutex> lock(inputVectorsMutex);
-
+	std::vector<InputMethod *> inputMethods = InputMethod::inputMethods.list();
+	std::vector<InputHandler *> inputHandlers = InputHandler::inputHandlers.list();
 	const uint32_t inputMethodCount = inputMethods.size();
 	const uint32_t inputHandlerCount = inputHandlers.size();
 

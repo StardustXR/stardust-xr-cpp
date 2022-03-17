@@ -11,8 +11,7 @@ ItemUI::ItemUI(Client *client, Item::TypeInfo *info, std::string callbackPath, s
 
 	info->UI = this;
 
-	std::lock_guard<std::mutex> lock(info->itemsMutex);
-	for(Item *item : info->items) {
+	for(Item *item : info->items.list()) {
 		handleItemCreate(item);
 	}
 }

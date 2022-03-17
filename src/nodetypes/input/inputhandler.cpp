@@ -14,6 +14,8 @@
 
 namespace StardustXRServer {
 
+Registry<InputHandler> InputHandler::inputHandlers;
+
 InputHandler::InputHandler(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, Field *field, std::string callbackPath, std::string callbackMethod) :
 Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
 field(field) {
@@ -25,13 +27,10 @@ field(field) {
 	STARDUSTXR_NODE_METHOD("getActions", &InputHandler::getActions);
 	STARDUSTXR_NODE_METHOD("runAction", &InputHandler::runAction);
 
-	const std::lock_guard<std::mutex> lock(InputInterface::inputVectorsMutex);
-	InputInterface::inputHandlers.push_back(this);
+	inputHandlers.add(this);
 }
-
 InputHandler::~InputHandler() {
-	const std::lock_guard<std::mutex> lock(InputInterface::inputVectorsMutex);
-	InputInterface::inputHandlers.erase(std::remove(InputInterface::inputHandlers.begin(), InputInterface::inputHandlers.end(), this));
+	inputHandlers.remove(this);
 }
 
 void InputHandler::sendInput(uint64_t oldFrame, std::list<DistanceLink> distanceLinks, const std::vector<uint8_t> &inputData) {

@@ -9,6 +9,7 @@
 #include <flatbuffers/flatbuffers.h>
 #include <flatbuffers/flexbuffers.h>
 #include "noderef.hpp"
+#include "registry.hpp"
 
 namespace StardustXRServer {
 

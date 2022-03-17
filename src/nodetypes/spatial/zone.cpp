@@ -8,6 +8,8 @@
 
 namespace StardustXRServer {
 
+Registry<Zone> Zone::zones;
+
 Zone::Zone(Client *client, Spatial *spatialParent, vec3 position, quat rotation, Field *field, std::string callbackPath, std::string callbackMethod) :
 	Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false) {
 	this->field = field;
@@ -18,8 +20,7 @@ Zone::Zone(Client *client, Spatial *spatialParent, vec3 position, quat rotation,
 	STARDUSTXR_NODE_METHOD("capture", &Zone::capture)
 	STARDUSTXR_NODE_METHOD("release", &Zone::release)
 
-	std::lock_guard<std::mutex> lock(SpatialInterface::spatialMutex);
-	SpatialInterface::zones.push_back(this);
+	zones.add(this);
 }
 Zone::~Zone() {
 	for(auto &childSet : children) {
@@ -29,8 +30,7 @@ Zone::~Zone() {
 			releaseSpatial(childSpatial);
 		}
 	}
-	std::lock_guard<std::mutex> lock(SpatialInterface::spatialMutex);
-	SpatialInterface::zones.erase(std::remove(SpatialInterface::zones.begin(), SpatialInterface::zones.end(), this));
+	zones.remove(this);
 }
 
 std::vector<uint8_t> Zone::isCaptured(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
