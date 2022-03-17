@@ -1,5 +1,5 @@
 #include "clientmanager.hpp"
-#include "../nodetypes/drawable/drawablenode.hpp"
+#include "../nodetypes/drawable/drawable.hpp"
 #include "scenegraphpropagation.hpp"
 #include <memory>
 #include <mutex>

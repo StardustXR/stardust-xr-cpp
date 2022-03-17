@@ -20,7 +20,7 @@ std::string home;
 #include "interfaces/root.hpp"
 #include "interfaces/spatial.hpp"
 #include "nodetypes/core/node.hpp"
-#include "nodetypes/drawable/drawablenode.hpp"
+#include "nodetypes/drawable/drawable.hpp"
 #include "objects/inputmethods/flatscreenpointer.hpp"
 #include "objects/inputmethods/skhand.hpp"
 using namespace StardustXRServer;

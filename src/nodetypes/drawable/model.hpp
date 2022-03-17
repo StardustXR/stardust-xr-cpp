@@ -1,6 +1,6 @@
 #pragma once
 
-#include "drawablenode.hpp"
+#include "drawable.hpp"
 #include <mutex>
 #include <string>
 #include <stereokit.h>
@@ -8,7 +8,7 @@
 
 namespace StardustXRServer {
 
-class Model : public DrawableNode {
+class Model : public Drawable {
 public:
 	Model(Client *client, std::string modelPath, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, sk::vec3 scale);
 	virtual ~Model();

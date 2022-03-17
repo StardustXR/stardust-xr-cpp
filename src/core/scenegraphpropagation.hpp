@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <string>
-#include "../nodetypes/drawable/drawablenode.hpp"
+#include "../nodetypes/drawable/drawable.hpp"
 
 namespace StardustXRServer {
 
@@ -17,7 +17,7 @@ static PropagateFunction ScenegraphDebugFunction = [](std::string, Node *node) {
 	return node;
 };
 static PropagateFunction ScenegraphDrawFunction = [](std::string, Node *node) {
-	if(DrawableNode *drawNode = dynamic_cast<DrawableNode *>(node))
+	if(Drawable *drawNode = dynamic_cast<Drawable *>(node))
 		drawNode->draw();
 	return true;
 };
