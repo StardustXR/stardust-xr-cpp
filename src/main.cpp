@@ -59,6 +59,10 @@ extern void debugSetup();
 ClientManager clientManager;
 Client serverInternalClient(0);
 
+// Builtin inputs
+FlatscreenPointer *flatscreenPointer = nullptr;
+SKHandInput *stereokitHands[2] = {nullptr, nullptr};
+
 // Wayland global variables
 Wayland *wayland;
 
@@ -101,10 +105,9 @@ int main(int argc, char *argv[]) {
 	if(args.flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_left, false);
 		input_hand_visible(handed_right, false);
-		FlatscreenPointer *flatscreenPointer = new FlatscreenPointer(&serverInternalClient);
+		flatscreenPointer = new FlatscreenPointer(&serverInternalClient);
 		serverInternalClient.scenegraph.addNode("/test/flatscreenpointer", static_cast<Spatial *>(flatscreenPointer));
 	} else { // Add the StereoKit hand representation if we're not in flatscreen
-		SKHandInput *stereokitHands[2];
 //		stereokitHands[0] = new SKHandInput(&serverInternalClient, handed_left);
 		stereokitHands[1] = new SKHandInput(&serverInternalClient, handed_right);
 //		serverInternalClient.scenegraph.addNode("/test/skhandleft", static_cast<Spatial *>(stereokitHands[0]));
@@ -138,8 +141,6 @@ int main(int argc, char *argv[]) {
 		wayland->update();
 
 		//Propagate the update and draw methods on scenegraph nodes
-		serverInternalClient.scenegraph.root.propagate("", ScenegraphUpdateFunction);
-		ClientManager::callClientsUpdate();
 		serverInternalClient.scenegraph.root.propagate("", ScenegraphDrawFunction);
 		ClientManager::callClientsDraw();
 
@@ -156,6 +157,12 @@ int main(int argc, char *argv[]) {
 		RootInterface::sendLogicStepSignals();
 
 		// Process all the input and send it to the clients
+	   if(flatscreenPointer)
+		   flatscreenPointer->update();
+	   if(stereokitHands[0])
+		   stereokitHands[0]->update();
+	   if(stereokitHands[1])
+		   stereokitHands[1]->update();
 		InputInterface::processInput();
 	})) {}
 

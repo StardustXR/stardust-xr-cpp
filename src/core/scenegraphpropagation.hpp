@@ -11,11 +11,6 @@ class Node;
 typedef std::function<bool (std::string, Node *)> PropagateFunction;
 
 // Define lambda functions for update and draw functions to be propagated
-static PropagateFunction ScenegraphUpdateFunction = [](std::string, Node *node) {
-	if(node)
-		node->update();
-	return node;
-};
 static PropagateFunction ScenegraphDebugFunction = [](std::string, Node *node) {
 	if(node)
 		node->debug();

@@ -25,7 +25,6 @@ public:
 	Node(Client *client, bool destroyable = true);
 	virtual ~Node();
 
-	virtual void update() {}
 	virtual void debug() {}
 	void propagate(std::string name, std::function<bool (std::string, Node *)> &function);
 	

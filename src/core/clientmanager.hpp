@@ -17,7 +17,6 @@ public:
 	static void handleNewlyConnectedClients();
 	static void handleDisconnectedClients();
 
-	static void callClientsUpdate();
 	static void callClientsDebug();
 	static void callClientsDraw();
 

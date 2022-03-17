@@ -82,6 +82,7 @@ void Item::updateItems(TypeInfo *info) {
 			item->itemTypeInfo->UI->handleItemCapture(item);
 			closestAcceptor->captureItem(*item);
 		}
+		item->update();
 	}
 }
 

@@ -50,12 +50,6 @@ void ClientManager::handleDisconnectedClients() {
 	}), clients.end());
 }
 
-void ClientManager::callClientsUpdate() {
-	for(auto &client : clients) {
-		client->scenegraphPropagate("", ScenegraphUpdateFunction);
-	}
-}
-
 void ClientManager::callClientsDebug() {
 	for(auto &client : clients) {
 		client->scenegraphPropagate("", ScenegraphDebugFunction);

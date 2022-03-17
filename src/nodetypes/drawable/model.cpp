@@ -17,7 +17,7 @@ Model::~Model() {
 	model_release(model);
 }
 
-void Model::update() {
+void Model::draw() {
 	if(modelQueued) {
 		modelQueued = false;
 		model_t original = model_create_file(modelPath.c_str());
@@ -26,7 +26,7 @@ void Model::update() {
 		enabled = true;
 	}
 
-    const std::lock_guard<std::mutex> lock(queuedPropertiesMutex);
+	const std::lock_guard<std::mutex> lock(queuedPropertiesMutex);
 	for(MaterialProperty &prop : queuedProperties) {
 		if(prop.submeshIndex >= model_subset_count(model))
 			return;
@@ -62,9 +62,7 @@ void Model::update() {
 		model_set_material(model, replacement.submeshIndex, replacement.mat);
 	}
 	queuedMaterialReplacements.clear();
-}
 
-void Model::draw() {
 	if(model && enabled)
 		render_add_model(model, worldTransform());
 }
