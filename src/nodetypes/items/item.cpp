@@ -53,7 +53,7 @@ std::vector<uint8_t> Item::triggerAccept(Client *callingClient, flexbuffers::Ref
 std::vector<uint8_t> Item::release(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	if(capturedAcceptor) {
 		itemTypeInfo->UI->handleItemRelease(this);
-		capturedAcceptor.ptr<ItemAcceptor>()->releaseItem(name);
+		capturedAcceptor.ptr()->releaseItem(name);
 	}
 	return std::vector<uint8_t>();
 }

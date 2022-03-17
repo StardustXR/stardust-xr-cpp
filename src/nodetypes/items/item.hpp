@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-#include "../core/noderef.hpp"
 #include "../spatial/spatial.hpp"
 
 namespace StardustXRServer {
@@ -37,7 +36,7 @@ public:
 	virtual void update() {};
 
 	bool acceptable = false;
-	NodeRef capturedAcceptor;
+	TypedNodeRef<ItemAcceptor> capturedAcceptor;
 protected:
 	TypeInfo *itemTypeInfo;
 };

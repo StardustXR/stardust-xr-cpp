@@ -19,7 +19,7 @@ RayMarchResult PointerInput::march(Field *field) {
 float PointerInput::distanceTo(InputHandler *handler) {
 	if(!handler->field)
 		return std::numeric_limits<float>::max();
-	RayMarchResult rayInfo = march(handler->field.ptr<Field>());
+	RayMarchResult rayInfo = march(handler->field.ptr());
 
 	datamap["deepestPointDistance"] = rayInfo.deepestDistance;
 	return rayInfo.distance;
@@ -36,7 +36,7 @@ flatbuffers::Offset<void> PointerInput::generateInput(flatbuffers::FlatBufferBui
 	sk::vec3 deepestPoint = pos;
 
 	if(handler->field) {
-		RayMarchResult rayInfo = march(handler->field.ptr<Field>());
+		RayMarchResult rayInfo = march(handler->field.ptr());
 		deepestPoint = dir * rayInfo.deepestDistance + pos;
 	}
 
@@ -69,7 +69,7 @@ void PointerInput::updateInput(InputData *data, InputHandler *handler) {
 
 	sk::vec3 deepestPoint = pos;
 	if(handler->field) {
-		RayMarchResult rayInfo = march(handler->field.ptr<Field>());
+		RayMarchResult rayInfo = march(handler->field.ptr());
 		deepestPoint = dir * rayInfo.deepestDistance + pos;
 	}
 

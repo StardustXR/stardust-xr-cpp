@@ -7,13 +7,9 @@ std::mutex NodeRef::registryMutex;
 std::unordered_map<uint32_t, Node *> NodeRef::registry;
 
 NodeRef::NodeRef() :
-	id(0) {}
-NodeRef::NodeRef(const NodeRef &original):
-	id(original.id) {}
-NodeRef::NodeRef(uint32_t id) :
-	id(id) {}
+	id(0){}
 NodeRef::NodeRef(Node *node) :
-	id(node == nullptr ? 0 : node->id) {}
+	id(node ? node->id : 0) {}
 
 NodeRef &NodeRef::operator=(NodeRef other) {
 	this->id = other.id;

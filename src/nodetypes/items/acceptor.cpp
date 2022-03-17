@@ -30,7 +30,7 @@ void ItemAcceptor::captureItem(Item &item) {
 	alias->addMethods({"release"});
 	addChild(alias->original->name, alias);
 
-	item.capturedAcceptor = NodeRef(this);
+	item.capturedAcceptor = this;
 
 	client->messenger.sendSignal(
 		callbackPath.c_str(),
@@ -49,7 +49,7 @@ void ItemAcceptor::releaseItem(std::string itemName) {
 	if(alias) {
 		Item *item = alias->original.ptr<Item>();
 		if(item) {
-			item->capturedAcceptor = NodeRef();
+			item->capturedAcceptor = nullptr;
 		}
 	}
 	children.erase(itemName);

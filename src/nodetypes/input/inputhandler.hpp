@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../core/noderef.hpp"
 #include "../fields/field.hpp"
 #include "../spatial/spatial.hpp"
 #include "distancelink.hpp"
@@ -17,7 +16,7 @@ public:
 	static Registry<InputHandler> inputHandlers;
 	~InputHandler();
 
-	NodeRef field;
+	TypedNodeRef<Field> field;
 	std::string callbackPath;
 	std::string callbackMethod;
 

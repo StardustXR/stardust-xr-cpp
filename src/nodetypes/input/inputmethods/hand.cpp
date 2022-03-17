@@ -38,7 +38,7 @@ float HandInput::distanceTo(InputHandler *handler) {
 	for(uint i=0; i<fingerJointCount; ++i) {
 		if(!handler->field)
 			break;
-		float distance = handler->field.ptr<Field>()->distance(this, fingerJoints[i].position);
+		float distance = handler->field.ptr()->distance(this, fingerJoints[i].position);
 		minDistance = min(minDistance, distance);
 	}
 	return minDistance;

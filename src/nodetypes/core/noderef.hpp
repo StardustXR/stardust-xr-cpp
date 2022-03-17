@@ -12,8 +12,6 @@ class Node;
 class NodeRef {
 public:
 	NodeRef();
-	NodeRef(const NodeRef &);
-	NodeRef(uint32_t id);
 	NodeRef(Node *node);
 
 	NodeRef &operator=(NodeRef other);
@@ -29,10 +27,7 @@ public:
 	template<class T>
 	T *ptr() const {
 		Node *node = ptr();
-		if(node)
-			return dynamic_cast<T *>(node);
-		else
-			return nullptr;
+		return node ? dynamic_cast<T *>(node) : nullptr;
 	}
 
 	static uint32_t registerNode(Node *node);
