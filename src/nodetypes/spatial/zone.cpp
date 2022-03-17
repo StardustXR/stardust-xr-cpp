@@ -65,7 +65,7 @@ std::vector<uint8_t> Zone::release(Client *callingClient, flexbuffers::Reference
 }
 
 void Zone::releaseSpatial(Spatial *spatial) {
-	if(spatial->zone == this) {
+	if(spatial && spatial->zone == this) {
 		spatial->zone = nullptr;
 		spatial->setSpatialParentInPlace(spatial->originalSpatialParent);
 	}

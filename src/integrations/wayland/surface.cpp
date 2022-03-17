@@ -82,6 +82,8 @@ Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surfa
 }
 
 Surface::~Surface() {
+	panel->queueDestroy(true);
+
 	wlr_seat_destroy(seat);
 
 	tex_release(surfaceTex);
@@ -89,8 +91,6 @@ Surface::~Surface() {
 	material_release(surfaceMatAlphaAdd);
 	material_release(surfaceMatAlphaBlend);
 	material_release(surfaceMatAlphaClip);
-
-	panel->queueDestroy(true);
 }
 
 void Surface::frameEnd() {
