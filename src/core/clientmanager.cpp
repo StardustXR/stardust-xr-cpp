@@ -56,10 +56,4 @@ void ClientManager::callClientsDebug() {
 	}
 }
 
-void ClientManager::callClientsDraw() {
-	for(auto &client : clients) {
-		client->scenegraphPropagate("", ScenegraphDrawFunction);
-	}
-}
-
 }

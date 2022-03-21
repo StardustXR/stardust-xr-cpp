@@ -1,3 +1,4 @@
 src_files += files(
-	'model.cpp',
+    'drawable.cpp',
+    'model.cpp',
 )

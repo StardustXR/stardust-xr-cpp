@@ -18,7 +18,6 @@ public:
 	static void handleDisconnectedClients();
 
 	static void callClientsDebug();
-	static void callClientsDraw();
 
 	static std::mutex pidCacheMutex;
 	static std::map<pid_t, matrix> pidCache;

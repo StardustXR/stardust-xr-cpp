@@ -141,8 +141,7 @@ int main(int argc, char *argv[]) {
 		wayland->update();
 
 		//Propagate the update and draw methods on scenegraph nodes
-		serverInternalClient.scenegraph.root.propagate("", ScenegraphDrawFunction);
-		ClientManager::callClientsDraw();
+		Drawable::drawAll();
 
 		// Propagate the debug draw methods if the appropriate attribute is set
 		if(args.fieldDebug) {
