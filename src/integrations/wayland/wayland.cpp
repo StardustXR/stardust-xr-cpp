@@ -122,7 +122,10 @@ Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 	mapSurfaceCallbackXWayland.callback = std::bind(&Wayland::onMapXWaylandSurface, this, std::placeholders::_1);
 }
 
-Wayland::~Wayland() {}
+Wayland::~Wayland() {
+	wl_display_destroy_clients(wayland_display);
+	wl_display_destroy(wayland_display);
+}
 
 void Wayland::update() {
 	wl_display_flush_clients(wayland_display);
