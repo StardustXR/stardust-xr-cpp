@@ -25,11 +25,6 @@ public:
 
 	std::vector<uint8_t> setCallback(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setField(Client *callingClient, flexbuffers::Reference data, bool returnValue);
-
-	std::vector<std::string> actions;
-	std::vector<uint8_t> setActions(Client *callingClient, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> getActions(Client *callingClient, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> runAction(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 protected:
 	flatbuffers::FlatBufferBuilder flbb;
 };
