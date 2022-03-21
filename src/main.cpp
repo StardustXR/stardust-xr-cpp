@@ -60,11 +60,16 @@ ClientManager clientManager;
 Client serverInternalClient(0);
 
 // Builtin inputs
-FlatscreenPointer *flatscreenPointer = nullptr;
-SKHandInput *stereokitHands[2] = {nullptr, nullptr};
+TypedNodeRef<FlatscreenPointer> flatscreenPointer;
+std::array<TypedNodeRef<SKHandInput>, 2> stereokitHands;
 
 // Wayland global variables
-Wayland *wayland;
+Wayland *wayland = nullptr;
+
+void shutdown(int signal) {
+	sk_quit();
+	printf("Shutting down Stardust\n");
+}
 
 int main(int argc, char *argv[]) {
 	int parse_result = args.parse(argc, argv);
@@ -78,6 +83,10 @@ int main(int argc, char *argv[]) {
 
 	if(!sk_init(settings))
 		perror("Stereokit initialization failed!");
+
+	signal(SIGINT, shutdown);
+	signal(SIGSTOP, shutdown);
+	signal(SIGQUIT, shutdown);
 
 	tex_t skytex;
 	FILE *skyfile = fopen((XdgUtils::BaseDir::XdgConfigHome()+"/stardust/skytex.hdr").c_str(), "ro");
@@ -106,12 +115,12 @@ int main(int argc, char *argv[]) {
 		input_hand_visible(handed_left, false);
 		input_hand_visible(handed_right, false);
 		flatscreenPointer = new FlatscreenPointer(&serverInternalClient);
-		serverInternalClient.scenegraph.addNode("/test/flatscreenpointer", static_cast<Spatial *>(flatscreenPointer));
+		serverInternalClient.scenegraph.addNode("/test/flatscreenpointer", flatscreenPointer);
 	} else { // Add the StereoKit hand representation if we're not in flatscreen
-//		stereokitHands[0] = new SKHandInput(&serverInternalClient, handed_left);
+		stereokitHands[0] = new SKHandInput(&serverInternalClient, handed_left);
 		stereokitHands[1] = new SKHandInput(&serverInternalClient, handed_right);
-//		serverInternalClient.scenegraph.addNode("/test/skhandleft", static_cast<Spatial *>(stereokitHands[0]));
-		serverInternalClient.scenegraph.addNode("/test/skhandright", static_cast<Spatial *>(stereokitHands[1]));
+		serverInternalClient.scenegraph.addNode("/test/skhandleft", stereokitHands[0]);
+		serverInternalClient.scenegraph.addNode("/test/skhandright", stereokitHands[1]);
 	}
 
 	// Start the startup script
@@ -138,7 +147,8 @@ int main(int argc, char *argv[]) {
 		ItemInterface::updateItems();
 
 		// Update wayland
-		wayland->update();
+		if(wayland)
+			wayland->update();
 
 		//Propagate the update and draw methods on scenegraph nodes
 		Drawable::drawAll();
@@ -157,13 +167,16 @@ int main(int argc, char *argv[]) {
 
 		// Process all the input and send it to the clients
 	   if(flatscreenPointer)
-		   flatscreenPointer->update();
+		   flatscreenPointer.ptr()->update();
 	   if(stereokitHands[0])
-		   stereokitHands[0]->update();
+		   stereokitHands[0].ptr()->update();
 	   if(stereokitHands[1])
-		   stereokitHands[1]->update();
+		   stereokitHands[1].ptr()->update();
 		InputInterface::processInput();
 	})) {}
+
+	if(wayland)
+		delete wayland;
 
 	sk_shutdown();
 	return 0;
