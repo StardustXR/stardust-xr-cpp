@@ -20,6 +20,10 @@ public:
 		return ptr();
 	}
 
+	T* operator ->() const {
+		return ptr();
+	}
+
 	T *ptr() const {
 		return NodeRef::ptr<T>();
 	}

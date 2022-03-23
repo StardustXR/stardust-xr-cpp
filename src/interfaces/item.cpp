@@ -54,9 +54,9 @@ std::vector<uint8_t> ItemInterface::createEnvironmentItem(Client *callingClient,
 	};
 	sk::pose_t pose = {pos, rot};
 
-	EnvironmentItem *item = new EnvironmentItem(&serverInternalClient, path, space ? matrix_transform_pose(space->worldTransform(), pose) : pose);
+	EnvironmentItem *item = new EnvironmentItem(serverInternalClient, path, space ? matrix_transform_pose(space->worldTransform(), pose) : pose);
 
-	Node *internalParent = serverInternalClient.scenegraph.findNode("/item/environment/");
+	Node *internalParent = serverInternalClient->scenegraph.findNode("/item/environment/");
 	internalParent->addChild(std::to_string(item->id), item);
 
 	if(EnvironmentItem::itemTypeInfo.UI)

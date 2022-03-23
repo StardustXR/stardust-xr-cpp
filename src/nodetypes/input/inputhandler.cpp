@@ -57,11 +57,12 @@ void InputHandler::sendInputCallback(uint64_t oldFrame, std::list<DistanceLink> 
 		std::vector<uint8_t> inputDataCopy = inputData;
 		InputData *parsedInputData = GetMutableInputData(inputDataCopy.data());
 
-		InputMethod *method = distanceLinks.begin()->method;
-		InputHandler *handler = distanceLinks.begin()->handler;
-		method->updateInput(parsedInputData, handler);
+		DistanceLink distanceLink = *distanceLinks.begin();
+		if(distanceLink.method && distanceLink.handler) {
+			distanceLink.method.ptr()->updateInput(parsedInputData, distanceLink.handler.ptr());
 
-		handler->sendInput(oldFrame, distanceLinks, inputDataCopy);
+			distanceLink.handler.ptr()->sendInput(oldFrame, distanceLinks, inputDataCopy);
+		}
 	}
 }
 

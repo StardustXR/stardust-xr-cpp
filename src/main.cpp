@@ -56,8 +56,8 @@ CLIArgs args;
 extern void debugSetup();
 
 // Initialize scenegraph and client manager
-ClientManager clientManager;
-Client serverInternalClient(0);
+ClientManager *clientManager = new ClientManager();
+Client *serverInternalClient = new Client(0);
 
 // Builtin inputs
 TypedNodeRef<FlatscreenPointer> flatscreenPointer;
@@ -114,13 +114,13 @@ int main(int argc, char *argv[]) {
 	if(args.flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_left, false);
 		input_hand_visible(handed_right, false);
-		flatscreenPointer = new FlatscreenPointer(&serverInternalClient);
-		serverInternalClient.scenegraph.addNode("/test/flatscreenpointer", flatscreenPointer);
+		flatscreenPointer = new FlatscreenPointer(serverInternalClient);
+		serverInternalClient->scenegraph.addNode("/test/flatscreenpointer", flatscreenPointer);
 	} else { // Add the StereoKit hand representation if we're not in flatscreen
-		stereokitHands[0] = new SKHandInput(&serverInternalClient, handed_left);
-		stereokitHands[1] = new SKHandInput(&serverInternalClient, handed_right);
-		serverInternalClient.scenegraph.addNode("/test/skhandleft", stereokitHands[0]);
-		serverInternalClient.scenegraph.addNode("/test/skhandright", stereokitHands[1]);
+		stereokitHands[0] = new SKHandInput(serverInternalClient, handed_left);
+		stereokitHands[1] = new SKHandInput(serverInternalClient, handed_right);
+		serverInternalClient->scenegraph.addNode("/test/skhandleft", stereokitHands[0]);
+		serverInternalClient->scenegraph.addNode("/test/skhandright", stereokitHands[1]);
 	}
 
 	// Start the startup script
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
 
 		// Propagate the debug draw methods if the appropriate attribute is set
 		if(args.fieldDebug) {
-			serverInternalClient.scenegraph.root.propagate("", ScenegraphDebugFunction);
+			serverInternalClient->scenegraph.root.propagate("", ScenegraphDebugFunction);
 			ClientManager::callClientsDebug();
 		}
 		
@@ -175,8 +175,10 @@ int main(int argc, char *argv[]) {
 		InputInterface::processInput();
 	})) {}
 
+	delete serverInternalClient;
 	if(wayland)
 		delete wayland;
+	delete clientManager;
 
 	sk_shutdown();
 	return 0;

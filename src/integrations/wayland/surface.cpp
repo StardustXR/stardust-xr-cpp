@@ -63,8 +63,8 @@ Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surfa
 	surfaceCommitCallback.callback = std::bind(&Surface::onCommit, this);
 	wl_signal_add(&surface->events.commit, &surfaceCommitCallback.listener);
 
-	panel = new StardustXRServer::PanelItem(&serverInternalClient, this, sk::pose_identity);
-	StardustXRServer::Node *internalPanelNode = serverInternalClient.scenegraph.findNode("/item/panel");
+	panel = new StardustXRServer::PanelItem(serverInternalClient, this, sk::pose_identity);
+	StardustXRServer::Node *internalPanelNode = serverInternalClient->scenegraph.findNode("/item/panel");
 	std::string panelName = std::to_string(panel->id);
 
 	this->seat = seat;
@@ -84,7 +84,7 @@ Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surfa
 Surface::~Surface() {
 	panel->queueDestroy(true);
 
-	wlr_seat_destroy(seat);
+//	wlr_seat_destroy(seat);
 
 	tex_release(surfaceTex);
 	shader_release(surfaceShader);

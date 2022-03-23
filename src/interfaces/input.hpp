@@ -16,7 +16,7 @@ public:
 	static void processInput();
 
 private:
-	static std::vector<uint8_t> CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod *inputMethod, InputHandler *inputHandler);
+	static std::vector<uint8_t> CreateInputData(flatbuffers::FlatBufferBuilder &fbb, TypedNodeRef<InputMethod> inputMethod, TypedNodeRef<InputHandler> inputHandler);
 	static flatbuffers::FlatBufferBuilder fbb;
 };
 

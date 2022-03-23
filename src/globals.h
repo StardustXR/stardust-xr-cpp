@@ -19,4 +19,4 @@ extern sk::mesh_t boxFieldMesh;
 extern sk::mesh_t cylinderFieldMesh;
 extern sk::mesh_t sphereFieldMesh;
 
-extern StardustXRServer::Client serverInternalClient;
+extern StardustXRServer::Client *serverInternalClient;

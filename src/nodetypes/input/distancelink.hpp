@@ -1,14 +1,16 @@
 #pragma once
 
+#include "../core/typednoderef.hpp"
+
 namespace StardustXRServer {
 
 class InputMethod;
 class InputHandler;
 
 typedef struct{
-	InputMethod *method;
+	TypedNodeRef<InputMethod> method;
 	float distance;
-	InputHandler *handler;
+	TypedNodeRef<InputHandler> handler;
 } DistanceLink;
 
 inline bool operator<(DistanceLink &a, DistanceLink &b) {

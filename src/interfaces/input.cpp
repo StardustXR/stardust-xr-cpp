@@ -111,13 +111,14 @@ void InputInterface::processInput() {
 			continue;
 		distanceLinks.sort();
 
+		DistanceLink closestLink = *distanceLinks.begin();
 		std::vector<uint8_t> inputData = CreateInputData(
 			fbb,
-			distanceLinks.begin()->method,
-			distanceLinks.begin()->handler
+			closestLink.method,
+			closestLink.handler
 		);
 
-		distanceLinks.begin()->handler->sendInput(
+		closestLink.handler.ptr()->sendInput(
 			frame,
 			distanceLinks,
 			inputData
@@ -125,10 +126,10 @@ void InputInterface::processInput() {
 	}
 }
 
-std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuilder &fbb, InputMethod* inputMethod, InputHandler *inputHandler) {
-	float distance = inputMethod->distanceTo(inputHandler);
+std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuilder &fbb, TypedNodeRef<InputMethod> inputMethod, TypedNodeRef<InputHandler> inputHandler) {
+	float distance = inputMethod->distanceTo(inputHandler.ptr());
 	StardustXR::InputDataRaw inputMethodType = inputMethod->type();
-	flatbuffers::Offset<void> flatInputMethod = inputMethod->generateInput(fbb, inputHandler);
+	flatbuffers::Offset<void> flatInputMethod = inputMethod->generateInput(fbb, inputHandler.ptr());
 	const std::vector<uint8_t> datamap = inputMethod->serializeDatamap();
 
 	auto inputDataOffset = CreateInputDataDirect(fbb, std::to_string(inputMethod->id).c_str(), inputMethodType, flatInputMethod, distance, &datamap);
