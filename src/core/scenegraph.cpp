@@ -45,12 +45,12 @@ std::vector<uint8_t> Scenegraph::executeMethod(std::string path, std::string met
 	});
 
 	if(currentNode == nullptr) {
-		printf("Node %s not found\n", path.c_str());
+		root.client->messenger.error(path, method, "Node not found");
 		return std::vector<uint8_t>();
 	}
 
 	if(currentNode->methods[method] == nullptr) {
-		printf("Method %s on node %s not found\n", method.c_str(), path.c_str());
+		root.client->messenger.error(path, method, "Method on node not found");
 		return std::vector<uint8_t>();
 	}
 	return (currentNode->methods[method])(root.client, args, returnValue);
