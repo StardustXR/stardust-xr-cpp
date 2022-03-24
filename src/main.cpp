@@ -57,7 +57,7 @@ extern void debugSetup();
 
 // Initialize scenegraph and client manager
 ClientManager *clientManager = new ClientManager();
-Client *serverInternalClient = new Client(0);
+Client *serverInternalClient = new Client(*clientManager, 0);
 
 // Builtin inputs
 TypedNodeRef<FlatscreenPointer> flatscreenPointer;
@@ -131,8 +131,8 @@ int main(int argc, char *argv[]) {
 	// Every stereokit step
 	while (sk_step([]() {
 		// Handle disconnected clients before anything else to ensure scenegraph is clean
-		ClientManager::handleDisconnectedClients();
-		ClientManager::handleNewlyConnectedClients();
+		clientManager->handleDisconnectedClients();
+		clientManager->handleNewlyConnectedClients();
 
         // Delete any nodes that are queued up to delete
         Node::destroyNodes();
@@ -154,10 +154,8 @@ int main(int argc, char *argv[]) {
 		Drawable::drawAll();
 
 		// Propagate the debug draw methods if the appropriate attribute is set
-		if(args.fieldDebug) {
-			serverInternalClient->scenegraph.root.propagate("", ScenegraphDebugFunction);
-			ClientManager::callClientsDebug();
-		}
+		if(args.fieldDebug)
+			clientManager->callClientsDebug();
 		
 		//Increment the frame count
 		frame++;

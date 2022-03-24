@@ -8,17 +8,18 @@ namespace StardustXRServer {
 
 uint32_t Client::clientCount = 0;
 
-Client::Client(int fd) :
+Client::Client(ClientManager &manager, int fd) :
 fd(fd),
 pid(getPID(fd)),
 messenger(this, fd),
-scenegraph(this) {
+scenegraph(this),
+manager(&manager) {
 
 	if(pid > 0) {
-		if(ClientManager::pidCache.find(pid) != ClientManager::pidCache.end())
-			scenegraph.root.setTransformMatrix(ClientManager::pidCache[pid]);
+		if(manager.pidCache.find(pid) != manager.pidCache.end())
+			scenegraph.root.setTransformMatrix(manager.pidCache[pid]);
 
-		ClientManager::pidCache.erase(pid);
+		manager.pidCache.erase(pid);
 	}
 
 	clientNumber = clientCount;

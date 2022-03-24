@@ -12,7 +12,7 @@ class ClientManager;
 
 class Client {
 public:
-	explicit Client(int fd);
+	explicit Client(ClientManager &manager, int fd);
 	~Client();
 
 	void startMessenger();
@@ -29,6 +29,9 @@ public:
 	Scenegraph scenegraph;
 
 	static uint32_t clientCount;
+
+protected:
+	ClientManager *manager;
 };
 
 }
