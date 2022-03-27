@@ -11,10 +11,9 @@ namespace StardustXRServer {
 Registry<Zone> Zone::zones;
 
 Zone::Zone(Client *client, Spatial *spatialParent, vec3 position, quat rotation, Field *field, std::string callbackPath, std::string callbackMethod) :
-	Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false) {
+Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
+callback({client, callbackPath, callbackMethod}) {
 	this->field = field;
-	this->callbackPath = callbackPath;
-	this->callbackMethod = callbackMethod;
 
 	STARDUSTXR_NODE_METHOD("isCaptured", &Zone::isCaptured)
 	STARDUSTXR_NODE_METHOD("capture", &Zone::capture)
@@ -72,15 +71,18 @@ void Zone::releaseSpatial(Spatial *spatial) {
 }
 
 void Zone::addSpatial(Spatial *spatial) {
-	spatials.push_back(spatial);
+	spatials.add(spatial);
 }
 
 void Zone::sendZoneSignals() {
 	std::vector<Spatial *> enter;
 	std::vector<Spatial *> leave;
-	std::sort(spatials.begin(), spatials.end(), [](Spatial* a, Spatial* b) {
-		return ((std::uintptr_t) a) < ((std::uintptr_t) b);
-	});
+	std::vector<Spatial *> spatials = this->spatials.list();
+	std::vector<Spatial *> oldSpatials = this->oldSpatials.list();
+//	std::sort(spatials.begin(), spatials.end(), [](Spatial* a, Spatial* b) {
+//		return ((std::uintptr_t) a) < ((std::uintptr_t) b);
+//	});
+
 	std::set_difference(spatials.begin(), spatials.end(),
 						oldSpatials.begin(), oldSpatials.end(),
 						std::inserter(enter, enter.begin()));
@@ -88,9 +90,7 @@ void Zone::sendZoneSignals() {
 						spatials.begin(), spatials.end(),
 						std::inserter(leave, leave.begin()));
 
-	client->messenger.sendSignal(
-		callbackPath.c_str(),
-		callbackMethod.c_str(),
+	callback.signal(
 		[&](flexbuffers::Builder &fbb) {
 			fbb.Vector([&] {
 				fbb.TypedVector([&] {

@@ -38,8 +38,10 @@ std::vector<uint8_t> NonSpatialSender::sendData(Client *callingClient, flexbuffe
 		Alias *receiverAlias = static_cast<Alias *>(children[receiverName].get());
 		NonSpatialReceiver *receiver = receiverAlias->original.ptr<NonSpatialReceiver>();
 		flexbuffers::Blob dataBlob = flexVec[1].AsBlob();
-		if(receiver)
-			receiver->sendData(this, dataBlob.data(), dataBlob.size());
+		if(receiver) {
+			std::vector<uint8_t> dataBlobVector(dataBlob.data(), dataBlob.data() + dataBlob.size());
+			receiver->sendData(this, dataBlobVector);
+		}
 	}
 
 	return std::vector<uint8_t>();

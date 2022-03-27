@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../core/noderef.hpp"
+#include "../core/typednoderef.hpp"
+#include "../core/callback.hpp"
 #include "../spatial/spatial.hpp"
 #include "../fields/field.hpp"
 
@@ -13,14 +14,13 @@ public:
 	NonSpatialReceiver(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, Field *field, std::string callbackPath, std::string callbackMethod);
 	~NonSpatialReceiver();
 
-	NodeRef field;
-	std::string callbackPath;
-	std::string callbackMethod;
+	TypedNodeRef<Field> field;
+	Callback eventCallback;
 
 	static Registry<NonSpatialReceiver> receivers;
 	static std::vector<std::string> makeAliases(Node *parent);
 
-	void sendData(NonSpatialSender *sender, const uint8_t *data, size_t dataSize);
+	void sendData(NonSpatialSender *sender, const std::vector<uint8_t> &data);
 
 	std::vector<uint8_t> getMask(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setMask(Client *callingClient, flexbuffers::Reference data, bool returnValue);

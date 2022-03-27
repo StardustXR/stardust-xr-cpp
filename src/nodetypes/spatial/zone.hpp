@@ -1,6 +1,7 @@
 #pragma once
 
 #include "spatial.hpp"
+#include "../core/callback.hpp"
 #include "../fields/field.hpp"
 
 namespace StardustXRServer {
@@ -21,11 +22,10 @@ public:
 	void addSpatial(Spatial *spatial);
 	void sendZoneSignals();
 private:
-	std::vector<Spatial *> oldSpatials;
-	std::vector<Spatial *> spatials;
+	Registry<Spatial> oldSpatials;
+	Registry<Spatial> spatials;
 
-	std::string callbackPath;
-	std::string callbackMethod;
+	Callback callback;
 };
 
 }

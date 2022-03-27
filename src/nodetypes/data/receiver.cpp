@@ -10,10 +10,8 @@ Registry<NonSpatialReceiver> NonSpatialReceiver::receivers;
 
 NonSpatialReceiver::NonSpatialReceiver(Client *client, Spatial *spatialParent, vec3 position, quat rotation, Field *field, std::string callbackPath, std::string callbackMethod) :
 	Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
-	field(field) {
-
-	this->callbackPath = callbackPath;
-	this->callbackMethod = callbackMethod;
+	field(field),
+	eventCallback({client, callbackPath, callbackMethod}) {
 
 	STARDUSTXR_NODE_METHOD("getMask", &NonSpatialReceiver::getMask)
 	STARDUSTXR_NODE_METHOD("setMask", &NonSpatialReceiver::setMask)
@@ -38,8 +36,8 @@ std::vector<std::string> NonSpatialReceiver::makeAliases(Node *parent) {
 	return aliasNames;
 }
 
-void NonSpatialReceiver::sendData(NonSpatialSender *sender, const uint8_t *data, size_t dataSize) {
-	flexbuffers::Map dataMap = flexbuffers::GetRoot(data, dataSize).AsMap();
+void NonSpatialReceiver::sendData(NonSpatialSender *sender, const std::vector<uint8_t> &data) {
+	flexbuffers::Map dataMap = flexbuffers::GetRoot(data).AsMap();
 	for(size_t i=0; i<maskMap.Keys().size(); ++i) {
 		std::string key = maskMap.Keys()[i].AsKey();
 		flexbuffers::Reference maskValue = maskMap[key];
@@ -51,16 +49,10 @@ void NonSpatialReceiver::sendData(NonSpatialSender *sender, const uint8_t *data,
 			return;
 	}
 
-	client->messenger.sendSignal(
-		callbackPath.c_str(),
-		callbackMethod.c_str(),
-		[&](flexbuffers::Builder &fbb) {
-			fbb.Vector([&] {
-				fbb.String(std::to_string(this->id));
-				fbb.Blob(data, dataSize);
-			});
-		}
-	);
+	eventCallback.signal(FLEX_ARGS(
+		FLEX_STRING(std::to_string(this->id))
+		FLEX_BLOB(data)
+	));
 }
 
 std::vector<uint8_t> NonSpatialReceiver::getMask(Client *callingClient, flexbuffers::Reference data, bool returnValue) {

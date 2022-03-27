@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../core/callback.hpp"
 #include "../fields/field.hpp"
 #include "../spatial/spatial.hpp"
 #include "distancelink.hpp"
@@ -17,14 +18,10 @@ public:
 	~InputHandler();
 
 	TypedNodeRef<Field> field;
-	std::string callbackPath;
-	std::string callbackMethod;
+	Callback callback;
 
 	void sendInput        (uint64_t oldFrame, std::list<DistanceLink> distanceLinks, std::vector<uint8_t> const &inputData);
 	void sendInputCallback(uint64_t oldFrame, std::list<DistanceLink> distanceLinks, std::vector<uint8_t> const &inputData, bool capture);
-
-	std::vector<uint8_t> setCallback(Client *callingClient, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> setField(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 protected:
 	flatbuffers::FlatBufferBuilder flbb;
 };

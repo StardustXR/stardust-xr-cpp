@@ -18,12 +18,8 @@ Registry<InputHandler> InputHandler::inputHandlers;
 
 InputHandler::InputHandler(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, Field *field, std::string callbackPath, std::string callbackMethod) :
 Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
-field(field) {
-	this->callbackPath = callbackPath;
-	this->callbackMethod = callbackMethod;
-
-	STARDUSTXR_NODE_METHOD("setField", &InputHandler::setField);
-
+field(field),
+callback({client, callbackPath, callbackMethod}) {
 	inputHandlers.add(this);
 }
 InputHandler::~InputHandler() {
@@ -40,9 +36,7 @@ void InputHandler::sendInput(uint64_t oldFrame, std::list<DistanceLink> distance
 		sendInputCallback(oldFrame, distanceLinks, inputData, false);
 		return;
 	}
-	client->messenger.executeRemoteMethod(
-		callbackPath.c_str(),
-		callbackMethod.c_str(),
+	callback.executeMethod(
 		[&](flexbuffers::Builder &fbb) {
 			fbb.Blob(inputData);
 		},
@@ -64,26 +58,6 @@ void InputHandler::sendInputCallback(uint64_t oldFrame, std::list<DistanceLink> 
 			distanceLink.handler.ptr()->sendInput(oldFrame, distanceLinks, inputDataCopy);
 		}
 	}
-}
-
-std::vector<uint8_t> InputHandler::setCallback(Client *callingClient, flexbuffers::Reference data, bool) {
-	flexbuffers::Vector vector = data.AsVector();
-	callbackPath = vector[0].AsString().str();
-	callbackMethod = vector[1].AsString().str();
-
-	return std::vector<uint8_t>();
-}
-
-std::vector<uint8_t> InputHandler::setField(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	std::string fieldPath = data.AsString().str();
-	field = TypedNodeRef<Field>(client->scenegraph.findNode<Field>(fieldPath));
-
-	if(returnValue) {
-		return FLEX_SINGLE(
-			FLEX_BOOL(field)
-		);
-	} else
-		return std::vector<uint8_t>();
 }
 
 } // namespace StardustXRServer

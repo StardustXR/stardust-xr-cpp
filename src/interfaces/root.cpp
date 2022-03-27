@@ -13,7 +13,7 @@ using namespace sk;
 namespace StardustXRServer {
 
 std::mutex RootInterface::updateMethodsMutex;
-std::vector<LifeCycleUpdateMethod> RootInterface::updateMethods;
+std::vector<Callback> RootInterface::updateMethods;
 
 double RootInterface::prevFrameTime;
 double RootInterface::frameTime;
@@ -36,7 +36,7 @@ RootInterface::RootInterface(Client *client) : Spatial(client, nullptr, vec3_zer
 RootInterface::~RootInterface() {
 	const std::lock_guard<std::mutex> lock(updateMethodsMutex);
 
-	updateMethods.erase(std::remove_if(updateMethods.begin(), updateMethods.end(), [&](LifeCycleUpdateMethod &updateMethod) {
+	updateMethods.erase(std::remove_if(updateMethods.begin(), updateMethods.end(), [&](Callback &updateMethod) {
 		return updateMethod.client == client;
 	}), updateMethods.end());
 }
@@ -47,17 +47,11 @@ void RootInterface::sendLogicStepSignals() {
 
 	const std::lock_guard<std::mutex> lock(updateMethodsMutex);
 
-	for(LifeCycleUpdateMethod &updateMethod : updateMethods) {
-		updateMethod.client->messenger.sendSignal(
-			updateMethod.nodePath.c_str(),
-			updateMethod.methodName.c_str(),
-			[&](flexbuffers::Builder &fbb) {
-				fbb.Vector([&]() {
-					fbb.Double(delta);
-					fbb.Double(0);
-				});
-			}
-		);
+	for(Callback &updateMethod : updateMethods) {
+		updateMethod.signal(FLEX_ARGS(
+								FLEX_DOUBLE(delta)
+								FLEX_DOUBLE(0)
+							));
 	}
 
 	prevFrameTime = frameTime;
@@ -67,7 +61,7 @@ std::vector<uint8_t> RootInterface::subscribeLogicStep(Client *callingClient, fl
 	const std::lock_guard<std::mutex> lock(updateMethodsMutex);
 
 	flexbuffers::Vector vector = data.AsVector();
-	updateMethods.push_back(LifeCycleUpdateMethod {
+	updateMethods.push_back(Callback {
 		callingClient,
 		vector[0].AsString().str(),
 		vector[1].AsString().str()

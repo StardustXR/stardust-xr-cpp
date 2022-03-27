@@ -1,17 +1,12 @@
 #pragma once
 
+#include "../nodetypes/core/callback.hpp"
 #include "../nodetypes/spatial/spatial.hpp"
 
 #include <mutex>
 #include <vector>
 
 namespace StardustXRServer {
-
-typedef struct {
-	Client *client;
-	std::string nodePath;
-	std::string methodName;
-} LifeCycleUpdateMethod;
 
 class RootInterface : public Spatial {
 public:
@@ -23,9 +18,9 @@ public:
 	std::vector<uint8_t> disconnect(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 protected:
-	static void logicStepSignal(uint32_t index, LifeCycleUpdateMethod &updateMethod);
+	static void logicStepSignal(uint32_t index, Callback &updateMethod);
 	static std::mutex updateMethodsMutex;
-	static std::vector<LifeCycleUpdateMethod> updateMethods;
+	static std::vector<Callback> updateMethods;
 
 	static double prevFrameTime;
 	static double frameTime;
