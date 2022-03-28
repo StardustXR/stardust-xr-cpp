@@ -4,7 +4,7 @@
 
 #include <cmath>
 
-using namespace std;
+using namespace sk;
 
 namespace StardustXRServer {
 
@@ -19,7 +19,7 @@ float CylinderField::localDistance(const vec3 point) {
 		abs(vec2_magnitude(vec2{point.x,point.y})) - radius,
 		abs(point.z) - (length / 2)
 	};
-	return min(max(d.x,d.y),0.0f) + ((d.x >= 0 && d.y >= 0) ? vec2_magnitude(d) : 0);
+	return std::min(std::max(d.x,d.y),0.0f) + ((d.x >= 0 && d.y >= 0) ? vec2_magnitude(d) : 0);
 }
 
 void CylinderField::debug() {

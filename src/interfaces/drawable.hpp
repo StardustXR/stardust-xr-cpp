@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../nodetypes/drawable/model.hpp"
+#include "../nodetypes/core/node.hpp"
+
 #include <stereokit.h>
 
 namespace StardustXRServer {

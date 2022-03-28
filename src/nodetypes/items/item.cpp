@@ -6,6 +6,8 @@
 #include "../../globals.h"
 #include "../core/alias.hpp"
 
+using namespace sk;
+
 namespace StardustXRServer {
 
 Item::Item(Client *client, TypeInfo &itemTypeInfo, pose_t transform) :

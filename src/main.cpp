@@ -75,14 +75,14 @@ int main(int argc, char *argv[]) {
 	int parse_result = args.parse(argc, argv);
 	if (parse_result != -1) return parse_result;
 
-	sk_settings_t settings = {};
-	settings.assets_folder = "";
-	settings.log_filter = log_diagnostic;
-	settings.app_name = args.flatscreen ? "Stardust XR (Flatscreen)" : "Stardust XR";
-	settings.display_preference = args.flatscreen ? display_mode_flatscreen : display_mode_mixedreality;
-
+	sk_settings_t settings = {
+		.app_name = args.flatscreen ? "Stardust XR (Flatscreen)" : "Stardust XR",
+		.assets_folder = "",
+		.display_preference = args.flatscreen ? display_mode_flatscreen : display_mode_mixedreality,
+		.log_filter = log_diagnostic
+	};
 	if(!sk_init(settings))
-		perror("Stereokit initialization failed!");
+		exit(1);
 
 	signal(SIGINT, shutdown);
 	signal(SIGSTOP, shutdown);

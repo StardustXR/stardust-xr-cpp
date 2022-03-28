@@ -7,6 +7,8 @@
 
 #include "../core/client.hpp"
 
+using namespace sk;
+
 namespace StardustXRServer {
 
 DataInterface::DataInterface(Client *client) : Node(client, false) {

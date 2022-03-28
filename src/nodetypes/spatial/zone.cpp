@@ -6,6 +6,8 @@
 #include "../../interfaces/spatial.hpp"
 #include "../../nodetypes/core/alias.hpp"
 
+using namespace sk;
+
 namespace StardustXRServer {
 
 Registry<Zone> Zone::zones;

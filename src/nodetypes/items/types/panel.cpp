@@ -4,6 +4,8 @@
 #include "../../../integrations/wayland/surface.hpp"
 #include "../../core/alias.hpp"
 
+using namespace sk;
+
 namespace StardustXRServer {
 
 Item::TypeInfo PanelItem::itemTypeInfo = {

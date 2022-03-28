@@ -3,7 +3,7 @@
 #include "stereokit.h"
 #include "../../globals.h"
 
-using namespace std;
+using namespace sk;
 
 namespace StardustXRServer {
 

@@ -1,6 +1,10 @@
 #include "drawable.hpp"
 #include "../core/client.hpp"
 
+#include "../nodetypes/drawable/model.hpp"
+
+using namespace sk;
+
 namespace StardustXRServer {
 
 std::string DrawableInterface::skytexQueuedPath;

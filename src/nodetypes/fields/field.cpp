@@ -3,7 +3,8 @@
 #include "../../core/client.hpp"
 #include <stereokit.h>
 
-using namespace StardustXR;
+using namespace sk;
+
 namespace StardustXRServer {
 
 Field::Field(Client *client, Spatial *spatialParent, pose_t transform, bool rotatable) :

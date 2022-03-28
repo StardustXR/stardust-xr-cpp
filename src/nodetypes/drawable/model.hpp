@@ -10,7 +10,7 @@ namespace StardustXRServer {
 
 class Model : public Drawable {
 public:
-	Model(Client *client, std::string modelPath, Spatial *spatialParent, matrix transform);
+	Model(Client *client, std::string modelPath, Spatial *spatialParent, sk::matrix transform);
 	virtual ~Model();
 
 	void draw();
@@ -32,7 +32,7 @@ protected:
 		float floatValue = 0;
 
 		bool isColor;
-		color128 colorValue = {0,0,0,0};
+		sk::color128 colorValue = {0,0,0,0};
 
 		bool isString;
 		std::string stringValue = "";

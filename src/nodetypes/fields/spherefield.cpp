@@ -2,6 +2,8 @@
 #include "stereokit.h"
 #include "../../globals.h"
 
+using namespace sk;
+
 namespace StardustXRServer {
 
 SphereField::SphereField(Client *client, Spatial *spatialParent, sk::vec3 position, float radius) :

@@ -4,6 +4,8 @@
 #include "../../core/client.hpp"
 #include <mutex>
 
+using namespace sk;
+
 namespace StardustXRServer {
 
 ItemAcceptor::ItemAcceptor(Client *client, Spatial *spatialParent, pose_t transform, Item::TypeInfo *typeInfo, Field *field, std::string callbackPath, std::string callbackMethod) :

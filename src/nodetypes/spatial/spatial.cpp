@@ -8,7 +8,9 @@
 #include "stereokit.h"
 #include <string>
 #include <vector>
-using namespace StardustXR;
+
+using namespace sk;
+
 namespace StardustXRServer {
 
 Registry<Spatial> Spatial::spatials;

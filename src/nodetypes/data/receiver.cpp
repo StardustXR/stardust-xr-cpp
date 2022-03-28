@@ -4,6 +4,8 @@
 
 #include "sender.hpp"
 
+using namespace sk;
+
 namespace StardustXRServer {
 
 Registry<NonSpatialReceiver> NonSpatialReceiver::receivers;

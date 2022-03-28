@@ -3,17 +3,15 @@
 #include "../core/node.hpp"
 #include <stereokit.h>
 
-using namespace sk;
-
 namespace StardustXRServer {
 
 class Zone;
 
 class Spatial : public Node {
 public:
-	Spatial(Client *client, matrix transform);
-	Spatial(Client *client, Spatial *spatialParent, pose_t transform, bool translatable, bool rotatable, bool scalable, bool zoneable);
-	Spatial(Client *client, Spatial *spatialParent, matrix transform, bool translatable, bool rotatable, bool scalable, bool zoneable);
+	Spatial(Client *client, sk::matrix transform);
+	Spatial(Client *client, Spatial *spatialParent, sk::pose_t transform, bool translatable, bool rotatable, bool scalable, bool zoneable);
+	Spatial(Client *client, Spatial *spatialParent, sk::matrix transform, bool translatable, bool rotatable, bool scalable, bool zoneable);
 	static Registry<Spatial> spatials;
 	~Spatial();
 
@@ -31,11 +29,11 @@ public:
 	bool zoneable     = false;
 
 	// Matrix get operations
-	static matrix spaceToSpaceMatrix(Spatial *from, Spatial *to);
-	matrix localTransform();
-	matrix worldTransform();
-	matrix localToSpaceMatrix(Spatial *space);
-	matrix spaceToLocalMatrix(Spatial *space);
+	static sk::matrix spaceToSpaceMatrix(Spatial *from, Spatial *to);
+	sk::matrix localTransform();
+	sk::matrix worldTransform();
+	sk::matrix localToSpaceMatrix(Spatial *space);
+	sk::matrix spaceToLocalMatrix(Spatial *space);
 
 	// Spatial heirarchy relationships
 	Zone *zone = nullptr;
@@ -43,17 +41,17 @@ public:
 	Spatial *originalSpatialParent = nullptr;
 	bool setSpatialParent(Spatial *spatial);
 	bool setSpatialParentInPlace(Spatial *spatial);
-	void setTransformMatrix(matrix mat);
+	void setTransformMatrix(sk::matrix mat);
 
-	vec3 spaceToLocalPoint    (Spatial *space, vec3 point    ) { return matrix_transform_pt  (spaceToLocalMatrix(space), point    ); }
-	vec3 spaceToLocalDirection(Spatial *space, vec3 direction) { return matrix_transform_dir (spaceToLocalMatrix(space), direction); }
-	quat spaceToLocalRotation (Spatial *space, quat rot      ) { return matrix_transform_quat(spaceToLocalMatrix(space), rot      ); }
+	sk::vec3 spaceToLocalPoint    (Spatial *space, sk::vec3 point    ) { return matrix_transform_pt  (spaceToLocalMatrix(space), point    ); }
+	sk::vec3 spaceToLocalDirection(Spatial *space, sk::vec3 direction) { return matrix_transform_dir (spaceToLocalMatrix(space), direction); }
+	sk::quat spaceToLocalRotation (Spatial *space, sk::quat rot      ) { return matrix_transform_quat(spaceToLocalMatrix(space), rot      ); }
 
-	vec3 localToSpacePoint    (Spatial *space, vec3 point    ) { return matrix_transform_pt  (localToSpaceMatrix(space), point    ); }
-	vec3 localToSpaceDirection(Spatial *space, vec3 direction) { return matrix_transform_dir (localToSpaceMatrix(space), direction); }
-	quat localToSpaceRotation (Spatial *space, quat rot      ) { return matrix_transform_quat(localToSpaceMatrix(space), rot      ); }
+	sk::vec3 localToSpacePoint    (Spatial *space, sk::vec3 point    ) { return matrix_transform_pt  (localToSpaceMatrix(space), point    ); }
+	sk::vec3 localToSpaceDirection(Spatial *space, sk::vec3 direction) { return matrix_transform_dir (localToSpaceMatrix(space), direction); }
+	sk::quat localToSpaceRotation (Spatial *space, sk::quat rot      ) { return matrix_transform_quat(localToSpaceMatrix(space), rot      ); }
 protected:
-	matrix transform = matrix_identity;
+	sk::matrix transform = sk::matrix_identity;
 };
 
 } // namespace StardustXRServer

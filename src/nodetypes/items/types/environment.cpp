@@ -1,5 +1,7 @@
 #include "environment.hpp"
 
+using namespace sk;
+
 namespace StardustXRServer {
 
 Item::TypeInfo EnvironmentItem::itemTypeInfo = {
