@@ -36,3 +36,12 @@ sk::pose_t FlexToSKPose(flexbuffers::TypedVector pos, flexbuffers::TypedVector r
 matrix FlexToSKTransform(flexbuffers::TypedVector pos, flexbuffers::TypedVector rot, flexbuffers::TypedVector scl) {
 	return matrix_trs(FlexToSKVec3(pos), FlexToSKQuat(rot), FlexToSKVec3(scl));
 }
+
+sk::color128 FlexToSKColor(flexbuffers::TypedVector flexVec) {
+	return color128 {
+		flexVec[0].AsFloat(),
+		flexVec[1].AsFloat(),
+		flexVec[2].AsFloat(),
+		flexVec[3].AsFloat()
+	};
+}
