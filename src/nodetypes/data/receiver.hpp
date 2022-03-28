@@ -7,20 +7,20 @@
 
 namespace StardustXRServer {
 
-class NonSpatialSender;
+class PulseSender;
 
-class NonSpatialReceiver : public Spatial {
+class PulseReceiver : public Spatial {
 public:
-	NonSpatialReceiver(Client *client, Spatial *spatialParent, sk::pose_t pose, Field *field, std::string callbackPath, std::string callbackMethod);
-	~NonSpatialReceiver();
+	PulseReceiver(Client *client, Spatial *spatialParent, sk::pose_t pose, Field *field, std::string callbackPath, std::string callbackMethod);
+	~PulseReceiver();
 
 	TypedNodeRef<Field> field;
 	Callback eventCallback;
 
-	static Registry<NonSpatialReceiver> receivers;
+	static Registry<PulseReceiver> receivers;
 	static std::vector<std::string> makeAliases(Node *parent);
 
-	void sendData(NonSpatialSender *sender, const std::vector<uint8_t> &data);
+	void sendData(PulseSender *sender, const std::vector<uint8_t> &data);
 
 	std::vector<uint8_t> getMask(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setMask(Client *callingClient, flexbuffers::Reference data, bool returnValue);

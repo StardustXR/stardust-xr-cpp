@@ -8,24 +8,24 @@ using namespace sk;
 
 namespace StardustXRServer {
 
-Registry<NonSpatialReceiver> NonSpatialReceiver::receivers;
+Registry<PulseReceiver> PulseReceiver::receivers;
 
-NonSpatialReceiver::NonSpatialReceiver(Client *client, Spatial *spatialParent, pose_t pose, Field *field, std::string callbackPath, std::string callbackMethod) :
+PulseReceiver::PulseReceiver(Client *client, Spatial *spatialParent, pose_t pose, Field *field, std::string callbackPath, std::string callbackMethod) :
 	Spatial(client, spatialParent, pose, true, true, false, false),
 	field(field),
 	eventCallback({client, callbackPath, callbackMethod}) {
 
-	STARDUSTXR_NODE_METHOD("getMask", &NonSpatialReceiver::getMask)
-	STARDUSTXR_NODE_METHOD("setMask", &NonSpatialReceiver::setMask)
+	STARDUSTXR_NODE_METHOD("getMask", &PulseReceiver::getMask)
+	STARDUSTXR_NODE_METHOD("setMask", &PulseReceiver::setMask)
 
 	receivers.add(this);
 }
 
-NonSpatialReceiver::~NonSpatialReceiver() {
+PulseReceiver::~PulseReceiver() {
 	receivers.remove(this);
 }
 
-std::vector<std::string> NonSpatialReceiver::makeAliases(Node *parent) {
+std::vector<std::string> PulseReceiver::makeAliases(Node *parent) {
 	std::vector<std::string> aliasNames;
 	for(auto const receiver : receivers.list()) {
 		std::string id = std::to_string(receiver->id);
@@ -38,7 +38,7 @@ std::vector<std::string> NonSpatialReceiver::makeAliases(Node *parent) {
 	return aliasNames;
 }
 
-void NonSpatialReceiver::sendData(NonSpatialSender *sender, const std::vector<uint8_t> &data) {
+void PulseReceiver::sendData(PulseSender *sender, const std::vector<uint8_t> &data) {
 	flexbuffers::Map dataMap = flexbuffers::GetRoot(data).AsMap();
 	for(size_t i=0; i<maskMap.Keys().size(); ++i) {
 		std::string key = maskMap.Keys()[i].AsKey();
@@ -57,10 +57,10 @@ void NonSpatialReceiver::sendData(NonSpatialSender *sender, const std::vector<ui
 	));
 }
 
-std::vector<uint8_t> NonSpatialReceiver::getMask(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PulseReceiver::getMask(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	return maskBinary;
 }
-std::vector<uint8_t> NonSpatialReceiver::setMask(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PulseReceiver::setMask(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Blob maskBlob = data.AsBlob();
 	this->maskBinary = std::vector<uint8_t>(maskBlob.data(), maskBlob.data() + maskBlob.size());
 	this->maskMap = flexbuffers::GetRoot(this->maskBinary).AsMap();

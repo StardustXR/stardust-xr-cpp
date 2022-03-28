@@ -8,23 +8,23 @@ using namespace sk;
 
 namespace StardustXRServer {
 
-Registry<NonSpatialSender> NonSpatialSender::senders;
+Registry<PulseSender> PulseSender::senders;
 
-NonSpatialSender::NonSpatialSender(Client *client, Spatial *spatialParent, pose_t pose) :
+PulseSender::PulseSender(Client *client, Spatial *spatialParent, pose_t pose) :
 	Spatial(client, spatialParent, pose, true, true, false, false) {
 
-	STARDUSTXR_NODE_METHOD("getReceivers", &NonSpatialSender::getReceivers)
-	STARDUSTXR_NODE_METHOD("sendData", &NonSpatialSender::sendData)
+	STARDUSTXR_NODE_METHOD("getReceivers", &PulseSender::getReceivers)
+	STARDUSTXR_NODE_METHOD("sendData", &PulseSender::sendData)
 
 	senders.add(this);
 }
-NonSpatialSender::~NonSpatialSender() {
+PulseSender::~PulseSender() {
 	senders.remove(this);
 }
 
-std::vector<uint8_t> NonSpatialSender::getReceivers(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PulseSender::getReceivers(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	children.clear();
-	std::vector<std::string> names = NonSpatialReceiver::makeAliases(this);
+	std::vector<std::string> names = PulseReceiver::makeAliases(this);
 
 	return FLEX(
 		for(std::string &name : names) {
@@ -33,12 +33,12 @@ std::vector<uint8_t> NonSpatialSender::getReceivers(Client *callingClient, flexb
 	);
 }
 
-std::vector<uint8_t> NonSpatialSender::sendData(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+std::vector<uint8_t> PulseSender::sendData(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	flexbuffers::Vector flexVec = data.AsVector();
 	std::string receiverName = flexVec[0].AsString().str();
 	if(children.find(receiverName) != children.end()) {
 		Alias *receiverAlias = static_cast<Alias *>(children[receiverName].get());
-		NonSpatialReceiver *receiver = receiverAlias->original.ptr<NonSpatialReceiver>();
+		PulseReceiver *receiver = receiverAlias->original.ptr<PulseReceiver>();
 		flexbuffers::Blob dataBlob = flexVec[1].AsBlob();
 		if(receiver) {
 			std::vector<uint8_t> dataBlobVector(dataBlob.data(), dataBlob.data() + dataBlob.size());
