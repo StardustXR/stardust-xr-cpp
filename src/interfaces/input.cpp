@@ -1,18 +1,19 @@
 #include "input.hpp"
 #include "../globals.h"
 #include "../core/client.hpp"
+#include "../nodetypes/core/alias.hpp"
+#include "../nodetypes/input/inputhandler.hpp"
 #include "../nodetypes/input/inputmethods/pointer.hpp"
-#include <stardustxr/common/flatbuffers/Input.hpp>
-#include "nodetypes/core/alias.hpp"
-#include "nodetypes/input/inputhandler.hpp"
+#include "../util/flex.hpp"
 #include "stereokit.h"
+
+#include <flatbuffers/flatbuffers.h>
 #include <flatbuffers/flexbuffers.h>
 
 #include <cstddef>
 #include <cstdint>
 #include <functional>
 #include <mutex>
-#include <stardustxr/common/flex.hpp>
 #include <string>
 
 namespace StardustXRServer {
@@ -63,25 +64,13 @@ std::vector<uint8_t> InputInterface::registerInputHandler(Client *callingClient,
 	std::string name                 = flexVec[0].AsString().str();
 	std::string flexFieldPath        = flexVec[1].AsString().str();
 	Spatial *spatialParent           = callingClient->scenegraph.findNode<Spatial>(flexVec[2].AsString().str());
-	flexbuffers::TypedVector flexPos = flexVec[3].AsTypedVector();
-	flexbuffers::TypedVector flexRot = flexVec[4].AsTypedVector();
+	pose_t transform                 = FlexToSKPose(flexVec[3].AsTypedVector(), flexVec[4].AsTypedVector());
 	std::string callbackPath         = flexVec[5].AsString().str();
 	std::string callbackMethod       = flexVec[6].AsString().str();
 
-	sk::vec3 pos = {
-		flexPos[0].AsFloat(), 
-		flexPos[1].AsFloat(),
-		flexPos[2].AsFloat()
-	};
-	sk::quat rot = {
-		flexRot[0].AsFloat(), 
-		flexRot[1].AsFloat(),
-		flexRot[2].AsFloat(),
-		flexRot[3].AsFloat()
-	};
 	Field *field = client->scenegraph.findNode<Field>(flexFieldPath);
 
-	InputHandler *handler = new InputHandler(client, spatialParent, pose_t{pos, rot}, field, callbackPath, callbackMethod);
+	InputHandler *handler = new InputHandler(client, spatialParent, transform, field, callbackPath, callbackMethod);
 	children["handler"]->addChild(name, handler);
 
 	return std::vector<uint8_t>();

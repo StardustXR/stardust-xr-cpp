@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../core/node.hpp"
-#include <stereokit.h>
+#include "stereokit.h"
 
 namespace StardustXRServer {
 

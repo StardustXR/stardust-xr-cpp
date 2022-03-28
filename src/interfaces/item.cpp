@@ -6,6 +6,7 @@
 #include "../nodetypes/items/types/panel.hpp"
 #include "../nodetypes/items/itemui.hpp"
 #include "../nodetypes/items/acceptor.hpp"
+#include "../util/flex.hpp"
 #include "../globals.h"
 
 
@@ -38,23 +39,9 @@ std::vector<uint8_t> ItemInterface::createEnvironmentItem(Client *callingClient,
 	std::string name                 = flexVec[0].AsString().str();
 	Spatial *space                   = this->client->scenegraph.findNode<Spatial>(flexVec[1].AsString().str());
 	std::string path                 = flexVec[2].AsString().str();
-	flexbuffers::TypedVector flexPos = flexVec[3].AsTypedVector();
-	flexbuffers::TypedVector flexRot = flexVec[4].AsTypedVector();
+	pose_t transform                 = FlexToSKPose(flexVec[3].AsTypedVector(), flexVec[4].AsTypedVector());
 
-	sk::vec3 pos = {
-		flexPos[0].AsFloat(),
-		flexPos[1].AsFloat(),
-		flexPos[2].AsFloat()
-	};
-	sk::quat rot = {
-		flexRot[0].AsFloat(),
-		flexRot[1].AsFloat(),
-		flexRot[2].AsFloat(),
-		flexRot[3].AsFloat()
-	};
-	sk::pose_t pose = {pos, rot};
-
-	EnvironmentItem *item = new EnvironmentItem(serverInternalClient, path, space ? matrix_transform_pose(space->worldTransform(), pose) : pose);
+	EnvironmentItem *item = new EnvironmentItem(serverInternalClient, path, space ? matrix_transform_pose(space->worldTransform(), transform) : transform);
 
 	Node *internalParent = serverInternalClient->scenegraph.findNode("/item/environment/");
 	internalParent->addChild(std::to_string(item->id), item);
@@ -97,24 +84,11 @@ std::vector<uint8_t> ItemInterface::createItemAcceptor(Client *callingClient, fl
 	std::string name                 = flexVec[0].AsString().str();
 	Spatial *space                   = this->client->scenegraph.findNode<Spatial>(flexVec[1].AsString().str());
 	Field *field                     = this->client->scenegraph.findNode<Field>(flexVec[2].AsString().str());
-	flexbuffers::TypedVector flexPos = flexVec[3].AsTypedVector();
-	flexbuffers::TypedVector flexRot = flexVec[4].AsTypedVector();
+	pose_t transform                 = FlexToSKPose(flexVec[3].AsTypedVector(), flexVec[4].AsTypedVector());
 	std::string callbackPath         = flexVec[5].AsString().str();
 	std::string callbackMethod       = flexVec[6].AsString().str();
 
-	sk::vec3 pos = {
-		flexPos[0].AsFloat(),
-		flexPos[1].AsFloat(),
-		flexPos[2].AsFloat()
-	};
-	sk::quat rot = {
-		flexRot[0].AsFloat(),
-		flexRot[1].AsFloat(),
-		flexRot[2].AsFloat(),
-		flexRot[3].AsFloat()
-	};
-
-	ItemAcceptor *acceptor = new ItemAcceptor(client, space, pose_t{pos, rot}, info, field, callbackPath, callbackMethod);
+	ItemAcceptor *acceptor = new ItemAcceptor(client, space, transform, info, field, callbackPath, callbackMethod);
 	children["acceptor"]->addChild(name, acceptor);
 
 	return std::vector<uint8_t>();

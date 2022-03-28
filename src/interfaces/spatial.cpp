@@ -2,6 +2,7 @@
 #include "../core/client.hpp"
 #include "../nodetypes/spatial/spatial.hpp"
 #include "../nodetypes/spatial/zone.hpp"
+#include "../util/flex.hpp"
 
 #include <list>
 #include <limits>
@@ -19,63 +20,31 @@ SpatialInterface::SpatialInterface(Client *client) : Node(client, false) {
 }
 
 std::vector<uint8_t> SpatialInterface::createSpatial(Client *callingClient, flexbuffers::Reference data, bool) {
-	flexbuffers::Vector vector            = data.AsVector();
-	string name                           = vector[0].AsString().str();
-	Spatial *spatialParent                = this->client->scenegraph.findNode<Spatial>(vector[1].AsString().str());
-	flexbuffers::TypedVector flexPosition = vector[2].AsTypedVector();
-	flexbuffers::TypedVector flexRotation = vector[3].AsTypedVector();
-	flexbuffers::TypedVector flexScale    = vector[4].AsTypedVector();
-	bool translatable                     = vector[5].AsBool();
-	bool rotatable                        = vector[6].AsBool();
-	bool scalable                         = vector[7].AsBool();
-	bool zoneable                         = vector[8].AsBool();
+	flexbuffers::Vector flexVec = data.AsVector();
+	string name                 = flexVec[0].AsString().str();
+	Spatial *spatialParent      = this->client->scenegraph.findNode<Spatial>(flexVec[1].AsString().str());
+	matrix transform            = FlexToSKTransform(flexVec[2].AsTypedVector(), flexVec[3].AsTypedVector(), flexVec[4].AsTypedVector());
+	bool translatable           = flexVec[5].AsBool();
+	bool rotatable              = flexVec[6].AsBool();
+	bool scalable               = flexVec[7].AsBool();
+	bool zoneable               = flexVec[8].AsBool();
 
-	vec3 position = {
-		flexPosition[0].AsFloat(),
-		flexPosition[1].AsFloat(),
-		flexPosition[2].AsFloat()
-	};
-	quat rotation = {
-		flexRotation[0].AsFloat(),
-		flexRotation[1].AsFloat(),
-		flexRotation[2].AsFloat(),
-		flexRotation[3].AsFloat()
-	};
-	vec3 scale = {
-		flexScale[0].AsFloat(),
-		flexScale[1].AsFloat(),
-		flexScale[2].AsFloat()
-	};
-
-	Spatial *spatial = new Spatial(client, spatialParent, matrix_trs(position, rotation, scale), translatable, rotatable, scalable, zoneable);
+	Spatial *spatial = new Spatial(client, spatialParent, transform, translatable, rotatable, scalable, zoneable);
 	children["spatial"]->addChild(name, spatial);
 
 	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> SpatialInterface::createZone(Client *callingClient, flexbuffers::Reference data, bool) {
-	flexbuffers::Vector vector            = data.AsVector();
-	string name                           = vector[0].AsString().str();
-	Field *field                          = callingClient->scenegraph.findNode<Field>(vector[1].AsString().str());
-	Spatial *spatialParent                = callingClient->scenegraph.findNode<Spatial>(vector[2].AsString().str());
-	flexbuffers::TypedVector flexPosition = vector[3].AsTypedVector();
-	flexbuffers::TypedVector flexRotation = vector[4].AsTypedVector();
-	std::string callbackPath              = vector[5].AsString().str();
-	std::string callbackMethod            = vector[6].AsString().str();
+	flexbuffers::Vector flexVec = data.AsVector();
+	string name                 = flexVec[0].AsString().str();
+	Field *field                = callingClient->scenegraph.findNode<Field>(flexVec[1].AsString().str());
+	Spatial *spatialParent      = callingClient->scenegraph.findNode<Spatial>(flexVec[2].AsString().str());
+	pose_t transform            = FlexToSKPose(flexVec[3].AsTypedVector(), flexVec[4].AsTypedVector());
+	std::string callbackPath    = flexVec[5].AsString().str();
+	std::string callbackMethod  = flexVec[6].AsString().str();
 
-	vec3 position = {
-		flexPosition[0].AsFloat(),
-		flexPosition[1].AsFloat(),
-		flexPosition[2].AsFloat()
-	};
-	quat rotation = {
-		flexRotation[0].AsFloat(),
-		flexRotation[1].AsFloat(),
-		flexRotation[2].AsFloat(),
-		flexRotation[3].AsFloat()
-	};
-
-	Zone *zone = new Zone(client, spatialParent, pose_t{position, rotation}, field, callbackPath, callbackMethod);
+	Zone *zone = new Zone(client, spatialParent, transform, field, callbackPath, callbackMethod);
 	children["zone"]->addChild(name, zone);
 
 	return std::vector<uint8_t>();
