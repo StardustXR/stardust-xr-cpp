@@ -5,9 +5,9 @@ using namespace std;
 
 namespace StardustXRServer {
 
-RoundedBoxField::RoundedBoxField(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 size, float radius) : BoxField::BoxField(client, spatialParent, position, rotation, size) {
-	this->radius = radius;
-}
+RoundedBoxField::RoundedBoxField(Client *client, Spatial *spatialParent, pose_t transform, vec3 size, float radius) :
+BoxField::BoxField(client, spatialParent, transform, size),
+radius(radius) {}
 
 float RoundedBoxField::localDistance(const vec3 point) {
 	float minSizeDimension = min(size.x, min(size.y, size.z));

@@ -7,8 +7,9 @@ using namespace sk;
 
 namespace StardustXRServer {
 
-Model::Model(Client *client, std::string modelPath, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale) : Drawable(client, spatialParent, position, rotation, scale, true, true, true) {
-	this->modelPath = modelPath;
+Model::Model(Client *client, std::string modelPath, Spatial *spatialParent, matrix transform) :
+Drawable(client, spatialParent, transform, true, true, true),
+modelPath(modelPath){
 	enabled = false;
 	STARDUSTXR_NODE_METHOD("setMaterialProperty", &Model::setMaterialProperty);
 }

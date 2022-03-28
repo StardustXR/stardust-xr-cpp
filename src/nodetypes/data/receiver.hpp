@@ -11,7 +11,7 @@ class NonSpatialSender;
 
 class NonSpatialReceiver : public Spatial {
 public:
-	NonSpatialReceiver(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, Field *field, std::string callbackPath, std::string callbackMethod);
+	NonSpatialReceiver(Client *client, Spatial *spatialParent, sk::pose_t pose, Field *field, std::string callbackPath, std::string callbackMethod);
 	~NonSpatialReceiver();
 
 	TypedNodeRef<Field> field;

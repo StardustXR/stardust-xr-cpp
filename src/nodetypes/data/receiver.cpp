@@ -8,8 +8,8 @@ namespace StardustXRServer {
 
 Registry<NonSpatialReceiver> NonSpatialReceiver::receivers;
 
-NonSpatialReceiver::NonSpatialReceiver(Client *client, Spatial *spatialParent, vec3 position, quat rotation, Field *field, std::string callbackPath, std::string callbackMethod) :
-	Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
+NonSpatialReceiver::NonSpatialReceiver(Client *client, Spatial *spatialParent, pose_t pose, Field *field, std::string callbackPath, std::string callbackMethod) :
+	Spatial(client, spatialParent, pose, true, true, false, false),
 	field(field),
 	eventCallback({client, callbackPath, callbackMethod}) {
 

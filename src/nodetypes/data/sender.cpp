@@ -8,8 +8,8 @@ namespace StardustXRServer {
 
 Registry<NonSpatialSender> NonSpatialSender::senders;
 
-NonSpatialSender::NonSpatialSender(Client *client, Spatial *spatialParent, vec3 position, quat rotation) :
-	Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false) {
+NonSpatialSender::NonSpatialSender(Client *client, Spatial *spatialParent, pose_t pose) :
+	Spatial(client, spatialParent, pose, true, true, false, false) {
 
 	STARDUSTXR_NODE_METHOD("getReceivers", &NonSpatialSender::getReceivers)
 	STARDUSTXR_NODE_METHOD("sendData", &NonSpatialSender::sendData)

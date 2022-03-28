@@ -7,7 +7,7 @@ namespace StardustXRServer {
 
 class Drawable : public Spatial {
 public:
-	Drawable(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, sk::vec3 scale, bool translatable, bool rotatable, bool scalable);
+	Drawable(Client *client, Spatial *spatialParent, matrix transform, bool translatable, bool rotatable, bool scalable);
 	virtual ~Drawable();
 	virtual void draw() {}
 

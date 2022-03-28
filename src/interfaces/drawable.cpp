@@ -73,7 +73,7 @@ std::vector<uint8_t> DrawableInterface::createModelFromFile(Client *, flexbuffer
 		flexScale[2].AsFloat()
 	};
 
-	Model *model = new Model(client, path, spatialParent, position, rotation, scale);
+	Model *model = new Model(client, path, spatialParent, matrix_trs(position, rotation, scale));
 	children["model"]->addChild(name, model);
 
 	return std::vector<uint8_t>();

@@ -8,7 +8,8 @@ using namespace std;
 
 namespace StardustXRServer {
 
-CylinderField::CylinderField(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, float length, float radius) : Field(client, spatialParent, position, rotation, true) {
+CylinderField::CylinderField(Client *client, Spatial *spatialParent, pose_t pose, float length, float radius) :
+Field(client, spatialParent, pose, true) {
 	this->length = length;
 	this->radius = radius;
 }
@@ -22,7 +23,7 @@ float CylinderField::localDistance(const vec3 point) {
 }
 
 void CylinderField::debug() {
-	render_add_mesh(cylinderFieldMesh, fieldDebugMat, matrix_trs(vec3_zero, quat_identity, vec3{radius, radius, length}) * worldTransform());
+	render_add_mesh(cylinderFieldMesh, fieldDebugMat, matrix_s(vec3{radius, radius, length}) * worldTransform());
 }
 
 } // namespace StardustXRServer

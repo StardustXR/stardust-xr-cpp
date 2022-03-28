@@ -7,7 +7,8 @@ using namespace std;
 
 namespace StardustXRServer {
 
-BoxField::BoxField(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 size) : Field(client, spatialParent, position, rotation, true) {
+BoxField::BoxField(Client *client, Spatial *spatialParent, pose_t transform, vec3 size) :
+Field(client, spatialParent, transform, true) {
 	this->size = size;
 	
 	STARDUSTXR_NODE_METHOD("setSize", &BoxField::setSize)
@@ -36,7 +37,7 @@ float BoxField::localDistance(const vec3 point) {
 }
 
 void BoxField::debug() {
-	render_add_mesh(boxFieldMesh, fieldDebugMat, matrix_trs(vec3_zero, quat_identity, size) * worldTransform());
+	render_add_mesh(boxFieldMesh, fieldDebugMat, matrix_s(size) * worldTransform());
 }
 
 } // namespace StardustXRServer

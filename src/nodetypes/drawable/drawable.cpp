@@ -4,8 +4,8 @@ namespace StardustXRServer {
 
 Registry<Drawable> Drawable::drawables;
 
-Drawable::Drawable(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable) :
-	Spatial(client, spatialParent, position, rotation, scale, translatable, rotatable, scalable, false) {
+Drawable::Drawable(Client *client, Spatial *spatialParent, matrix transform, bool translatable, bool rotatable, bool scalable) :
+	Spatial(client, spatialParent, transform, translatable, rotatable, scalable, false) {
 
 	drawables.add(this);
 }

@@ -22,7 +22,7 @@ public:
 		Registry<ItemAcceptor> acceptors;
 	};
 
-	Item(Client *client, TypeInfo &itemTypeInfo, sk::pose_t pose);
+	Item(Client *client, TypeInfo &itemTypeInfo, sk::pose_t transform);
 	virtual ~Item();
 
 	std::vector<uint8_t> getData(Client *callingClient, flexbuffers::Reference data, bool returnValue);

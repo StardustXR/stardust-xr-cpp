@@ -19,7 +19,7 @@ double RootInterface::prevFrameTime;
 double RootInterface::frameTime;
 double RootInterface::delta;
 
-RootInterface::RootInterface(Client *client) : Spatial(client, nullptr, vec3_zero, quat_identity, vec3_one, false, false, false, false) {
+RootInterface::RootInterface(Client *client) : Spatial(client, nullptr, matrix_identity, false, false, false, false) {
 	this->addChild("data",        new DataInterface(client));
 	this->addChild("drawable",    new DrawableInterface(client));
 	this->addChild("field",       new FieldInterface(client));

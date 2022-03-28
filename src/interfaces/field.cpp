@@ -40,7 +40,7 @@ std::vector<uint8_t> FieldInterface::createBoxField(Client *, flexbuffers::Refer
 		flexSize[2].AsFloat()
 	};
 
-	BoxField *field = new BoxField(client, spatialParent, position, rotation, size);
+	BoxField *field = new BoxField(client, spatialParent, pose_t{position, rotation}, size);
 	this->addChild(name, field);
 
 	return std::vector<uint8_t>();
@@ -68,7 +68,7 @@ std::vector<uint8_t> FieldInterface::createCylinderField(Client *, flexbuffers::
 		flexRotation[3].AsFloat()
 	};
 
-	CylinderField *field = new CylinderField(client, spatialParent, origin, rotation, length, radius);
+	CylinderField *field = new CylinderField(client, spatialParent, pose_t{origin, rotation}, length, radius);
 	this->addChild(name, field);
 
 	return std::vector<uint8_t>();

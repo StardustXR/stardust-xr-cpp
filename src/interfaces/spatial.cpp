@@ -47,7 +47,7 @@ std::vector<uint8_t> SpatialInterface::createSpatial(Client *callingClient, flex
 		flexScale[2].AsFloat()
 	};
 
-	Spatial *spatial = new Spatial(client, spatialParent, position, rotation, scale, translatable, rotatable, scalable, zoneable);
+	Spatial *spatial = new Spatial(client, spatialParent, matrix_trs(position, rotation, scale), translatable, rotatable, scalable, zoneable);
 	children["spatial"]->addChild(name, spatial);
 
 	return std::vector<uint8_t>();
@@ -75,7 +75,7 @@ std::vector<uint8_t> SpatialInterface::createZone(Client *callingClient, flexbuf
 		flexRotation[3].AsFloat()
 	};
 
-	Zone *zone = new Zone(client, spatialParent, position, rotation, field, callbackPath, callbackMethod);
+	Zone *zone = new Zone(client, spatialParent, pose_t{position, rotation}, field, callbackPath, callbackMethod);
 	children["zone"]->addChild(name, zone);
 
 	return std::vector<uint8_t>();

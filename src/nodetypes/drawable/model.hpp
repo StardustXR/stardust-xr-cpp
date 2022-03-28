@@ -10,7 +10,7 @@ namespace StardustXRServer {
 
 class Model : public Drawable {
 public:
-	Model(Client *client, std::string modelPath, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, sk::vec3 scale);
+	Model(Client *client, std::string modelPath, Spatial *spatialParent, matrix transform);
 	virtual ~Model();
 
 	void draw();

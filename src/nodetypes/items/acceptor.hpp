@@ -9,7 +9,7 @@ namespace StardustXRServer {
 
 class ItemAcceptor : public Spatial {
 public:
-	ItemAcceptor(Client *client, Spatial *spatialParent, vec3 position, quat rotation, Item::TypeInfo *typeInfo, Field *field, std::string callbackPath, std::string callbackMethod);
+	ItemAcceptor(Client *client, Spatial *spatialParent, sk::pose_t transform, Item::TypeInfo *typeInfo, Field *field, std::string callbackPath, std::string callbackMethod);
 	~ItemAcceptor();
 
 	NodeRef field;

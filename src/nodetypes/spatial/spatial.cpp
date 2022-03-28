@@ -13,11 +13,11 @@ namespace StardustXRServer {
 
 Registry<Spatial> Spatial::spatials;
 
-Spatial::Spatial(Client *client, matrix transformMatrix) : Node(client, false) {
-	setTransformMatrix(transformMatrix);
+Spatial::Spatial(Client *client, matrix transform) : Node(client, false) {
+	setTransformMatrix(transform);
 }
-Spatial::Spatial(Client *client, Spatial *spatialParent, matrix transformMatrix, bool translatable, bool rotatable, bool scalable, bool zoneable) :
-		Spatial(client, transformMatrix) {
+Spatial::Spatial(Client *client, Spatial *spatialParent, matrix transform, bool translatable, bool rotatable, bool scalable, bool zoneable) :
+		Spatial(client, transform) {
 	this->spatialParent = spatialParent;
 	this->translatable = translatable;
 	this->rotatable = rotatable;
@@ -44,8 +44,8 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, matrix transformMatrix,
 
 	spatials.add(this);
 }
-Spatial::Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable) :
-	Spatial(client, spatialParent, matrix_trs(position, rotation, scale), translatable, rotatable, scalable, zoneable) {}
+Spatial::Spatial(Client *client, Spatial *spatialParent, pose_t transform, bool translatable, bool rotatable, bool scalable, bool zoneable) :
+	Spatial(client, spatialParent, matrix_trs(transform.position, transform.orientation), translatable, rotatable, scalable, zoneable) {}
 Spatial::~Spatial() {
 	spatials.remove(this);
 }

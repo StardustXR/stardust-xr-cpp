@@ -10,8 +10,8 @@ namespace StardustXRServer {
 
 Registry<Zone> Zone::zones;
 
-Zone::Zone(Client *client, Spatial *spatialParent, vec3 position, quat rotation, Field *field, std::string callbackPath, std::string callbackMethod) :
-Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
+Zone::Zone(Client *client, Spatial *spatialParent, pose_t transform, Field *field, std::string callbackPath, std::string callbackMethod) :
+Spatial(client, spatialParent, transform, true, true, false, false),
 callback({client, callbackPath, callbackMethod}) {
 	this->field = field;
 

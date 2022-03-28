@@ -8,7 +8,8 @@ namespace StardustXRServer {
 
 Registry<InputMethod> InputMethod::inputMethods;
 
-InputMethod::InputMethod(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, bool rotatable) : Spatial(client, spatialParent, position, rotation, vec3_one, true, rotatable, false, false) {
+InputMethod::InputMethod(Client *client, Spatial *spatialParent, pose_t transform, bool rotatable) :
+Spatial(client, spatialParent, transform, true, rotatable, false, false) {
 	inputMethods.add(this);
 }
 InputMethod::~InputMethod() {

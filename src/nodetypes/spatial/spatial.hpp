@@ -11,9 +11,9 @@ class Zone;
 
 class Spatial : public Node {
 public:
-	Spatial(Client *client, matrix transformMatrix);
-	Spatial(Client *client, Spatial *spatialParent, matrix transformMatrix, bool translatable, bool rotatable, bool scalable, bool zoneable);
-	Spatial(Client *client, Spatial *spatialParent, vec3 position, quat rotation, vec3 scale, bool translatable, bool rotatable, bool scalable, bool zoneable);
+	Spatial(Client *client, matrix transform);
+	Spatial(Client *client, Spatial *spatialParent, pose_t transform, bool translatable, bool rotatable, bool scalable, bool zoneable);
+	Spatial(Client *client, Spatial *spatialParent, matrix transform, bool translatable, bool rotatable, bool scalable, bool zoneable);
 	static Registry<Spatial> spatials;
 	~Spatial();
 

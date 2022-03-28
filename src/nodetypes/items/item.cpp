@@ -8,8 +8,8 @@
 
 namespace StardustXRServer {
 
-Item::Item(Client *client, TypeInfo &itemTypeInfo, pose_t pose) :
-	Spatial(client, nullptr, pose.position, pose.orientation, vec3_one, true, true, false, false),
+Item::Item(Client *client, TypeInfo &itemTypeInfo, pose_t transform) :
+	Spatial(client, nullptr, transform, true, true, false, false),
 	itemTypeInfo(&itemTypeInfo) {
 
 	STARDUSTXR_NODE_METHOD("getData", &Item::getData)

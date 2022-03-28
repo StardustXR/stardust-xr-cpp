@@ -6,8 +6,8 @@
 
 namespace StardustXRServer {
 
-ItemAcceptor::ItemAcceptor(Client *client, Spatial *spatialParent, vec3 position, quat rotation, Item::TypeInfo *typeInfo, Field *field, std::string callbackPath, std::string callbackMethod) :
-	Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
+ItemAcceptor::ItemAcceptor(Client *client, Spatial *spatialParent, pose_t transform, Item::TypeInfo *typeInfo, Field *field, std::string callbackPath, std::string callbackMethod) :
+	Spatial(client, spatialParent, transform, true, true, false, false),
 	field(field),
 	typeInfo(typeInfo),
 	callbackPath(callbackPath),

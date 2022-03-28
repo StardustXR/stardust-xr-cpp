@@ -81,7 +81,7 @@ std::vector<uint8_t> InputInterface::registerInputHandler(Client *callingClient,
 	};
 	Field *field = client->scenegraph.findNode<Field>(flexFieldPath);
 
-	InputHandler *handler = new InputHandler(client, spatialParent, pos, rot, field, callbackPath, callbackMethod);
+	InputHandler *handler = new InputHandler(client, spatialParent, pose_t{pos, rot}, field, callbackPath, callbackMethod);
 	children["handler"]->addChild(name, handler);
 
 	return std::vector<uint8_t>();

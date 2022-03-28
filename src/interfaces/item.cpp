@@ -114,7 +114,7 @@ std::vector<uint8_t> ItemInterface::createItemAcceptor(Client *callingClient, fl
 		flexRot[3].AsFloat()
 	};
 
-	ItemAcceptor *acceptor = new ItemAcceptor(client, space, pos, rot, info, field, callbackPath, callbackMethod);
+	ItemAcceptor *acceptor = new ItemAcceptor(client, space, pose_t{pos, rot}, info, field, callbackPath, callbackMethod);
 	children["acceptor"]->addChild(name, acceptor);
 
 	return std::vector<uint8_t>();

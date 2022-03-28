@@ -3,7 +3,7 @@
 
 namespace StardustXRServer {
 
-PointerInput::PointerInput(Client *client) : InputMethod(client, nullptr, vec3_zero, quat_identity, true) {}
+PointerInput::PointerInput(Client *client) : InputMethod(client, nullptr, pose_identity, true) {}
 
 PointerInput::~PointerInput() {}
 

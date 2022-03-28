@@ -7,7 +7,7 @@ namespace StardustXRServer {
 
 class NonSpatialSender : public Spatial {
 public:
-	NonSpatialSender(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation);
+	NonSpatialSender(Client *client, Spatial *spatialParent, sk::pose_t pose);
 	static Registry<NonSpatialSender> senders;
 	~NonSpatialSender();
 

@@ -6,7 +6,8 @@
 using namespace StardustXR;
 namespace StardustXRServer {
 
-Field::Field(Client *client, Spatial *spatialParent, vec3 position, quat rotation, bool rotatable) : Spatial(client, spatialParent, position, rotation, vec3_one, true, rotatable, false, false) {
+Field::Field(Client *client, Spatial *spatialParent, pose_t transform, bool rotatable) :
+Spatial(client, spatialParent, transform, true, rotatable, false, false) {
 	STARDUSTXR_NODE_METHOD("distance",     static_cast<std::vector<uint8_t>(Field::*)(Client *, flexbuffers::Reference, bool)>(&Field::distance))
 	STARDUSTXR_NODE_METHOD("normal",       static_cast<std::vector<uint8_t>(Field::*)(Client *, flexbuffers::Reference, bool)>(&Field::normal))
 	STARDUSTXR_NODE_METHOD("closestPoint", static_cast<std::vector<uint8_t>(Field::*)(Client *, flexbuffers::Reference, bool)>(&Field::closestPoint))

@@ -36,7 +36,7 @@ std::vector<uint8_t> DataInterface::createNonSpatialSender(Client *, flexbuffers
 		flexRot[3].AsFloat()
 	};
 
-	NonSpatialSender *sender = new NonSpatialSender(client, space, pos, rot);
+	NonSpatialSender *sender = new NonSpatialSender(client, space, pose_t{pos, rot});
 	children["sender"]->addChild(name, sender);
 
 	return std::vector<uint8_t>();
@@ -64,7 +64,7 @@ std::vector<uint8_t> DataInterface::createNonSpatialReceiver(Client *, flexbuffe
 		flexRotation[3].AsFloat()
 	};
 
-	NonSpatialReceiver *receiver = new NonSpatialReceiver(client, spatialParent, position, rotation, field, callbackPath, callbackMethod);
+	NonSpatialReceiver *receiver = new NonSpatialReceiver(client, spatialParent, pose_t{position, rotation}, field, callbackPath, callbackMethod);
 	children["receiver"]->addChild(name, receiver);
 
 	return std::vector<uint8_t>();

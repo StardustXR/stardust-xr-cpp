@@ -16,8 +16,8 @@ namespace StardustXRServer {
 
 Registry<InputHandler> InputHandler::inputHandlers;
 
-InputHandler::InputHandler(Client *client, Spatial *spatialParent, sk::vec3 position, sk::quat rotation, Field *field, std::string callbackPath, std::string callbackMethod) :
-Spatial(client, spatialParent, position, rotation, vec3_one, true, true, false, false),
+InputHandler::InputHandler(Client *client, Spatial *spatialParent, pose_t transform, Field *field, std::string callbackPath, std::string callbackMethod) :
+Spatial(client, spatialParent, transform, true, true, false, false),
 field(field),
 callback({client, callbackPath, callbackMethod}) {
 	inputHandlers.add(this);
