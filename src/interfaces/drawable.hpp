@@ -13,6 +13,7 @@ public:
 	static void updateEnvironment();
 
 	std::vector<uint8_t> createModelFromFile(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> createText(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setSkytex(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setSkylight(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
