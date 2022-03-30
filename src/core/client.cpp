@@ -14,14 +14,6 @@ pid(getPID(fd)),
 messenger(this, fd),
 scenegraph(this),
 manager(&manager) {
-
-	if(pid > 0) {
-		if(manager.pidCache.find(pid) != manager.pidCache.end())
-			scenegraph.root.setTransformMatrix(manager.pidCache[pid]);
-
-		manager.pidCache.erase(pid);
-	}
-
 	clientNumber = clientCount;
 	clientCount++;
 }

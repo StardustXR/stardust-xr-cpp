@@ -19,9 +19,6 @@ public:
 
 	void callClientsDebug();
 
-	std::mutex pidCacheMutex;
-	std::map<pid_t, sk::matrix> pidCache;
-
 protected:
 	std::mutex connectedClientsMutex;
 	std::vector<int> newlyConnectedClients;
