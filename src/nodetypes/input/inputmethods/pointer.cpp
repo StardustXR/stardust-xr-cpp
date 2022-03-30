@@ -21,7 +21,7 @@ float PointerInput::distanceTo(InputHandler *handler) {
 		return std::numeric_limits<float>::max();
 	RayMarchResult rayInfo = march(handler->field.ptr());
 
-	datamap["deepestPointDistance"] = rayInfo.deepestDistance;
+	deepestPointDistance = rayInfo.deepestDistance;
 	return rayInfo.distance;
 }
 
@@ -76,6 +76,10 @@ void PointerInput::updateInput(InputData *data, InputHandler *handler) {
 	pointerInput->mutable_deepest_point()->mutate_x(deepestPoint.x);
 	pointerInput->mutable_deepest_point()->mutate_y(deepestPoint.y);
 	pointerInput->mutable_deepest_point()->mutate_z(deepestPoint.z);
+}
+
+void PointerInput::serializeData(flexbuffers::Builder &fbb) {
+	fbb.Float("deepestPointDistance", deepestPointDistance);
 }
 
 } // namespace StardustXRServer

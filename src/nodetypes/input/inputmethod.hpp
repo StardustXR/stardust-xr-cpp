@@ -16,20 +16,13 @@ public:
 	static Registry<InputMethod> inputMethods;
 	virtual ~InputMethod();
 
-	std::vector<uint8_t> modifyDatamap(Client *callingClient, flexbuffers::Reference data, bool returnValue);
-
 	virtual float distanceTo(InputHandler *handler) = 0;
 	virtual InputDataRaw type() = 0;
 	virtual flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler) = 0;
-	virtual void	 updateInput(InputData *data, InputHandler *handler) = 0;
-	virtual std::vector<uint8_t> serializeDatamap();
+	virtual void updateInput(InputData *data, InputHandler *handler) = 0;
 
-	typedef std::variant<bool, int32_t, float, sk::vec2, sk::vec3, std::string> DatamapVariant;
-	std::map<std::string, DatamapVariant> datamap;
-
-protected:
-	DatamapVariant flexRefToVar(flexbuffers::Reference ref);
-	void varToMapFlex(flexbuffers::Builder &fbb, std::string key, InputMethod::DatamapVariant value);
+	std::vector<uint8_t> serializeDatamap();
+	virtual void serializeData(flexbuffers::Builder &fbb) = 0;
 };
 
 } // namespace StardustXRServer

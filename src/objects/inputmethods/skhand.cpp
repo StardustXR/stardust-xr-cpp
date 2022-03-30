@@ -28,11 +28,14 @@ void SKHandInput::update() {
 		hand->wrist.orientation,
 		vec3_magnitude(hand->fingers[0][0].position - hand->fingers[4][0].position) * 0.5f
 	};
+}
 
-	datamap["isLeft"] = handed == handed_left;
-	datamap["pinchDistance"] = vec3_magnitude(hand->fingers[0][4].position - hand->fingers[1][4].position);
-	datamap["pinchStrength"] = hand->pinch_state & button_state_active ? 1.0f : 0.0f;
-	datamap["grabStrength"] = hand->grip_state & button_state_active ? 1.0f : 0.0f;
+void SKHandInput::serializeData(flexbuffers::Builder &fbb) {
+	HandInput::serializeData(fbb);
+	fbb.Bool("isLeft", handed == handed_left);
+	fbb.Float("pinchDistance", vec3_magnitude(hand->fingers[0][4].position - hand->fingers[1][4].position));
+	fbb.Float("pinchStrength", hand->pinch_state & button_state_active);
+	fbb.Float("grabStrength", hand->grip_state & button_state_active);
 }
 
 } // namespace StardustXRServer

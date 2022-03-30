@@ -10,6 +10,7 @@ public:
 	virtual ~SKHandInput();
 
 	void update();
+	void serializeData(flexbuffers::Builder &fbb);
 protected:
 	handed_ handed = handed_left;
 	const hand_t *hand;

@@ -9,6 +9,7 @@ public:
 	FlatscreenPointer(Client *client);
 
 	void update();
+	void serializeData(flexbuffers::Builder &fbb);
 };
 
 } // namespace StardustXRServer

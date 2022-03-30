@@ -77,5 +77,6 @@ void HandInput::updateInput(InputData *data, InputHandler *handler) {
 		updateSpaceFlexJoint(handler, elbowJoint, handInput->mutable_elbow());
 }
 
+void HandInput::serializeData(flexbuffers::Builder &fbb) {}
 
 } // namespace StardustXRServer

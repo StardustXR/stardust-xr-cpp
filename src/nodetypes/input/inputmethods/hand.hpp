@@ -24,6 +24,7 @@ public:
 	InputDataRaw type();
 	flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler);
 	void updateInput(InputData *data, InputHandler *handler);
+	virtual void serializeData(flexbuffers::Builder &fbb);
 protected:
 	sk::vec3 flexToSK(StardustXR::vec3 flex) {
 		return {

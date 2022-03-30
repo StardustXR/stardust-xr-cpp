@@ -3,29 +3,33 @@
 
 namespace StardustXRServer {
 
-FlatscreenPointer::FlatscreenPointer(Client *client) : PointerInput(client) {
-	datamap["select"] = 0.0f;
-	datamap["grab"] = 0.0f;
-	datamap["scroll"] = vec2{0, 0};
-
-	datamap["type"] = "mouse";
-}
+FlatscreenPointer::FlatscreenPointer(Client *client) : PointerInput(client) {}
 
 void FlatscreenPointer::update() {
 	ray_t mouseRay;
 	if(ray_from_mouse(input_mouse()->pos, mouseRay)) {
 		transform = matrix_trs(mouseRay.pos, quat_lookat(vec3_zero, mouseRay.dir));
-
-		datamap["left"]   = (input_key(sk::key_mouse_left)   & button_state_active) ? 1.0f : 0.0f;
-		datamap["middle"] = (input_key(sk::key_mouse_center) & button_state_active) ? 1.0f : 0.0f;
-		datamap["right"]  = (input_key(sk::key_mouse_right)  & button_state_active) ? 1.0f : 0.0f;
-
-		datamap["select"] = datamap["left"];
-		datamap["rotate"] = datamap["middle"];
-		datamap["context"] = datamap["right"];
-
-		datamap["scroll"] = vec2{0, input_mouse()->scroll_change / 120.0f};
 	}
+}
+
+void FlatscreenPointer::serializeData(flexbuffers::Builder &fbb) {
+	fbb.String("type", "mouse");
+
+	bool left = input_key(sk::key_mouse_left) & button_state_active;
+	bool middle = input_key(sk::key_mouse_center) & button_state_active;
+	bool right = input_key(sk::key_mouse_right) & button_state_active;
+
+	fbb.Bool("left", left);
+	fbb.Bool("middle", middle);
+	fbb.Bool("right", right);
+	fbb.TypedVector("scroll", [&]() {
+		fbb.Float(0);
+		fbb.Float(input_mouse()->scroll_change / 120.0f);
+	});
+
+	fbb.Bool("select", left);
+	fbb.Bool("rotate", middle);
+	fbb.Bool("context", right);
 }
 
 } // namespace StardustXRServer
