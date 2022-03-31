@@ -50,23 +50,4 @@ std::vector<uint8_t> SpatialInterface::createZone(Client *callingClient, flexbuf
 	return std::vector<uint8_t>();
 }
 
-void SpatialInterface::updateZones() {
-	for(Spatial *spatial : Spatial::spatials.list()) {
-		if(spatial->zoneable && spatial->getEnabled()) {
-			float spatialDistance = spatial->zone ? spatial->zone->field->distance(spatial, vec3_zero) : 1.0f;
-			for(Zone *zone : Zone::zones.list()) {
-				if(zone->field == nullptr || zone == spatial || spatial == zone->field)
-					continue;
-				float distance = zone->field->distance(spatial, vec3_zero);
-				if(distance < 0 && distance <= spatialDistance) {
-					zone->addSpatial(spatial);
-				}
-			}
-		}
-	}
-	for(Zone *zone : Zone::zones.list()) {
-		zone->sendZoneSignals();
-	}
-}
-
 } // namespace StardustXRServer

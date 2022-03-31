@@ -19,16 +19,9 @@ public:
 
 	std::vector<uint8_t> getTransform                (Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setTransform                (Client *callingClient, flexbuffers::Reference data, bool returnValue);
-
 	std::vector<uint8_t> setSpatialParentFlex        (Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setSpatialParentInPlaceFlex (Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setZoneable                 (Client *callingClient, flexbuffers::Reference data, bool returnValue);
-
-	// Disable parts of this spatialnode (e.g. fields should not be scalable)
-	bool translatable = true;
-	bool rotatable    = true;
-	bool scalable     = true;
-	bool zoneable     = false;
 
 	// Matrix get operations
 	static sk::matrix spaceToSpaceMatrix(Spatial *from, Spatial *to);
@@ -38,12 +31,13 @@ public:
 	sk::matrix spaceToLocalMatrix(Spatial *space);
 
 	// Spatial heirarchy relationships
-	Zone *zone = nullptr;
-	Spatial *spatialParent = nullptr;
-	Spatial *originalSpatialParent = nullptr;
+	Spatial *getSpatialParent();
 	bool setSpatialParent(Spatial *spatial);
 	bool setSpatialParentInPlace(Spatial *spatial);
 	void setTransformMatrix(sk::matrix mat);
+
+	// Zone stuffs
+	TypedNodeRef<Zone> zone;
 
 	sk::vec3 spaceToLocalPoint    (Spatial *space, sk::vec3 point    ) { return matrix_transform_pt  (spaceToLocalMatrix(space), point    ); }
 	sk::vec3 spaceToLocalDirection(Spatial *space, sk::vec3 direction) { return matrix_transform_dir (spaceToLocalMatrix(space), direction); }
@@ -55,7 +49,15 @@ public:
 protected:
 	sk::matrix transform = sk::matrix_identity;
 
+	// Disable parts of this spatialnode (e.g. fields should not be scalable)
+	bool translatable = true;
+	bool rotatable    = true;
+	bool scalable     = true;
+
 	static std::map<uint32_t, sk::matrix> anchors;
+
+private:
+	TypedNodeRef<Spatial> spatialParent;
 };
 
 } // namespace StardustXRServer

@@ -11,6 +11,7 @@ using namespace sk;
 namespace StardustXRServer {
 
 Registry<Zone> Zone::zones;
+Registry<Spatial> Zone::zoneableSpatials;
 
 Zone::Zone(Client *client, Spatial *spatialParent, pose_t transform, Field *field, std::string callbackPath, std::string callbackMethod) :
 Spatial(client, spatialParent, transform, true, true, false, false),
@@ -18,72 +19,88 @@ callback({client, callbackPath, callbackMethod}) {
 	this->field = field;
 
 	STARDUSTXR_NODE_METHOD("isCaptured", &Zone::isCaptured)
-	STARDUSTXR_NODE_METHOD("capture", &Zone::capture)
-	STARDUSTXR_NODE_METHOD("release", &Zone::release)
+	STARDUSTXR_NODE_METHOD("capture", &Zone::captureFlex)
+	STARDUSTXR_NODE_METHOD("release", &Zone::releaseFlex)
 
 	zones.add(this);
 }
 Zone::~Zone() {
-	for(auto &childSet : children) {
-		Alias *child = dynamic_cast<Alias *>(childSet.second.get());
-		if(child != nullptr) {
-			Spatial *childSpatial = child->original.ptr<Spatial>();
-			releaseSpatial(childSpatial);
-		}
+	for(auto capturedSpatial : captured) {
+		release(capturedSpatial.first);
 	}
 	zones.remove(this);
 }
 
 std::vector<uint8_t> Zone::isCaptured(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	Alias *spatialAlias = dynamic_cast<Alias *>(this->children[data.AsString().str()].get());
-	if(spatialAlias == nullptr)
-		return StardustXR::FlexbufferFromArguments(FLEX_ARG(FLEX_NULL));
-	Spatial *spatialOriginal = spatialAlias->original.ptr<Spatial>();
-	return StardustXR::FlexbufferFromArguments(FLEX_ARG(FLEX_BOOL(spatialOriginal->zone != nullptr)));
-}
-
-std::vector<uint8_t> Zone::capture(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	std::string uuid = data.AsString().str();
-	Alias *spatialAlias = dynamic_cast<Alias *>(this->children[uuid].get());
-	if(spatialAlias == nullptr)
-		return std::vector<uint8_t>();
+	return FLEX_SINGLE(FLEX_BOOL(captured[uuid]));
+}
 
-	Spatial *spatialOriginal = spatialAlias->original.ptr<Spatial>();
-	spatialOriginal->zone = this;
-	spatialOriginal->originalSpatialParent = spatialOriginal->spatialParent;
-	spatialOriginal->setSpatialParentInPlace(this);
+std::vector<uint8_t> Zone::captureFlex(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	std::string uuid = data.AsString().str();
+	capture(uuid);
 
 	return std::vector<uint8_t>();
 }
-std::vector<uint8_t> Zone::release(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	Alias *spatialAlias = dynamic_cast<Alias *>(this->children[data.AsString().str()].get());
-	if(spatialAlias == nullptr)
-		return std::vector<uint8_t>();
+std::vector<uint8_t> Zone::releaseFlex(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	std::string uuid = data.AsString().str();
+	release(uuid);
 
-	Spatial *spatialOriginal = spatialAlias->original.ptr<Spatial>();
-	releaseSpatial(spatialOriginal);
 	return std::vector<uint8_t>();
 }
 
-void Zone::releaseSpatial(Spatial *spatial) {
-	if(spatial && spatial->zone == this) {
-		spatial->zone = nullptr;
-		spatial->setSpatialParentInPlace(spatial->originalSpatialParent);
+void Zone::capture(std::string uuid) {
+	TypedNodeRef<Spatial> spatial = inRange[uuid];
+	if(spatial && !this->captured[uuid]) {
+		this->captured[uuid] = {
+			spatial,
+			spatial->getSpatialParent()
+		};
+		spatial->zone = this;
+		spatial->setSpatialParentInPlace(this);
 	}
 }
+void Zone::release(std::string uuid) {
+	CapturedSpatial captured = this->captured[uuid];
+	if(captured) {
+		Spatial *newParent = captured.originalParent ? captured.originalParent.ptr() : &captured.spatial->client->scenegraph.root;
+		captured.spatial->zone = nullptr;
+		captured.spatial->setSpatialParentInPlace(newParent);
+	}
+	this->captured.erase(uuid);
+}
 
-void Zone::addSpatial(Spatial *spatial) {
-	spatials.add(spatial);
+void Zone::queueSpatial(Spatial *spatial) {
+	inRangeSpatials.add(spatial);
+}
+
+void Zone::updateZones() {
+	// Loop through all spatials in the zoneable registry that are enabled
+	for(Spatial *spatial : Zone::zoneableSpatials.list(true)) {
+		// Get the distance between the spatial and its zone if it has one, otherwise return 1 ensuring any zone will be closer
+		float oldZoneDistance = spatial->zone ? spatial->zone->field->distance(spatial, vec3_zero) : 1.0f;
+		// Loop through all zones in the zone registry that are enabled
+		for(Zone *zone : Zone::zones.list(true)) {
+			// Try the next zone if the zone doesn't have a field, or the zone tries to include itself/its field
+			if(!zone->field || zone == spatial || spatial == zone->field)
+				continue;
+			// Get the distance between the spatial's origin and this zone
+			float distance = zone->field->distance(spatial, vec3_zero);
+			// Only queue up spatials that are inside the zone or closer to this zone than their currently captured zone
+			if(distance < 0 && distance <= oldZoneDistance)
+				zone->queueSpatial(spatial);
+		}
+	}
+	for(Zone *zone : Zone::zones.list()) {
+		zone->sendZoneSignals();
+	}
 }
 
 void Zone::sendZoneSignals() {
 	std::vector<Spatial *> enter;
 	std::vector<Spatial *> leave;
-	std::vector<Spatial *> spatials = this->spatials.list();
-	std::vector<Spatial *> oldSpatials = this->oldSpatials.list();
-//	std::sort(spatials.begin(), spatials.end(), [](Spatial* a, Spatial* b) {
-//		return ((std::uintptr_t) a) < ((std::uintptr_t) b);
-//	});
+	std::vector<Spatial *> spatials = this->inRangeSpatials.list();
+	std::vector<Spatial *> oldSpatials = this->oldInRangeSpatials.list();
 
 	std::set_difference(spatials.begin(), spatials.end(),
 						oldSpatials.begin(), oldSpatials.end(),
@@ -93,39 +110,39 @@ void Zone::sendZoneSignals() {
 						std::inserter(leave, leave.begin()));
 
 	callback.signal(
-		[&](flexbuffers::Builder &fbb) {
-			fbb.Vector([&] {
-				fbb.TypedVector([&] {
-					for(Spatial *enterNode : enter) {
-						std::string uuid = std::to_string(enterNode->id);
-						addChild(uuid, new Alias(client, enterNode, {
-							"move",
-							"rotate",
-							"scale",
-							"setOrigin",
-							"setOrientation",
-							"setScale",
-							"setPose",
-							"setTransform"
-						}));
-						fbb.String(uuid);
-					}
-				});
-				fbb.TypedVector([&] {
-					for(Spatial *leaveNode : leave) {
-						releaseSpatial(leaveNode);
-						std::string uuid = std::to_string(leaveNode->id);
-						if(children[uuid] != nullptr)
-							children.erase(uuid);
-						fbb.String(uuid);
-					}
-				});
-			});
-		}
+		FLEX_ARGS(
+			FLEX_TYPED_VEC(
+				for(Spatial *enterNode : enter) {
+					std::string uuid = std::to_string(enterNode->id);
+					inRange[uuid] = enterNode;
+					addChild(uuid, new Alias(client, enterNode, {
+						"move",
+						"rotate",
+						"scale",
+						"setOrigin",
+						"setOrientation",
+						"setScale",
+						"setPose",
+						"setTransform"
+					}));
+					FLEX_STRING(uuid);
+				}
+			)
+			FLEX_TYPED_VEC(
+				for(Spatial *leaveNode : leave) {
+					std::string uuid = std::to_string(leaveNode->id);
+					release(uuid);
+					inRange.erase(uuid);
+					if(children[uuid] != nullptr)
+						children.erase(uuid);
+					FLEX_STRING(uuid);
+				}
+			)
+		)
 	);
 
-	oldSpatials = spatials;
-	spatials.clear();
+	oldInRangeSpatials = inRangeSpatials;
+	inRangeSpatials.clear();
 }
 
 }

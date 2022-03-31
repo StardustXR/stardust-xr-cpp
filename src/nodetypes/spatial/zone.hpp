@@ -11,19 +11,34 @@ public:
 	Zone(Client *client, Spatial *spatialParent, sk::pose_t transform, Field *field, std::string callbackPath, std::string callbackMethod);
 	~Zone();
 	static Registry<Zone> zones;
-	Field *field;
+	TypedNodeRef<Field> field;
 
 	std::vector<uint8_t> isCaptured(Client *callingClient, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> capture(Client *callingClient, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> release(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> captureFlex(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> releaseFlex(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
-	void releaseSpatial(Spatial *spatial);
+	void capture(std::string uuid);
+	void release(std::string uuid);
 
-	void addSpatial(Spatial *spatial);
+	void queueSpatial(Spatial *spatial);
 	void sendZoneSignals();
+
+	static Registry<Spatial> zoneableSpatials;
+	static void updateZones();
 private:
-	Registry<Spatial> oldSpatials;
-	Registry<Spatial> spatials;
+	struct CapturedSpatial {
+		TypedNodeRef<Spatial> spatial;
+		TypedNodeRef<Spatial> originalParent;
+
+		operator bool() {
+			return spatial;
+		}
+	};
+
+	Registry<Spatial> oldInRangeSpatials;
+	Registry<Spatial> inRangeSpatials;
+	std::map<std::string, TypedNodeRef<Spatial>> inRange;
+	std::map<std::string, CapturedSpatial> captured;
 
 	Callback callback;
 };

@@ -1,11 +1,12 @@
 #include "spatial.hpp"
-#include "../../globals.h"
 
+#include "../../globals.h"
 #include "../../core/client.hpp"
 #include "../../core/scenegraph.hpp"
 #include "../../interfaces/spatial.hpp"
 #include "../../nodetypes/core/alias.hpp"
-#include "stereokit.h"
+#include "../../util/random.hpp"
+
 #include <string>
 #include <vector>
 
@@ -14,6 +15,7 @@ using namespace sk;
 namespace StardustXRServer {
 
 Registry<Spatial> Spatial::spatials;
+std::map<uint32_t, sk::matrix> Spatial::anchors;
 
 Spatial::Spatial(Client *client, matrix transform) : Node(client, false) {
 	setTransformMatrix(transform);
@@ -24,19 +26,10 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, matrix transform, bool 
 	this->translatable = translatable;
 	this->rotatable = rotatable;
 	this->scalable = scalable;
-	this->zoneable = zoneable;
 
-//	STARDUSTXR_NODE_METHOD("move", &Spatial::move)
-//	STARDUSTXR_NODE_METHOD("rotate", &Spatial::rotate)
-//	STARDUSTXR_NODE_METHOD("scale", &Spatial::scaleThis)
+	STARDUSTXR_NODE_METHOD("createLaunchAnchor", &Spatial::createLaunchAnchor)
 
 	STARDUSTXR_NODE_METHOD("getTransform", &Spatial::getTransform)
-
-//	STARDUSTXR_NODE_METHOD("setOrigin", &Spatial::setOrigin)
-//	STARDUSTXR_NODE_METHOD("setOrientation", &Spatial::setOrientation)
-//	STARDUSTXR_NODE_METHOD("setScale", &Spatial::setScale)
-
-//	STARDUSTXR_NODE_METHOD("setPose", &Spatial::setPose)
 	STARDUSTXR_NODE_METHOD("setTransform", &Spatial::setTransform)
 
 	STARDUSTXR_NODE_METHOD("setSpatialParent", &Spatial::setSpatialParentFlex)
@@ -45,10 +38,13 @@ Spatial::Spatial(Client *client, Spatial *spatialParent, matrix transform, bool 
 	STARDUSTXR_NODE_METHOD("setZoneable", &Spatial::setZoneable)
 
 	spatials.add(this);
+	if(zoneable)
+		Zone::zoneableSpatials.add(this);
 }
 Spatial::Spatial(Client *client, Spatial *spatialParent, pose_t transform, bool translatable, bool rotatable, bool scalable, bool zoneable) :
 	Spatial(client, spatialParent, matrix_trs(transform.position, transform.orientation), translatable, rotatable, scalable, zoneable) {}
 Spatial::~Spatial() {
+	Zone::zoneableSpatials.remove(this);
 	spatials.remove(this);
 }
 
@@ -86,14 +82,16 @@ std::vector<uint8_t> Spatial::getTransform(Client *callingClient, flexbuffers::R
 }
 std::vector<uint8_t> Spatial::setTransform(Client *callingClient, flexbuffers::Reference data, bool) {
 	flexbuffers::Vector flexVec = data.AsVector();
-
-	Spatial *space = callingClient->scenegraph.findNode<Spatial>(flexVec[0].AsString().str());
-	if(!space) {
-		Alias *spaceAlias = callingClient->scenegraph.findNode<Alias>(flexVec[0].AsString().str());
-		space = spaceAlias ? spaceAlias->original.ptr<Spatial>() : nullptr;
+	std::string spaceString = flexVec[0].AsString().str();
+	Spatial *space = nullptr;
+	if(spaceString == "") {
+		space = getSpatialParent();
+	} else {
+		Node *spaceNode = callingClient->scenegraph.findNode(spaceString);
+		space = dynamic_cast<Spatial *>(spaceNode) ?: dynamic_cast<Alias *>(spaceNode)->original.ptr<Spatial>();
 	}
 	if(!space)
-		space = this->spatialParent;
+		return std::vector<uint8_t>();
 
 	vec3 pos, scl;
 	quat rot;
@@ -104,7 +102,7 @@ std::vector<uint8_t> Spatial::setTransform(Client *callingClient, flexbuffers::R
 		pos.x = posFlex[0].AsFloat();
 		pos.y = posFlex[1].AsFloat();
 		pos.z = posFlex[2].AsFloat();
-		pos = matrix_transform_pt(spaceToSpaceMatrix(space, this->spatialParent), pos);
+		pos = matrix_transform_pt(spaceToSpaceMatrix(space, getSpatialParent()), pos);
 	}
 	if(rotatable && flexVec[2].IsTypedVector() && flexVec[2].AsTypedVector().size() == 4) {
 		flexbuffers::TypedVector rotFlex = flexVec[2].AsTypedVector();
@@ -112,7 +110,7 @@ std::vector<uint8_t> Spatial::setTransform(Client *callingClient, flexbuffers::R
 		rot.y = rotFlex[1].AsFloat();
 		rot.z = rotFlex[2].AsFloat();
 		rot.w = rotFlex[3].AsFloat();
-		rot = matrix_transform_quat(spaceToSpaceMatrix(space, this->spatialParent), rot);
+		rot = matrix_transform_quat(spaceToSpaceMatrix(space, getSpatialParent()), rot);
 	}
 	if(scalable && flexVec[3].IsTypedVector() && flexVec[3].AsTypedVector().size() == 3) {
 		flexbuffers::TypedVector sclFlex = flexVec[3].AsTypedVector();
@@ -158,9 +156,12 @@ std::vector<uint8_t> Spatial::setSpatialParentInPlaceFlex(Client *callingClient,
 }
 
 std::vector<uint8_t> Spatial::setZoneable(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	zoneable = data.AsBool();
-	if(!zoneable && this->zone != nullptr)
-		this->zone->releaseSpatial(this);
+	if(data.AsBool()) {
+		Zone::zoneableSpatials.add(this);
+	} else {
+		Zone::zoneableSpatials.remove(this);
+		this->zone->release(std::to_string(id));
+	}
 	return std::vector<uint8_t>();
 }
 
@@ -210,16 +211,20 @@ matrix Spatial::spaceToLocalMatrix(Spatial *space) {
 	return spaceToWorldMatrix * worldToLocalMatrix;
 }
 
+Spatial *Spatial::getSpatialParent() {
+	return spatialParent ? spatialParent.ptr() : &client->scenegraph.root;
+}
+
 bool Spatial::setSpatialParent(Spatial *spatial) {
 	if(spatial == spatialParent)
 		return false;
 
 	//Spatial parent loop protection
 	Spatial *currentParent = spatial;
-	while(currentParent->spatialParent && currentParent->spatialParent != nullptr) {
-		if(currentParent->spatialParent->id == this->id)
+	while(currentParent->getSpatialParent() && currentParent->getSpatialParent() != nullptr) {
+		if(currentParent->getSpatialParent()->id == this->id)
 			return false;
-		currentParent = currentParent->spatialParent;
+		currentParent = getSpatialParent();
 	}
 
 	spatialParent = spatial;
@@ -231,10 +236,10 @@ bool Spatial::setSpatialParentInPlace(Spatial *spatial) {
 
 	//Spatial parent loop protection
 	Spatial *currentParent = spatial;
-	while(currentParent->spatialParent && currentParent->spatialParent != nullptr) {
-		if(currentParent->spatialParent->id == this->id)
+	while(currentParent->spatialParent && currentParent->getSpatialParent() != nullptr) {
+		if(currentParent->getSpatialParent()->id == this->id)
 			return false;
-		currentParent = currentParent->spatialParent;
+		currentParent = currentParent->getSpatialParent();
 	}
 
 	setTransformMatrix(localToSpaceMatrix(spatial));

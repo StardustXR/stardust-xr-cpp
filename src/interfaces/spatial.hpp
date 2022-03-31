@@ -12,8 +12,6 @@ public:
 
 	std::vector<uint8_t> createSpatial(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> createZone(Client *callingClient, flexbuffers::Reference data, bool returnValue);
-
-	static void updateZones();
 };
 
 } // namespace StardustXRServer

@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
 		DrawableInterface::updateEnvironment();
 
 		// Process the zones
-		SpatialInterface::updateZones();
+		Zone::updateZones();
 
 		// Accept items
 		ItemInterface::updateItems();
