@@ -52,6 +52,17 @@ Spatial::~Spatial() {
 	spatials.remove(this);
 }
 
+std::vector<uint8_t> Spatial::createLaunchAnchor(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	if(!returnValue)
+		return std::vector<uint8_t>();
+
+	std::hash<uint32_t> idHasher;
+	const uint32_t hashedID = idHasher(id);
+	anchors[hashedID] = worldTransform();
+
+	return FLEX_SINGLE(FLEX_UINT(hashedID));
+}
+
 std::vector<uint8_t> Spatial::getTransform(Client *callingClient, flexbuffers::Reference data, bool) {
 	Spatial *space = callingClient->scenegraph.findNode<Spatial>(data.AsString().str());
 	if(!space) {

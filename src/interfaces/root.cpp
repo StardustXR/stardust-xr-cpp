@@ -28,6 +28,7 @@ RootInterface::RootInterface(Client *client) : Spatial(client, nullptr, matrix_i
 	this->addChild("spatial",     new SpatialInterface(client));
 
 	STARDUSTXR_NODE_METHOD("disconnect", &RootInterface::disconnect)
+	STARDUSTXR_NODE_METHOD("applyLaunchAnchor", &RootInterface::applyLaunchAnchor)
 	STARDUSTXR_NODE_METHOD("subscribeLogicStep", &RootInterface::subscribeLogicStep)
 
 	prevFrameTime = sk::time_get();
@@ -55,6 +56,14 @@ void RootInterface::sendLogicStepSignals() {
 	}
 
 	prevFrameTime = frameTime;
+}
+
+std::vector<uint8_t> RootInterface::applyLaunchAnchor(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	uint32_t anchorID = data.AsUInt32();
+	setTransformMatrix(anchors[anchorID]);
+	anchors.erase(anchorID);
+
+	return std::vector<uint8_t>();
 }
 
 std::vector<uint8_t> RootInterface::subscribeLogicStep(Client *callingClient, flexbuffers::Reference data, bool) {

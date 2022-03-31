@@ -15,6 +15,8 @@ public:
 	static Registry<Spatial> spatials;
 	~Spatial();
 
+	std::vector<uint8_t> createLaunchAnchor          (Client *callingClient, flexbuffers::Reference data, bool returnValue);
+
 	std::vector<uint8_t> getTransform                (Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setTransform                (Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
@@ -52,6 +54,8 @@ public:
 	sk::quat localToSpaceRotation (Spatial *space, sk::quat rot      ) { return matrix_transform_quat(localToSpaceMatrix(space), rot      ); }
 protected:
 	sk::matrix transform = sk::matrix_identity;
+
+	static std::map<uint32_t, sk::matrix> anchors;
 };
 
 } // namespace StardustXRServer

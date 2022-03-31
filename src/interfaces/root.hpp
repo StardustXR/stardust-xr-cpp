@@ -14,6 +14,7 @@ public:
 	~RootInterface();
 
 	static void sendLogicStepSignals();
+	std::vector<uint8_t> applyLaunchAnchor(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> subscribeLogicStep(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> disconnect(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
