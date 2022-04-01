@@ -215,35 +215,31 @@ Spatial *Spatial::getSpatialParent() {
 	return spatialParent ? spatialParent.ptr() : &client->scenegraph.root;
 }
 
+bool Spatial::isAncestorOf(Spatial *spatial) {
+	Spatial *currentParent = spatial;
+	while(currentParent->id != currentParent->client->scenegraph.root.id) {
+		if(currentParent->getSpatialParent()->id == this->id)
+			return true;
+		currentParent = currentParent->getSpatialParent();
+	}
+	return false;
+}
 bool Spatial::setSpatialParent(Spatial *spatial) {
 	if(spatial == spatialParent)
 		return false;
 
-	//Spatial parent loop protection
-	Spatial *currentParent = spatial;
-	while(currentParent->getSpatialParent() && currentParent->getSpatialParent() != nullptr) {
-		if(currentParent->getSpatialParent()->id == this->id)
-			return false;
-		currentParent = getSpatialParent();
-	}
-
-	spatialParent = spatial;
+	if(!this->isAncestorOf(spatial))
+		spatialParent = spatial;
 	return true;
 }
 bool Spatial::setSpatialParentInPlace(Spatial *spatial) {
 	if(spatial == spatialParent)
 		return false;
 
-	//Spatial parent loop protection
-	Spatial *currentParent = spatial;
-	while(currentParent->spatialParent && currentParent->getSpatialParent() != nullptr) {
-		if(currentParent->getSpatialParent()->id == this->id)
-			return false;
-		currentParent = currentParent->getSpatialParent();
+	if(!this->isAncestorOf(spatial)) {
+		setTransformMatrix(localToSpaceMatrix(spatial));
+		spatialParent = spatial;
 	}
-
-	setTransformMatrix(localToSpaceMatrix(spatial));
-	spatialParent = spatial;
 	return true;
 }
 void Spatial::setTransformMatrix(matrix mat) {

@@ -32,6 +32,7 @@ public:
 
 	// Spatial heirarchy relationships
 	Spatial *getSpatialParent();
+	bool isAncestorOf(Spatial *spatial);
 	bool setSpatialParent(Spatial *spatial);
 	bool setSpatialParentInPlace(Spatial *spatial);
 	void setTransformMatrix(sk::matrix mat);
