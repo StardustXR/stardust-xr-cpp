@@ -16,10 +16,13 @@ public:
 	std::vector<uint8_t> registerEnvironmentItemUI(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> registerPanelItemUI(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
-	std::vector<uint8_t> createItemAcceptor(Client *callingClient, flexbuffers::Reference data, bool returnValue, Item::TypeInfo *info);
-
 	std::vector<uint8_t> createEnvironmentItemAcceptor(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> createPanelItemAcceptor(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+
+private:
+	void addTypeNodes(Client *client, std::string name);
+	std::vector<uint8_t> registerItemUI(flexbuffers::Reference data, Item::TypeInfo *info);
+	std::vector<uint8_t> createItemAcceptor(flexbuffers::Reference data, Item::TypeInfo *info);
 };
 
 } // namespace StardustXRServer
