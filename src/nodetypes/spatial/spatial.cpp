@@ -160,7 +160,8 @@ std::vector<uint8_t> Spatial::setZoneable(Client *callingClient, flexbuffers::Re
 		Zone::zoneableSpatials.add(this);
 	} else {
 		Zone::zoneableSpatials.remove(this);
-		this->zone->release(std::to_string(id));
+		if(this->zone)
+			this->zone->release(std::to_string(id));
 	}
 	return std::vector<uint8_t>();
 }

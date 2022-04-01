@@ -50,8 +50,10 @@ std::vector<uint8_t> Zone::releaseFlex(Client *callingClient, flexbuffers::Refer
 }
 
 void Zone::capture(std::string uuid) {
+	if(this->inRange.count(uuid) == 0 && this->captured.count(uuid) == 0)
+		return;
 	TypedNodeRef<Spatial> spatial = inRange[uuid];
-	if(spatial && !this->captured[uuid]) {
+	if(spatial) {
 		this->captured[uuid] = {
 			spatial,
 			spatial->getSpatialParent()
@@ -61,6 +63,8 @@ void Zone::capture(std::string uuid) {
 	}
 }
 void Zone::release(std::string uuid) {
+	if(this->captured.count(uuid) == 0)
+		return;
 	CapturedSpatial captured = this->captured[uuid];
 	if(captured) {
 		Spatial *newParent = captured.originalParent ? captured.originalParent.ptr() : &captured.spatial->client->scenegraph.root;
