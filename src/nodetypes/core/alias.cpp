@@ -3,7 +3,7 @@
 namespace StardustXRServer {
 
 Alias::Alias(Client *client, Node *original, std::vector<std::string> methods) : Node(client, false), original(original) {
-	original->aliases.push_back(this);
+	original->aliases.add(this);
 
 	addMethods(methods);
 }

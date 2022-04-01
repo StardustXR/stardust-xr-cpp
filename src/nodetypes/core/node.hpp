@@ -46,7 +46,7 @@ public:
 
 	std::map<std::string, NodeMethod> methods;
 	std::map<std::string, std::unique_ptr<Node>> children;
-	std::vector<NodeRef> aliases;
+	Registry<Alias> aliases;
 protected:
 	std::atomic_bool enabled = {true};
 
