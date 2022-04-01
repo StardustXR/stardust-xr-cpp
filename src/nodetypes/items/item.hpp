@@ -16,7 +16,7 @@ public:
 		const std::string type;
 		const std::vector<std::string> aliasedMethods;
 
-		ItemUI *UI;
+		TypedNodeRef<ItemUI> UI;
 
 		Registry<Item> items;
 		Registry<ItemAcceptor> acceptors;
