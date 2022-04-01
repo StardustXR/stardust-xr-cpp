@@ -29,7 +29,7 @@ typedef struct {
 typedef struct {
 	Ray ray;
 	float distance;
-	float deepestDistance;
+	float deepestPointDistance;
 	float rayLength;
 	int raySteps;
 } RayMarchResult;
@@ -52,7 +52,7 @@ static RayMarchResult RayMarch(Ray ray, Field *field) {
 		rayPoint += rayDirection * marchDistance;
 
 		if(result.distance > distance)
-			result.deepestDistance = result.rayLength;
+			result.deepestPointDistance = result.rayLength;
 		result.distance = std::min(distance, result.distance);
 
 		result.raySteps++;

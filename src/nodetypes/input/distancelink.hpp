@@ -9,12 +9,13 @@ class InputHandler;
 
 typedef struct{
 	TypedNodeRef<InputMethod> method;
-	float distance;
+	float compareDistance;
+	float trueDistance;
 	TypedNodeRef<InputHandler> handler;
 } DistanceLink;
 
 inline bool operator<(DistanceLink &a, DistanceLink &b) {
-	return a.distance < b.distance;
+	return a.compareDistance < b.compareDistance;
 }
 
 }

@@ -16,13 +16,15 @@ RayMarchResult PointerInput::march(Field *field) {
 	return RayMarch(ray, field);
 }
 
-float PointerInput::distanceTo(InputHandler *handler) {
-	if(!handler->field)
-		return std::numeric_limits<float>::max();
+DistanceLink PointerInput::makeDistanceLink(InputHandler *handler) {
 	RayMarchResult rayInfo = march(handler->field.ptr());
-
-	deepestPointDistance = rayInfo.deepestDistance;
-	return rayInfo.distance;
+	vec2 compareDistanceTriangle = vec2 {rayInfo.deepestPointDistance, rayInfo.distance};
+	return DistanceLink{
+		.method = this,
+		.compareDistance = vec2_magnitude(compareDistanceTriangle),
+		.trueDistance = rayInfo.distance,
+		.handler = handler,
+	};
 }
 
 InputDataRaw PointerInput::type() {
@@ -37,7 +39,7 @@ flatbuffers::Offset<void> PointerInput::generateInput(flatbuffers::FlatBufferBui
 
 	if(handler->field) {
 		RayMarchResult rayInfo = march(handler->field.ptr());
-		deepestPoint = dir * rayInfo.deepestDistance + pos;
+		deepestPoint = dir * rayInfo.deepestPointDistance + pos;
 	}
 
 	StardustXR::vec3 flatPos(pos.x, pos.y, pos.z);
@@ -70,7 +72,7 @@ void PointerInput::updateInput(InputData *data, InputHandler *handler) {
 	sk::vec3 deepestPoint = pos;
 	if(handler->field) {
 		RayMarchResult rayInfo = march(handler->field.ptr());
-		deepestPoint = dir * rayInfo.deepestDistance + pos;
+		deepestPoint = dir * rayInfo.deepestPointDistance + pos;
 	}
 
 	pointerInput->mutable_deepest_point()->mutate_x(deepestPoint.x);
@@ -78,8 +80,6 @@ void PointerInput::updateInput(InputData *data, InputHandler *handler) {
 	pointerInput->mutable_deepest_point()->mutate_z(deepestPoint.z);
 }
 
-void PointerInput::serializeData(flexbuffers::Builder &fbb) {
-	fbb.Float("deepestPointDistance", deepestPointDistance);
-}
+void PointerInput::serializeData(flexbuffers::Builder &fbb) {}
 
 } // namespace StardustXRServer

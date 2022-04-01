@@ -20,7 +20,7 @@ public:
 	joint localSKToSpaceFlexJoint(Spatial *space, hand_joint_t joint);
 	void updateSpaceFlexJoint(Spatial *space, hand_joint_t joint, struct joint *updateJoint);
 
-	float distanceTo(InputHandler *handler);
+	DistanceLink makeDistanceLink(InputHandler *handler);
 	InputDataRaw type();
 	flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler);
 	void updateInput(InputData *data, InputHandler *handler);

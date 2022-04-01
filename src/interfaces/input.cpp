@@ -23,40 +23,8 @@ flatbuffers::FlatBufferBuilder InputInterface::fbb;
 InputInterface::InputInterface(Client *client) : Node(client, false) {
 	addChild("handler", new Node(client, false));
 	addChild("method", new Node(client, false));
-	addChild("global_handler", new Node(client, false));
 
-	STARDUSTXR_NODE_METHOD("getInputHandlers", &InputInterface::getInputHandlers)
 	STARDUSTXR_NODE_METHOD("registerInputHandler", &InputInterface::registerInputHandler)
-}
-
-std::vector<uint8_t> InputInterface::getInputHandlers(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	flexbuffers::Vector flexVec = data.AsVector();
-
-	//If the spacePath doesn't exist, it must be world space
-	Spatial *space = callingClient->scenegraph.findNode<Spatial>(flexVec[0].AsString().str());
-	bool excludeSelf = flexVec[1].AsBool();
-
-	return StardustXR::FlexbufferFromArguments([&](flexbuffers::Builder &fbb) {
-		fbb.Vector([&]() {
-			children["global_handler"]->children.clear();
-			for(InputHandler *handler : InputHandler::inputHandlers.list()) {
-				if(excludeSelf == false || handler->client != this->client) {
-					fbb.Vector([&] {
-						std::string uuid = std::to_string(handler->id);
-						children["global_handler"]->addChild(uuid, new Alias(client, handler, {"getActions", "runAction"}));
-						fbb.String(uuid);
-
-						fbb.TypedVector([&] {
-							sk::vec3 position = handler->localToSpacePoint(space, vec3_zero);
-							fbb.Float(position.x);
-							fbb.Float(position.y);
-							fbb.Float(position.z);
-						});
-					});
-				}
-			}
-		});
-	});
 }
 
 std::vector<uint8_t> InputInterface::registerInputHandler(Client *callingClient, flexbuffers::Reference data, bool) {
@@ -77,60 +45,34 @@ std::vector<uint8_t> InputInterface::registerInputHandler(Client *callingClient,
 }
 
 void InputInterface::processInput() {
-	std::vector<InputMethod *> inputMethods = InputMethod::inputMethods.list();
-	std::vector<InputHandler *> inputHandlers = InputHandler::inputHandlers.list();
-	const uint32_t inputMethodCount = inputMethods.size();
-	const uint32_t inputHandlerCount = inputHandlers.size();
-
-	if(inputMethodCount == 0 || inputHandlerCount == 0)
-		return;
-
-	for(auto &inputMethod : inputMethods) {
+	for(auto &inputMethod : InputMethod::inputMethods.list(true)) {
 		std::list<DistanceLink> distanceLinks;
-		for(auto &inputHandler : inputHandlers) {
-			if(!inputHandler->getEnabled() || inputHandler->field == nullptr)
-				continue;
-			distanceLinks.push_front(DistanceLink {
-				inputMethod,
-				inputMethod->distanceTo(inputHandler),
-				inputHandler
-			});
+		for(auto &inputHandler : InputHandler::inputHandlers.list(true)) {
+			if(inputHandler->field)
+				distanceLinks.push_front(inputMethod->makeDistanceLink(inputHandler));
 		}
-		if(distanceLinks.size() == 0)
+		if(distanceLinks.empty())
 			continue;
 		distanceLinks.sort();
 
-		DistanceLink closestLink = *distanceLinks.begin();
-		std::vector<uint8_t> inputData = CreateInputData(
-			fbb,
-			closestLink.method,
-			closestLink.handler
-		);
-
-		closestLink.handler.ptr()->sendInput(
-			frame,
-			distanceLinks,
-			inputData
-		);
+		DistanceLink *closestLink = &*distanceLinks.begin();
+		closestLink->handler.ptr()->sendInput(frame, distanceLinks, CreateInputData(fbb, closestLink));
 	}
 }
 
-std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuilder &fbb, TypedNodeRef<InputMethod> inputMethod, TypedNodeRef<InputHandler> inputHandler) {
-	float distance = inputMethod->distanceTo(inputHandler.ptr());
-	StardustXR::InputDataRaw inputMethodType = inputMethod->type();
-	flatbuffers::Offset<void> flatInputMethod = inputMethod->generateInput(fbb, inputHandler.ptr());
-	const std::vector<uint8_t> datamap = inputMethod->serializeDatamap();
-
-	auto inputDataOffset = CreateInputDataDirect(fbb, std::to_string(inputMethod->id).c_str(), inputMethodType, flatInputMethod, distance, &datamap);
-	fbb.Finish(inputDataOffset);
-
-	std::vector<uint8_t> data;
-	data.resize(fbb.GetSize());
-	memcpy(data.data(), fbb.GetBufferPointer(), fbb.GetSize());
-
+std::vector<uint8_t> InputInterface::CreateInputData(flatbuffers::FlatBufferBuilder &fbb, DistanceLink *distanceLink) {
 	fbb.Clear();
 
-	return data;
+	float distance = distanceLink->trueDistance;
+	std::string uuid = std::to_string(distanceLink->method->id);
+	StardustXR::InputDataRaw inputMethodType = distanceLink->method->type();
+	flatbuffers::Offset<void> flatInputMethod = distanceLink->method->generateInput(fbb, distanceLink->handler.ptr());
+	const std::vector<uint8_t> datamap = distanceLink->method->serializeDatamap();
+
+	auto inputDataOffset = CreateInputDataDirect(fbb, uuid.c_str(), inputMethodType, flatInputMethod, distance, &datamap);
+	fbb.Finish(inputDataOffset);
+
+	return std::vector<uint8_t>(fbb.GetBufferPointer(), fbb.GetBufferPointer() + fbb.GetSize());
 }
 
 } // namespace StardustXRServer

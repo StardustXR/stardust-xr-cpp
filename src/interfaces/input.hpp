@@ -12,11 +12,10 @@ public:
 	InputInterface(Client *client);
 
 	std::vector<uint8_t> registerInputHandler(Client *callingClient, flexbuffers::Reference data, bool returnValue);
-	std::vector<uint8_t> getInputHandlers(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	static void processInput();
 
 private:
-	static std::vector<uint8_t> CreateInputData(flatbuffers::FlatBufferBuilder &fbb, TypedNodeRef<InputMethod> inputMethod, TypedNodeRef<InputHandler> inputHandler);
+	static std::vector<uint8_t> CreateInputData(flatbuffers::FlatBufferBuilder &fbb, DistanceLink *distanceLink);
 	static flatbuffers::FlatBufferBuilder fbb;
 };
 

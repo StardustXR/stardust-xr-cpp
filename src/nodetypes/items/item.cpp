@@ -42,6 +42,7 @@ Alias *Item::makeAlias(Client *client) {
 		"setTransform",
 		"setSpatialParent",
 		"setSpatialParentInPlace",
+		"setZoneable",
 	});
 
 	return alias;

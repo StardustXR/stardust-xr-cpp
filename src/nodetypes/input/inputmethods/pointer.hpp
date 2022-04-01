@@ -13,7 +13,7 @@ public:
 
 	Ray ray;
 	RayMarchResult march(Field *field);
-	float distanceTo(InputHandler *handler);
+	DistanceLink makeDistanceLink(InputHandler *handler);
 	InputDataRaw type();
 	flatbuffers::Offset<void> generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler);
 	void updateInput(InputData *data, InputHandler *handler);

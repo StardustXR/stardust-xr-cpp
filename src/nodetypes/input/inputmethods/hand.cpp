@@ -33,15 +33,18 @@ void HandInput::updateSpaceFlexJoint(Spatial *space, hand_joint_t joint, struct 
 	updateJoint->mutate_radius(localJoint.radius());
 }
 
-float HandInput::distanceTo(InputHandler *handler) {
+DistanceLink HandInput::makeDistanceLink(InputHandler *handler) {
 	float minDistance = numeric_limits<float>::max();
 	for(uint i=4; i<fingerJointCount; i+=5) {
-		if(!handler->field)
-			break;
 		float distance = handler->field.ptr()->distance(this, fingerJoints[i].position);
 		minDistance = min(minDistance, distance);
 	}
-	return minDistance;
+	return DistanceLink{
+		.method = this,
+		.compareDistance = minDistance,
+		.trueDistance = minDistance,
+		.handler = handler,
+	};
 }
 
 InputDataRaw HandInput::type() {
