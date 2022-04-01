@@ -12,7 +12,6 @@ Item::TypeInfo PanelItem::itemTypeInfo = {
 	"panel",
 	{
 		"applySurfaceMaterial",
-		"getData",
 
 		"setPointerActive",
 		"setPointerPosition",
