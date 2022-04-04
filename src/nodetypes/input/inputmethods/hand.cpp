@@ -48,7 +48,7 @@ DistanceLink HandInput::makeDistanceLink(InputHandler *handler) {
 }
 
 InputDataRaw HandInput::type() {
-	return InputDataRaw_Hand;
+	return InputDataRaw::Hand;
 }
 
 flatbuffers::Offset<void> HandInput::generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler) {

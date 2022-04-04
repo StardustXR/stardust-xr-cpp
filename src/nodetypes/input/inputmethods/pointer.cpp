@@ -28,7 +28,7 @@ DistanceLink PointerInput::makeDistanceLink(InputHandler *handler) {
 }
 
 InputDataRaw PointerInput::type() {
-	return InputDataRaw_Pointer;
+	return InputDataRaw::Pointer;
 }
 
 flatbuffers::Offset<void> PointerInput::generateInput(flatbuffers::FlatBufferBuilder &fbb, InputHandler *handler) {
