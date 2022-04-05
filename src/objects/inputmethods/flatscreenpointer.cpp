@@ -19,9 +19,6 @@ void FlatscreenPointer::serializeData(flexbuffers::Builder &fbb) {
 	bool middle = input_key(sk::key_mouse_center) & button_state_active;
 	bool right = input_key(sk::key_mouse_right) & button_state_active;
 
-	if(right)
-		printf("test bla\n");
-
 	fbb.Bool("left", left);
 	fbb.Bool("middle", middle);
 	fbb.Bool("right", right);
