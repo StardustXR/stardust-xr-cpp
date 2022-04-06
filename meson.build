@@ -11,13 +11,11 @@ libstardustxr = dependency('stardustxr-server', required: true)
 
 stereokit_options = cmake.subproject_options()
 stereokit_options.add_cmake_defines({'CMAKE_BUILD_TYPE': get_option('buildtype')})
-stereokit_options.add_cmake_defines({'SK_LINUX_EGL': true, 'SK_BUILD_TESTS': false, 'SK_BUILD_SHARED_LIBS': false})
-# stereokit_options.add_cmake_defines({'SK_BUILD_TESTS': false, 'SK_BUILD_SHARED_LIBS': false})
+stereokit_options.add_cmake_defines({'SK_LINUX_EGL': true, 'SK_BUILD_TESTS': false, 'SK_BUILD_SHARED_LIBS': false, 'SK_PHYSICS': false})
 stereokit_options.add_cmake_defines({'CMAKE_CXX_FLAGS': '-Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-pragmas -Wno-sign-compare -Wno-switch -Wno-parentheses -Wno-sizeof-pointer-memaccess'})
 stereokit_options.set_install(false)
 stereokit_project = cmake.subproject('StereoKit', options: stereokit_options)
 stereokit = stereokit_project.dependency('StereoKitC')
-reactphysics = stereokit_project.dependency('reactphysics3d')
 
 xdg_utils_project = cmake.subproject('xdg-utils')
 xdg_utils_basedir = xdg_utils_project.dependency('BaseDir')
@@ -47,8 +45,7 @@ executable(
 	# link_args: ['-lflatbuffers', '-lX11', '-lGLX', '-lGLEW', '-lGL', '-ldl', '-lopenxr_loader', '-lfontconfig'],
 	dependencies: [
 		libstardustxr,
-		stereokit,
-                reactphysics,
+                stereokit,
                 wlroots,
                 xdg_utils_basedir,
 	],
