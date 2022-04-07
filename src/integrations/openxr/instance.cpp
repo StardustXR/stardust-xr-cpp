@@ -1,4 +1,6 @@
 #include "instance.hpp"
+#include "../../interfaces/openxr.hpp"
+#include <stardustxr/common/flex.hpp>
 
 namespace StardustXRServer {
 
@@ -16,7 +18,19 @@ OpenXRInstance::OpenXRInstance(Client *client,
 				engineVersion(engineVersion),
 				apiVersion(apiVersion),
 				flags(flags) {
-	addChild("system", new OpenXRSystem(client, XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY));
+
+	STARDUSTXR_NODE_METHOD("createSession", &OpenXRInstance::createSession)
+}
+
+std::vector<uint8_t> OpenXRInstance::createSession(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+//	XrFormFactor formFactor = (XrFormFactor) data.AsUInt32();
+	Node *systemNode = parent->children["system"].get();
+	OpenXRSystem *system = static_cast<OpenXRSystem *>(systemNode);
+
+	OpenXRSession *session = new OpenXRSession(client, system);
+	sessions.add(session);
+	addChild("session", session);
+	return FLEX_SINGLE(FLEX_INT(session->getCreateResult()));
 }
 
 }

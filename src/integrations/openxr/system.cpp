@@ -7,17 +7,9 @@ using namespace sk;
 namespace StardustXRServer {
 
 OpenXRSystem::OpenXRSystem(Client *client, XrFormFactor formFactor) :
-Node(client, true),
+Node(client, false),
 formFactor(formFactor) {
-	STARDUSTXR_NODE_METHOD("createSession", &OpenXRSystem::createSession)
 	STARDUSTXR_NODE_METHOD("getViewConfigurations", &OpenXRSystem::getViewConfigurations)
-}
-
-std::vector<uint8_t> OpenXRSystem::createSession(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
-	OpenXRSession *session = new OpenXRSession(client);
-	this->session = session;
-	addChild("session", session);
-	return FLEX_SINGLE(FLEX_INT(session->getCreateResult()));
 }
 
 std::vector<uint8_t> OpenXRSystem::getViewConfigurations(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
@@ -35,10 +27,6 @@ std::vector<uint8_t> OpenXRSystem::getViewConfigurations(Client *callingClient, 
 			)
 		}
 	);
-}
-
-OpenXRSession *OpenXRSystem::getSession() {
-	return session.ptr();
 }
 
 

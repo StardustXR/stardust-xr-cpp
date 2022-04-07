@@ -1,7 +1,7 @@
 #pragma once
 
 #include "object.hpp"
-#include "system.hpp"
+#include "session.hpp"
 
 #include <openxr/openxr.h>
 #include <memory>
@@ -27,6 +27,11 @@ public:
 	const uint32_t engineVersion;
 
 	const XrVersion apiVersion;
+
+	std::vector<uint8_t> createSession(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> getViewConfigurations(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+
+	Registry<OpenXRSession> sessions;
 
 private:
 	const XrInstanceCreateFlags flags;

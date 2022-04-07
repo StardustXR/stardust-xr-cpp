@@ -1,13 +1,16 @@
 #include "openxr.hpp"
 #include "../integrations/openxr/instance.hpp"
+#include "../integrations/openxr/system.hpp"
 
 #include <stardustxr/common/flex.hpp>
 
 namespace StardustXRServer {
 
 OpenXRInterface::OpenXRInterface(Client *client) :
-Node(client) {
+Node(client),
+system(new OpenXRSystem(client, XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY)) {
 	STARDUSTXR_NODE_METHOD("createInstance", &OpenXRInterface::createInstance)
+	addChild("system", const_cast<OpenXRSystem *>(system));
 }
 
 std::vector<uint8_t> OpenXRInterface::createInstance(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
