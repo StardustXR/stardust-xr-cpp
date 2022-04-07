@@ -4,6 +4,7 @@ src_files += files(
     'field.cpp',
     'input.cpp',
     'item.cpp',
+    'openxr.cpp',
     'root.cpp',
     'spatial.cpp',
 )

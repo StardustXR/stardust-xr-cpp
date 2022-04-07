@@ -6,6 +6,7 @@
 #include "field.hpp"
 #include "input.hpp"
 #include "item.hpp"
+#include "openxr.hpp"
 #include "spatial.hpp"
 
 using namespace sk;
@@ -25,6 +26,7 @@ RootInterface::RootInterface(Client *client) : Spatial(client, nullptr, matrix_i
 	this->addChild("field",       new FieldInterface(client));
 	this->addChild("input",       new InputInterface(client));
 	this->addChild("item",        new ItemInterface(client));
+	this->addChild("openxr",      new OpenXRInterface(client));
 	this->addChild("spatial",     new SpatialInterface(client));
 
 	STARDUSTXR_NODE_METHOD("disconnect", &RootInterface::disconnect)
