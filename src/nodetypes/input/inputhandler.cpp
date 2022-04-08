@@ -1,6 +1,6 @@
 #include "inputhandler.hpp"
 #include "inputmethod.hpp"
-#include "../../globals.h"
+#include "../../globals.hpp"
 #include <stardustxr/common/flatbuffers/ActionInput.hpp>
 #include <stardustxr/common/flatbuffers/Input.hpp>
 #include <stardustxr/common/flex.hpp>

@@ -1,5 +1,5 @@
 #include "input.hpp"
-#include "../globals.h"
+#include "../globals.hpp"
 #include "../core/client.hpp"
 #include "../nodetypes/core/alias.hpp"
 #include "../nodetypes/input/inputhandler.hpp"

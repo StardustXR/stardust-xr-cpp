@@ -1,6 +1,6 @@
 #include "cylinderfield.hpp"
 #include "stereokit.h"
-#include "../../globals.h"
+#include "../../globals.hpp"
 
 #include <cmath>
 

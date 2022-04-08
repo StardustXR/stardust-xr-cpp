@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/client.hpp"
+#include "objects/hmd.hpp"
 #include <stereokit.h>
 #include <cstdint>
 #include <atomic>
@@ -20,3 +21,4 @@ extern sk::mesh_t cylinderFieldMesh;
 extern sk::mesh_t sphereFieldMesh;
 
 extern StardustXRServer::Client *serverInternalClient;
+extern StardustXRServer::HMD *hmd;

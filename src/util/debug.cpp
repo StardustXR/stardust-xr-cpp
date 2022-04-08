@@ -1,4 +1,4 @@
-#include "../globals.h"
+#include "../globals.hpp"
 #include "stereokit.h"
 
 using namespace sk;

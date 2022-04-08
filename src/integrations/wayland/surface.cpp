@@ -7,7 +7,7 @@
 #include "surface.hpp"
 #include "../../nodetypes/items/types/panel.hpp"
 #include "../../nodetypes/items/itemui.hpp"
-#include "../../globals.h"
+#include "../../globals.hpp"
 #include "../../util/time.hpp"
 
 extern "C" {

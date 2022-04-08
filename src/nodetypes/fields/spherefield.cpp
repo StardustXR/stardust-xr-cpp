@@ -1,6 +1,6 @@
 #include "spherefield.hpp"
 #include "stereokit.h"
-#include "../../globals.h"
+#include "../../globals.hpp"
 
 using namespace sk;
 

@@ -1,5 +1,5 @@
 // Globals includes
-#include "globals.h"
+#include "globals.hpp"
 
 // Home directory getters
 #include <pwd.h>
@@ -21,6 +21,7 @@ std::string home;
 #include "interfaces/spatial.hpp"
 #include "nodetypes/core/node.hpp"
 #include "nodetypes/drawable/drawable.hpp"
+#include "objects/hmd.hpp"
 #include "objects/inputmethods/flatscreenpointer.hpp"
 #include "objects/inputmethods/skhand.hpp"
 using namespace StardustXRServer;
@@ -58,6 +59,7 @@ extern void debugSetup();
 // Initialize scenegraph and client manager
 ClientManager *clientManager = new ClientManager();
 Client *serverInternalClient = new Client(*clientManager, 0);
+HMD *hmd = new HMD(serverInternalClient);
 
 // Builtin inputs
 TypedNodeRef<FlatscreenPointer> flatscreenPointer;
@@ -130,6 +132,8 @@ int main(int argc, char *argv[]) {
 
 	// Every stereokit step
 	while (sk_step([]() {
+		hmd->update();
+
 		// Handle disconnected clients before anything else to ensure scenegraph is clean
 		clientManager->handleDisconnectedClients();
 		clientManager->handleNewlyConnectedClients();
@@ -164,12 +168,13 @@ int main(int argc, char *argv[]) {
 		RootInterface::sendLogicStepSignals();
 
 		// Process all the input and send it to the clients
-	   if(flatscreenPointer)
-		   flatscreenPointer.ptr()->update();
-	   if(stereokitHands[0])
-		   stereokitHands[0].ptr()->update();
-	   if(stereokitHands[1])
-		   stereokitHands[1].ptr()->update();
+		if(flatscreenPointer)
+			flatscreenPointer.ptr()->update();
+		if(stereokitHands[0])
+			stereokitHands[0].ptr()->update();
+		if(stereokitHands[1])
+			stereokitHands[1].ptr()->update();
+
 		InputInterface::processInput();
 	})) {}
 

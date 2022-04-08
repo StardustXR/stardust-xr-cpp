@@ -7,7 +7,7 @@
 #include "../nodetypes/items/itemui.hpp"
 #include "../nodetypes/items/acceptor.hpp"
 #include "../util/flex.hpp"
-#include "../globals.h"
+#include "../globals.hpp"
 
 
 #include <list>

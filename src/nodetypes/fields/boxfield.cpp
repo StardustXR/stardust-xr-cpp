@@ -1,7 +1,7 @@
 #include "boxfield.hpp"
 #include <cmath>
 #include "stereokit.h"
-#include "../../globals.h"
+#include "../../globals.hpp"
 
 using namespace sk;
 

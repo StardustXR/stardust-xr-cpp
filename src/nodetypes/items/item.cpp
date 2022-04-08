@@ -3,7 +3,7 @@
 #include "itemui.hpp"
 #include "../../core/client.hpp"
 #include "../../core/clientmanager.hpp"
-#include "../../globals.h"
+#include "../../globals.hpp"
 #include "../core/alias.hpp"
 
 using namespace sk;

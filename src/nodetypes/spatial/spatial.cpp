@@ -1,6 +1,6 @@
 #include "spatial.hpp"
 
-#include "../../globals.h"
+#include "../../globals.hpp"
 #include "../../core/client.hpp"
 #include "../../core/scenegraph.hpp"
 #include "../../interfaces/spatial.hpp"
