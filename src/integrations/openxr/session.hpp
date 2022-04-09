@@ -12,6 +12,7 @@ class OpenXRSession : public OpenXRObject {
 public:
 	OpenXRSession(Client *client, OpenXRSystem *system);
 
+	std::vector<uint8_t> getReferenceSpaces(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 private:
 	OpenXRSystem *system;
 };

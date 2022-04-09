@@ -11,17 +11,25 @@ namespace StardustXRServer {
 OpenXRSession::OpenXRSession(Client *client, OpenXRSystem *system) :
 OpenXRObject(client),
 system(system) {
-	Node *spaces = new Node(client, false);
-	addChild("spaces", spaces);
+	STARDUSTXR_NODE_METHOD("getReferenceSpaces", &OpenXRSession::getReferenceSpaces)
 
-	Spatial *localSpace = new Spatial(client, client->scenegraph.root.worldTransform());
-	spaces->addChild("XR_REFERENCE_SPACE_TYPE_LOCAL", localSpace);
-
+	Spatial *localSpace = new Spatial(client, nullptr, client->scenegraph.root.worldTransform(), true, true, false, false);
 	Spatial *viewSpace = new Spatial(client, hmd, matrix_identity, false, false, false, false);
-	spaces->addChild("XR_REFERENCE_SPACE_TYPE_VIEW", viewSpace);
+	Spatial *stageSpace = new Spatial(client, nullptr, matrix_identity, true, true, false, false);
 
-	Spatial *stageSpace = new Spatial(client, matrix_identity);
-	spaces->addChild("XR_REFERENCE_SPACE_TYPE_STAGE", stageSpace);
+	addChild("referenceSpace"+std::to_string((uint) XR_REFERENCE_SPACE_TYPE_LOCAL), localSpace);
+	addChild("referenceSpace"+std::to_string((uint) XR_REFERENCE_SPACE_TYPE_VIEW),  viewSpace);
+	addChild("referenceSpace"+std::to_string((uint) XR_REFERENCE_SPACE_TYPE_STAGE), stageSpace);
+}
+
+std::vector<uint8_t> OpenXRSession::getReferenceSpaces(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	return FLEX_SINGLE(
+		FLEX_TYPED_VEC(
+			FLEX_UINT(XR_REFERENCE_SPACE_TYPE_VIEW)
+			FLEX_UINT(XR_REFERENCE_SPACE_TYPE_LOCAL)
+			FLEX_UINT(XR_REFERENCE_SPACE_TYPE_STAGE)
+		)
+	);
 }
 
 }
