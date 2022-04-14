@@ -128,8 +128,8 @@ Wayland::~Wayland() {
 }
 
 void Wayland::update() {
-	wl_display_flush_clients(wayland_display);
 	wl_event_loop_dispatch(event_loop, 1);
+	wl_display_flush_clients(wayland_display);
 }
 
 wlr_seat *Wayland::createSeat() {
