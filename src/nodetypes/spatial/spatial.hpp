@@ -58,6 +58,7 @@ protected:
 	static std::map<uint32_t, sk::matrix> anchors;
 
 private:
+	sk::quat oldRotation = sk::quat_identity;
 	TypedNodeRef<Spatial> spatialParent;
 };
 

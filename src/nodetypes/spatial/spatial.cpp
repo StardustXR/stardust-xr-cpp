@@ -96,13 +96,26 @@ std::vector<uint8_t> Spatial::setTransform(Client *callingClient, flexbuffers::R
 	vec3 pos, scl;
 	quat rot;
 	matrix_decompose(transform, pos, scl, rot);
+	if(scl.x == 0 && scl.y == 0 && scl.z == 0)
+		rot = oldRotation;
 
+	bool translated = false;
+	bool scaled = false;
+	bool rotated = false;
 	if(translatable && flexVec[1].IsTypedVector() && flexVec[1].AsTypedVector().size() == 3) {
 		flexbuffers::TypedVector posFlex = flexVec[1].AsTypedVector();
 		pos.x = posFlex[0].AsFloat();
 		pos.y = posFlex[1].AsFloat();
 		pos.z = posFlex[2].AsFloat();
 		pos = matrix_transform_pt(spaceToSpaceMatrix(space, getSpatialParent()), pos);
+		translated = true;
+	}
+	if(scalable && flexVec[3].IsTypedVector() && flexVec[3].AsTypedVector().size() == 3) {
+		flexbuffers::TypedVector sclFlex = flexVec[3].AsTypedVector();
+		scl.x = sclFlex[0].AsFloat();
+		scl.y = sclFlex[1].AsFloat();
+		scl.z = sclFlex[2].AsFloat();
+		scaled = true;
 	}
 	if(rotatable && flexVec[2].IsTypedVector() && flexVec[2].AsTypedVector().size() == 4) {
 		flexbuffers::TypedVector rotFlex = flexVec[2].AsTypedVector();
@@ -111,13 +124,10 @@ std::vector<uint8_t> Spatial::setTransform(Client *callingClient, flexbuffers::R
 		rot.z = rotFlex[2].AsFloat();
 		rot.w = rotFlex[3].AsFloat();
 		rot = matrix_transform_quat(spaceToSpaceMatrix(space, getSpatialParent()), rot);
+		rotated = true;
 	}
-	if(scalable && flexVec[3].IsTypedVector() && flexVec[3].AsTypedVector().size() == 3) {
-		flexbuffers::TypedVector sclFlex = flexVec[3].AsTypedVector();
-		scl.x = sclFlex[0].AsFloat();
-		scl.y = sclFlex[1].AsFloat();
-		scl.z = sclFlex[2].AsFloat();
-	}
+	if(scaled && scl.x == 0 && scl.y == 0 && scl.z == 0)
+		oldRotation = rot;
 
 	transform = matrix_trs(pos, rot, scl);
 
