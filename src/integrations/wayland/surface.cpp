@@ -149,10 +149,7 @@ void Surface::setPointerPosition(double x, double y) {
 	wlr_seat_pointer_send_motion(seat, StardustXRServer::Time::timestampMS(), x, y);
 }
 void Surface::setPointerButtonPressed(uint32_t button, bool pressed) {
-	if(buttonStates.find(button) != buttonStates.end() && buttonStates[button] == pressed)
-		return;
-	wlr_seat_pointer_notify_button(seat, StardustXRServer::Time::timestampMS(), button, pressed ? WLR_BUTTON_PRESSED : WLR_BUTTON_RELEASED);
-	buttonStates[button] = pressed;
+	wlr_seat_pointer_send_button(seat, StardustXRServer::Time::timestampMS(), button, pressed ? WLR_BUTTON_PRESSED : WLR_BUTTON_RELEASED);
 }
 void Surface::scrollPointerAxis(uint32_t source, double x, double y, int32_t dx, int32_t dy) {
 	if(x != 0 || dx != 0)
@@ -162,13 +159,13 @@ void Surface::scrollPointerAxis(uint32_t source, double x, double y, int32_t dx,
 }
 
 void Surface::touchDown(uint32_t id, double x, double y) {
-	wlr_seat_touch_notify_down(seat, surface, StardustXRServer::Time::timestampMS(), id, x, y);
+	wlr_seat_touch_send_down(seat, surface, StardustXRServer::Time::timestampMS(), id, x, y);
 }
 void Surface::touchMove(uint32_t id, double x, double y) {
-	wlr_seat_touch_notify_motion(seat, StardustXRServer::Time::timestampMS(), id, x, y);
+	wlr_seat_touch_send_motion(seat, StardustXRServer::Time::timestampMS(), id, x, y);
 }
 void Surface::touchUp(uint32_t id) {
-	wlr_seat_touch_notify_up(seat, StardustXRServer::Time::timestampMS(), id);
+	wlr_seat_touch_send_up(seat, StardustXRServer::Time::timestampMS(), id);
 }
 
 void Surface::setKeyboardActive(bool active) {

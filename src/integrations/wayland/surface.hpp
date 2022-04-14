@@ -65,8 +65,6 @@ protected:
 	wlr_keyboard *keyboard;
 	xkb_context *kb_context;
 
-	std::unordered_map<uint32_t, bool> buttonStates;
-
 	bool updateSurface();
 	sk::shader_t surfaceShader;
 
