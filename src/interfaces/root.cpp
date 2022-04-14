@@ -61,7 +61,6 @@ void RootInterface::sendLogicStepSignals() {
 std::vector<uint8_t> RootInterface::applyLaunchAnchor(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
 	uint32_t anchorID = data.AsUInt32();
 	setTransformMatrix(anchors[anchorID]);
-	anchors.erase(anchorID);
 
 	return std::vector<uint8_t>();
 }
