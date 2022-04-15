@@ -19,8 +19,8 @@ void SKHandInput::update() {
 		}
 	}
 	palmJoint = {
-		hand->fingers[2][0].position + hand->fingers[2][1].position * 0.5f, // Average the positions to get the middle of the bone (OpenXR spec)
-		hand->fingers[2][0].orientation, // Same orientation as the metacarpal (OpenXR spec)
+		hand->palm.position,
+		hand->palm.orientation,
 		hand->fingers[2][0].radius + hand->fingers[2][1].radius * 0.5f // Average the radii
 	};
 	wristJoint = {
