@@ -1,0 +1,9 @@
+[submodule "subprojects/StereoKit"]
+	path = subprojects/StereoKit
+	url = git@github.com:technobaboo/StereoKit.git
+[submodule "subprojects/wlroots"]
+	path = subprojects/wlroots
+	url = git@gitlab.freedesktop.org:wlroots/wlroots.git
+[submodule "subprojects/xdg-utils"]
+	path = subprojects/xdg-utils
+	url = https://github.com/azubieta/xdg-utils-cxx.git
