@@ -124,6 +124,7 @@ Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 
 Wayland::~Wayland() {
     wlr_seat_destroy(queueSeat);
+	wlr_xwayland_destroy(xwayland);
 	wl_display_destroy_clients(wayland_display);
 	wl_display_destroy(wayland_display);
 }
