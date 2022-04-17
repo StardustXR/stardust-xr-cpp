@@ -56,8 +56,8 @@ CLIArgs args;
 extern void debugSetup();
 
 // Initialize scenegraph and client manager
-ClientManager *clientManager = new ClientManager();
-Client *serverInternalClient = new Client(*clientManager, 0);
+ClientManager *clientManager;// = new ClientManager();
+Client *serverInternalClient;// = new Client(*clientManager, 0);
 
 // Builtin inputs
 TypedNodeRef<FlatscreenPointer> flatscreenPointer;
@@ -72,6 +72,8 @@ void shutdown(int signal) {
 }
 
 int main(int argc, char *argv[]) {
+    clientManager = new ClientManager();
+    serverInternalClient = new Client(*clientManager, 0);
 	int parse_result = args.parse(argc, argv);
 	if (parse_result != -1) return parse_result;
 
