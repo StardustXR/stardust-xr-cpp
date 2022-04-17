@@ -1,10 +1,11 @@
 [submodule "subprojects/StereoKit"]
 	path = subprojects/StereoKit
 	url = https://github.com/technobaboo/StereoKit.git
-	branch = feature/system-removal
+	branch = develop
 [submodule "subprojects/xdg-utils"]
 	path = subprojects/xdg-utils
 	url = https://github.com/StardustXR/xdg-utils-cxx.git
 [submodule "subprojects/wlroots"]
 	path = subprojects/wlroots
 	url = https://gitlab.freedesktop.org/emersion/wlroots.git
+	branch = 0.15
