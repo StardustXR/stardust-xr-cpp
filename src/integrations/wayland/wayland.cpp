@@ -127,6 +127,8 @@ Wayland::~Wayland() {
 	wlr_xwayland_destroy(xwayland);
 	wl_display_destroy_clients(wayland_display);
 	wl_display_destroy(wayland_display);
+    wlr_renderer_destroy(renderer);
+
 }
 
 void Wayland::update() {
