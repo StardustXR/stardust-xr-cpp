@@ -5,6 +5,7 @@
 #include "asset_types/texture.h"
 
 #include "surface.hpp"
+#include "wayland.hpp"
 #include "../../nodetypes/items/types/panel.hpp"
 #include "../../nodetypes/items/itemui.hpp"
 #include "../../globals.h"
@@ -28,10 +29,11 @@ extern "C" {
 
 using namespace sk;
 
-Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surface, wlr_seat *seat) {
-	this->renderer = renderer;
-	this->surface = surface;
-
+Surface::Surface(Wayland *wayland, wlr_renderer *renderer, wlr_surface *surface, wlr_seat *seat) :
+surface(surface),
+wayland(wayland),
+renderer(renderer),
+seat(seat) {
 	this->surfaceTex = tex_create(tex_type_image_nomips, tex_format_rgba32);
 
 	this->surfaceTex->tex.type        = skg_tex_type_image;
@@ -63,11 +65,10 @@ Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surfa
 	surfaceCommitCallback.callback = std::bind(&Surface::onCommit, this);
 	wl_signal_add(&surface->events.commit, &surfaceCommitCallback.listener);
 
-	panel = new StardustXRServer::PanelItem(serverInternalClient, this, sk::pose_identity);
-	StardustXRServer::Node *internalPanelNode = serverInternalClient->scenegraph.findNode("/item/panel");
+	panel = new StardustXRServer::PanelItem(nullptr, this, sk::pose_identity);
+	serverInternalNode->addChild("panel"+std::to_string(panel->id), panel);
 	std::string panelName = std::to_string(panel->id);
 
-	this->seat = seat;
 	wlr_seat_set_capabilities(seat, WL_SEAT_CAPABILITY_POINTER | WL_SEAT_CAPABILITY_KEYBOARD | WL_SEAT_CAPABILITY_TOUCH);
 
 	kb_context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
@@ -75,8 +76,6 @@ Surface::Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surfa
 
 	wl_signal_add(&surface->events.destroy, &destroyCallback.listener);
 
-	if(internalPanelNode)
-		internalPanelNode->addChild(panelName, panel);
 	if(StardustXRServer::PanelItem::itemTypeInfo.UI)
 		StardustXRServer::PanelItem::itemTypeInfo.UI->handleItemCreate(panel);
 }
@@ -140,18 +139,22 @@ void Surface::onCommit() {
 }
 
 void Surface::setPointerActive(bool active) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	if(active && isMapped())
 		wlr_seat_pointer_enter(seat, surface, seat->pointer_state.sx, seat->pointer_state.sy);
 	else
 		wlr_seat_pointer_clear_focus(seat);
 }
 void Surface::setPointerPosition(double x, double y) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	wlr_seat_pointer_send_motion(seat, StardustXRServer::Time::timestampMS(), x, y);
 }
 void Surface::setPointerButtonPressed(uint32_t button, bool pressed) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	wlr_seat_pointer_send_button(seat, StardustXRServer::Time::timestampMS(), button, pressed ? WLR_BUTTON_PRESSED : WLR_BUTTON_RELEASED);
 }
 void Surface::scrollPointerAxis(uint32_t source, double x, double y, int32_t dx, int32_t dy) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	if(x != 0 || dx != 0)
 		wlr_seat_pointer_send_axis(seat, StardustXRServer::Time::timestampMS(), WLR_AXIS_ORIENTATION_HORIZONTAL,  x,  dx, (wlr_axis_source) source);
 	if(y != 0 || dy != 0)
@@ -159,16 +162,20 @@ void Surface::scrollPointerAxis(uint32_t source, double x, double y, int32_t dx,
 }
 
 void Surface::touchDown(uint32_t id, double x, double y) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	wlr_seat_touch_send_down(seat, surface, StardustXRServer::Time::timestampMS(), id, x, y);
 }
 void Surface::touchMove(uint32_t id, double x, double y) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	wlr_seat_touch_send_motion(seat, StardustXRServer::Time::timestampMS(), id, x, y);
 }
 void Surface::touchUp(uint32_t id) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	wlr_seat_touch_send_up(seat, StardustXRServer::Time::timestampMS(), id);
 }
 
 void Surface::setKeyboardActive(bool active) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	if(active) {
 		wlr_seat_keyboard_enter(seat, surface, keyboard->keycodes, keyboard->num_keycodes, &keyboard->modifiers);
 	} else {
@@ -176,17 +183,21 @@ void Surface::setKeyboardActive(bool active) {
 	}
 }
 void Surface::setKeymap(std::string keymapString) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	xkb_keymap *keymap = xkb_keymap_new_from_string(kb_context, keymapString.c_str(), XKB_KEYMAP_FORMAT_TEXT_V1, XKB_KEYMAP_COMPILE_NO_FLAGS);
 	wlr_keyboard_set_keymap(keyboard, keymap);
 	xkb_keymap_unref(keymap);
 }
 void Surface::setKeyState(uint32_t key, uint32_t state) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	wlr_seat_keyboard_send_key(seat, StardustXRServer::Time::timestampMS(), key-8, state);
 }
 void Surface::setKeyModStates(uint32_t depressed, uint32_t latched, uint32_t locked, uint32_t group) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	struct wlr_keyboard_modifiers mods{depressed, latched, locked, group};
 	wlr_seat_keyboard_send_modifiers(seat, &mods);
 }
 void Surface::setKeyRepeat(int32_t rate, int32_t delay) {
+	std::lock_guard<std::mutex> lock(wayland->mutex);
 	wlr_keyboard_set_repeat_info(keyboard, rate, delay);
 }

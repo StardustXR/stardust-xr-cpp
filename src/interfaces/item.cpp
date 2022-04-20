@@ -51,10 +51,8 @@ std::vector<uint8_t> ItemInterface::createEnvironmentItem(Client *callingClient,
 	std::string path                 = flexVec[2].AsString().str();
 	pose_t transform                 = FlexToSKPose(flexVec[3].AsTypedVector(), flexVec[4].AsTypedVector());
 
-	EnvironmentItem *item = new EnvironmentItem(serverInternalClient, path, space ? matrix_transform_pose(space->worldTransform(), transform) : transform);
-
-	Node *internalParent = serverInternalClient->scenegraph.findNode("/item/environment/");
-	internalParent->addChild(std::to_string(item->id), item);
+	EnvironmentItem *item = new EnvironmentItem(nullptr, path, space ? matrix_transform_pose(space->worldTransform(), transform) : transform);
+	serverInternalNode->addChild("environment"+std::to_string(item->id), item);
 
 	if(EnvironmentItem::itemTypeInfo.UI)
 		EnvironmentItem::itemTypeInfo.UI->handleItemCreate(item);

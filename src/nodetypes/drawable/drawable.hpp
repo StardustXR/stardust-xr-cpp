@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../spatial/spatial.hpp"
 #include <vector>
 

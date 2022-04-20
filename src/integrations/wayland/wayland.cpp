@@ -3,6 +3,7 @@
 #include <EGL/egl.h>
 #include <string>
 #include <stereokit.h>
+#include <wayland-client-core.h>
 
 #include "callbacks.h"
 #include "wayland.hpp"
@@ -54,12 +55,12 @@ static void wlr_log_handler(wlr_log_importance level, const char *fmt, va_list a
 	vprintf(format.c_str(), args);
 }
 
-Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
+Wayland::Wayland(EGLDisplay display, EGLContext context) {
 	wlr_log_init(WLR_DEBUG, wlr_log_handler);
-//	wlr_log_
 
 	wayland_display = wl_display_create();
 	assert(wayland_display);
+
 	event_loop = wl_display_get_event_loop(wayland_display);
 	assert(event_loop);
 
@@ -75,7 +76,7 @@ Wayland::Wayland(EGLDisplay display, EGLContext context, EGLenum platform) {
 
 	renderer = wlr_gles2_renderer_create(egl);
 	assert(renderer);
-	eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, context);
+	wlr_egl_make_current(egl);
 	wlr_renderer_init_wl_display(renderer, wayland_display);
 
 	compositor = wlr_compositor_create(wayland_display, renderer);
@@ -131,9 +132,17 @@ Wayland::~Wayland() {
 
 }
 
-void Wayland::update() {
-	wl_event_loop_dispatch(event_loop, 1);
+bool Wayland::dispatch() {
+	std::lock_guard<std::mutex> lock(mutex);
+
+	int dispatch_status = wl_event_loop_dispatch(event_loop, 1);
+	if(dispatch_status == -1) return false;
+
+	for(Surface *surface : surfaces)
+		surface->frameEnd();
+
 	wl_display_flush_clients(wayland_display);
+	return true;
 }
 
 wlr_seat *Wayland::createSeat() {
@@ -161,8 +170,10 @@ void Wayland::onNewXDGSurface(void *data) {
 	if(surface->role != WLR_XDG_SURFACE_ROLE_TOPLEVEL)
 		return;
 
-	XDGSurface *newSurface = new XDGSurface(wayland_display, renderer, surface, queueSeat);
-	newSurface->destroyCallback.callback = [newSurface](void *data) {
+	XDGSurface *newSurface = new XDGSurface(this, renderer, surface, queueSeat);
+	surfaces.push_back(newSurface);
+	newSurface->destroyCallback.callback = [this, newSurface](void *data) {
+		surfaces.erase(std::remove(surfaces.begin(), surfaces.end(), newSurface));
 		delete newSurface;
 	};
 }
@@ -178,8 +189,11 @@ void Wayland::onNewXWaylandSurface(void *data) {
 }
 void Wayland::onMapXWaylandSurface(void *data) {
 	wlr_xwayland_surface *surface = (wlr_xwayland_surface *) data;
-	XWaylandSurface *newSurface = new XWaylandSurface(wayland_display, renderer, surface, queueSeat);
-	newSurface->destroyCallback.callback = [newSurface](void *data) {
+
+	XWaylandSurface *newSurface = new XWaylandSurface(this, renderer, surface, queueSeat);
+	surfaces.push_back(newSurface);
+	newSurface->destroyCallback.callback = [this, newSurface](void *data) {
+		surfaces.erase(std::remove(surfaces.begin(), surfaces.end(), newSurface));
 		delete newSurface;
 	};
 

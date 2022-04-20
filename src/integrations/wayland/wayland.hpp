@@ -1,10 +1,13 @@
 #pragma once
 
+#include <mutex>
 #include <memory>
 #include <vector>
 
 #include <EGL/egl.h>
 #include <wayland-server.h>
+
+#include "../../core/connection.hpp"
 
 #include "callbacks.h"
 #include "xdgsurface.hpp"
@@ -22,10 +25,12 @@ struct wlr_xwayland;
 
 class Wayland {
 public:
-	explicit Wayland(EGLDisplay display, EGLContext context, EGLenum platform);
+	Wayland(EGLDisplay display, EGLContext context);
 	~Wayland();
 
-	void update();
+	bool dispatch();
+
+	std::mutex mutex;
 
 	wlr_seat *createSeat();
 
@@ -37,7 +42,7 @@ public:
 	void onNewXWaylandSurface(void *data);
 	void onMapXWaylandSurface(void *data);
 
-protected:
+private:
 	wl_display *wayland_display;
 	wl_event_loop *event_loop;
 
@@ -51,6 +56,8 @@ protected:
 	xkb_keymap *keymap;
 	wlr_seat *queueSeat;
 	uint32_t seatID = 0;
+
+	std::vector<Surface *> surfaces;
 
 	wlr_xdg_shell *xdg_shell;
 	WaylandCallback newSurfaceCallbackXDG;

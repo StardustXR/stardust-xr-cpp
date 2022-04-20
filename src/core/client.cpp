@@ -1,31 +1,30 @@
 #include "client.hpp"
-#include "clientmanager.hpp"
-#include "messenger.hpp"
+#include "eventloop.hpp"
 #include "scenegraph.hpp"
 #include "scenegraphpropagation.hpp"
 
 namespace StardustXRServer {
 
-uint32_t Client::clientCount = 0;
-
-Client::Client(ClientManager &manager, int fd) :
+Client::Client(int epollFD, int fd) :
+Connection(epollFD, fd, EPOLLIN),
 fd(fd),
-pid(getPID(fd)),
-messenger(this, fd),
 scenegraph(this),
-manager(&manager) {
-	clientNumber = clientCount;
-	clientCount++;
-}
+messenger(fd, &scenegraph) {}
+
 Client::~Client() {
+	::close(fd);
 	printf("Disconnecting client %p\n", this);
+}
+
+bool Client::dispatch() {
+	return messenger.dispatch();
 }
 
 void Client::scenegraphPropagate(std::string name, PropagateFunction &function) {
 	scenegraph.root.propagate(name, function);
 }
 
-pid_t Client::getPID(int fd) {
+pid_t Client::getPID() {
 	if(fd > 0) {
 		struct ucred ucred;
 		uint len = sizeof(struct ucred);
@@ -35,10 +34,6 @@ pid_t Client::getPID(int fd) {
 	} else {
 		return 0;
 	}
-}
-
-void Client::startMessenger() {
-	messenger.startHandler();
 }
 
 }

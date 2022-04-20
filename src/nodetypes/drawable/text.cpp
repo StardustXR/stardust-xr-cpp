@@ -9,10 +9,10 @@ std::map<font_t, text_style_t> Text::fontStyles;
 
 Text::Text(Client *client, Spatial *spatialParent, pose_t transform, std::string text, std::string font, float characterHeight, text_align_ textAlign, vec2 bounds, text_fit_ fit, text_align_ boundsAlign, color128 color) :
 Drawable(client, spatialParent, transform, true, true, false),
-fontPath(font),
-characterHeight(characterHeight),
 size(bounds),
+fontPath(font),
 text(text),
+characterHeight(characterHeight),
 textAlign(textAlign),
 bounds(bounds),
 fit(fit),
@@ -24,8 +24,8 @@ color(color) {
 		size = text_size(text.c_str(), style) * characterHeight;
 }
 Text::~Text() {
-
-	font_release(font);
+	if(font)
+		assets_releaseref_threadsafe(font);
 }
 
 void Text::draw() {

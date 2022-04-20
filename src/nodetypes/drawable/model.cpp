@@ -15,7 +15,8 @@ modelPath(modelPath){
 }
 
 Model::~Model() {
-	model_release(model);
+	if(model)
+		assets_releaseref_threadsafe(model);
 }
 
 void Model::draw() {
