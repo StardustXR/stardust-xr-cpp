@@ -26,7 +26,8 @@ void XDGSurface::close() const {
 }
 
 XDGSurface::~XDGSurface() {
-    wlr_xdg_popup_destroy(xdg_surface);
+    //if(xdg_surface != NULL)
+    //wlr_xdg_popup_destroy(xdg_surface);
 }
 
 bool XDGSurface::isMapped() const {
