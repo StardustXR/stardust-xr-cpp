@@ -22,7 +22,7 @@ class Wayland;
 
 class Surface {
 public:
-	explicit Surface(wl_display *display, wlr_renderer *renderer, wlr_surface *surface, wlr_seat *seat);
+	explicit Surface(Wayland *wayland, wlr_renderer *renderer, wlr_surface *surface, wlr_seat *seat);
 	virtual ~Surface();
 
 	void frameEnd();
@@ -60,6 +60,7 @@ protected:
 
 	bool pointerActive = false;
 
+	Wayland *wayland;
     wlr_renderer *renderer;
 	wlr_seat *seat;
 	wlr_keyboard *keyboard;

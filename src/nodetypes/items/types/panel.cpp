@@ -58,10 +58,6 @@ PanelItem::PanelItem(Client *client, Surface *surface, pose_t pose) :
 }
 PanelItem::~PanelItem() {}
 
-void PanelItem::update() {
-	surface->frameEnd();
-}
-
 void PanelItem::serializeData(flexbuffers::Builder &fbb) {
 	fbb.Vector([&]() {
 		fbb.UInt(getEnabled() ? surface->width  : 0);

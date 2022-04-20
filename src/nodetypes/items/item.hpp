@@ -33,7 +33,6 @@ public:
 	std::vector<uint8_t> release(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 	static void updateItems(TypeInfo *info);
-	virtual void update() {};
 
 	bool acceptable = false;
 	TypedNodeRef<ItemAcceptor> capturedAcceptor;

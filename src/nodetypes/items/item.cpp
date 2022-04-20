@@ -2,7 +2,7 @@
 #include "acceptor.hpp"
 #include "itemui.hpp"
 #include "../../core/client.hpp"
-#include "../../core/clientmanager.hpp"
+#include "../../core/eventloop.hpp"
 #include "../../globals.h"
 #include "../core/alias.hpp"
 
@@ -82,7 +82,6 @@ void Item::updateItems(TypeInfo *info) {
 			item->itemTypeInfo->UI->handleItemCapture(item);
 			closestAcceptor->captureItem(*item);
 		}
-		item->update();
 	}
 }
 

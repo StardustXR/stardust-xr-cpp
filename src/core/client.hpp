@@ -2,36 +2,28 @@
 
 #include <atomic>
 
-#include "messenger.hpp"
+#include <stardustxr/common/messenger.hpp>
+#include "connection.hpp"
 #include "scenegraph.hpp"
 #include "scenegraphpropagation.hpp"
 
 namespace StardustXRServer {
 
-class ClientManager;
-
-class Client {
+class Client : public Connection {
 public:
-	explicit Client(ClientManager &manager, int fd);
-	~Client();
+	explicit Client(int epollFD, int fd);
+	virtual ~Client();
 
-	void startMessenger();
+	bool dispatch() override;
+
 	void scenegraphPropagate(std::string name, PropagateFunction &function);
 
 	const int fd;
-	const pid_t pid;
+	pid_t getPID();
 
-	static pid_t getPID(int fd);
-
-	uint32_t clientNumber;
-	std::atomic<bool> disconnected{false};
-	Messenger messenger;
 	Scenegraph scenegraph;
+	StardustXR::Messenger messenger;
 
-	static uint32_t clientCount;
-
-protected:
-	ClientManager *manager;
 };
 
 }

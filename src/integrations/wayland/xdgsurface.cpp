@@ -5,9 +5,9 @@ extern "C" {
 #include "wlr/util/edges.h"
 }
 
-XDGSurface::XDGSurface(wl_display *display, wlr_renderer *renderer, wlr_xdg_surface *xdg_surface, wlr_seat *seat) : Surface(display, renderer, xdg_surface->surface, seat) {
-	this->xdg_surface = xdg_surface;
-
+XDGSurface::XDGSurface(Wayland *wayland, wlr_renderer *renderer, wlr_xdg_surface *xdg_surface, wlr_seat *seat) :
+Surface(wayland, renderer, xdg_surface->surface, seat),
+xdg_surface(xdg_surface) {
 	if(wlr_surface_is_xdg_surface(surface))
 		printf("New XDG surface created\n");
 

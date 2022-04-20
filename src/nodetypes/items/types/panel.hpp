@@ -14,8 +14,6 @@ public:
 	PanelItem(Client *client, Surface *surface, sk::pose_t pose);
 	~PanelItem();
 
-	void update();
-
 	void serializeData(flexbuffers::Builder &fbb);
 	std::vector<uint8_t> applySurfaceMaterial(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 

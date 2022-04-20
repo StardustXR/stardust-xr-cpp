@@ -1,6 +1,6 @@
 src_files += files(
-	'client.cpp',
-	'clientmanager.cpp',
-	'messenger.cpp',
-	'scenegraph.cpp',
+    'client.cpp',
+    'connection.cpp',
+    'eventloop.cpp',
+    'scenegraph.cpp',
 )
