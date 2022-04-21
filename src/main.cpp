@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
 	if(args.flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_left, false);
 		input_hand_visible(handed_right, false);
-		flatscreenPointer = new FlatscreenPointer(nullptr);
+		flatscreenPointer = new FlatscreenPointer(nullptr, 0.05f);
 		serverInternalNode->addChild("flatscreenPointer", flatscreenPointer);
 	} else { // Add the StereoKit hand representation if we're not in flatscreen
 		stereokitHands[0] = new SKHandInput(nullptr, handed_left);
