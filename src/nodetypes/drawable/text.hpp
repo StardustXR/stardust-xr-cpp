@@ -11,6 +11,9 @@ public:
 
 	void draw();
 
+	std::vector<uint8_t> setColor(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+	std::vector<uint8_t> setText(Client *callingClient, flexbuffers::Reference data, bool returnValue);
+
 protected:
 	static sk::font_t defaultFont;
 	static std::map<sk::font_t, sk::text_style_t> fontStyles;

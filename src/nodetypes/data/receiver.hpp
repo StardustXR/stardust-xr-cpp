@@ -20,13 +20,13 @@ public:
 	static Registry<PulseReceiver> receivers;
 	static std::vector<std::string> makeAliases(Node *parent);
 
+	std::vector<uint8_t> maskBinary;
 	void sendData(PulseSender *sender, const std::vector<uint8_t> &data);
 
 	std::vector<uint8_t> getMask(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 	std::vector<uint8_t> setMask(Client *callingClient, flexbuffers::Reference data, bool returnValue);
 
 private:
-	std::vector<uint8_t> maskBinary;
 	flexbuffers::Map maskMap = flexbuffers::Reference().AsMap();
 };
 
