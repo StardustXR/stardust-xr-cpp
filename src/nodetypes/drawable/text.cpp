@@ -1,4 +1,5 @@
 #include "text.hpp"
+#include "../../util/flex.hpp"
 
 using namespace sk;
 
@@ -22,6 +23,9 @@ color(color) {
 		defaultFont = font_find(default_id_font);
 	if(bounds.x == 0 && bounds.y == 0)
 		size = text_size(text.c_str(), style) * characterHeight;
+
+	STARDUSTXR_NODE_METHOD("setColor", &Text::setColor)
+	STARDUSTXR_NODE_METHOD("setText", &Text::setText)
 }
 Text::~Text() {
 	if(font)
@@ -56,6 +60,16 @@ void Text::draw() {
 		text_add_at(text.c_str(), matrix_s(vec3_one * characterHeight) * worldTransform(), style, boundsAlign, textAlign, 0, 0, 0, color);
 	else
 		size.y = text_add_in(text.c_str(), matrix_s(vec3_one * characterHeight) * worldTransform(), bounds / characterHeight, fit, style, boundsAlign, textAlign, 0, 0, 0, color) * characterHeight;
+}
+
+std::vector<uint8_t> Text::setColor(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	color = FlexToSKColor(data.AsTypedVector());
+	return std::vector<uint8_t>();
+}
+
+std::vector<uint8_t> Text::setText(Client *callingClient, flexbuffers::Reference data, bool returnValue) {
+	text = data.AsString().str();
+	return std::vector<uint8_t>();
 }
 
 }
