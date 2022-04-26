@@ -44,11 +44,13 @@ std::atomic<uint64_t> frame = {0};
 struct CLIArgs {
 	bool flatscreen = false;
 	bool fieldDebug = false;
+	bool disableWayland = false;
 
 	int parse(int argc, const char* const argv[]) {
 		CLI::App app("Stardust XR");
 		app.add_flag("-F,--flatscreen", flatscreen, "Run Stardust in flatscreen mode");
 		app.add_flag("--field-debug", fieldDebug, "Draw translucent meshes around fields");
+		app.add_flag("--disable-wayland", disableWayland, "Disable wayland compositor component");
 		try {
 			(app).parse((argc), (argv));
 		} catch(const CLI::ParseError &e) {
@@ -100,8 +102,10 @@ int main(int argc, char *argv[]) {
 	serverInternalNode = new Node(nullptr, false);
 
 
-	struct skg_platform_data_t stereokitPlatformData = skg_get_platform_data();
-	wayland = new Wayland(stereokitPlatformData._egl_display, stereokitPlatformData._egl_context);
+	if(!args.disableWayland) {
+		struct skg_platform_data_t stereokitPlatformData = skg_get_platform_data();
+		wayland = new Wayland(stereokitPlatformData._egl_display, stereokitPlatformData._egl_context);
+	}
 
 	tex_t skytex;
 	FILE *skyfile = fopen((XdgUtils::BaseDir::XdgConfigHome()+"/stardust/skytex.hdr").c_str(), "ro");
@@ -177,13 +181,14 @@ int main(int argc, char *argv[]) {
 		InputInterface::processInput();
 
 		// Handle all the wayland events!
-		if(!wayland->dispatch())
+		if(wayland && !wayland->dispatch())
 		   sk_quit();
 	})) {}
 	printf("Shutting down Stardust\n");
 
 	delete serverInternalNode;
-	delete wayland;
+	if(wayland)
+		delete wayland;
 	delete eventLoop;
 
 	sk_shutdown();
