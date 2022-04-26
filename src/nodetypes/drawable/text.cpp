@@ -21,8 +21,8 @@ boundsAlign(boundsAlign),
 color(color) {
 	if(!defaultFont)
 		defaultFont = font_find(default_id_font);
-	if(bounds.x == 0 && bounds.y == 0)
-		size = text_size(text.c_str(), style) * characterHeight;
+//	if(bounds.x == 0 && bounds.y == 0)
+//		size = text_size(text.c_str(), style) * characterHeight;
 
 	STARDUSTXR_NODE_METHOD("setColor", &Text::setColor)
 	STARDUSTXR_NODE_METHOD("setText", &Text::setText)
