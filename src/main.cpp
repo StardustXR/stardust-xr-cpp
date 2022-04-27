@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 	// Start the startup script
 	int pid = fork();
 	if(pid == 0)
-		execlp((XdgUtils::BaseDir::XdgConfigHome()+"/stardust/startup").c_str(), "", nullptr);
+		execl((XdgUtils::BaseDir::XdgConfigHome()+"/stardust/startup").c_str(), "", nullptr);
 
 	// Every stereokit step
 	while (sk_step([]() {
