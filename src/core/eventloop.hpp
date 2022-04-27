@@ -19,6 +19,7 @@ public:
 	const int epollFD;
 
 	void addConnection(Connection *connection);
+	void closeConnection(Connection *connection);
 	void callClientsDebug();
 	void stop();
 
@@ -26,7 +27,6 @@ private:
 	bool successful;
 
 	std::vector<std::unique_ptr<Connection>> connections;
-	void closeConnection(Connection *connection);
 	Connection *internalConnection;
 
 	StardustXRServer::SocketHandler socketHandler;
