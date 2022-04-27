@@ -1,5 +1,6 @@
 #include "root.hpp"
 #include "../core/client.hpp"
+#include "../core/eventloop.hpp"
 
 #include "data.hpp"
 #include "drawable.hpp"
@@ -78,7 +79,7 @@ std::vector<uint8_t> RootInterface::subscribeLogicStep(Client *callingClient, fl
 	return std::vector<uint8_t>();
 }
 std::vector<uint8_t> RootInterface::disconnect(Client *callingClient, flexbuffers::Reference data, bool) {
-//	callingClient->disconnected = true;
+	callingClient->eventLoop->closeConnection(callingClient);
 	return std::vector<uint8_t>();
 }
 
