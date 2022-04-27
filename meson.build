@@ -8,6 +8,7 @@ add_project_arguments([
 cmake = import('cmake')
 pkg = import('pkgconfig')
 libstardustxr = dependency('stardustxr-server', required: true)
+flatbuffers = dependency('flatbuffers', version:'>=2.0.6')
 
 stereokit_options = cmake.subproject_options()
 stereokit_options.add_cmake_defines({'CMAKE_BUILD_TYPE': get_option('buildtype')})
@@ -41,10 +42,11 @@ executable(
 	'stardustxr',
 	src_files,
 	include_directories: includes,
-	link_args: ['-lflatbuffers', '-lX11', '-lGLX', '-lEGL', '-ldl', '-lopenxr_loader', '-lfontconfig'],
-	# link_args: ['-lflatbuffers', '-lX11', '-lGLX', '-lGLEW', '-lGL', '-ldl', '-lopenxr_loader', '-lfontconfig'],
+        link_args: ['-lX11', '-lGLX', '-lEGL', '-ldl', '-lopenxr_loader', '-lfontconfig'],
+        # link_args: ['-lX11', '-lGLX', '-lGLEW', '-lGL', '-ldl', '-lopenxr_loader', '-lfontconfig'],
 	dependencies: [
 		libstardustxr,
+                flatbuffers,
                 stereokit,
                 wlroots,
                 xdg_utils_basedir,
