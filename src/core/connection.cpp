@@ -1,19 +1,22 @@
 #include "connection.hpp"
+#include "eventloop.hpp"
 
 namespace StardustXRServer {
 
-Connection::Connection(int epollFD, int fd, uint32_t dispatchEvents) :
+Connection::Connection(EventLoop *eventLoop, int fd, uint32_t dispatchEvents) :
 fd(fd),
-epollFD(epollFD),
+eventLoop(eventLoop),
 event(epoll_event {
 	.events = dispatchEvents,
 	.data = {this},
 }) {}
 void Connection::startPoll() {
-	epoll_ctl(epollFD, EPOLL_CTL_ADD, fd, &event);
+	epoll_ctl(eventLoop->epollFD, EPOLL_CTL_ADD, fd, &event);
+	polling = true;
 }
 Connection::~Connection() {
-	epoll_ctl(epollFD, EPOLL_CTL_DEL, fd, &event);
+	if(polling)
+		epoll_ctl(eventLoop->epollFD, EPOLL_CTL_DEL, fd, &event);
 }
 
 bool Connection::dispatch(){

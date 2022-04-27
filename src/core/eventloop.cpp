@@ -43,7 +43,7 @@ void EventLoop::callClientsDebug() {
 	}
 }
 void EventLoop::eventLoop() {
-	internalConnection = new Connection(epollFD, socketHandler.fd(), EPOLLIN);
+	internalConnection = new Connection(this, socketHandler.fd(), EPOLLIN);
 	addConnection(internalConnection);
 
 	epoll_event events[20];
@@ -61,7 +61,7 @@ void EventLoop::eventLoop() {
 			if(connection == internalConnection) {
 				int fd = socketHandler.acceptNewClient();
 				if(fd == -1) return;
-				addConnection(new Client(epollFD, fd));
+				addConnection(new Client(this, fd));
 				continue;
 			}
 
