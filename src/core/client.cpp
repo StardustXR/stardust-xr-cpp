@@ -5,15 +5,16 @@
 
 namespace StardustXRServer {
 
-Client::Client(int epollFD, int fd) :
-Connection(epollFD, fd, EPOLLIN),
+Client::Client(EventLoop *eventLoop, int fd) :
+Connection(eventLoop, fd, EPOLLIN),
 fd(fd),
 scenegraph(this),
 messenger(fd, &scenegraph) {}
 
 Client::~Client() {
 	::close(fd);
-	printf("Disconnecting client %p\n", this);
+	printf("Disconnected client %p\n", this);
+	fflush(stdout);
 }
 
 bool Client::dispatch() {

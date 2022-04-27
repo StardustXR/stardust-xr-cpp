@@ -11,7 +11,7 @@ namespace StardustXRServer {
 
 class Client : public Connection {
 public:
-	explicit Client(int epollFD, int fd);
+	explicit Client(EventLoop *eventLoop, int fd);
 	virtual ~Client();
 
 	bool dispatch() override;
@@ -23,7 +23,6 @@ public:
 
 	Scenegraph scenegraph;
 	StardustXR::Messenger messenger;
-
 };
 
 }
