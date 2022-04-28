@@ -101,7 +101,6 @@ int main(int argc, char *argv[]) {
 	}
 	serverInternalNode = new Node(nullptr, false);
 
-
 	if(!args.disableWayland) {
 		struct skg_platform_data_t stereokitPlatformData = skg_get_platform_data();
 		wayland = new Wayland(stereokitPlatformData._egl_display, stereokitPlatformData._egl_context);
@@ -140,6 +139,10 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Start the startup script
+	if(wayland) {
+		setenv("GDK_BACKEND", "wayland", true);
+		setenv("QT_QPA_PLATFORM", "wayland", true);
+	}
 	int pid = fork();
 	if(pid == 0)
 		execl((XdgUtils::BaseDir::XdgConfigHome()+"/stardust/startup").c_str(), "", nullptr);
