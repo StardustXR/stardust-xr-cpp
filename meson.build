@@ -43,7 +43,6 @@ executable(
 	src_files,
 	include_directories: includes,
 	link_args: ['-lX11', '-lGLX', '-lEGL', '-ldl', '-lopenxr_loader', '-lfontconfig'],
-	# link_args: ['-lX11', '-lGLX', '-lGLEW', '-lGL', '-ldl', '-lopenxr_loader', '-lfontconfig'],
 	dependencies: [
 		libstardustxr,
 		flatbuffers,
