@@ -1,4 +1,4 @@
-project('stardustxr', 'cpp', default_options: ['cpp_std=c++17'], version:'0.9.1')
+project('stardustxr', 'cpp', default_options: ['cpp_std=c++17'], version:'0.9.2')
 
 add_project_arguments([
 	'-DWLR_USE_UNSTABLE',
