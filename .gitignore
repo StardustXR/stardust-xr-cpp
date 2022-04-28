@@ -13,3 +13,5 @@ stardust-xr.srctrlprj
 .cache/
 
 .vscode/
+
+.buildconfig
