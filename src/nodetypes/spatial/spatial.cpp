@@ -21,7 +21,8 @@ Spatial::Spatial(Client *client, matrix transform) : Node(client, false) {
 	setTransformMatrix(transform);
 }
 Spatial::Spatial(Client *client, Spatial *spatialParent, matrix transform, bool translatable, bool rotatable, bool scalable, bool zoneable) :
-		Spatial(client, transform) {
+		Node(client, true) {
+	setTransformMatrix(transform);
 	this->spatialParent = spatialParent;
 	this->translatable = translatable;
 	this->rotatable = rotatable;
