@@ -43,8 +43,8 @@ seat(seat) {
 	this->surfaceTex->tex.array_count = 1;
 	this->surfaceTex->header.state    = asset_state_loading;
 
-//	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_gamma_hlsl, 4032);
-	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_simula_hlsl, 6106);
+//	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_gamma_hlsl, sizeof(sks_sshader_unlit_gamma_hlsl)/sizeof(sks_sshader_unlit_gamma_hlsl[0]));
+	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_simula_hlsl, sizeof(sks_sshader_unlit_simula_hlsl)/sizeof(sks_sshader_unlit_simula_hlsl[0]));
 
 	this->surfaceMatAlphaAdd   = material_create(this->surfaceShader);
 	this->surfaceMatAlphaBlend = material_create(this->surfaceShader);
