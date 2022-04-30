@@ -1,6 +1,9 @@
 #include "root.hpp"
+#include "../globals.h"
 #include "../core/client.hpp"
 #include "../core/eventloop.hpp"
+
+#include "../nodetypes/core/alias.hpp"
 
 #include "data.hpp"
 #include "drawable.hpp"
@@ -20,10 +23,12 @@ double RootInterface::prevFrameTime;
 double RootInterface::frameTime;
 double RootInterface::delta;
 
+
 RootInterface::RootInterface(Client *client) : Spatial(client, nullptr, matrix_identity, false, false, false, false) {
 	this->addChild("data",        new DataInterface(client));
 	this->addChild("drawable",    new DrawableInterface(client));
 	this->addChild("field",       new FieldInterface(client));
+	this->addChild("hmd",         new Alias(client, hmd, {"getTransform"}));
 	this->addChild("input",       new InputInterface(client));
 	this->addChild("item",        new ItemInterface(client));
 	this->addChild("spatial",     new SpatialInterface(client));

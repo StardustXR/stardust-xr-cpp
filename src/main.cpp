@@ -21,6 +21,7 @@ std::string home;
 #include "interfaces/spatial.hpp"
 #include "nodetypes/core/node.hpp"
 #include "nodetypes/drawable/drawable.hpp"
+#include "objects/hmd.hpp"
 #include "objects/inputmethods/flatscreenpointer.hpp"
 #include "objects/inputmethods/skhand.hpp"
 using namespace StardustXRServer;
@@ -67,7 +68,8 @@ EventLoop *eventLoop = nullptr;
 Node *serverInternalNode = nullptr;
 Wayland *wayland = nullptr;
 
-// Builtin inputs
+// Builtin objects
+HMD *hmd;
 FlatscreenPointer *flatscreenPointer;
 std::array<SKHandInput *, 2> stereokitHands;
 
@@ -126,6 +128,8 @@ int main(int argc, char *argv[]) {
 		debugSetup();
 
 	ui_enable_far_interact(false);
+	hmd = new HMD();
+	serverInternalNode->addChild("hmd", hmd);
 	if(args.flatscreen) { // Add the flatscreen pointer if we're in flatscreen mode
 		input_hand_visible(handed_left, false);
 		input_hand_visible(handed_right, false);
@@ -175,6 +179,7 @@ int main(int argc, char *argv[]) {
 		RootInterface::sendLogicStepSignals();
 
 		// Process all the input and send it to the clients
+		hmd->update();
 		if(args.flatscreen) {
 			flatscreenPointer->update();
 		} else {
