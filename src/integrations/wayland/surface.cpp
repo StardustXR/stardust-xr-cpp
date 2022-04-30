@@ -46,21 +46,19 @@ seat(seat) {
 //	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_gamma_hlsl, sizeof(sks_sshader_unlit_gamma_hlsl)/sizeof(sks_sshader_unlit_gamma_hlsl[0]));
 	this->surfaceShader = shader_create_mem((void *) sks_sshader_unlit_simula_hlsl, sizeof(sks_sshader_unlit_simula_hlsl)/sizeof(sks_sshader_unlit_simula_hlsl[0]));
 
-	this->surfaceMatAlphaAdd   = material_create(this->surfaceShader);
-	this->surfaceMatAlphaBlend = material_create(this->surfaceShader);
-	this->surfaceMatAlphaClip  = material_create(this->surfaceShader);
+	material_t surfaceMatBase = material_create(this->surfaceShader);
+	material_set_float(surfaceMatBase,  "fcFactor", 0.5f);
+	material_set_texture(surfaceMatBase,  "diffuse", this->surfaceTex);
 
+	this->surfaceMatAlphaAdd   = material_copy(surfaceMatBase);
 	material_set_transparency(this->surfaceMatAlphaAdd,   transparency_add);
+	this->surfaceMatAlphaBlend = material_copy(surfaceMatBase);
 	material_set_transparency(this->surfaceMatAlphaBlend, transparency_blend);
+	this->surfaceMatAlphaClip  = material_copy(surfaceMatBase);
 	material_set_transparency(this->surfaceMatAlphaClip,  transparency_none);
 
-	material_set_float(this->surfaceMatAlphaAdd,   "fcFactor", 0.5f);
-	material_set_float(this->surfaceMatAlphaBlend, "fcFactor", 0.5f);
-	material_set_float(this->surfaceMatAlphaClip,  "fcFactor", 0.5f);
+	material_release(surfaceMatBase);
 
-	material_set_texture(this->surfaceMatAlphaAdd,   "diffuse", this->surfaceTex);
-	material_set_texture(this->surfaceMatAlphaBlend, "diffuse", this->surfaceTex);
-	material_set_texture(this->surfaceMatAlphaClip,  "diffuse", this->surfaceTex);
 
 	surfaceCommitCallback.callback = std::bind(&Surface::onCommit, this);
 	wl_signal_add(&surface->events.commit, &surfaceCommitCallback.listener);
