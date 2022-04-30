@@ -10,4 +10,5 @@ public:
 	void resize(uint32_t width, uint32_t height) const override;
 	void close() const override;
 	bool isMapped() const override;
+    ~XDGSurface();
 };

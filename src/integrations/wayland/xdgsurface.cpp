@@ -25,6 +25,11 @@ void XDGSurface::close() const {
 	wlr_xdg_toplevel_send_close(xdg_surface);
 }
 
+XDGSurface::~XDGSurface() {
+    //if(xdg_surface != NULL)
+    //wlr_xdg_popup_destroy(xdg_surface);
+}
+
 bool XDGSurface::isMapped() const {
 	return xdg_surface && xdg_surface->mapped;
 }

@@ -125,9 +125,12 @@ Wayland::Wayland(EGLDisplay display, EGLContext context) {
 
 Wayland::~Wayland() {
     wlr_seat_destroy(queueSeat);
+    wlr_keyboard_destroy(queueSeat->keyboard_state.keyboard);
 	wlr_xwayland_destroy(xwayland);
 	wl_display_destroy_clients(wayland_display);
 	wl_display_destroy(wayland_display);
+    wlr_renderer_destroy(renderer);
+    xkb_keymap_unref(keymap);
 }
 
 bool Wayland::dispatch() {
