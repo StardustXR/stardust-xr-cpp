@@ -7,11 +7,15 @@
 //--fcFactor    = 1.0
 //--ripple      = 4.0
 //--size        = 256, 256
+//--uv_offset   = 0.0, 0.0
+//--uv_scale    = 1.0, 1.0
 Texture2D    diffuse   : register(t0);
 SamplerState diffuse_s : register(s0);
 int2         size;
 float        fcFactor;
 float        ripple;
+float2       uv_scale;
+float2       uv_offset;
 
 struct vsIn {
 	float4 pos  : SV_Position;
@@ -32,7 +36,7 @@ psIn vs(vsIn input, uint id : SV_InstanceID) {
 	float3 world = mul(float4(input.pos.xyz, 1), sk_inst[id].world).xyz;
 	o.pos        = mul(float4(world,         1), sk_viewproj[o.view_id]);
 
-	o.uv    = input.uv;
+	o.uv    = (input.uv) + uv_offset * uv_scale;
 	return o;
 }
 
