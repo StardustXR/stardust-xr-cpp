@@ -1,0 +1,58 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    defaults:
+      run:
+        shell: 'script -q -e -c "bash {0}"'
+    env:
+      CPPFLAGS: -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wno-unused-function
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - uses: actions/setup-python@v1
+    - name: Caching time
+      uses: actions/cache@v2.1.6
+      id: caching-time
+      with:
+        path: |
+          flatbuffers/
+          /home/runner/.cache/pip
+        key: wheeeeeeeeeeeeeeeee
+
+    - name: Clone/Build Flatbuffers
+      if: steps.caching-time.outputs.cache-hit != 'true'
+      run: |
+        git clone https://github.com/google/flatbuffers.git
+        cd flatbuffers/
+        cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DFLATBUFFERS_BUILD_TESTS=OFF -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF -DFLATBUFFERS_BUILD_SHAREDLIB=ON -DCMAKE_INSTALL_PREFIX=/usr
+        make -j2
+    - name: Install Flatbuffers
+      run: |
+        cd flatbuffers/
+        sudo make install
+    
+    - name: Install Meson/Ninja
+      run: |
+        sudo apt install mesa-common-dev libwayland-egl1 libgles2-mesa-dev libgl1-mesa-dev libglu1-mesa-dev fontconfig
+        /opt/hostedtoolcache/Python/3.9.6/x64/python -m pip install ninja==1.9.0.post1
+        /opt/hostedtoolcache/Python/3.9.6/x64/python -m pip install meson==0.59.0
+    
+    - name: Install libstardustxr
+      run: |
+        git clone https://github.com/StardustXR/libstardustxr.git
+        cd libstardustxr
+        /opt/hostedtoolcache/Python/3.9.6/x64/bin/meson build
+        cd build
+        /opt/hostedtoolcache/Python/3.9.6/x64/bin/ninja -j2
+        sudo /opt/hostedtoolcache/Python/3.9.6/x64/bin/ninja -j2 install
+    
+    - name: Build Server
+      uses: BSFishy/meson-build@v1.0.3
+      with:
+        action: build
+        directory: build
+        meson-version: 0.53.0
+        options: -j2
